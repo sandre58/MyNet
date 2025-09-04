@@ -85,11 +85,11 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always() && github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         with:
           files: coverage/**/*.trx
           check_name: 'Test Results'
-          comment_mode: update last
+          comment_mode: changes
           fail_on: 'test failures'
 
       - name: Upload Coverage Reports
