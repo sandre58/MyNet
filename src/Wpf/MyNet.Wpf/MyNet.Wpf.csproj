@@ -9,15 +9,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MahApps.Metro" Version="3.0.0-alpha0492" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci780" />
+        <PackageReference Include="MahApps.Metro" Version="3.0.0-rc0516" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.3.0-ci1108" />
         <PackageReference Include="MyNet.Xaml.Html" Version="1.0.0" />
-        <PackageReference Include="MyNet.Xaml.Merger.MSBuild" Version="2.0.1">
+        <PackageReference Include="MyNet.Xaml.Merger.MSBuild" Version="4.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="WPF-UI" Version="4.0.0-rc.2" />
-        <PackageReference Include="Fody" Version="6.8.2">
+        <PackageReference Include="WPF-UI" Version="4.0.3" />
+        <PackageReference Include="Fody" Version="6.9.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

@@ -13,7 +13,7 @@
         <RepositoryUrl>https://github.com/sandre58/MyNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryBranch>main</RepositoryBranch>
-        <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\packages</PackageOutputPath>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)..\nugets</PackageOutputPath>
         <PackageProjectUrl>https://github.com/sandre58/MyNet</PackageProjectUrl>
         <PackageReleaseNotes>https://github.com/sandre58/MyNet/releases</PackageReleaseNotes>
         <PackageIconUrl>$(PackageIcon)</PackageIconUrl>
@@ -24,7 +24,7 @@
 
         <!-- Build configuration -->
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>true</IncludeSource>
 

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+      <Product>My .NET XAML - HTML</Product>
+      <PackageIcon>MyNetXaml.png</PackageIcon>
+      <Description>This library provides seamless conversion capabilities between HTML and XAML markup languages, enabling developers to effortlessly translate web content into native XAML format for integration within .NET applications, and vice versa.</Description>
+      <PackageTags>MyNet;XAML;HTML;Converter</PackageTags>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Drawing.Common" Version="10.0.0-preview.7.25380.108" />
+    </ItemGroup>
+</Project>

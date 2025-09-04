@@ -18,14 +18,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Mail.MailKi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Tests", "tests\MyNet.Utilities.Tests\MyNet.Utilities.Tests.csproj", "{4CFCE474-D538-9CA7-60BF-C6F6BDD132B3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github actions", ".github actions", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github Actions", "Github Actions", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		.github\workflows\release-please.yml = .github\workflows\release-please.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2E7433DA-B851-4B09-A8BF-5E8265B474AC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2E7433DA-B851-4B09-A8BF-5E8265B474AC}"
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2E7433DA
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{892DFD87-4C6A-412C-8243-7E9709DF5209}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{892DFD87-4C6A-412C-8243-7E9709DF5209}"
 	ProjectSection(SolutionItems) = preProject
 		.runsettings = .runsettings
 		build\code-analysis.props = build\code-analysis.props
@@ -47,17 +47,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{892DFD
 		Settings.XamlStyler = Settings.XamlStyler
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".assets", ".assets", "{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3}"
 	ProjectSection(SolutionItems) = preProject
+		assets\MyNetAutoMapper.png = assets\MyNetAutoMapper.png
+		assets\MyNetAvalonia.png = assets\MyNetAvalonia.png
 		assets\MyNetCsvHelper.png = assets\MyNetCsvHelper.png
 		assets\MyNetDynamicData.png = assets\MyNetDynamicData.png
+		assets\MyNetHttp.png = assets\MyNetHttp.png
 		assets\MyNetHumanizer.png = assets\MyNetHumanizer.png
 		assets\MyNetObservable.png = assets\MyNetObservable.png
 		assets\MyNetUI.png = assets\MyNetUI.png
 		assets\MyNetUtilities.png = assets\MyNetUtilities.png
+		assets\MyNetWpf.png = assets\MyNetWpf.png
+		assets\MyNetXaml.png = assets\MyNetXaml.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".code analysis", ".code analysis", "{015D541F-7A6E-4FF7-A267-7FA869C00DE0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code analysis", "Code analysis", "{015D541F-7A6E-4FF7-A267-7FA869C00DE0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		stylecop.json = stylecop.json
@@ -73,13 +78,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.UI", "src\MyNet.UI\My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Humanizer.UnitTests", "tests\MyNet.Humanizer.UnitTests\MyNet.Humanizer.UnitTests.csproj", "{2090F530-BECF-6B20-D9BD-5E7E19A89366}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".versioning", ".versioning", "{ECE90391-AE4A-42D9-8332-508DC90BABE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{ECE90391-AE4A-42D9-8332-508DC90BABE6}"
 	ProjectSection(SolutionItems) = preProject
 		.release-please-manifest.json = .release-please-manifest.json
 		release-please-config.json = release-please-config.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".scripts", ".scripts", "{4942B6F1-961C-4D26-A566-06D348BA98C1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4942B6F1-961C-4D26-A566-06D348BA98C1}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\test-coverage.ps1 = scripts\test-coverage.ps1
 	EndProjectSection
@@ -89,8 +94,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Http", "src\MyNet.Http\MyNet.Http.csproj", "{916AE5D1-AEFA-6E1D-D395-BD4EDC7ED10D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wpf", "Wpf", "{588950BE-D5F6-4387-B511-BDB903493436}"
+	ProjectSection(SolutionItems) = preProject
+		src\Wpf\Directory.Build.props = src\Wpf\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Avalonia", "Avalonia", "{7C7CC95A-7D7D-427F-BAA9-19EE998C6D23}"
+	ProjectSection(SolutionItems) = preProject
+		src\Avalonia\Directory.Build.props = src\Avalonia\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveCharts", "src\Wpf\LiveCharts\LiveCharts\LiveCharts.csproj", "{962BF176-50A4-A051-6B4F-3C9668767590}"
 EndProject
@@ -100,11 +111,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveCharts.Wpf", "src\Wpf\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Wpf", "src\Wpf\MyNet.Wpf\MyNet.Wpf.csproj", "{E3A42752-A3CD-2D7C-41D6-D6D7C3B0DEDB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{DF13C343-DA01-492C-A08F-E8C7F28E17E3}"
-	ProjectSection(SolutionItems) = preProject
-		src\Wpf\Directory.Build.props = src\Wpf\Directory.Build.props
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Wpf.DragAndDrop", "src\Wpf\MyNet.Wpf.DragAndDrop\MyNet.Wpf.DragAndDrop.csproj", "{59274D09-1181-B7E5-A4E4-B3D7C3FDC726}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Wpf.LiveCharts", "src\Wpf\MyNet.Wpf.LiveCharts\MyNet.Wpf.LiveCharts.csproj", "{478ABB78-CE5D-0999-2604-B6C1A908C03B}"
@@ -112,11 +118,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Wpf.Presentation", "src\Wpf\MyNet.Wpf.Presentation\MyNet.Wpf.Presentation.csproj", "{1F495846-CF14-DD73-77BD-C2230F38A26F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Wpf.Web", "src\Wpf\MyNet.Wpf.Web\MyNet.Wpf.Web.csproj", "{13375FC2-BA2C-37FE-A4E8-02162B9474EA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{3C12B72F-4DF2-4F01-B986-FA775AF97421}"
-	ProjectSection(SolutionItems) = preProject
-		src\Avalonia\Directory.Build.props = src\Avalonia\Directory.Build.props
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Avalonia", "src\Avalonia\MyNet.Avalonia\MyNet.Avalonia.csproj", "{7BB8F447-6DA8-B57F-FBF2-E718386789BA}"
 EndProject
@@ -135,6 +136,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Avalonia.Demo.Desktop", "demos\MyNet.Avalonia.Demo.Desktop\MyNet.Avalonia.Demo.Desktop.csproj", "{7F71A729-E05E-0121-D4D7-15D8676DDDC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Avalonia.Demo.Browser", "demos\MyNet.Avalonia.Demo.Browser\MyNet.Avalonia.Demo.Browser.csproj", "{B6246235-FFA4-472E-4888-DDCDCD30A950}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{761E88AC-1747-465B-BFFA-B7EFFD3F47B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Xaml.Html", "src\Wpf\MyNet.Xaml.Html\MyNet.Xaml.Html.csproj", "{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -258,23 +263,31 @@ Global
 		{B6246235-FFA4-472E-4888-DDCDCD30A950}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6246235-FFA4-472E-4888-DDCDCD30A950}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6246235-FFA4-472E-4888-DDCDCD30A950}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4CFCE474-D538-9CA7-60BF-C6F6BDD132B3} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{2E7433DA-B851-4B09-A8BF-5E8265B474AC} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
+		{892DFD87-4C6A-412C-8243-7E9709DF5209} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
+		{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
+		{015D541F-7A6E-4FF7-A267-7FA869C00DE0} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{2090F530-BECF-6B20-D9BD-5E7E19A89366} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{ECE90391-AE4A-42D9-8332-508DC90BABE6} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
+		{4942B6F1-961C-4D26-A566-06D348BA98C1} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{962BF176-50A4-A051-6B4F-3C9668767590} = {3FA842DE-2B04-49C8-AE73-5E80F3D3DB4B}
 		{3FA842DE-2B04-49C8-AE73-5E80F3D3DB4B} = {588950BE-D5F6-4387-B511-BDB903493436}
 		{01FEEE64-B857-4C93-CB41-1CEC931BC4FE} = {3FA842DE-2B04-49C8-AE73-5E80F3D3DB4B}
 		{E3A42752-A3CD-2D7C-41D6-D6D7C3B0DEDB} = {588950BE-D5F6-4387-B511-BDB903493436}
-		{DF13C343-DA01-492C-A08F-E8C7F28E17E3} = {588950BE-D5F6-4387-B511-BDB903493436}
 		{59274D09-1181-B7E5-A4E4-B3D7C3FDC726} = {588950BE-D5F6-4387-B511-BDB903493436}
 		{478ABB78-CE5D-0999-2604-B6C1A908C03B} = {588950BE-D5F6-4387-B511-BDB903493436}
 		{1F495846-CF14-DD73-77BD-C2230F38A26F} = {588950BE-D5F6-4387-B511-BDB903493436}
 		{13375FC2-BA2C-37FE-A4E8-02162B9474EA} = {588950BE-D5F6-4387-B511-BDB903493436}
-		{3C12B72F-4DF2-4F01-B986-FA775AF97421} = {7C7CC95A-7D7D-427F-BAA9-19EE998C6D23}
 		{7BB8F447-6DA8-B57F-FBF2-E718386789BA} = {7C7CC95A-7D7D-427F-BAA9-19EE998C6D23}
 		{311C3ED1-8411-0D49-E76C-4FA7BB234B40} = {7C7CC95A-7D7D-427F-BAA9-19EE998C6D23}
 		{E60678BA-1F56-E291-535B-2D3182A6D1F4} = {7C7CC95A-7D7D-427F-BAA9-19EE998C6D23}
@@ -283,6 +296,7 @@ Global
 		{5771D788-0298-CFC7-B3D2-D20249AA3FCE} = {2C7D6C1B-A6CA-44B6-B604-FDD86A107640}
 		{7F71A729-E05E-0121-D4D7-15D8676DDDC8} = {2C7D6C1B-A6CA-44B6-B604-FDD86A107640}
 		{B6246235-FFA4-472E-4888-DDCDCD30A950} = {2C7D6C1B-A6CA-44B6-B604-FDD86A107640}
+		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14} = {588950BE-D5F6-4387-B511-BDB903493436}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {075CDC9E-861B-4CC2-87C4-C6DD6DDB77B6}

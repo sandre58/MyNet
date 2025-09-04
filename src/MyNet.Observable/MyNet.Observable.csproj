@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Reactive" Version="6.0.1" />
-        <PackageReference Include="Fody" Version="6.9.2">
+        <PackageReference Include="System.Reactive" Version="6.0.2" />
+        <PackageReference Include="Fody" Version="6.9.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -19,7 +19,7 @@
         <PackageReference Include="PropertyChanging.Fody" Version="1.31.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="DynamicData" Version="9.3.2" />
+        <PackageReference Include="DynamicData" Version="9.4.1" />
     </ItemGroup>
 
     <ItemGroup>

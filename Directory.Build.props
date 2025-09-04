@@ -12,7 +12,8 @@
     <!-- Automatic project type detection -->
     <PropertyGroup>
         <IsTestProject>$(MSBuildProjectName.EndsWith('Tests'))</IsTestProject>
-    <IsDemoProject>$(MSBuildProjectName.Contains('.Demo'))</IsDemoProject>
+        <IsDemoProject>$(MSBuildProjectName.Contains('.Demo'))</IsDemoProject>
+        <IsPackable Condition="'$(IsDemoProject)' == 'True' Or '$(IsTestProject)' == 'True'">false</IsPackable>
         <IsPackable Condition="'$(IsDemoProject)' != 'True' And '$(IsTestProject)' != 'True'">true</IsPackable>
     </PropertyGroup>
 
@@ -25,11 +26,10 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <!-- Output builds -->
-        <BaseOutputPath Condition="'$(IsDemoProject)' != 'True'">bin</BaseOutputPath>
-        <BaseOutputPath Condition="'$(IsDemoProject)' == 'True'">$(MSBuildThisFileDirectory)\artifacts\demos\$(MSBuildProjectName)</BaseOutputPath>
         <AppendTargetFrameworkToOutputPath Condition="'$(IsDemoProject)' != 'True'">true</AppendTargetFrameworkToOutputPath>
+        <AppendTargetFrameworkToOutputPath Condition="'$(IsDemoProject)' == 'True'">false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
-    
+
     <!-- Imports -->
     <Import Project="$(MSBuildThisFileDirectory)/build/code-analysis.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/code-analysis.props')" />
     <Import Project="$(MSBuildThisFileDirectory)/build/dependencies.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/dependencies.props')" />

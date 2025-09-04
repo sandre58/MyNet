@@ -1,21 +1,74 @@
-name: Release
+name: Release - Publish Package
 
 on:
   push:
     tags:
-      - 'v*' # ex: v1.2.3
+      - '*/v*'  # Matches tags like MyNet.Utilities/v1.2.3
+
+permissions:
+  contents: write      # Required to create releases
+  packages: write      # Required to publish to GitHub Packages
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 jobs:
-  build-test-pack:
+  publish:
     runs-on: ubuntu-latest
+    
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Step 2: Set up .NET SDK
+      - name: Parse tag
+        id: parse-tag
+        run: |
+          tag="${{ github.ref_name }}"
+          echo "Full tag: $tag"
+          
+          # Extract project name and version from tag (format: ProjectName/vX.Y.Z)
+          if [[ "$tag" =~ ^(.+)/v(.+)$ ]]; then
+            project_name="${BASH_REMATCH[1]}"
+            version="${BASH_REMATCH[2]}"
+            
+            echo "Project: $project_name"
+            echo "Version: $version"
+            
+            echo "project_name=$project_name" >> $GITHUB_OUTPUT
+            echo "version=$version" >> $GITHUB_OUTPUT
+            echo "tag_valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "Invalid tag format: $tag"
+            echo "Expected format: ProjectName/vX.Y.Z"
+            echo "tag_valid=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Find project file
+        id: find-project
+        if: steps.parse-tag.outputs.tag_valid == 'true'
+        run: |
+          project_name="${{ steps.parse-tag.outputs.project_name }}"
+          
+          # Search for the project file
+          project_file=$(find src -name "$project_name.csproj" -type f | head -n1)
+          
+          if [ -z "$project_file" ]; then
+            echo "Project file not found for: $project_name"
+            exit 1
+          fi
+          
+          echo "Found project file: $project_file"
+          echo "project_file=$project_file" >> $GITHUB_OUTPUT
+          
+          # Get the directory
+          project_dir=$(dirname "$project_file")
+          echo "project_dir=$project_dir" >> $GITHUB_OUTPUT
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -24,44 +77,234 @@ jobs:
             9.0.x
             8.0.x
 
-      # Step 2b: Install wasm-tools workload
-      - name: Install wasm-tools workload
-        run: dotnet workload install wasm-tools
+      - name: Install NBGV tool
+        run: dotnet tool install -g nbgv
 
-      # Step 2c: Install android workload
-      - name: Install android workload
-        run: dotnet workload install android
+      - name: Verify version
+        id: verify-version
+        run: |
+          project_dir="${{ steps.find-project.outputs.project_dir }}"
+          expected_version="${{ steps.parse-tag.outputs.version }}"
+          
+          echo "Verifying version in: $project_dir"
+          
+          cd "$project_dir"
+          actual_version=$(nbgv get-version -v SimpleVersion)
+          cd - > /dev/null
+          
+          echo "Expected version: $expected_version"
+          echo "Actual version: $actual_version"
+          
+          if [ "$expected_version" != "$actual_version" ]; then
+            echo "Version mismatch!"
+            echo "Tag version ($expected_version) does not match project version ($actual_version)"
+            exit 1
+          fi
+          
+          echo "Version verified successfully"
 
-      # Step 2d: Restore .NET workloads
-      - name: Restore .NET workloads
-        run: dotnet workload restore
-
-      # Step 3: Restore project dependencies
-      - name: Restore
+      - name: Restore dependencies
         run: dotnet restore --property:EnableWindowsTargeting=true
 
-      # Step 4: Build the project
-      - name: Build
-        run: dotnet build --configuration Release --no-restore --property:EnableWindowsTargeting=true
+      - name: Build project
+        run: |
+          project_file="${{ steps.find-project.outputs.project_file }}"
+          echo "Building: $project_file"
+          
+          dotnet build "$project_file" \
+            --configuration Release \
+            --no-restore \
+            --property:EnableWindowsTargeting=true
 
-      # Step 5: Run tests
-      - name: Test
-        run: dotnet test --configuration Release --no-build
+      - name: Run tests for project
+        run: |
+          project_name="${{ steps.parse-tag.outputs.project_name }}"
+          
+          # Try to find test project
+          test_project=$(find tests -name "*$project_name*Test*.csproj" -o -name "*Test*$project_name*.csproj" | head -n1)
+          
+          if [ -n "$test_project" ]; then
+            echo "Found test project: $test_project"
+            echo "Running tests..."
+            
+            dotnet test "$test_project" \
+              --configuration Release \
+              --no-build \
+              --logger "GitHubActions;report-warnings=false"
+          else
+            echo "No test project found for $project_name"
+          fi
 
-      # Step 6: Package NuGet artifacts
-      - name: Pack NuGet
-        run: dotnet pack --configuration Release --no-build --output ./artifacts
+      - name: Pack NuGet package
+        run: |
+          project_file="${{ steps.find-project.outputs.project_file }}"
+          
+          echo "Packing: $project_file"
+          
+          dotnet pack "$project_file" \
+            --configuration Release \
+            --no-build \
+            --output ./packages \
+            --include-symbols \
+            --include-source
 
-      # Step 7: Upload NuGet package as artifact
-      - name: Upload NuGet package (artifact)
+      - name: List generated packages
+        run: |
+          echo "Generated packages:"
+          ls -la ./packages/
+
+      - name: Publish to NuGet.org
+        if: ${{ !github.event.repository.private }}
+        run: |
+          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
+            echo "NUGET_API_KEY secret not configured, skipping NuGet.org publish"
+          else
+            echo "Publishing to NuGet.org..."
+            
+            for package in ./packages/*.nupkg; do
+              # Skip symbol packages for NuGet.org
+              if [[ "$package" == *".snupkg" ]]; then
+                continue
+              fi
+              
+              echo "Publishing: $package"
+              dotnet nuget push "$package" \
+                --api-key "${{ secrets.NUGET_API_KEY }}" \
+                --source https://api.nuget.org/v3/index.json \
+                --skip-duplicate
+            done
+          fi
+
+    #   - name: Publish to GitHub Packages
+    #     run: |
+    #       echo "Publishing to GitHub Packages..."
+          
+    #       for package in ./packages/*.nupkg; do
+    #         echo "Publishing: $package"
+    #         dotnet nuget push "$package" \
+    #           --api-key "${{ secrets.GITHUB_TOKEN }}" \
+    #           --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+    #           --skip-duplicate
+    #       done
+
+      - name: Install git-chglog
+        run: |
+          echo "Installing git-chglog..."
+          wget -O git-chglog.tar.gz https://github.com/git-chglog/git-chglog/releases/download/v0.15.4/git-chglog_0.15.4_linux_amd64.tar.gz
+          tar -xzf git-chglog.tar.gz
+          sudo mv git-chglog /usr/local/bin/
+          chmod +x /usr/local/bin/git-chglog
+          git-chglog --version
+
+      - name: Update git-chglog configs for project
+        run: |
+          project_name="${{ steps.parse-tag.outputs.project_name }}"
+          
+          echo "Updating git-chglog configurations for $project_name..."
+          
+          # Update the title in both config files to match the current project
+          sed -i "s/title: CHANGELOG/title: $project_name/" .chglog/config.yml
+          sed -i "s/title: CHANGELOG/title: $project_name/" .chglog/release-config.yml
+          
+          echo "Configurations updated for project: $project_name"
+
+      - name: Generate release changelog
+        id: changelog
+        run: |
+          project_name="${{ steps.parse-tag.outputs.project_name }}"
+          current_tag="${{ github.ref_name }}"
+          project_dir="${{ steps.find-project.outputs.project_dir }}"
+          
+          echo "Generating release changelog for $project_name using git-chglog..."
+          
+          # Find previous tag for this project
+          previous_tag=$(git tag -l "$project_name/v*" --sort=-version:refname | grep -v "^$current_tag$" | head -n1)
+          
+          if [ -z "$previous_tag" ]; then
+            echo "No previous tag found, generating changelog from beginning"
+            # Generate changelog for current tag only (all history)
+            git-chglog --config .github/.chglog/release-config.yml --path "$project_dir" --tag-filter-pattern "$project_name/v*" "$current_tag" > RELEASE_CHANGELOG.md
+          else
+            echo "Previous tag: $previous_tag"
+            # Generate changelog between previous and current tag (for release)
+            git-chglog --config .github/.chglog/release-config.yml --path "$project_dir" --tag-filter-pattern "$project_name/v*" "$previous_tag".."$current_tag" > RELEASE_CHANGELOG.md
+          fi
+          
+          echo "Release changelog generated:"
+          cat RELEASE_CHANGELOG.md
+
+      - name: Update project CHANGELOG.md
+        run: |
+          project_name="${{ steps.parse-tag.outputs.project_name }}"
+          current_tag="${{ github.ref_name }}"
+          project_dir="${{ steps.find-project.outputs.project_dir }}"
+          project_changelog="$project_dir/CHANGELOG.md"
+          
+          echo "Updating permanent CHANGELOG.md for $project_name..."
+          
+          # Generate complete changelog for all versions of this project
+          git-chglog --config .chglog/config.yml --path "$project_dir" --tag-filter-pattern "$project_name/v*" > "$project_changelog"
+          
+          echo "Permanent CHANGELOG.md updated at: $project_changelog"
+          echo "Content preview:"
+          head -30 "$project_changelog"
+
+      - name: Commit updated CHANGELOG.md
+        run: |
+          project_dir="${{ steps.find-project.outputs.project_dir }}"
+          project_changelog="$project_dir/CHANGELOG.md"
+          
+          # Configure git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Add and commit the updated CHANGELOG.md
+          git add "$project_changelog"
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to CHANGELOG.md, skipping commit"
+          else
+            git commit -m "docs(${{ steps.parse-tag.outputs.project_name }}): update CHANGELOG.md for v${{ steps.parse-tag.outputs.version }}
+
+            Auto-generated by GitHub Actions for release ${{ github.ref_name }}"
+            
+            # Push the changes
+            git push origin HEAD:main
+            
+            echo "CHANGELOG.md committed and pushed to main branch"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "${{ steps.parse-tag.outputs.project_name }} v${{ steps.parse-tag.outputs.version }}"
+          body_path: RELEASE_CHANGELOG.md
+          files: |
+            ./packages/*.nupkg
+          draft: false
+          prerelease: ${{ contains(steps.parse-tag.outputs.version, '-') }}
+          generate_release_notes: true
+
+      - name: Upload packages as artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: nuget-packages
-          path: ./artifacts/*.nupkg
+          name: "${{ steps.parse-tag.outputs.project_name }}-v${{ steps.parse-tag.outputs.version }}-packages"
+          path: ./packages/
 
-      # Step 8: Push NuGet package to NuGet.org
-      - name: Push to NuGet.org
-        run: dotnet nuget push "./artifacts/*.nupkg" \
-             --source https://api.nuget.org/v3/index.json \
-             --api-key ${{ secrets.NUGET_API_KEY }} \
-             --skip-duplicate
+      - name: Summary
+        run: |
+          echo "=========================================="
+          echo "RELEASE SUMMARY"
+          echo "=========================================="
+          echo "Project: ${{ steps.parse-tag.outputs.project_name }}"
+          echo "Version: ${{ steps.parse-tag.outputs.version }}"
+          echo "Tag: ${{ github.ref_name }}"
+          echo "Commit: $(git rev-parse HEAD)"
+          echo ""
+          echo "Packages created:"
+          ls -la ./packages/
+          echo ""
+          echo "Release URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+          echo "=========================================="

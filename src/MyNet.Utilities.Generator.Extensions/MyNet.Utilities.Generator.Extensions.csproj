@@ -5,7 +5,6 @@
         <PackageIcon>MyNetUtilities.png</PackageIcon>
         <Description>A robust and flexible .NET library for generating random data, designed to simplify testing, prototyping, and data population in your applications. MyNet.Utilities.Generator.Extensions provides easy-to-use extensions for creating random addresses, names, internet information, and more.</Description>
         <PackageTags>My;Utilities;Generator</PackageTags>
-        <VersionPrefix>8.0.0</VersionPrefix>
     </PropertyGroup>
 
     <ItemGroup>

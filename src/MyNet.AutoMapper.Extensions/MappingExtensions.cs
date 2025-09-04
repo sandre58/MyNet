@@ -8,16 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace MyNet.AutoMapper.Extensions;
 
 public static class MappingExtensions
 {
     public static TDestination MapTo<TSource, TDestination>(this TSource source)
-        => new MapperConfiguration(cfg => cfg.CreateMap<TSource, TDestination>()).CreateMapper().Map<TDestination>(source);
+        => new MapperConfiguration(cfg => cfg.CreateMap<TSource, TDestination>(), NullLoggerFactory.Instance).CreateMapper().Map<TDestination>(source);
 
     public static TDestination UpdateFrom<TSource, TDestination>(this TDestination destination, TSource source)
-        => new MapperConfiguration(cfg => cfg.CreateMap<TSource, TDestination>()).CreateMapper().Map(source, destination);
+        => new MapperConfiguration(cfg => cfg.CreateMap<TSource, TDestination>(), NullLoggerFactory.Instance).CreateMapper().Map(source, destination);
 
     public static void UpdateFrom<TSource, TDestination>(this ICollection<TDestination> destination,
         IEnumerable<TSource>? source,

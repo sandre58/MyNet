@@ -73,18 +73,6 @@ public class DropDownButton : MaterialDesignThemes.Wpf.PopupBox
 
     #endregion ButtonStyle
 
-    #region PopupAnimation
-
-    public static readonly DependencyProperty PopupAnimationProperty = DependencyProperty.Register(nameof(PopupAnimation), typeof(PopupAnimation), typeof(DropDownButton), new UIPropertyMetadata(PopupAnimation.Slide));
-
-    public PopupAnimation PopupAnimation
-    {
-        get => (PopupAnimation)GetValue(PopupAnimationProperty);
-        set => SetValue(PopupAnimationProperty, value);
-    }
-
-    #endregion PopupAnimation
-
     #region MaxPopupHeight
 
     public static readonly DependencyProperty MaxPopupHeightProperty = DependencyProperty.Register(nameof(MaxPopupHeight), typeof(double), typeof(DropDownButton), new UIPropertyMetadata(double.NaN));

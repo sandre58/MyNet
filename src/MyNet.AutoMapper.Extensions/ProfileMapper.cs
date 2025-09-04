@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace MyNet.AutoMapper.Extensions;
 
@@ -15,10 +16,10 @@ public static class ProfileMapper<TProfile>
     where TProfile : Profile, new()
 {
     public static TDestination Map<TSource, TDestination>(TSource source)
-        => new MapperConfiguration(cfg => cfg.AddProfile<TProfile>()).CreateMapper().Map<TDestination>(source);
+        => new MapperConfiguration(cfg => cfg.AddProfile<TProfile>(), NullLoggerFactory.Instance).CreateMapper().Map<TDestination>(source);
 
     public static TDestination UpdateFrom<TSource, TDestination>(TDestination destination, TSource source)
-        => new MapperConfiguration(cfg => cfg.AddProfile<TProfile>()).CreateMapper().Map(source, destination);
+        => new MapperConfiguration(cfg => cfg.AddProfile<TProfile>(), NullLoggerFactory.Instance).CreateMapper().Map(source, destination);
 
     public static void UpdateFrom<TSource, TDestination>(
         ICollection<TDestination> destination,
