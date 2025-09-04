@@ -21,17 +21,19 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github Actions", "Github Actions", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci.yml = .github\workflows\ci.yml
-		.github\workflows\release-please.yml = .github\workflows\release-please.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\tag.yml = .github\workflows\tag.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2E7433DA-B851-4B09-A8BF-5E8265B474AC}"
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		.github\docs\CONVENTIONAL_COMMITS.md = .github\docs\CONVENTIONAL_COMMITS.md
 		LICENSE = LICENSE
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
+		.github\docs\WORKFLOWS.md = .github\docs\WORKFLOWS.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{892DFD87-4C6A-412C-8243-7E9709DF5209}"
@@ -80,8 +82,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Humanizer.UnitTests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{ECE90391-AE4A-42D9-8332-508DC90BABE6}"
 	ProjectSection(SolutionItems) = preProject
-		.release-please-manifest.json = .release-please-manifest.json
-		release-please-config.json = release-please-config.json
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4942B6F1-961C-4D26-A566-06D348BA98C1}"
@@ -140,6 +141,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{761E88AC-1747-465B-BFFA-B7EFFD3F47B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Xaml.Html", "src\Wpf\MyNet.Xaml.Html\MyNet.Xaml.Html.csproj", "{D04297EC-EA9B-C0D8-3FC7-48E84E314B14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{9C3385D2-1E72-4723-83A9-35A106A6ACBA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\.chglog\CHANGELOG.tpl.md = .github\.chglog\CHANGELOG.tpl.md
+		.github\.chglog\config.yml = .github\.chglog\config.yml
+		.github\.chglog\release-config.yml = .github\.chglog\release-config.yml
+		.github\.chglog\RELEASE.tpl.md = .github\.chglog\RELEASE.tpl.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -297,6 +306,7 @@ Global
 		{7F71A729-E05E-0121-D4D7-15D8676DDDC8} = {2C7D6C1B-A6CA-44B6-B604-FDD86A107640}
 		{B6246235-FFA4-472E-4888-DDCDCD30A950} = {2C7D6C1B-A6CA-44B6-B604-FDD86A107640}
 		{D04297EC-EA9B-C0D8-3FC7-48E84E314B14} = {588950BE-D5F6-4387-B511-BDB903493436}
+		{9C3385D2-1E72-4723-83A9-35A106A6ACBA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {075CDC9E-861B-4CC2-87C4-C6DD6DDB77B6}

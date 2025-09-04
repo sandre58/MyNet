@@ -11,7 +11,6 @@
     <ItemGroup>
         <PackageReference Include="MahApps.Metro" Version="3.0.0-rc0516" />
         <PackageReference Include="MaterialDesignThemes" Version="5.3.0-ci1108" />
-        <PackageReference Include="MyNet.Xaml.Html" Version="1.0.0" />
         <PackageReference Include="MyNet.Xaml.Merger.MSBuild" Version="4.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -73,6 +72,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\MyNet.UI\MyNet.UI.csproj" />
+        <ProjectReference Include="..\MyNet.Xaml.Html\MyNet.Xaml.Html.csproj" />
     </ItemGroup>
 
     <ItemGroup>

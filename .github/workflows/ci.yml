@@ -41,19 +41,14 @@ jobs:
           dotnet workload install android
           dotnet workload restore
 
-      - name: Install NBGV tool
-        run: dotnet tool install -g nbgv
-
-      - name: Get version from NBGV
-        id: nbgv
+      - name: Verify NBGV tool
         run: |
-          echo "Version=$(nbgv get-version -v Version)" >> $GITHUB_OUTPUT
-          echo "SimpleVersion=$(nbgv get-version -v SimpleVersion)" >> $GITHUB_OUTPUT
-
-      - name: Display version info
-        run: |
-          echo "Version: ${{ steps.nbgv.outputs.Version }}"
-          echo "Simple Version: ${{ steps.nbgv.outputs.SimpleVersion }}"
+          if ! command -v nbgv &> /dev/null; then
+            echo "NBGV not found, installing..."
+            dotnet tool install -g nbgv
+          else
+            echo "NBGV already available: $(nbgv --version)"
+          fi
 
       - name: Restore dependencies
         run: dotnet restore --property:EnableWindowsTargeting=true
