@@ -42,7 +42,7 @@ public class MetricNumeralExtensionsTests
     public void FromMetricOnInvalid(string input) => Assert.Throws<ArgumentException>(() => input.FromMetric());
 
     [Fact]
-    public void FromMetricOnNull() => Assert.Throws<ArgumentNullException>(() =>
+    public void FromMetricOnNull() => Assert.Throws<ArgumentException>(() =>
         MetricNumeralExtensions.FromMetric(null));
 
     [Theory]
