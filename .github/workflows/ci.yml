@@ -17,9 +17,185 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 jobs:
-  # Job 1: Build, Test, Coverage
-  build-and-test:
+  # Job 0: Calculate versions with NBGV (shared by all jobs)
+  version:
     runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.nbgv.outputs.SimpleVersion }}
+      nuget-version: ${{ steps.nbgv.outputs.NuGetPackageVersion }}
+      assembly-version: ${{ steps.nbgv.outputs.AssemblyVersion }}
+      file-version: ${{ steps.nbgv.outputs.AssemblyFileVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for NBGV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Install NBGV tool
+        run: |
+          if ! command -v nbgv &> /dev/null; then
+            echo "NBGV not found, installing..."
+            dotnet tool install -g nbgv
+          else
+            echo "NBGV already available: $(nbgv --version)"
+          fi
+
+      - name: Calculate versions with NBGV
+        id: nbgv
+        run: |
+          echo "SimpleVersion=$(nbgv get-version -v SimpleVersion)" >> $GITHUB_OUTPUT
+          echo "NuGetPackageVersion=$(nbgv get-version -v NuGetPackageVersion)" >> $GITHUB_OUTPUT
+          echo "AssemblyVersion=$(nbgv get-version -v AssemblyVersion)" >> $GITHUB_OUTPUT
+          echo "AssemblyFileVersion=$(nbgv get-version -v AssemblyFileVersion)" >> $GITHUB_OUTPUT
+          
+          echo "📋 Calculated versions:"
+          echo "  Simple: $(nbgv get-version -v SimpleVersion)"
+          echo "  NuGet: $(nbgv get-version -v NuGetPackageVersion)"
+          echo "  Assembly: $(nbgv get-version -v AssemblyVersion)"
+          echo "  File: $(nbgv get-version -v AssemblyFileVersion)"
+
+  # Job 1: Build non-WPF projects on Linux
+  build-core-projects:
+    runs-on: ubuntu-latest
+    needs: version
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for NBGV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Restore non-WPF dependencies
+        run: |
+          # Restore core projects (exclude WPF and demos)
+          find src -name "*.csproj" -not -path "*/Wpf/*" -not -path "*/Demo*" | while read project; do
+            echo "Restoring: $project"
+            dotnet restore "$project"
+          done
+
+      - name: Build non-WPF projects
+        run: |
+          # Build core projects
+          find src -name "*.csproj" -not -path "*/Wpf/*" -not -path "*/Demo*" | while read project; do
+            echo "Building: $project"
+            dotnet build "$project" --configuration Release --no-restore
+          done
+
+      - name: Run tests with coverage
+        run: |
+          # Run tests only on non-WPF test projects
+          find tests -name "*.csproj" | while read test_project; do
+            echo "Testing: $test_project"
+            dotnet test "$test_project" --configuration Release --no-build \
+              --collect:"XPlat Code Coverage" \
+              --results-directory ./coverage \
+              --logger "GitHubActions;report-warnings=false" \
+              /p:CollectCoverage=true \
+              /p:CoverletOutputFormat=cobertura \
+              /p:CoverletOutput=./coverage/
+          done
+
+      - name: Generate coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: 'coverage/**/coverage.cobertura.xml'
+          targetdir: 'coveragereport'
+          reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./coverage
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: coverage/**/*.trx
+
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-linux
+          path: coveragereport/
+
+      - name: Upload build artifacts (core)
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-core
+          path: |
+            src/**/bin/Release/**/*.dll
+            src/**/bin/Release/**/*.pdb
+            src/**/bin/Release/**/*.xml
+
+  # Job 2: Build WPF projects on Windows
+  build-wpf-projects:
+    runs-on: windows-latest
+    needs: version
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for NBGV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Restore WPF dependencies
+        run: |
+          # Restore WPF projects
+          find src/Wpf -name "*.csproj" | while read project; do
+            echo "Restoring: $project"
+            dotnet restore "$project"
+          done
+
+      - name: Build WPF projects
+        run: |
+          # Build WPF projects
+          find src/Wpf -name "*.csproj" | while read project; do
+            echo "Building: $project"
+            dotnet build "$project" --configuration Release --no-restore
+          done
+
+      - name: Upload build artifacts (WPF)
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-wpf
+          path: |
+            src/Wpf/**/bin/Release/**/*.dll
+            src/Wpf/**/bin/Release/**/*.pdb
+            src/Wpf/**/bin/Release/**/*.xml
+
+  # Job 3: Build Avalonia projects on Linux
+  build-avalonia-projects:
+    runs-on: ubuntu-latest
+    needs: version
     
     steps:
       - name: Checkout
@@ -41,78 +217,41 @@ jobs:
           dotnet workload install android
           dotnet workload restore
 
-      - name: Verify NBGV tool
+      - name: Restore Avalonia dependencies
         run: |
-          if ! command -v nbgv &> /dev/null; then
-            echo "NBGV not found, installing..."
-            dotnet tool install -g nbgv
-          else
-            echo "NBGV already available: $(nbgv --version)"
-          fi
+          # Restore Avalonia projects
+          find src/Avalonia -name "*.csproj" | while read project; do
+            echo "Restoring: $project"
+            dotnet restore "$project"
+          done
 
-      - name: Restore dependencies
-        run: dotnet restore --property:EnableWindowsTargeting=true
-
-      - name: Build all projects
-        run: dotnet build --configuration Release --no-restore --property:EnableWindowsTargeting=true
-
-      - name: Run tests with coverage
+      - name: Build Avalonia projects
         run: |
-          dotnet test --configuration Release --no-build \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./coverage \
-            --logger "GitHubActions;report-warnings=false" \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=./coverage/
+          # Build Avalonia libraries
+          find src/Avalonia -name "*.csproj" | while read project; do
+            echo "Building: $project"
+            dotnet build "$project" --configuration Release --no-restore
+          done
 
-      - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@v5
-        with:
-          reports: '**/coverage.cobertura.xml'
-          targetdir: 'coverage-report'
-          reporttypes: 'Html;Cobertura;MarkdownSummary;Badges'
-          classfilters: '-AutoGeneratedProgram'
-
-      - name: Add coverage comment to PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          recreate: true
-          path: coverage-report/Summary.md
-
-      - name: Upload coverage report artifact
+      - name: Upload build artifacts (Avalonia)
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: ./coverage-report
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: '**/coverage.cobertura.xml'
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
+          name: build-artifacts-avalonia
           path: |
-            **/bin/Release/
-            **/obj/Release/
-          retention-days: 1
+            src/Avalonia/**/bin/Release/**/*.dll
+            src/Avalonia/**/bin/Release/**/*.pdb
+            src/Avalonia/**/bin/Release/**/*.xml
 
-  # Job 2: Package NuGet packages
-  package:
-    needs: build-and-test
+  # Job 4: Package all projects
+  package-projects:
     runs-on: ubuntu-latest
+    needs: [version, build-core-projects, build-wpf-projects, build-avalonia-projects]
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Required for NBGV
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -125,133 +264,94 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output
-          path: ./
+          path: artifacts
 
-      - name: Pack all NuGet packages
+      - name: Display calculated version
         run: |
-          # Create output directory
-          mkdir -p ./packages
+          echo "📋 Using calculated versions for packaging:"
+          echo "  Simple: ${{ needs.version.outputs.version }}"
+          echo "  NuGet: ${{ needs.version.outputs.nuget-version }}"
+
+      - name: Package all projects
+        run: |
+          mkdir -p packages
           
-          # Find all packable projects (exclude demos, tests, and check IsPackable)
-          find src -name "*.csproj" -not -path "*/Demo*" -not -path "*/Test*" | while read project; do
-            echo "Checking project: $project"
+          echo "📦 Discovering and packaging all library projects..."
+          
+          # Find all projects in src/ except demos and test projects
+          find src -name "*.csproj" -not -path "*/demos*" -not -path "*/tests*" | while read project; do
+            # Extract project name for logging
+            project_name=$(basename "$project" .csproj)
+            echo "  📦 Packaging: $project_name"
             
-            # Check if project is explicitly marked as not packable
-            if grep -q "<IsPackable>false</IsPackable>" "$project"; then
-              echo "Skipping $project (IsPackable=false)"
-              continue
-            fi
-            
-            # Check if it's an executable project (typically not packable)
-            if grep -q "<OutputType>Exe</OutputType>" "$project" || grep -q "<UseWPF>true</UseWPF>" "$project" || grep -q "<UseWindowsForms>true</UseWindowsForms>" "$project"; then
-              echo "Skipping $project (executable/UI project)"
-              continue
-            fi
-            
-            echo "Packing: $project"
+            # Package with symbols and documentation
             dotnet pack "$project" \
               --configuration Release \
-              --no-build \
               --output ./packages \
+              --include-symbols \
+              --include-source \
               --verbosity minimal
           done
           
-          # List generated packages
-          echo "Generated NuGet packages:"
-          ls -la ./packages/ || echo "No packages generated"
+          echo ""
+          echo "✅ Packaging completed!"
 
-      - name: Upload NuGet packages artifact
-        if: hashFiles('./packages/*.nupkg') != ''
+      - name: Display package summary
+        run: |
+          echo "📋 Packages created:"
+          ls -la packages/
+          echo ""
+          echo "📊 Package count: $(ls packages/*.nupkg 2>/dev/null | wc -l)"
+
+      - name: Upload all NuGet packages
         uses: actions/upload-artifact@v4
         with:
-          name: nuget-packages
-          path: ./packages/*.nupkg
+          name: all-nuget-packages
+          path: packages/*.nupkg
 
-      - name: Report packaging results
-        run: |
-          if [ -d "./packages" ] && [ "$(ls -A ./packages)" ]; then
-            echo "✅ Successfully packaged $(ls ./packages/*.nupkg | wc -l) NuGet packages"
-            ls -la ./packages/
-          else
-            echo "ℹ️ No NuGet packages were generated (no packable projects found)"
-          fi
-
-  # Job 3: Build and publish demos
-  build-demos:
-    needs: build-and-test
+  # Job 5: Collect and publish results
+  publish-results:
     runs-on: ubuntu-latest
+    needs: [version, build-core-projects, build-wpf-projects, build-avalonia-projects, package-projects]
+    if: always()
     
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            10.0.x
-            9.0.x
-            8.0.x
-
-      - name: Install workloads
-        run: |
-          dotnet workload install wasm-tools
-          dotnet workload install android
-          dotnet workload restore
-
-      - name: Build all demos
-        run: |
-          # Find and publish all executable demo projects (exclude base libraries)
-          find demos -name "*.csproj" | while read demo; do
-            echo "Checking demo project: $demo"
-            
-            # Skip if it's a library project (no OutputType=Exe, UseWPF, UseAvalonia executable markers)
-            if ! grep -q "<OutputType>Exe</OutputType>\|<OutputType>WinExe</OutputType>" "$demo"; then
-              echo "Skipping $demo (not an executable project)"
-              continue
-            fi
-            
-            echo "Publishing demo: $demo"
-            dotnet publish "$demo" \
-              --configuration Release \
-              --output "./demos-output/$demo_name"
-          done
-          
-          # List published demos
-          echo "Published demos:"
-          ls -la ./demos-output/ || echo "No demos published"
-
-      - name: Upload demos artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: demos
-          path: ./demos-output/
-
-  # Job 4: Deploy coverage to GitHub Pages (only on main)
-  deploy-coverage:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-      
-    steps:
-      - name: Download coverage report
+      - name: Download package artifacts
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: ./coverage-report
+          name: all-nuget-packages
+          path: final-packages
 
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
         with:
-          path: ./coverage-report
+          name: coverage-report-linux
+          path: coverage-report
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Display package summary
+        run: |
+          echo "📦 Final packages:"
+          ls -la final-packages/
+          echo ""
+          echo "� Total package count: $(ls final-packages/*.nupkg 2>/dev/null | wc -l)"
+
+      - name: Upload final packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-nuget-packages
+          path: final-packages/*.nupkg
+
+      - name: Display build summary
+        run: |
+          echo "## 🚀 Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Version Calculation | ${{ needs.version.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Core Projects | ${{ needs.build-core-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| WPF Projects | ${{ needs.build-wpf-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Avalonia Projects | ${{ needs.build-avalonia-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Package Creation | ${{ needs.package-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**NuGet Version:** ${{ needs.version.outputs.nuget-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Package Count:** $(ls final-packages/*.nupkg 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
