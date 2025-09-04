@@ -10,6 +10,9 @@ permissions:
   contents: read       # Required to checkout code
   pages: write         # Required to publish to GitHub Pages
   id-token: write      # Required for OIDC authentication
+  checks: write        # Required to publish test results
+  pull-requests: write # Required to comment on PRs
+  actions: read        # Required to read workflow runs
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -82,9 +85,12 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+        if: always() && github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         with:
           files: coverage/**/*.trx
+          check_name: 'Test Results'
+          comment_mode: update last
+          fail_on: 'test failures'
 
       - name: Upload Coverage Reports
         uses: actions/upload-artifact@v4
