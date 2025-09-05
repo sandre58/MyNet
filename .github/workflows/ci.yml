@@ -73,7 +73,7 @@ jobs:
           mkdir -p ./TestResults
           
           # Run tests using the configuration from Directory.Build.targets
-          dotnet test --no-build --configuration Release \
+          dotnet test --configuration Release \
             --logger "trx" \
             --logger "GitHubActions;report-warnings=false"
           
