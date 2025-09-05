@@ -201,13 +201,13 @@ jobs:
           # Restore and build Desktop demo
           if [ -f "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" ]; then
             echo "🖥️  Building: MyNet.Avalonia.Demo.Desktop"
-            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release
+            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release -f net10.0-windows
           fi
           
           # Restore and build Browser demo
           if [ -f "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" ]; then
             echo "🌐 Building: MyNet.Avalonia.Demo.Browser"
-            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release
+            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release -f net10.0-windows
           fi
           
           echo "✅ Avalonia demos build completed!"
