@@ -201,13 +201,13 @@ jobs:
           # Restore and build Desktop demo
           if [ -f "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" ]; then
             echo "🖥️  Building: MyNet.Avalonia.Demo.Desktop"
-            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release -f net10.0-windows
+            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release
           fi
           
           # Restore and build Browser demo
           if [ -f "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" ]; then
             echo "🌐 Building: MyNet.Avalonia.Demo.Browser"
-            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release -f net10.0-windows
+            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release
           fi
           
           echo "✅ Avalonia demos build completed!"
@@ -342,3 +342,32 @@ jobs:
           echo "- NuGet Packages: $(find artifacts -name "*.nupkg" | wc -l)" >> $GITHUB_STEP_SUMMARY
           echo "- Demo Executables: $(find artifacts -name "*.exe" | wc -l)" >> $GITHUB_STEP_SUMMARY
           echo "- Coverage Reports: Available" >> $GITHUB_STEP_SUMMARY
+
+  # Job 6: Publish coverage report to GitHub Pages (main branch only)
+  publish-coverage-to-pages:
+    runs-on: ubuntu-latest
+    needs: [build-core-projects]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report-linux
+          path: coverage-report
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload coverage report to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: coverage-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

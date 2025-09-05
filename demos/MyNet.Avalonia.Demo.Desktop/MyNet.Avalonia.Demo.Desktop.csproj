@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Product>My .NET Avalonia</Product>
         <OutputType>WinExe</OutputType>
-        <TargetFrameworks>net10.0</TargetFrameworks>
+        <TargetFrameworks>net10.0-windows</TargetFrameworks>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
