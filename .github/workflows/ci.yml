@@ -88,14 +88,14 @@ jobs:
       - name: Generate coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
-          reports: 'TestResults/Coverage/**/*.cobertura.xml'
+          reports: 'TestResults/**/*.cobertura.xml'
           targetdir: 'coveragereport'
           reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: TestResults/Coverage/**/*.cobertura.xml
+          files: TestResults/**/*.cobertura.xml
           fail_ci_if_error: false
           verbose: true
 
