@@ -1,65 +1,23 @@
 <Project>
-    <!-- This ensures the .runsettings file is automatically applied to all test projects -->
-    <PropertyGroup>
+<Project>
+    <!-- Configuration for test projects - use .runsettings for coverage -->
+    <PropertyGroup Condition="'$(IsTestProject)' == 'True'">
         <!-- Path to the .runsettings file -->
         <RunSettingsFile>$(MSBuildThisFileDirectory).runsettings</RunSettingsFile>
 
-        <!-- Enables coverage collection -->
-        <CollectCoverage>true</CollectCoverage>
-
-        <!-- Formats for ReportGenerator output -->
-        <CoverageReportFormats>Html;Cobertura;MarkdownSummary</CoverageReportFormats>
-
-        <!-- Output folder for coverage reports -->
-        <CoverageOutputDir>$(MSBuildThisFileDirectory)TestResults\CoverageReport</CoverageOutputDir>
-
+        <!-- Force VSTest to use our runsettings -->
+        <VSTestSetting>$(RunSettingsFile)</VSTestSetting>
         <VSTestCLIRunSettings>$(RunSettingsFile)</VSTestCLIRunSettings>
+        
+        <!-- Test results directory -->
+        <VSTestResultsDirectory>$(MSBuildThisFileDirectory)TestResults</VSTestResultsDirectory>
     </PropertyGroup>
 
-    <!-- Also inject it into Test projects so VS and dotnet test pick it up -->
-    <ItemGroup Condition="'$(IsTestProject)' == 'True'">
+    <!-- Include runsettings file in test projects -->
+    <ItemGroup Condition="'$(IsTestProject)' == 'True' And Exists('$(RunSettingsFile)')">
         <None Include="$(RunSettingsFile)" Link=".runsettings" Visible="false" />
     </ItemGroup>
 
-    <!-- Force VSTest to use our runsettings -->
-    <Target Name="SetRunSettings" BeforeTargets="VSTest">
-        <ItemGroup>
-            <RunSettingsFile Include="$(RunSettingsFile)" />
-        </ItemGroup>
-    </Target>
-
-    <!-- Automatically collect coverage when running tests -->
-    <Target Name="EnableCoverage" BeforeTargets="Test">
-        <ItemGroup Condition="'$(IsTestProject)' == 'True'">
-            <PackageReference Include="coverlet.collector" Version="3.2.0" />
-        </ItemGroup>
-    </Target>
-
-    <!-- Generate HTML coverage report after tests -->
-    <Target Name="GenerateCoverageReport" AfterTargets="VSTest">
-
-        <!-- Only run if coverage file exists -->
-        <ItemGroup>
-            <CoverageFiles Include="$(MSBuildThisFileDirectory)TestResults\**\*.cobertura.xml" />
-        </ItemGroup>
-
-        <!-- Debug : affiche les fichiers trouvés -->
-        <Message Text="Coverage files found: @(CoverageFiles)" Importance="High" />
-
-        <Exec Condition="@(CoverageFiles->Count()) > 0"
-              Command="dotnet tool run reportgenerator 
-                   -reports:@(CoverageFiles) 
-                   -targetdir:$(CoverageOutputDir)
-                   -reporttypes:$(CoverageReportFormats)" />
-    </Target>
-
-    <Target Name="RemoveWpfTemp" AfterTargets="Build">
-        <ItemGroup>
-            <WpfTempDirectories Include="$([System.IO.Directory]::GetDirectories(&quot;$(BaseOutputPath)..&quot;,&quot;$(MSBuildProjectName)_*_wpftmp&quot;))"/>
-        </ItemGroup>
-        <RemoveDir Directories="@(WpfTempDirectories)" />
-    </Target>
-    
     <!-- Target to display the main properties of each project -->
     <Target Name="ShowProjectProperties" AfterTargets="Build">
         <Message Text="========== $(MSBuildProjectName) ==========" Importance="High" />
@@ -67,5 +25,6 @@
         <Message Text="IsDemoProject=$(IsDemoProject)" Importance="High" />
         <Message Text="IsPackable=$(IsPackable)" Importance="High" />
         <Message Text="EnableAnalyzers=$(EnableAnalyzers)" Importance="High" />
+        <Message Text="RunSettingsFile=$(RunSettingsFile)" Importance="High" Condition="'$(IsTestProject)' == 'True'" />
     </Target>
 </Project>

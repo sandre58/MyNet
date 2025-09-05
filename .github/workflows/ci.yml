@@ -72,8 +72,10 @@ jobs:
           # Create results directory
           mkdir -p ./TestResults
           
-          # Run tests using the configuration from Directory.Build.targets
+          # Run tests with coverage collection using Directory.Build.targets configuration
           dotnet test --no-build --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --settings .runsettings \
             --logger "trx" \
             --logger "GitHubActions;report-warnings=false" \
             --results-directory ./TestResults
