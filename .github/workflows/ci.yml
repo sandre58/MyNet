@@ -88,14 +88,14 @@ jobs:
       - name: Generate coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
-          reports: 'TestResults/**/*.cobertura.xml'
+          reports: 'TestResults/Coverage/coverage.cobertura.xml'
           targetdir: 'coveragereport'
           reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./TestResults
+          files: TestResults/Coverage/**/*.cobertura.xml
           fail_ci_if_error: false
           verbose: true
 
@@ -108,20 +108,11 @@ jobs:
           comment_mode: changes
           fail_on: 'test failures'
 
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: TestResults
-          path: TestResults/**/*.trx
-
       - name: Upload Coverage Reports
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-linux
-          path: |
-            coveragereport/
-            TestResults/CoverageReport/
+          path: coveragereport
 
       - name: Upload auto-generated packages (core)
         uses: actions/upload-artifact@v4
