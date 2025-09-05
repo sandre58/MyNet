@@ -4,10 +4,16 @@
         <Product>My .NET Avalonia</Product>
         <OutputType>Exe</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <WasmMainJSPath>wwwroot\main.js</WasmMainJSPath>
+        <EmccLinkOptimization>false</EmccLinkOptimization>
+        <WasmBuildNative>true</WasmBuildNative>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
