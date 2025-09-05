@@ -76,8 +76,8 @@ jobs:
           dotnet test --no-build --configuration Release \
             --collect:"XPlat Code Coverage" \
             --settings .runsettings \
+            --logger GitHubActions \
             --logger "trx" \
-            --logger "GitHubActions;report-warnings=false" \
             --results-directory ./TestResults
           
           echo "📋 Test results generated:"
@@ -222,7 +222,8 @@ jobs:
             dotnet publish "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" \
               --configuration Release \
               --output publish/avalonia/desktop \
-              --no-build
+              --no-build \
+              -f net10.0-windows
           fi
           
           # Publish Browser demo
@@ -231,7 +232,8 @@ jobs:
             dotnet publish "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" \
               --configuration Release \
               --output publish/avalonia/browser \
-              --no-build
+              --no-build \
+              -f net10.0-browser
           fi
 
       - name: Upload Avalonia demo artifacts

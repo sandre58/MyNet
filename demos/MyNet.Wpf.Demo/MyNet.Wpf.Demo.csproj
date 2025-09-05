@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFrameworks>net10.0-windows</TargetFrameworks>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <OutputType>WinExe</OutputType>
         <Product>My .NET WPF</Product>
         <Description>Platform for testing and experimenting with WPF controls and styles. </Description>

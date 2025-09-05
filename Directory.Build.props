@@ -19,7 +19,7 @@
 
     <!-- Configuration -->
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFrameworks Condition="'$(IsDemoProject)' != 'True'">net8.0;net9.0;net10.0</TargetFrameworks>
         <LangVersion>preview</LangVersion>
         <NeutralLanguage>fr</NeutralLanguage>
         <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
