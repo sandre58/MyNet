@@ -1,5 +1,4 @@
 <Project>
-<Project>
     <!-- Configuration for test projects - use .runsettings for coverage -->
     <PropertyGroup Condition="'$(IsTestProject)' == 'True'">
         <!-- Path to the .runsettings file -->
