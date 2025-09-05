@@ -57,29 +57,33 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          # Run tests only on non-WPF test projects
+          # Create results directory
+          mkdir -p ./test-results
+          
+          # Run tests using the configuration from Directory.Build.targets
           find tests -name "*.csproj" | while read test_project; do
             echo "Testing: $test_project"
             dotnet test "$test_project" --configuration Release \
-              --collect:"XPlat Code Coverage" \
-              --results-directory ./coverage \
-              --logger "GitHubActions;report-warnings=false" \
-              /p:CollectCoverage=true \
-              /p:CoverletOutputFormat=cobertura \
-              /p:CoverletOutput=./coverage/
+              --logger "trx" \
+              --logger "GitHubActions;report-warnings=false"
           done
+          
+          echo "📋 Test results generated:"
+          find ./TestResults -name "*.trx" | head -10
+          echo "📋 Coverage files from Directory.Build.targets:"
+          find ./TestResults -name "*.cobertura.xml" 2>/dev/null | head -10 || echo "No coverage files found yet"
 
       - name: Generate coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
-          reports: 'coverage/**/coverage.cobertura.xml'
+          reports: 'TestResults/**/*.cobertura.xml'
           targetdir: 'coveragereport'
           reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./coverage
+          directory: ./TestResults
           fail_ci_if_error: false
           verbose: true
 
@@ -87,25 +91,25 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         with:
-          files: coverage/**/*.trx
+          files: TestResults/**/*.trx
           check_name: 'Test Results'
           comment_mode: changes
           fail_on: 'test failures'
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: TestResults
+          path: TestResults/**/*.trx
 
       - name: Upload Coverage Reports
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-linux
-          path: coveragereport/
-
-      - name: Upload build artifacts (core)
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-core
           path: |
-            src/**/bin/Release/**/*.dll
-            src/**/bin/Release/**/*.pdb
-            src/**/bin/Release/**/*.xml
+            coveragereport/
+            TestResults/CoverageReport/
 
       - name: Upload auto-generated packages (core)
         uses: actions/upload-artifact@v4
@@ -149,15 +153,6 @@ jobs:
             dotnet build "$($_.FullName)" --configuration Release --no-restore
           }
 
-      - name: Upload build artifacts (WPF)
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-wpf
-          path: |
-            src/Wpf/**/bin/Release/**/*.dll
-            src/Wpf/**/bin/Release/**/*.pdb
-            src/Wpf/**/bin/Release/**/*.xml
-
       - name: Upload auto-generated packages (WPF)
         uses: actions/upload-artifact@v4
         if: always()
@@ -166,36 +161,167 @@ jobs:
           path: |
             packages/*.nupkg
 
-  # Job 3: Collect and publish results
+  # Job 3: Build Avalonia demos on Linux  
+  build-avalonia-demos:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for NBGV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Install workloads
+        run: |
+          dotnet workload install wasm-tools
+          dotnet workload install android
+          dotnet workload restore
+
+      - name: Restore and build Avalonia demos
+        run: |
+          echo "🎯 Building Avalonia demos..."
+          
+          # Restore and build main Avalonia demo
+          if [ -f "demos/MyNet.Avalonia.Demo/MyNet.Avalonia.Demo.csproj" ]; then
+            echo "📱 Building: MyNet.Avalonia.Demo"
+            dotnet build "demos/MyNet.Avalonia.Demo/MyNet.Avalonia.Demo.csproj" --configuration Release
+          fi
+          
+          # Restore and build Desktop demo
+          if [ -f "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" ]; then
+            echo "🖥️  Building: MyNet.Avalonia.Demo.Desktop"
+            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release
+          fi
+          
+          # Restore and build Browser demo
+          if [ -f "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" ]; then
+            echo "🌐 Building: MyNet.Avalonia.Demo.Browser"
+            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release
+          fi
+          
+          echo "✅ Avalonia demos build completed!"
+
+      - name: Publish Avalonia demos
+        run: |
+          mkdir -p publish/avalonia
+          
+          # Publish Desktop demo
+          if [ -f "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" ]; then
+            echo "📦 Publishing Desktop demo..."
+            dotnet publish "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" \
+              --configuration Release \
+              --output publish/avalonia/desktop \
+              --no-build
+          fi
+          
+          # Publish Browser demo
+          if [ -f "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" ]; then
+            echo "📦 Publishing Browser demo..."
+            dotnet publish "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" \
+              --configuration Release \
+              --output publish/avalonia/browser \
+              --no-build
+          fi
+
+      - name: Upload Avalonia demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: avalonia-demos
+          path: |
+            publish/avalonia/**
+
+  # Job 4: Build WPF demos on Windows
+  build-wpf-demos:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for NBGV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: .
+
+      - name: Restore and build WPF demos
+        run: |
+          Write-Host "🎯 Building WPF demos..."
+          
+          # Find and build WPF demo projects
+          Get-ChildItem -Path "demos" -Filter "*Wpf*.csproj" -Recurse | ForEach-Object {
+            Write-Host "🖥️  Building: $($_.Name)"
+            dotnet build "$($_.FullName)" --configuration Release
+          }
+          
+          Write-Host "✅ WPF demos build completed!"
+
+      - name: Publish WPF demos
+        run: |
+          New-Item -ItemType Directory -Path "published-demos/wpf" -Force
+          
+          # Publish WPF demo projects
+          Get-ChildItem -Path "demos" -Filter "*Wpf*.csproj" -Recurse | ForEach-Object {
+            $projectName = $_.BaseName
+            Write-Host "📦 Publishing: $projectName"
+            
+            dotnet publish "$($_.FullName)" `
+              --configuration Release `
+              --output "published-demos/wpf/$projectName" `
+              --no-build
+          }
+
+      - name: Upload WPF demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpf-demos
+          path: |
+            publish/wpf/**
+
+  # Job 5: Collect and publish results
   publish-results:
     runs-on: ubuntu-latest
-    needs: [build-core-projects, build-wpf-projects]
+    needs: [build-core-projects, build-wpf-projects, build-avalonia-demos, build-wpf-demos]
     if: always()
     
     steps:
-      - name: Download package artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: packages
+          path: artifacts
 
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report-linux
-          path: coverage-report
-
-      - name: Display package summary
+      - name: Display artifacts summary
         run: |
-          echo "📦 Final packages:"
-          ls -la packages/
+          echo "📦 All artifacts downloaded:"
+          find artifacts -type f -name "*.nupkg" -o -name "*.exe" -o -name "*.dll" | head -20
           echo ""
-          echo "📦 Total package count: $(ls packages/*.nupkg 2>/dev/null | wc -l)"
+          echo "📊 Artifacts summary:"
+          echo "  NuGet packages: $(find artifacts -name "*.nupkg" | wc -l)"
+          echo "  Demo executables: $(find artifacts -name "*.exe" | wc -l)"
+          echo "  Coverage reports: $(find artifacts -name "coverage-report-linux" -type d | wc -l)"
 
-      - name: Upload final packages
+      - name: Upload consolidated artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: packages
-          path: packages/*.nupkg
+          name: final-release-bundle
+          path: artifacts/**
 
       - name: Display build summary
         run: |
@@ -204,5 +330,10 @@ jobs:
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Core Projects | ${{ needs.build-core-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| WPF Projects | ${{ needs.build-wpf-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Avalonia Demos | ${{ needs.build-avalonia-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| WPF Demos | ${{ needs.build-wpf-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Package Count:** $(ls final-packages/*.nupkg 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "**📦 Artifacts Generated:**" >> $GITHUB_STEP_SUMMARY
+          echo "- NuGet Packages: $(find artifacts -name "*.nupkg" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Demo Executables: $(find artifacts -name "*.exe" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Coverage Reports: Available" >> $GITHUB_STEP_SUMMARY
