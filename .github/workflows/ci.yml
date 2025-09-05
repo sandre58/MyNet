@@ -118,9 +118,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: packages-core
-          path: |
-            packages/*.nupkg
+          path: packages/*.nupkg
 
   # Job 2: Build WPF projects on Windows
   build-wpf-projects:
@@ -160,9 +158,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: packages-wpf
-          path: |
-            packages/*.nupkg
+          path: packages/*.nupkg
 
   # Job 3: Build Avalonia demos on Linux  
   build-avalonia-demos:
@@ -188,30 +184,6 @@ jobs:
           dotnet workload install android
           dotnet workload restore
 
-      - name: Restore and build Avalonia demos
-        run: |
-          echo "🎯 Building Avalonia demos..."
-          
-          # Restore and build main Avalonia demo
-          if [ -f "demos/MyNet.Avalonia.Demo/MyNet.Avalonia.Demo.csproj" ]; then
-            echo "📱 Building: MyNet.Avalonia.Demo"
-            dotnet build "demos/MyNet.Avalonia.Demo/MyNet.Avalonia.Demo.csproj" --configuration Release
-          fi
-          
-          # Restore and build Desktop demo
-          if [ -f "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" ]; then
-            echo "🖥️  Building: MyNet.Avalonia.Demo.Desktop"
-            dotnet build "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" --configuration Release
-          fi
-          
-          # Restore and build Browser demo
-          if [ -f "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" ]; then
-            echo "🌐 Building: MyNet.Avalonia.Demo.Browser"
-            dotnet build "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" --configuration Release
-          fi
-          
-          echo "✅ Avalonia demos build completed!"
-
       - name: Publish Avalonia demos
         run: |
           mkdir -p publish/avalonia
@@ -222,7 +194,6 @@ jobs:
             dotnet publish "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" \
               --configuration Release \
               --output publish/MyNet.Avalonia.Demo.Desktop \
-              --no-build \
               -f net10.0-windows
           fi
           
@@ -232,16 +203,13 @@ jobs:
             dotnet publish "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" \
               --configuration Release \
               --output publish/MyNet.Avalonia.Demo.Browser \
-              --no-build \
               -f net10.0-browser
           fi
 
       - name: Upload Avalonia demo artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: avalonia-demos
-          path: |
-            publish/**
+          path: publish/**
 
   # Job 4: Build WPF demos on Windows
   build-wpf-demos:
@@ -261,18 +229,6 @@ jobs:
             9.0.x
             8.0.x
 
-      - name: Restore and build WPF demos
-        run: |
-          Write-Host "🎯 Building WPF demos..."
-          
-          # Find and build WPF demo projects
-          Get-ChildItem -Path "demos" -Filter "*Wpf*.csproj" -Recurse | ForEach-Object {
-            Write-Host "🖥️  Building: $($_.Name)"
-            dotnet build "$($_.FullName)" --configuration Release
-          }
-          
-          Write-Host "✅ WPF demos build completed!"
-
       - name: Publish WPF demos
         run: |
           New-Item -ItemType Directory -Path "published-demos/wpf" -Force
@@ -284,16 +240,13 @@ jobs:
             
             dotnet publish "$($_.FullName)" `
               --configuration Release `
-              --output "publish/$projectName" `
-              --no-build
+              --output "publish/$projectName"
           }
 
       - name: Upload WPF demo artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wpf-demos
-          path: |
-            publish/**
+          path: publish/**
 
   # Job 5: Collect and publish results
   publish-results:
