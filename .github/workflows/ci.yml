@@ -221,7 +221,7 @@ jobs:
             echo "📦 Publishing Desktop demo..."
             dotnet publish "demos/MyNet.Avalonia.Demo.Desktop/MyNet.Avalonia.Demo.Desktop.csproj" \
               --configuration Release \
-              --output publish/avalonia/desktop \
+              --output publish/MyNet.Avalonia.Demo.Desktop \
               --no-build \
               -f net10.0-windows
           fi
@@ -231,7 +231,7 @@ jobs:
             echo "📦 Publishing Browser demo..."
             dotnet publish "demos/MyNet.Avalonia.Demo.Browser/MyNet.Avalonia.Demo.Browser.csproj" \
               --configuration Release \
-              --output publish/avalonia/browser \
+              --output publish/MyNet.Avalonia.Demo.Browser \
               --no-build \
               -f net10.0-browser
           fi
@@ -241,7 +241,7 @@ jobs:
         with:
           name: avalonia-demos
           path: |
-            publish/avalonia/**
+            publish/**
 
   # Job 4: Build WPF demos on Windows
   build-wpf-demos:
@@ -260,11 +260,6 @@ jobs:
             10.0.x
             9.0.x
             8.0.x
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: .
 
       - name: Restore and build WPF demos
         run: |
@@ -289,7 +284,7 @@ jobs:
             
             dotnet publish "$($_.FullName)" `
               --configuration Release `
-              --output "published-demos/wpf/$projectName" `
+              --output "publish/$projectName" `
               --no-build
           }
 
@@ -298,7 +293,7 @@ jobs:
         with:
           name: wpf-demos
           path: |
-            publish/wpf/**
+            publish/**
 
   # Job 5: Collect and publish results
   publish-results:

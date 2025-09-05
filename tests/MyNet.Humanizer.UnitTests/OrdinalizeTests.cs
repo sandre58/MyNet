@@ -9,6 +9,7 @@ using Xunit;
 
 namespace MyNet.Humanizer.UnitTests;
 
+[Collection("UseCultureSequential")]
 public class OrdinalizeTests
 {
     [Theory]
