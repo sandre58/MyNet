@@ -73,9 +73,10 @@ jobs:
           mkdir -p ./TestResults
           
           # Run tests using the configuration from Directory.Build.targets
-          dotnet test --configuration Release \
+          dotnet test --no-build --configuration Release \
             --logger "trx" \
-            --logger "GitHubActions;report-warnings=false"
+            --logger "GitHubActions;report-warnings=false" \
+            --results-directory ./TestResults
           
           echo "📋 Test results generated:"
           find ./TestResults -name "*.trx" | head -10
