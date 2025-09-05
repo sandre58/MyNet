@@ -58,15 +58,12 @@ jobs:
       - name: Run tests with coverage
         run: |
           # Create results directory
-          mkdir -p ./test-results
+          mkdir -p ./TestResults
           
           # Run tests using the configuration from Directory.Build.targets
-          find tests -name "*.csproj" | while read test_project; do
-            echo "Testing: $test_project"
-            dotnet test "$test_project" --configuration Release \
-              --logger "trx" \
-              --logger "GitHubActions;report-warnings=false"
-          done
+          dotnet test --configuration Release \
+            --logger "trx" \
+            --logger "GitHubActions;report-warnings=false"
           
           echo "📋 Test results generated:"
           find ./TestResults -name "*.trx" | head -10
