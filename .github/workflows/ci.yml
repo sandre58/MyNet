@@ -46,12 +46,24 @@ jobs:
             echo "Restoring: $project"
             dotnet restore "$project"
           done
+          
+          # Restore test projects
+          find tests -name "*.csproj" | while read project; do
+            echo "Restoring test: $project"
+            dotnet restore "$project"
+          done
 
       - name: Build non-WPF projects
         run: |
           # Build core projects
           find src -name "*.csproj" -not -path "*/Wpf/*" | while read project; do
             echo "Building: $project"
+            dotnet build "$project" --configuration Release --no-restore
+          done
+          
+          # Build test projects
+          find tests -name "*.csproj" | while read project; do
+            echo "Building test: $project"
             dotnet build "$project" --configuration Release --no-restore
           done
 
