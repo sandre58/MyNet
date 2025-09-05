@@ -118,6 +118,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
+          name: packages-core
           path: packages/*.nupkg
 
   # Job 2: Build WPF projects on Windows
@@ -158,6 +159,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
+          name: packages-wpf
           path: packages/*.nupkg
 
   # Job 3: Build Avalonia demos on Linux  
@@ -209,6 +211,7 @@ jobs:
       - name: Upload Avalonia demo artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: demos-avalonia
           path: publish/**
 
   # Job 4: Build WPF demos on Windows
@@ -246,6 +249,7 @@ jobs:
       - name: Upload WPF demo artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: demos-wpf
           path: publish/**
 
   # Job 5: Collect and publish results
@@ -269,12 +273,6 @@ jobs:
           echo "  NuGet packages: $(find artifacts -name "*.nupkg" | wc -l)"
           echo "  Demo executables: $(find artifacts -name "*.exe" | wc -l)"
           echo "  Coverage reports: $(find artifacts -name "coverage-report-linux" -type d | wc -l)"
-
-      - name: Upload consolidated artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: final-release-bundle
-          path: artifacts/**
 
       - name: Display build summary
         run: |
