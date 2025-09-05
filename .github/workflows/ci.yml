@@ -107,6 +107,14 @@ jobs:
             src/**/bin/Release/**/*.pdb
             src/**/bin/Release/**/*.xml
 
+      - name: Upload auto-generated packages (core)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: packages-core
+          path: |
+            packages/*.nupkg
+
   # Job 2: Build WPF projects on Windows
   build-wpf-projects:
     runs-on: windows-latest
@@ -150,79 +158,25 @@ jobs:
             src/Wpf/**/bin/Release/**/*.pdb
             src/Wpf/**/bin/Release/**/*.xml
 
-  # Job 3: Package all projects
-  package:
-    runs-on: ubuntu-latest
-    needs: [build-core-projects, build-wpf-projects]
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Required for NBGV
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            10.0.x
-            9.0.x
-            8.0.x
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Package all projects
-        run: |
-          mkdir -p packages
-          
-          echo "📦 Discovering and packaging all library projects..."
-          
-          # Find all projects in src/ except demos and test projects
-          find src -name "*.csproj" -not -path "*/demos*" -not -path "*/tests*" | while read project; do
-            # Extract project name for logging
-            project_name=$(basename "$project" .csproj)
-            echo "  📦 Packaging: $project_name"
-            
-            # Package with symbols and documentation
-            dotnet pack "$project" \
-              --configuration Release \
-              --output ./packages \
-              --include-symbols \
-              --include-source \
-              --verbosity minimal
-          done
-          
-          echo ""
-          echo "✅ Packaging completed!"
-
-      - name: Display package summary
-        run: |
-          echo "📋 Packages created:"
-          ls -la packages/
-          echo ""
-          echo "📊 Package count: $(ls packages/*.nupkg 2>/dev/null | wc -l)"
-
-      - name: Upload all NuGet packages
+      - name: Upload auto-generated packages (WPF)
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: all-nuget-packages
-          path: packages/*.nupkg
+          name: packages-wpf
+          path: |
+            packages/*.nupkg
 
-  # Job 5: Collect and publish results
+  # Job 3: Collect and publish results
   publish-results:
     runs-on: ubuntu-latest
-    needs: [build-core-projects, build-wpf-projects, package]
+    needs: [build-core-projects, build-wpf-projects]
     if: always()
     
     steps:
       - name: Download package artifacts
         uses: actions/download-artifact@v4
         with:
-          name: all-nuget-packages
-          path: final-packages
+          path: packages
 
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
@@ -233,15 +187,15 @@ jobs:
       - name: Display package summary
         run: |
           echo "📦 Final packages:"
-          ls -la final-packages/
+          ls -la packages/
           echo ""
-          echo "� Total package count: $(ls final-packages/*.nupkg 2>/dev/null | wc -l)"
+          echo "📦 Total package count: $(ls packages/*.nupkg 2>/dev/null | wc -l)"
 
       - name: Upload final packages
         uses: actions/upload-artifact@v4
         with:
-          name: final-nuget-packages
-          path: final-packages/*.nupkg
+          name: packages
+          path: packages/*.nupkg
 
       - name: Display build summary
         run: |
@@ -250,6 +204,5 @@ jobs:
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Core Projects | ${{ needs.build-core-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| WPF Projects | ${{ needs.build-wpf-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Package Creation | ${{ needs.package.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Package Count:** $(ls final-packages/*.nupkg 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
