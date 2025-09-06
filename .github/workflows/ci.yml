@@ -272,7 +272,7 @@ jobs:
           echo "🌐 Publishing Avalonia Browser demo for GitHub Pages..."
           # Copy published files to a clean directory for GitHub Pages
           mkdir -p github-pages
-          cp -r publish/browser/wwwroot/* github-pages/
+          cp -r MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
           
           # Create a simple index.html if not exists
           if [ ! -f "github-pages/index.html" ]; then
