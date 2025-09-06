@@ -6,9 +6,18 @@
 
 namespace MyNet.Utilities.Comparison;
 
+/// <summary>
+/// Represents a binary comparison operator for boolean-like comparisons.
+/// </summary>
 public enum BinaryOperator
 {
+    /// <summary>
+    /// Indicates equality or positive match.
+    /// </summary>
     Is,
 
+    /// <summary>
+    /// Indicates inequality or negative match.
+    /// </summary>
     IsNot
 }

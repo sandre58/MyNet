@@ -252,31 +252,63 @@ jobs:
           name: demos-wpf
           path: publish/**
 
-  # Job 5: Collect and publish results
-  publish-results:
+
+  # Job 5: Résumé des artifacts et build summary
+  publish-artifacts-summary:
     runs-on: ubuntu-latest
     needs: [build-core-projects, build-wpf-projects, build-avalonia-demos, build-wpf-demos]
     if: always()
-    
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
 
+      - name: Display artifacts summary
+        run: |
+          echo "📦 All artifacts downloaded:"
+          find artifacts -type f -name "*.nupkg" -o -name "*.exe" -o -name "*.dll" | head -20
+          echo ""
+          echo "📊 Artifacts summary:"
+          echo "  NuGet packages: $(find artifacts -name "*.nupkg" | wc -l)"
+          echo "  Demo executables: $(find artifacts -name "**/*.exe" | wc -l)"
+          echo "  Coverage reports: $(find artifacts -name "coverage-report-linux" -type d | wc -l)"
+
+      - name: Display build summary
+        run: |
+          echo "## 🚀 Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Core Projects | ${{ needs.build-core-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| WPF Projects | ${{ needs.build-wpf-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Avalonia Demos | ${{ needs.build-avalonia-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| WPF Demos | ${{ needs.build-wpf-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**📦 Artifacts Generated:**" >> $GITHUB_STEP_SUMMARY
+          echo "- NuGet Packages: $(find artifacts -name "*.nupkg" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Demo Executables: $(find artifacts -name "*.exe" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Coverage Reports: Available" >> $GITHUB_STEP_SUMMARY
+
+  # Job 6: Publication du demo Avalonia Browser sur GitHub Pages (main uniquement)
+  publish-avalonia-demo-to-pages:
+    runs-on: ubuntu-latest
+    needs: [build-avalonia-demos]
+    steps:
+      - name: Download Avalonia demo artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: demos-avalonia
+          path: artifacts/demos-avalonia
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Publish Avalonia Browser demo for GitHub Pages
         run: |
-          echo "📁 Dossiers d'artifacts téléchargés :"
-          find artifacts -type d | sort
           echo "🌐 Publishing Avalonia Browser demo for GitHub Pages..."
-          # Copy published files to a clean directory for GitHub Pages
           mkdir -p github-pages
-          cp -r artifacts/demos-avalonia/publish/MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
-          
-          # Create a simple index.html if not exists
+          cp -r demos-avalonia/MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
+
           if [ ! -f "github-pages/index.html" ]; then
             echo "Creating index.html redirect..."
             cat > github-pages/index.html << 'EOF'
@@ -328,67 +360,13 @@ jobs:
             </html>
             EOF
           fi
-            
+
           echo "✅ Browser demo published to GitHub Pages"
 
       - name: Upload Avalonia Web Demo to GitHub Pages
         uses: actions/upload-pages-artifact@v4
         with:
           path: github-pages
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: Display artifacts summary
-        run: |
-          echo "📦 All artifacts downloaded:"
-          find artifacts -type f -name "*.nupkg" -o -name "*.exe" -o -name "*.dll" | head -20
-          echo ""
-          echo "📊 Artifacts summary:"
-          echo "  NuGet packages: $(find artifacts -name "*.nupkg" | wc -l)"
-          echo "  Demo executables: $(find artifacts -name "**/*.exe" | wc -l)"
-          echo "  Coverage reports: $(find artifacts -name "coverage-report-linux" -type d | wc -l)"
-
-      - name: Display build summary
-        run: |
-          echo "## 🚀 Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Core Projects | ${{ needs.build-core-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| WPF Projects | ${{ needs.build-wpf-projects.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Avalonia Demos | ${{ needs.build-avalonia-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| WPF Demos | ${{ needs.build-wpf-demos.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**📦 Artifacts Generated:**" >> $GITHUB_STEP_SUMMARY
-          echo "- NuGet Packages: $(find artifacts -name "*.nupkg" | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- Demo Executables: $(find artifacts -name "*.exe" | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- Coverage Reports: Available" >> $GITHUB_STEP_SUMMARY
-
-  # Job 6: Publish coverage report to GitHub Pages (main branch only)
-  publish-coverage-to-pages:
-    runs-on: ubuntu-latest
-    needs: [build-core-projects]
-    if: false  # Disabled in favor of Avalonia demo
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download coverage report artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report-linux
-          path: coverage-report
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload coverage report to GitHub Pages
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: coverage-report
 
       - name: Deploy to GitHub Pages
         id: deployment
