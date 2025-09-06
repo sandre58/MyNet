@@ -307,60 +307,32 @@ jobs:
         run: |
           echo "🌐 Publishing Avalonia Browser demo for GitHub Pages..."
           mkdir -p github-pages
-          echo "📂 Contenu de artifacts/demos-avalonia :"
-          ls -lR artifacts/demos-avalonia
           cp -r artifacts/demos-avalonia/MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
 
           if [ ! -f "github-pages/index.html" ]; then
             echo "Creating index.html redirect..."
-            cat > github-pages/index.html << 'EOF'
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <title>MyNet Avalonia Demo</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                    body { 
-                        margin: 0; 
-                        padding: 20px; 
-                        font-family: Arial, sans-serif; 
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        text-align: center;
-                    }
-                    .container {
-                        max-width: 800px;
-                        margin: 0 auto;
-                        padding: 40px 20px;
-                    }
-                    .demo-button {
-                        display: inline-block;
-                        padding: 15px 30px;
-                        background: rgba(255,255,255,0.2);
-                        border: 2px solid white;
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 10px;
-                        margin: 10px;
-                        transition: all 0.3s ease;
-                    }
-                    .demo-button:hover {
-                        background: rgba(255,255,255,0.3);
-                        transform: translateY(-2px);
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1>🚀 MyNet Avalonia Demo</h1>
-                    <p>Welcome to the MyNet Avalonia cross-platform demo application running in your browser!</p>
-                    <a href="./main.html" class="demo-button">🌐 Launch Avalonia WebAssembly Demo</a>
-                    <p><small>Built with Avalonia UI and .NET WebAssembly</small></p>
-                </div>
-            </body>
-            </html>
-            EOF
+            echo '<!DOCTYPE html>' > github-pages/index.html
+            echo '<html>' >> github-pages/index.html
+            echo '<head>' >> github-pages/index.html
+            echo '    <meta charset="utf-8">' >> github-pages/index.html
+            echo '    <title>MyNet Avalonia Demo</title>' >> github-pages/index.html
+            echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> github-pages/index.html
+            echo '    <style>' >> github-pages/index.html
+            echo '        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; }' >> github-pages/index.html
+            echo '        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }' >> github-pages/index.html
+            echo '        .demo-button { display: inline-block; padding: 15px 30px; background: rgba(255,255,255,0.2); border: 2px solid white; color: white; text-decoration: none; border-radius: 10px; margin: 10px; transition: all 0.3s ease; }' >> github-pages/index.html
+            echo '        .demo-button:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }' >> github-pages/index.html
+            echo '    </style>' >> github-pages/index.html
+            echo '</head>' >> github-pages/index.html
+            echo '<body>' >> github-pages/index.html
+            echo '    <div class="container">' >> github-pages/index.html
+            echo '        <h1>🚀 MyNet Avalonia Demo</h1>' >> github-pages/index.html
+            echo '        <p>Welcome to the MyNet Avalonia cross-platform demo application running in your browser!</p>' >> github-pages/index.html
+            echo '        <a href="./main.html" class="demo-button">🌐 Launch Avalonia WebAssembly Demo</a>' >> github-pages/index.html
+            echo '        <p><small>Built with Avalonia UI and .NET WebAssembly</small></p>' >> github-pages/index.html
+            echo '    </div>' >> github-pages/index.html
+            echo '</body>' >> github-pages/index.html
+            echo '</html>' >> github-pages/index.html
           fi
 
           echo "✅ Browser demo published to GitHub Pages"

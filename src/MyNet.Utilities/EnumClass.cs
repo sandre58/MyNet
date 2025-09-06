@@ -13,8 +13,16 @@ using System.Threading;
 
 namespace MyNet.Utilities;
 
+/// <summary>
+/// Provides helper methods for working with smart enum classes derived from <see cref="EnumClass{TEnum, TValue}"/>.
+/// </summary>
 public static class EnumClass
 {
+    /// <summary>
+    /// Gets all defined instances of the specified smart enum type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The smart enum type.</typeparam>
+    /// <returns>An array containing all instances of the smart enum type.</returns>
     public static T[] GetAll<T>()
         where T : EnumClass<T>
     {
@@ -29,6 +37,12 @@ public static class EnumClass
         ];
     }
 
+    /// <summary>
+    /// Gets all defined instances of the specified smart enum type <typeparamref name="T"/> with an inner value of type <typeparamref name="TValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The smart enum type.</typeparam>
+    /// <typeparam name="TValue">The inner value type.</typeparam>
+    /// <returns>An array containing all instances of the smart enum type.</returns>
     public static T[] GetAll<T, TValue>()
         where T : EnumClass<T, TValue>
         where TValue : IEquatable<TValue>, IComparable<TValue>
@@ -44,6 +58,11 @@ public static class EnumClass
         ];
     }
 
+    /// <summary>
+    /// Gets all defined instances of the smart enum type represented by <paramref name="baseType"/>.
+    /// </summary>
+    /// <param name="baseType">The base smart enum type.</param>
+    /// <returns>An array of objects representing the enum instances.</returns>
     public static object[] GetAll(Type baseType)
         => [.. Assembly.GetAssembly(baseType)!
             .GetTypes()
@@ -92,6 +111,12 @@ public abstract class EnumClass<TEnum, TValue> :
             return dictionary;
         });
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EnumClass{TEnum, TValue}"/> class.
+    /// </summary>
+    /// <param name="name">The name of the enum option.</param>
+    /// <param name="value">The underlying value of the option.</param>
+    /// <param name="resourceKey">An optional resource key used for localization; when null the <paramref name="name"/> is used.</param>
     protected EnumClass(string name, TValue value, string? resourceKey = null)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -118,6 +143,9 @@ public abstract class EnumClass<TEnum, TValue> :
     /// <value>A <see cref="string"/> that is the name of the <see cref="EnumClass{TEnum, TValue}"/>.</value>
     public string Name { get; }
 
+    /// <summary>
+    /// Gets the resource key used for localization lookups.
+    /// </summary>
     public string ResourceKey { get; }
 
     /// <summary>
@@ -276,8 +304,14 @@ public abstract class EnumClass<TEnum, TValue> :
         return false;
     }
 
+    /// <summary>
+    /// Returns the enum instance associated with the specified underlying value.
+    /// </summary>
     public static EnumClass<TEnum, TValue> FromTValue(TValue value) => FromValue(value);
 
+    /// <summary>
+    /// Converts this instance to its underlying value type.
+    /// </summary>
     public TValue ToTValue() => Value;
 
     public override string ToString() =>
