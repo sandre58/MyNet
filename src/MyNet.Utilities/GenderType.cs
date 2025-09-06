@@ -6,8 +6,18 @@
 
 namespace MyNet.Utilities;
 
+/// <summary>
+/// Specifies a gender value. This enum is a simple representation for common gender options.
+/// </summary>
 public enum GenderType
 {
+    /// <summary>
+    /// The male gender.
+    /// </summary>
     Male,
+
+    /// <summary>
+    /// The female gender.
+    /// </summary>
     Female
 }

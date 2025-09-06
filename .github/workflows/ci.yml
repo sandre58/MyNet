@@ -292,6 +292,8 @@ jobs:
   # Job 6: Publication du demo Avalonia Browser sur GitHub Pages (main uniquement)
   publish-avalonia-demo-to-pages:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     needs: [build-avalonia-demos]
     steps:
       - name: Download Avalonia demo artifact
