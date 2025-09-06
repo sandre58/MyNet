@@ -269,10 +269,12 @@ jobs:
 
       - name: Publish Avalonia Browser demo for GitHub Pages
         run: |
+          echo "📁 Dossiers d'artifacts téléchargés :"
+          find artifacts -type d | sort
           echo "🌐 Publishing Avalonia Browser demo for GitHub Pages..."
           # Copy published files to a clean directory for GitHub Pages
           mkdir -p github-pages
-          cp -r MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
+          cp -r artifacts/demos-avalonia/publish/MyNet.Avalonia.Demo.Browser/* github-pages/
           
           # Create a simple index.html if not exists
           if [ ! -f "github-pages/index.html" ]; then
