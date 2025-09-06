@@ -9,8 +9,15 @@ using System.ComponentModel;
 
 namespace MyNet.Utilities.DateTimes;
 
+/// <summary>
+/// An observable variant of <see cref="Period"/> that raises property change notifications
+/// when the Start or End properties are changed.
+/// </summary>
 public class ObservablePeriod(DateTime start, DateTime end) : Period(start, end), INotifyPropertyChanged
 {
+    /// <summary>
+    /// Occurs when a property value changes. This forwards to the internal <see cref="PropertyChangedHandler"/>.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged
     {
         add => PropertyChangedHandler += value;
@@ -20,6 +27,11 @@ public class ObservablePeriod(DateTime start, DateTime end) : Period(start, end)
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1159:Use EventHandler<T>", Justification = "INotifyPropertyChanged implementation")]
     private event PropertyChangedEventHandler? PropertyChangedHandler;
 
+    /// <summary>
+    /// Sets the interval and raises <see cref="PropertyChanged"/> for Start and End when they change.
+    /// </summary>
+    /// <param name="start">The new start date/time.</param>
+    /// <param name="end">The new end date/time.</param>
     public override void SetInterval(DateTime start, DateTime end)
     {
         var oldStart = Start;
@@ -31,7 +43,17 @@ public class ObservablePeriod(DateTime start, DateTime end) : Period(start, end)
             OnPropertyChanged(nameof(End));
     }
 
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event for the specified property name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     protected void OnPropertyChanged(string? propertyName) => PropertyChangedHandler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+    /// <summary>
+    /// Creates a new instance of <see cref="Period"/> used when cloning or creating derived instances.
+    /// </summary>
+    /// <param name="start">The start date/time for the new instance.</param>
+    /// <param name="end">The end date/time for the new instance.</param>
+    /// <returns>A new <see cref="ObservablePeriod"/> instance.</returns>
     protected override Period CreateInstance(DateTime start, DateTime end) => new ObservablePeriod(start, end);
 }

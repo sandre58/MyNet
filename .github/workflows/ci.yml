@@ -307,7 +307,9 @@ jobs:
         run: |
           echo "🌐 Publishing Avalonia Browser demo for GitHub Pages..."
           mkdir -p github-pages
-          cp -r demos-avalonia/MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
+          echo "📂 Contenu de artifacts/demos-avalonia :"
+          ls -lR artifacts/demos-avalonia
+          cp -r artifacts/demos-avalonia/MyNet.Avalonia.Demo.Browser/wwwroot/* github-pages/
 
           if [ ! -f "github-pages/index.html" ]; then
             echo "Creating index.html redirect..."
