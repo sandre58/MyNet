@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 import { analyzeCommits } from '@semantic-release/commit-analyzer';
-import { semver } from 'semver';
+import pkg from 'semver';
 
 const project = process.argv[2];
 if (!project) {
@@ -60,10 +60,10 @@ const commits = rawCommits.split('\n').map(message => ({ message }));
     nextVersion = currentTag.replace(`${project}-v`, '');
   } else if (branch === 'main') {
     // Sur main : prerelease (pre)
-    nextVersion = semver.inc(lastVersion, releaseType || 'patch', 'pre');
+    nextVersion = pkg.inc(lastVersion, releaseType || 'patch', 'pre');
   } else {
     // Sur feature : prerelease (beta)
-    nextVersion = semver.inc(lastVersion, releaseType || 'patch', 'beta');
+    nextVersion = pkg.inc(lastVersion, releaseType || 'patch', 'beta');
   }
 
   console.log(nextVersion);
