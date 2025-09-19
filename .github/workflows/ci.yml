@@ -37,8 +37,59 @@ jobs:
           9.0.x
           8.0.x
 
-    - name: Build, Tests, Cover, Pack and Publish (on push tag)
-      shell: bash
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet --configuration Release --no-restore
+
+    - name: Run tests with coverage
       run: |
-        dotnet tool install --global dotnet-releaser
-        dotnet-releaser run --nuget-token "${{secrets.NUGET_API_KEY}}" --github-token "${{secrets.GITHUB_TOKEN}}" dotnet-releaser.toml
+        # Run tests with coverage collection using Directory.Build.targets configuration
+        dotnet test --configuration Release `
+          --collect:"XPlat Code Coverage" `
+          --settings .runsettings `
+          --logger GitHubActions `
+          --logger "trx" `
+          --results-directory ./TestResults
+
+        echo "📋 Test results generated:"
+        find ./TestResults -type f -name "*.trx" | head -n 10 | while read file; do
+          echo "$file"
+        done
+
+        echo "📋 Coverage files from Directory.Build.targets:"
+        coverageFiles=$(find ./TestResults -type f -name "*.cobertura.xml" | head -n 10)
+        if [ -n "$coverageFiles" ]; then
+          echo "$coverageFiles"
+        else
+          echo "No coverage files found yet"
+        fi
+
+    - name: Generate coverage report
+      uses: danielpalme/ReportGenerator-GitHub-Action@v5
+      with:
+        reports: 'TestResults/**/*.cobertura.xml'
+        targetdir: 'coveragereport'
+        reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: TestResults/**/*.cobertura.xml
+        fail_ci_if_error: false
+        verbose: true
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        files: TestResults/**/*.trx
+        check_name: 'Test Results'
+        comment_mode: changes
+        fail_on: 'test failures'
+
+    - name: Upload Coverage Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-linux
+        path: coveragereport
