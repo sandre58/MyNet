@@ -24,88 +24,122 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-          10.0.x
-          9.0.x
-          8.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
 
-    - name: Restore
-      run: dotnet restore
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - name: Install tools
+        run: |
+          npm install -g nbgv
+          npm install conventional-commits-parser @semantic-release/commit-analyzer semver
 
-    - name: Run tests with coverage
-      run: |
-        # Run tests with coverage collection using Directory.Build.targets configuration
-        dotnet test --no-build --configuration Release \
-          --collect:"XPlat Code Coverage" \
-          --settings .runsettings \
-          --logger GitHubActions \
-          --logger "trx" \
-          --results-directory ./TestResults
+      - name: List projects
+        id: list_projects
+        run: |
+          echo "PROJECTS=$(ls src)" >> $GITHUB_ENV
 
-        echo "📋 Test results generated:"
-        find ./TestResults -type f -name "*.trx" | head -n 10 | while read file; do
-          echo "$file"
-        done
+      - name: Versions
+        run: |
+          for project in $PROJECTS; do
+            echo "Processing project: $project"
 
-        echo "📋 Coverage files from Directory.Build.targets:"
-        coverageFiles=$(find ./TestResults -type f -name "*.cobertura.xml" | head -n 10)
-        if [ -n "$coverageFiles" ]; then
-          echo "$coverageFiles"
-        else
-          echo "No coverage files found yet"
-        fi
+            # Compute version
+            VERSION=$(node scripts/compute-version.js $project)
+            if [ -z "$VERSION" ]; then
+              echo "No changes detected for $project. Skipping."
+              continue
+            fi
+            echo "Next version for $project: $VERSION"
 
-    - name: Pack NuGet packages
-      run: dotnet pack --configuration Release --no-build --output ./packages
+            # Inject version using nbgv
+            nbgv set-version $VERSION --csproj ./src/$project/$project.csproj
+          done
 
-    - name: Generate coverage report
-      uses: danielpalme/ReportGenerator-GitHub-Action@v5
-      with:
-        reports: 'TestResults/**/*.cobertura.xml'
-        targetdir: 'coveragereport'
-        reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
+      - name: Restore
+        run: dotnet restore
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        files: TestResults/**/*.cobertura.xml
-        fail_ci_if_error: false
-        verbose: true
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      with:
-        files: TestResults/**/*.trx
-        check_name: 'Test Results'
-        comment_mode: changes
-        fail_on: 'test failures'
+      - name: Run tests with coverage
+        run: |
+          # Run tests with coverage collection using Directory.Build.targets configuration
+          dotnet test --no-build --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --settings .runsettings \
+            --logger GitHubActions \
+            --logger "trx" \
+            --results-directory ./TestResults
 
-    - name: Upload Coverage Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: coveragereport
+          echo "📋 Test results generated:"
+          find ./TestResults -type f -name "*.trx" | head -n 10 | while read file; do
+            echo "$file"
+          done
 
-    - name: Upload NuGet Packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: packages
-        path: packages/*.nupkg
+          echo "📋 Coverage files from Directory.Build.targets:"
+          coverageFiles=$(find ./TestResults -type f -name "*.cobertura.xml" | head -n 10)
+          if [ -n "$coverageFiles" ]; then
+            echo "$coverageFiles"
+          else
+            echo "No coverage files found yet"
+          fi
 
-    - name: Deploy documentation to GitHub Pages
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: coveragereport
+      - name: Pack NuGet packages
+        run: dotnet pack --configuration Release --no-build --output ./packages
+
+      - name: Generate coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: 'TestResults/**/*.cobertura.xml'
+          targetdir: 'coveragereport'
+          reporttypes: 'HtmlInline_AzurePipelines;Cobertura;MarkdownSummaryGithub'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: TestResults/**/*.cobertura.xml
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: TestResults/**/*.trx
+          check_name: 'Test Results'
+          comment_mode: changes
+          fail_on: 'test failures'
+
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coveragereport
+
+      - name: Upload NuGet Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: packages/*.nupkg
+
+      - name: Deploy documentation to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: coveragereport
