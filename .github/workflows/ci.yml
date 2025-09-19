@@ -67,6 +67,7 @@ jobs:
 
                 # Add the project/version to the JSON
                 projects_versions=$(echo $projects_versions | jq --arg p "$project" --arg v "$VERSION" --arg path "$path" '. + [{"project":$p,"version":$v,"path":$path}]')
+            fi
           done
 
           echo "PROJECTS_VERSIONS=$projects_versions" >> $GITHUB_ENV
