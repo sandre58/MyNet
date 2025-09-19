@@ -47,7 +47,7 @@ jobs:
       - name: Install tools
         run: |
           dotnet tool install --global nbgv
-          npm install conventional-commits-parser @semantic-release/commit-analyzer semver
+          npm install
         env:
           PATH: $PATH:/home/runner/.dotnet/tools
 
