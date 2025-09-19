@@ -62,8 +62,10 @@ jobs:
               VERSION=$(node scripts/compute-version.js $project)
               echo "Version for $project: $VERSION"
 
-              # Inject version using nbgv
-              nbgv set-version $VERSION -p "$project_dir"
+              # Inject version via MSBuild props
+              echo "##vso[task.setvariable variable=${project}_VERSION]$VERSION"
+              echo "VERSION=$VERSION" >> $GITHUB_ENV
+              echo "${project}_VERSION=$VERSION" >> $GITHUB_ENV
             fi
           done
 
@@ -71,7 +73,21 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          for project_dir in src/*/; do
+            if [ -d "$project_dir" ]; then
+              project=$(basename "$project_dir")
+              VERSION_VAR="${project}_VERSION"
+              VERSION=${!VERSION_VAR}
+
+              dotnet build $project_dir/$project.csproj \
+                --configuration Release \
+                --no-restore \
+                -p:Version=$VERSION \
+                -p:AssemblyVersion=$VERSION \
+                -p:FileVersion=$VERSION
+            fi
+          done
 
       - name: Run tests with coverage
         run: |
@@ -97,7 +113,21 @@ jobs:
           fi
 
       - name: Pack NuGet packages
-        run: dotnet pack --configuration Release --no-build --output ./packages
+        run: |
+          mkdir -p packages
+          for project_dir in src/*/; do
+            if [ -d "$project_dir" ]; then
+              project=$(basename "$project_dir")
+              VERSION_VAR="${project}_VERSION"
+              VERSION=${!VERSION_VAR}
+
+              dotnet pack $project_dir/$project.csproj \
+                --configuration Release \
+                --no-build \
+                -p:PackageVersion=$VERSION \
+                -o ./packages
+            fi
+          done
 
       - name: Generate coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
