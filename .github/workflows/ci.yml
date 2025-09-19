@@ -70,7 +70,9 @@ jobs:
             fi
           done
 
-          echo "PROJECTS_VERSIONS=$projects_versions" >> $GITHUB_ENV
+            # Minify JSON to avoid line breaks
+          projects_versions_min=$(echo $projects_versions | jq -c '.')
+          echo "PROJECTS_VERSIONS=$projects_versions_min" >> $GITHUB_ENV
 
       - name: Restore
         run: dotnet restore
