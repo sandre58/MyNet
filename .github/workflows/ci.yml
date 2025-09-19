@@ -53,46 +53,47 @@ jobs:
 
       - name: Versions
         run: |
+          projects_versions="[]"
+
           for project_dir in src/*/; do
             if [ -d "$project_dir" ]; then
               project=$(basename "$project_dir")
+              path=$project_dir
               echo "Processing project: $project"
 
               # Compute version
               VERSION=$(node scripts/compute-version.js $project)
               echo "Version for $project: $VERSION"
 
-              # Inject version via MSBuild props
-              echo "##vso[task.setvariable variable=${project}_VERSION]$VERSION"
-              echo "VERSION=$VERSION" >> $GITHUB_ENV
-              echo "${project}_VERSION=$VERSION" >> $GITHUB_ENV
-            fi
+                # Add the project/version to the JSON
+                projects_versions=$(echo $projects_versions | jq --arg p "$project" --arg v "$VERSION" --arg path "$path" '. + [{"project":$p,"version":$v,"path":$path}]')
           done
+
+          echo "PROJECTS_VERSIONS=$projects_versions" >> $GITHUB_ENV
 
       - name: Restore
         run: dotnet restore
 
       - name: Build
+        shell: bash
         run: |
-          for project_dir in src/*/; do
-            if [ -d "$project_dir" ]; then
-              project=$(basename "$project_dir")
-              VERSION_VAR="${project}_VERSION"
-              VERSION=${!VERSION_VAR}
+          for row in $(echo $PROJECTS_VERSIONS | jq -c '.[]'); do
+            project=$(echo $row | jq -r '.project')
+            version=$(echo $row | jq -r '.version')
+            path=$(echo $row | jq -r '.path')
 
-              dotnet build $project_dir/$project.csproj \
-                --configuration Release \
-                --no-restore \
-                -p:Version=$VERSION \
-                -p:AssemblyVersion=$VERSION \
-                -p:FileVersion=$VERSION
-            fi
+            dotnet build "$path/$project.csproj" \
+              --configuration Release \
+              --no-restore \
+              -p:Version=$version \
+              -p:AssemblyVersion=$version \
+              -p:FileVersion=$version
           done
 
       - name: Run tests with coverage
         run: |
           # Run tests with coverage collection using Directory.Build.targets configuration
-          dotnet test --no-build --configuration Release \
+          dotnet test --configuration Release \
             --collect:"XPlat Code Coverage" \
             --settings .runsettings \
             --logger GitHubActions \
@@ -115,18 +116,16 @@ jobs:
       - name: Pack NuGet packages
         run: |
           mkdir -p packages
-          for project_dir in src/*/; do
-            if [ -d "$project_dir" ]; then
-              project=$(basename "$project_dir")
-              VERSION_VAR="${project}_VERSION"
-              VERSION=${!VERSION_VAR}
+          for row in $(echo $PROJECTS_VERSIONS | jq -c '.[]'); do
+            project=$(echo $row | jq -r '.project')
+            version=$(echo $row | jq -r '.version')
+            path=$(echo $row | jq -r '.path')
 
-              dotnet pack $project_dir/$project.csproj \
+            dotnet pack "$path/$project.csproj" \
                 --configuration Release \
                 --no-build \
-                -p:PackageVersion=$VERSION \
+                -p:PackageVersion=$version \
                 -o ./packages
-            fi
           done
 
       - name: Generate coverage report
