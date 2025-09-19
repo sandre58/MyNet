@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/19/2025 - 16:47:21 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 09/19/2025 - 20:18:44 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 6 |
 | Classes: | 354 |
 | Files: | 275 |
-| **Line coverage:** | 32.5% (5155 of 15833) |
-| Covered lines: | 5155 |
-| Uncovered lines: | 10678 |
-| Coverable lines: | 15833 |
+| **Line coverage:** | 32.4% (5154 of 15897) |
+| Covered lines: | 5154 |
+| Uncovered lines: | 10743 |
+| Coverable lines: | 15897 |
 | Total lines: | 30662 |
-| **Branch coverage:** | 18.9% (1646 of 8684) |
+| **Branch coverage:** | 18.9% (1646 of 8708) |
 | Covered branches: | 1646 |
-| Total branches: | 8684 |
+| Total branches: | 8708 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 124_17864426479 |
+| Tag: | 125_17868822537 |
 
 </details>
 
@@ -175,11 +175,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 15.4%</summary>
+<details><summary>MyNet.Utilities - 15.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**15.4%**|**8%**|
+|**MyNet.Utilities**|**15.3%**|**8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
