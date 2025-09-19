@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read       # Required to checkout code
+  contents: write      # Required to checkout code and push to gh-pages
   pages: write         # Required to publish to GitHub Pages
   id-token: write      # Required for OIDC authentication
   checks: write        # Required to publish test results
