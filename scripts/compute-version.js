@@ -25,7 +25,7 @@ if (currentTag.startsWith(`${project}/v`)) {
 // 1️⃣ Get the latest existing tag for the project
 let lastTag = null;
 try {
-  lastTag = execSync('git describe --tags --match "${project}/v*" --abbrev=0', {
+  lastTag = execSync(`git describe --tags --match "${project}/v*" --abbrev=0`, {
     stdio: ["pipe", "pipe", "ignore"],
   })
     .toString()
