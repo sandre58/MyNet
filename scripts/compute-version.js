@@ -24,11 +24,11 @@ const isProjectTag = currentTag.startsWith(`${project}-v`);
 // 3️⃣ Get the latest existing tag for the project
 let lastTag = null;
 try {
-  lastTag = execSync(`git describe --tags --match "${project}-v*" --abbrev=0`).toString().trim();
+  lastTag = execSync(`git describe --tags --match "${project}/v*" --abbrev=0`).toString().trim();
 } catch {
   lastTag = null;
 }
-let lastVersion = lastTag ? lastTag.replace(`${project}-v`, '') : '0.0.0';
+let lastVersion = lastTag ? lastTag.replace(`${project}/v`, '') : '0.0.0';
 
 // 4️⃣ Extract commits since last tag (or all history if no tag)
 const fromRef = lastTag ? `${lastTag}..HEAD` : '';
@@ -71,7 +71,7 @@ const commits = rawCommits.split('\n').map((message, index) => ({
 
   if (isProjectTag) {
     // Stable release: take version directly from tag
-    nextVersion = currentTag.replace(`${project}-v`, '');
+    nextVersion = currentTag.replace(`${project}/v`, '');
   } else if (branch === 'main') {
     // On main: prerelease (pre)
     nextVersion = semver.inc(lastVersion, releaseType || 'patch', 'pre');
