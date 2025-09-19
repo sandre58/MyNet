@@ -55,9 +55,9 @@ const commits = rawCommits.split('\n').map((message, index) => ({
   { 
       commits,
       logger: { 
-      log: console.log, 
-      error: console.error 
-      }
+        log: console.error, 
+        error: console.error 
+    }
   }
   );
 
