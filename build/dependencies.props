@@ -1,16 +1,12 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <PropertyGroup>
-        <AvaloniaVersion>11.3.5</AvaloniaVersion>
-    </PropertyGroup>
-
     <!-- Versioning -->
-    <ItemGroup Condition="'$(IsDemoProject)' != 'True' And '$(IsTestProject)' != 'True'">
+    <ItemGroup Condition="'$(IsTestProject)' != 'True'">
         <PackageReference Include="Nerdbank.GitVersioning" Version="3.8.38-alpha" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Source link -->
-    <ItemGroup Condition="'$(IsDemoProject)' != 'True' And '$(IsTestProject)' != 'True'">
+    <ItemGroup Condition="'$(IsTestProject)' != 'True'">
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     </ItemGroup>
 

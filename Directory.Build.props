@@ -12,22 +12,20 @@
     <!-- Automatic project type detection -->
     <PropertyGroup>
         <IsTestProject>$(MSBuildProjectName.EndsWith('Tests'))</IsTestProject>
-        <IsDemoProject>$(MSBuildProjectName.Contains('.Demo'))</IsDemoProject>
-        <IsPackable Condition="'$(IsDemoProject)' == 'True' Or '$(IsTestProject)' == 'True'">false</IsPackable>
-        <IsPackable Condition="'$(IsDemoProject)' != 'True' And '$(IsTestProject)' != 'True'">true</IsPackable>
+        <IsPackable Condition="'$(IsTestProject)' == 'True'">false</IsPackable>
+        <IsPackable Condition="'$(IsTestProject)' != 'True'">true</IsPackable>
     </PropertyGroup>
 
     <!-- Configuration -->
     <PropertyGroup>
-        <TargetFrameworks Condition="'$(IsDemoProject)' != 'True'">net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <LangVersion>preview</LangVersion>
         <NeutralLanguage>fr</NeutralLanguage>
         <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <!-- Output builds -->
-        <AppendTargetFrameworkToOutputPath Condition="'$(IsDemoProject)' != 'True'">true</AppendTargetFrameworkToOutputPath>
-        <AppendTargetFrameworkToOutputPath Condition="'$(IsDemoProject)' == 'True'">false</AppendTargetFrameworkToOutputPath>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
     <!-- Imports -->

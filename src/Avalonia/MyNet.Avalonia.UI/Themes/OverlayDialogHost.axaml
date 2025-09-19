@@ -1,7 +1,0 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:my="http://mynet.com/avalonia">
-    <ControlTheme x:Key="{x:Type my:OverlayDialogHost}" TargetType="my:OverlayDialogHost">
-        <Setter Property="OverlayMaskBrush" Value="{DynamicResource MyNet.Brush.Overlay.Background}" />
-    </ControlTheme>
-</ResourceDictionary>

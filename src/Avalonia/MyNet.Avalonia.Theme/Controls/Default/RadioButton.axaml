@@ -1,9 +1,0 @@
-﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:my="http://mynet.com/avalonia">
-    <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton" BasedOn="{StaticResource MyNet.Theme.ToggleButton.CheckBox}">
-        <Setter Property="my:ToggleButtonAssist.CheckedPath" Value="{StaticResource MyNet.Geometry.RadioboxMarked}" />
-        <Setter Property="my:ToggleButtonAssist.IndeterminatePath" Value="{StaticResource MyNet.Geometry.RadioboxIndeterminateVariant}" />
-        <Setter Property="my:ToggleButtonAssist.UncheckedPath" Value="{StaticResource MyNet.Geometry.RadioboxBlank}" />
-    </ControlTheme>
-</ResourceDictionary>
