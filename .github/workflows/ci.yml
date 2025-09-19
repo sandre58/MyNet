@@ -51,26 +51,24 @@ jobs:
         env:
           PATH: $PATH:/home/runner/.dotnet/tools
 
-      - name: List projects
-        id: list_projects
-        run: |
-          echo "PROJECTS=$(ls src)" >> $GITHUB_ENV
-
       - name: Versions
         run: |
-          for project in $PROJECTS; do
-            echo "Processing project: $project"
+          for project_dir in src/*/; do
+            if [ -d "$project_dir" ]; then
+              project=$(basename "$project_dir")
+              echo "Processing project: $project"
 
-            # Compute version
-            VERSION=$(node scripts/compute-version.js $project)
-            if [ -z "$VERSION" ]; then
-              echo "No changes detected for $project. Skipping."
-              continue
+              # Compute version
+              VERSION=$(node scripts/compute-version.js $project)
+              if [ -z "$VERSION" ]; then
+                echo "No changes detected for $project. Skipping."
+                continue
+              fi
+              echo "Next version for $project: $VERSION"
+
+              # Inject version using nbgv
+              nbgv set-version $VERSION --csproj ./src/$project/$project.csproj
             fi
-            echo "Next version for $project: $VERSION"
-
-            # Inject version using nbgv
-            nbgv set-version $VERSION --csproj ./src/$project/$project.csproj
           done
 
       - name: Restore
