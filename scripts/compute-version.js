@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 import { analyzeCommits } from '@semantic-release/commit-analyzer';
-import pkg from 'semver';
+import semver from 'semver';
 
 const project = process.argv[2];
 if (!project) {
@@ -42,11 +42,11 @@ if (!rawCommits) {
   process.exit(0);
 }
 
-const commits = rawCommits.split('\n').map(message => ({ 
-  message,
-  hash: 'dummy',
-  subject: message 
-}));
+const commits = rawCommits.split('\n').map((message, index) => ({ 
+  message: message.trim(),
+  hash: `commit${index}`,
+  subject: message.trim()
+})).filter(commit => commit.message);
 
 (async () => {
   // 5️⃣ Déterminer le type de release à partir des commits
@@ -64,10 +64,10 @@ const commits = rawCommits.split('\n').map(message => ({
     nextVersion = currentTag.replace(`${project}-v`, '');
   } else if (branch === 'main') {
     // Sur main : prerelease (pre)
-    nextVersion = pkg.inc(lastVersion, releaseType || 'patch', 'pre');
+    nextVersion = semver.inc(lastVersion, releaseType || 'patch', 'pre');
   } else {
     // Sur feature : prerelease (beta)
-    nextVersion = pkg.inc(lastVersion, releaseType || 'patch', 'beta');
+    nextVersion = semver.inc(lastVersion, releaseType || 'patch', 'beta');
   }
 
   console.log(nextVersion);
