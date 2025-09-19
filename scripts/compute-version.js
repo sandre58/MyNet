@@ -50,7 +50,17 @@ const commits = rawCommits.split('\n').map((message, index) => ({
 
 (async () => {
   // 5️⃣ Determine release type from commits
-  const releaseType = await analyzeCommits({ preset: 'conventionalcommits' }, { commits });
+  const releaseType = await analyzeCommits(
+  { preset: 'conventionalcommits' }, // ou 'conventionalcommits' si installé
+  { 
+      commits,
+      logger: { 
+      log: console.log, 
+      error: console.error 
+      }
+  }
+  );
+
   if (!releaseType && !isProjectTag) {
     console.log(""); // no release
     process.exit(0);
