@@ -63,7 +63,7 @@ jobs:
               echo "Version for $project: $VERSION"
 
               # Inject version using nbgv
-              nbgv set-version $VERSION -p ./src/$project/$project.csproj
+              nbgv set-version $VERSION -p "$project_dir"
             fi
           done
 
