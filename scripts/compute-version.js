@@ -33,7 +33,7 @@ try {
 } catch {
   lastTag = null;
 }
-let lastVersion = lastTag ? lastTag.replace(`${project}/v`, "") : "1.0.0";
+let lastVersion = lastTag ? lastTag.replace(`${project}/v`, "") : "0.0.0";
 
 // 3️⃣ Extract commits since last tag (or all history if no tag)
 const fromRef = lastTag ? `${lastTag}..HEAD` : "";
