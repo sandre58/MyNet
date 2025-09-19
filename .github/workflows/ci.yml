@@ -66,6 +66,9 @@ jobs:
           echo "No coverage files found yet"
         fi
 
+    - name: Pack NuGet packages
+      run: dotnet pack --configuration Release --no-build --output ./packages
+
     - name: Generate coverage report
       uses: danielpalme/ReportGenerator-GitHub-Action@v5
       with:
@@ -91,5 +94,18 @@ jobs:
     - name: Upload Coverage Reports
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report-linux
+        name: coverage-report
         path: coveragereport
+
+    - name: Upload NuGet Packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: packages
+        path: packages/*.nupkg
+
+    - name: Deploy documentation to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: coveragereport
