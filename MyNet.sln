@@ -29,11 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2E7433DA-B
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		.github\docs\CONVENTIONAL_COMMITS.md = .github\docs\CONVENTIONAL_COMMITS.md
+		docs\CONVENTIONAL_COMMITS.md = docs\CONVENTIONAL_COMMITS.md
 		LICENSE = LICENSE
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
-		.github\docs\WORKFLOWS.md = .github\docs\WORKFLOWS.md
+		docs\WORKFLOWS.md = docs\WORKFLOWS.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{892DFD87-4C6A-412C-8243-7E9709DF5209}"
@@ -46,7 +46,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{892DFD87
 		global.json = global.json
 		NuGet.config = NuGet.config
 		build\package.props = build\package.props
-		Settings.XamlStyler = Settings.XamlStyler
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3}"
@@ -79,7 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Humanizer.UnitTests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{ECE90391-AE4A-42D9-8332-508DC90BABE6}"
 	ProjectSection(SolutionItems) = preProject
-		version.json = version.json
+		scripts\compute-version.js = scripts\compute-version.js
+		package.json = package.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4942B6F1-961C-4D26-A566-06D348BA98C1}"
@@ -97,7 +97,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{9C3385
 	ProjectSection(SolutionItems) = preProject
 		.github\.chglog\CHANGELOG.tpl.md = .github\.chglog\CHANGELOG.tpl.md
 		.github\.chglog\config.yml = .github\.chglog\config.yml
-		dotnet-releaser.toml = dotnet-releaser.toml
 		.github\.chglog\release-config.yml = .github\.chglog\release-config.yml
 		.github\.chglog\RELEASE.tpl.md = .github\.chglog\RELEASE.tpl.md
 	EndProjectSection
