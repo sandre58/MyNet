@@ -52,6 +52,7 @@ jobs:
           PATH: $PATH:/home/runner/.dotnet/tools
 
       - name: Versions
+        id: versions
         run: |
           projects_versions="[]"
 
@@ -62,17 +63,18 @@ jobs:
               echo "Processing project: $project"
 
               # Compute version
-              VERSION=$(node scripts/compute-version.js $project)
-              echo "Version for $project: $VERSION"
+              result=$(node scripts/compute-version.js $project)
+              version=$(echo "$result" | jq -r '.version')
+              echo "Version for $project: $version"
 
                 # Add the project/version to the JSON
-                projects_versions=$(echo $projects_versions | jq --arg p "$project" --arg v "$VERSION" --arg path "$path" '. + [{"project":$p,"version":$v,"path":$path}]')
+                projects_versions=$(echo $projects_versions | jq --arg p "$project" --arg v "$version" --arg path "$path" '. + [{"project":$p,"version":$v,"path":$path}]')
             fi
           done
 
             # Minify JSON to avoid line breaks
           projects_versions_min=$(echo $projects_versions | jq -c '.')
-          echo "PROJECTS_VERSIONS=$projects_versions_min" >> $GITHUB_ENV
+          echo "projects_versions=$projects_versions_min" >> $GITHUB_OUTPUT
 
       - name: Restore
         run: dotnet restore
@@ -80,7 +82,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          for row in $(echo $PROJECTS_VERSIONS | jq -c '.[]'); do
+          for row in $(echo '${{ steps.versions.outputs.projects_versions }}' | jq -c '.[]'); do
             project=$(echo $row | jq -r '.project')
             version=$(echo $row | jq -r '.version')
             path=$(echo $row | jq -r '.path')
@@ -119,7 +121,7 @@ jobs:
       - name: Pack NuGet packages
         run: |
           mkdir -p packages
-          for row in $(echo $PROJECTS_VERSIONS | jq -c '.[]'); do
+          for row in $(echo '${{ steps.versions.outputs.projects_versions }}' | jq -c '.[]'); do
             project=$(echo $row | jq -r '.project')
             version=$(echo $row | jq -r '.version')
             path=$(echo $row | jq -r '.path')

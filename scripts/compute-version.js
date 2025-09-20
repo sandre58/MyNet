@@ -9,6 +9,12 @@ if (!project) {
   process.exit(1);
 }
 
+// Helper to print JSON and exit
+function printResult(version, changed) {
+  console.log(JSON.stringify({ version, changed }));
+  process.exit(0);
+}
+
 // 1️⃣ Check if we are on a project tag
 let currentTag = "";
 try {
@@ -18,8 +24,7 @@ try {
 }
 if (currentTag.startsWith(`${project}/v`)) {
   const tagVersion = currentTag.replace(`${project}/v`, "");
-  console.log(tagVersion);
-  process.exit(0);
+  printResult(tagVersion, false);
 }
 
 // 1️⃣ Get the latest existing tag for the project
@@ -43,8 +48,7 @@ const rawCommitsCmd = fromRef
 const rawCommits = execSync(rawCommitsCmd).toString().trim();
 
 if (!rawCommits) {
-  console.log(lastVersion); // no version
-  process.exit(0);
+  printResult(lastVersion, false);
 }
 
 const commits = rawCommits
@@ -70,8 +74,7 @@ const commits = rawCommits
   );
 
   if (!releaseType) {
-    console.log(lastVersion);
-    process.exit(0);
+    printResult(lastVersion, false);
   }
 
   // 5️⃣ Calculate version based on context
@@ -84,5 +87,5 @@ const commits = rawCommits
   }
   let nextVersion = semver.inc(lastVersion, releaseType || "patch", suffix);
 
-  console.log(nextVersion);
+  printResult(nextVersion, true);
 })();

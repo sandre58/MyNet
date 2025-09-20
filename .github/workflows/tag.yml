@@ -36,7 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required for git history and NBGV
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }} # Use PAT if available: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Setup .NET
@@ -47,165 +47,50 @@ jobs:
             9.0.x
             8.0.x
 
-      - name: Install NBGV tool
-        run: dotnet tool install -g nbgv
-
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Find packable projects
-        id: find-projects
-        run: |
-          echo "Finding all packable projects..."
-
-          # Find all .csproj files in src directory (exclude demos and tests)
-          all_projects=$(find src -name "*.csproj" -not -path "*/Demo*" -not -path "*/Test*" | sort)
-
-          # Exclude projects with <IsPackable>false</IsPackable>
-          packable_projects=""
-          for project in $all_projects; do
-            if ! grep -q '<IsPackable>\s*false' "$project"; then
-              packable_projects="$packable_projects$project\n"
-            fi
-          done
-
-          echo "Found packable projects:"
-          echo -e "$packable_projects"
-
-          # Save projects list for later steps
-          echo -e "$packable_projects" > projects.txt
-
-          # Convert to JSON array for matrix strategy if needed
-          projects_json=$(echo -e "$packable_projects" | jq -R -s -c 'split("\n")[:-1]')
-          echo "projects=$projects_json" >> $GITHUB_OUTPUT
-
-      - name: Get last release tags
-        id: get-tags
-        run: |
-          echo "Getting existing tags..."
-          git tag -l "v*" --sort=-version:refname > existing_tags.txt
-          echo "Existing tags:"
-          cat existing_tags.txt
-
       - name: Analyze changes and determine versions
         id: analyze
         run: |
-          echo "Analyzing changes since last tags..."
-          
-          declare -A projects_to_tag
-          declare -A project_versions
-          
-          while IFS= read -r project_path; do
-            [ -z "$project_path" ] && continue
-            
-            echo "----------------------------------------"
-            echo "Analyzing: $project_path"
-            
-            # Extract project name from path
-            project_name=$(basename "$project_path" .csproj)
-            project_dir=$(dirname "$project_path")
-            
-            echo "Project: $project_name"
-            echo "Directory: $project_dir"
-            
-            # Get version from NBGV for this project
-            cd "$project_dir"
-            version=$(nbgv get-version -v SimpleVersion 2>/dev/null || echo "1.0.0")
-            simple_version=$(nbgv get-version -v SimpleVersion 2>/dev/null || echo "1.0.0")
-            cd - > /dev/null
-            
-            echo "Current version: $version"
-            
-            # Check if tag already exists for this version
-            tag_name="$project_name/v$simple_version"
-            
-            if git tag -l | grep -q "^$tag_name$"; then
-              echo "Tag $tag_name already exists"
-              
-              # Check for changes since this tag
-              if [ "${{ inputs.force_all }}" = "true" ]; then
-                echo "Force mode: Will retag"
-                projects_to_tag["$project_name"]="$tag_name"
-                project_versions["$project_name"]="$simple_version"
-              else
-                # Check if there are changes since the tag
-                if git diff --quiet "$tag_name" HEAD -- "$project_dir/"; then
-                  echo "No changes since tag $tag_name"
-                else
-                  echo "Changes detected since tag $tag_name"
-                  projects_to_tag["$project_name"]="$tag_name"
-                  project_versions["$project_name"]="$simple_version"
-                fi
-              fi
-            else
-              echo "Tag $tag_name does not exist"
-              
-              if [ "${{ inputs.force_all }}" = "true" ]; then
-                echo "Force mode: Will tag"
-                projects_to_tag["$project_name"]="$tag_name"
-                project_versions["$project_name"]="$simple_version"
-              else
-                # Find the last tag for this project
-                last_tag=$(git tag -l "$project_name/v*" --sort=-version:refname | head -n1)
-                
-                if [ -z "$last_tag" ]; then
-                  echo "No previous tag found for $project_name, will tag"
-                  projects_to_tag["$project_name"]="$tag_name"
-                  project_versions["$project_name"]="$simple_version"
-                else
-                  echo "Last tag for $project_name: $last_tag"
-                  
-                  # Check for changes since last tag
-                  if git diff --quiet "$last_tag" HEAD -- "$project_dir/" ":(exclude)$project_dir/*.md"; then
-                    echo "No changes since $last_tag"
-                  else
-                    echo "Changes detected since $last_tag"
-                    projects_to_tag["$project_name"]="$tag_name"
-                    project_versions["$project_name"]="$simple_version"
-                  fi
-                fi
+          projects_versions="[]"
+          has_projects_to_tag=false
+
+          for project_dir in src/*/; do
+            if [ -d "$project_dir" ]; then
+              project=$(basename "$project_dir")
+              echo "Processing project: $project"
+
+              # Compute version
+              result=$(node scripts/compute-version.js $project)
+              version=$(echo "$result" | jq -r '.version')
+              changed=$(echo "$result" | jq -r '.changed')
+              echo "Version for $project: $version"
+
+              if [ "$changed" = "true" ]; then
+                projects_versions=$(echo $projects_versions | jq --arg p "$project" --arg v "$version" '. + [{"project":$p,"version":$v}]')
+                has_projects_to_tag=true
               fi
             fi
-          done < projects.txt
-          
-          echo "----------------------------------------"
-          echo "SUMMARY OF PROJECTS TO TAG:"
-          
-          if [ ${#projects_to_tag[@]} -eq 0 ]; then
-            echo "No projects need to be tagged."
-          else
-            for project in "${!projects_to_tag[@]}"; do
-              echo "- $project -> ${projects_to_tag[$project]} (v${project_versions[$project]})"
-            done
-          fi
-          
-          # Save results for next step
-          for project in "${!projects_to_tag[@]}"; do
-            echo "$project:${projects_to_tag[$project]}:${project_versions[$project]}" >> projects_to_tag.txt
           done
-          
-          # Set output for conditional execution
-          if [ ${#projects_to_tag[@]} -gt 0 ]; then
-            echo "has_projects_to_tag=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_projects_to_tag=false" >> $GITHUB_OUTPUT
-          fi
+
+            # Minify JSON to avoid line breaks
+          projects_versions_min=$(echo $projects_versions | jq -c '.')
+          echo "projects_versions=$projects_versions_min" >> $GITHUB_OUTPUT
+          echo "has_projects_to_tag=$has_projects_to_tag" >> $GITHUB_OUTPUT
 
       - name: Create tags
         if: steps.analyze.outputs.has_projects_to_tag == 'true'
         run: |
           echo "Creating tags..."
-          
-          if [ ! -f "projects_to_tag.txt" ]; then
-            echo "No projects to tag file found"
-            exit 0
-          fi
-          
-          while IFS=':' read -r project tag_name version; do
-            [ -z "$project" ] && continue
-            
+
+          for row in $(echo '${{ steps.analyze.outputs.projects_versions }}' | jq -c '.[]'); do
+            project=$(echo $row | jq -r '.project')
+            version=$(echo $row | jq -r '.version')
+            tag_name="$project/v$version"
+
             echo "----------------------------------------"
             echo "Processing: $project"
             echo "Tag: $tag_name"
@@ -228,15 +113,17 @@ jobs:
               
               echo "Tag $tag_name created successfully"
             fi
-          done < projects_to_tag.txt
+          done
           
           if [ "${{ inputs.dry_run }}" = "false" ]; then
             echo "Pushing all tags to origin..."
             
             # Push tags one by one to ensure proper processing
-            while IFS=':' read -r project tag_name version; do
-              [ -z "$project" ] && continue
-              
+            for row in $(echo '${{ steps.analyze.outputs.projects_versions }}' | jq -c '.[]'); do
+              project=$(echo $row | jq -r '.project')
+              version=$(echo $row | jq -r '.version')
+              tag_name="$project/v$version"
+
               echo "Pushing tag: $tag_name"
               
               # Push the tag using git
@@ -253,7 +140,7 @@ jobs:
               # Small delay to ensure GitHub processes the tag
               sleep 3
               
-            done < projects_to_tag.txt
+            done
             
             echo "All tags pushed successfully and release workflows triggered"
           else
@@ -268,17 +155,19 @@ jobs:
           echo "Mode: ${{ inputs.dry_run == 'true' && 'DRY RUN' || 'LIVE' }}"
           echo "Force all: ${{ inputs.force_all }}"
           echo ""
-          
-          if [ -f "projects_to_tag.txt" ] && [ -s "projects_to_tag.txt" ]; then
+
+          if [ "${{ steps.analyze.outputs.has_projects_to_tag }}" = "true" ]; then
             echo "Projects processed:"
-            while IFS=':' read -r project tag_name version; do
-              [ -z "$project" ] && continue
+            for row in $(echo '${{ steps.analyze.outputs.projects_versions }}' | jq -c '.[]'); do
+              project=$(echo $row | jq -r '.project')
+              tag_name="$project/v$(echo $row | jq -r '.version')"
+
               if [ "${{ inputs.dry_run }}" = "true" ]; then
                 echo "  - $project -> $tag_name (DRY RUN)"
               else
                 echo "  - $project -> $tag_name (TAGGED)"
               fi
-            done < projects_to_tag.txt
+            done
           else
             echo "No projects needed tagging."
           fi
