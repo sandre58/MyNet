@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/20/2025 - 05:42:09 |
-| Parser: | MultiReport (5x Cobertura) |
+| Generated on: | 09/20/2025 - 05:48:28 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 6 |
-| Classes: | 352 |
+| Classes: | 353 |
 | Files: | 275 |
-| **Line coverage:** | 32.7% (4827 of 14737) |
-| Covered lines: | 4827 |
-| Uncovered lines: | 9910 |
-| Coverable lines: | 14737 |
+| **Line coverage:** | 31% (4824 of 15513) |
+| Covered lines: | 4824 |
+| Uncovered lines: | 10689 |
+| Coverable lines: | 15513 |
 | Total lines: | 30662 |
-| **Branch coverage:** | 18.7% (1514 of 8056) |
-| Covered branches: | 1514 |
-| Total branches: | 8056 |
+| **Branch coverage:** | 17.7% (1513 of 8540) |
+| Covered branches: | 1513 |
+| Total branches: | 8540 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 137_17875968897 |
+| Tag: | 138_17876031543 |
 
 </details>
 
@@ -174,11 +174,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 16.8%</summary>
+<details><summary>MyNet.Utilities - 15.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**16.8%**|**8.8%**|
+|**MyNet.Utilities**|**15.3%**|**8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -314,7 +314,7 @@
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
-|MyNet.Utilities.Localization.LocalizationService|97.1%|85%|
+|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
 |MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
@@ -388,6 +388,7 @@
 |MyNet.Utilities.TimeSpanExtensions|28.3%|59.3%|
 |MyNet.Utilities.ValidationExtensions|0%|0%|
 |MyNet.Utilities.ValueObject|0%|0%|
+|System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 
