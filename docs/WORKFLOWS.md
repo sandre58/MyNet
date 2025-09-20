@@ -1,31 +1,46 @@
 # CI/CD Workflows Documentation
 
-This repository uses a **3-workflow approach** for Continuous Integration and Deployment with **automatic changelog generation** and **conventional commits integration**:
+This repository uses an **integrated CI/CD approach** with **automatic versioning**, **semantic release analysis**, and **conventional commits integration**:
 
-## 1. 🔄 CI - Build and Test (`.github/workflows/ci.yml`)
+## 1. 🔄 CI - Build, Test & Version (`.github/workflows/ci.yml`)
 
 **Triggers:**
 - Push to `main`, `feature/*`, `hotfix/*` branches
 - Pull requests to `main`
 
 **What it does:**
-- ✅ **Build everything** - All projects with multi-targeting (.NET 8, 9, 10)
+- 🏷️ **Automatic versioning** - Calculates semantic versions per project using conventional commits
+- ✅ **Build everything** - All projects with multi-targeting (.NET 8, 9, 10) with computed versions
 - ✅ **Run all tests** with code coverage
 - ✅ **Generate coverage reports** (HTML, Cobertura, Markdown, Badges)
-- ✅ **Package all NuGet packages** (as artifacts)
-- ✅ **Build all demos** (WPF, Avalonia Desktop, Avalonia Browser)
+- ✅ **Package all NuGet packages** with semantic versions (as artifacts)
 - ✅ **Deploy coverage to GitHub Pages** (main branch only)
 - ✅ **Upload to Codecov** for coverage tracking
 - ✅ **PR coverage comments** with diff coverage information
 
+**🎯 Automatic Versioning System:**
+- **Semantic analysis**: Uses `@semantic-release/commit-analyzer` to parse conventional commits
+- **Per-project versioning**: Each project gets its own calculated version based on its changes
+- **Branch-specific suffixes**: 
+  - `main` branch: `X.Y.Z-pre.BUILD` format
+  - Other branches: `X.Y.Z-beta.BUILD` format
+- **Tag-based detection**: Returns exact version if current commit is tagged
+- **Smart change detection**: Only increments version when project has actual changes
+
 **Artifacts produced:**
 - `coverage-report` - HTML coverage report with badges
-- `nuget-packages` - All .nupkg files ready for distribution
-- `demos` - Built demo applications (WPF, Avalonia Desktop, Browser)
+- `packages` - All .nupkg files with semantic versions ready for distribution
+
+**Version calculation process:**
+1. **Project detection**: Scans all `src/*/` directories
+2. **Commit analysis**: Uses semantic-release to analyze conventional commits since last tag
+3. **Version computation**: Calculates next semantic version (patch/minor/major)
+4. **Format application**: Applies branch-specific suffix (`-pre` or `-beta`)
+5. **Build integration**: Injects computed versions into `dotnet build` and `dotnet pack`
 
 **Coverage features:**
 - **GitHub Pages**: Deployed automatically on main branch
-- **Codecov integration**: Upload for detailed coverage tracking
+- **Codecov integration**: Upload for detailed coverage tracking  
 - **PR comments**: Coverage diff and summary in pull requests
 - **Multi-format reports**: HTML, Cobertura, Markdown, Badges
 
@@ -35,75 +50,46 @@ This repository uses a **3-workflow approach** for Continuous Integration and De
 
 ---
 
-## 2. 🏷️ Manual - Tag Projects (`.github/workflows/manual-tag.yml`)
+## 2. 📊 Version Calculation Details
 
-**Triggers:**
-- Manual execution via GitHub Actions UI
+**The `scripts/compute-version.js` script:**
 
-**Parameters:**
-- `dry_run` (default: true) - Preview what would be tagged without creating tags
-- `force_all` (default: false) - Force tag all projects regardless of changes
+1. **Tag Detection**: Checks if current commit has an existing project tag
+2. **Last Version**: Finds the last tag for the project (`ProjectName/vX.Y.Z`)
+3. **Commit Analysis**: Extracts commits since last tag affecting the project directory
+4. **Semantic Analysis**: Uses `@semantic-release/commit-analyzer` with conventional commits preset
+5. **Version Increment**: Determines release type (patch/minor/major) and increments
+6. **Branch Suffix**: Applies `-pre` (main) or `-beta` (other branches) suffix
 
-**What it does:**
-- 🔍 **Detect all packable projects** (excludes demos and tests)
-- 📊 **Analyze changes** since last tag for each project
-- 🏷️ **Create project-specific tags** in format: `ProjectName/vX.Y.Z`
-- ⚡ **Smart change detection** - Only tags projects with actual changes
-- 📝 **Comprehensive reporting** of what will be/was tagged
+**Version Calculation Examples:**
 
-**Tag format:**
+```bash
+# Starting from MyNet.Utilities/v1.4.0
+
+# Patch increment (fix commits)
+git commit -m "fix(utils): resolve null reference exception"
+# Result: 1.4.1-pre.X (main) or 1.4.1-beta.X (feature branch)
+
+# Minor increment (feat commits)  
+git commit -m "feat(utils): add new string extension methods"
+# Result: 1.5.0-pre.X (main) or 1.5.0-beta.X (feature branch)
+
+# Major increment (breaking changes)
+git commit -m "feat(utils)!: redesign configuration API
+
+BREAKING CHANGE: Configuration class constructor signature changed"
+# Result: 2.0.0-pre.X (main) or 2.0.0-beta.X (feature branch)
+
+# No increment (docs, style, etc.)
+git commit -m "docs(utils): update README examples"  
+# Result: 1.4.0 (no change, last tag version)
 ```
-MyNet.Utilities/v1.2.3
-MyNet.Observable/v2.1.0
-MyNet.Http/v3.0.1
-```
 
-**Workflow:**
-1. Run with `dry_run: true` to see what would be tagged
-2. Review the output
-3. Run with `dry_run: false` to create the actual tags
-
----
-
-## 3. 🚀 Release - Publish Package (`.github/workflows/release-tag.yml`)
-
-**Triggers:**
-- Push of tags matching pattern `*/v*` (e.g., `MyNet.Utilities/v1.2.3`)
-
-**What it does:**
-- 🎯 **Parse tag** to extract project name and version
-- 🔍 **Find specific project** file and verify version consistency
-- 🏗️ **Build only the tagged project** (efficient, targeted build)
-- 🧪 **Run tests** for the specific project (if test project exists)
-- 📦 **Pack NuGet package** with symbols and source code
-- 🌐 **Publish to NuGet.org** (if `NUGET_API_KEY` secret configured)
-- 📚 **Publish to GitHub Packages** (always, for backup/private access)
-- 📝 **Generate dual changelogs** using git-chglog with conventional commits
-- 📄 **Update project CHANGELOG.md** (permanent project documentation)
-- 🎉 **Create GitHub Release** with release changelog and packages
-- 📊 **Upload artifacts** for download and backup
-
-**Changelog Features:**
-- **🔄 Dual changelog approach**:
-  - **Release changelog**: Focused content for GitHub Release (changes between tags)
-  - **Project changelog**: Complete history in `{ProjectFolder}/CHANGELOG.md`
-- **📋 git-chglog integration**: Professional changelog generation from conventional commits
-- **🏷️ Conventional commits parsing**: Automatic categorization (Features, Bug Fixes, etc.)
-- **🔗 Smart linking**: Automatic links to commits and repository
-- **⚠️ Breaking changes detection**: Special handling for BREAKING CHANGE commits
-- **📝 Automatic commit**: Updated CHANGELOG.md pushed back to main branch
-
-**Publications:**
-- **NuGet.org**: Main package distribution (public packages)
-- **GitHub Packages**: Backup/private distribution (always published)
-- **GitHub Releases**: With comprehensive changelog and attached packages
-
-**Release features:**
-- **Smart changelog generation** from conventional commits
-- **Package files attached** to release (NuGet packages)
-- **Pre-release detection** (versions containing `-` like `1.0.0-alpha`)
-- **Automatic release notes** (GitHub's built-in feature + custom changelog)
-- **Project documentation update** (CHANGELOG.md files maintained automatically)
+**🔧 Integration Points:**
+- **Build Step**: Versions injected via `-p:Version=$version` parameters
+- **Pack Step**: Versions applied via `-p:PackageVersion=$version` parameters  
+- **Artifacts**: All packages include computed semantic versions in filenames
+- **Per-Project**: Each project in `src/` gets independent version calculation
 
 ---
 
@@ -118,71 +104,92 @@ MyNet.Http/v3.0.1
    
    # Make changes with conventional commit messages
    git commit -m "feat(cache): add memory caching with TTL support"
-   git commit -m "test(cache): add comprehensive caching tests"
+   git commit -m "test(cache): add comprehensive caching tests"  
    git commit -m "docs(cache): add caching documentation and examples"
    
    git push origin feature/add-caching-support
    ```
 
-2. **CI automatically runs**:
-   - ✅ Builds everything (all projects, all targets)
-   - ✅ Runs tests with coverage collection
-   - ✅ Creates NuGet packages as artifacts
-   - ✅ Builds demo applications
-   - ❌ No deployment (not main branch)
+2. **CI automatically runs on feature branch**:
+   - 🏷️ **Calculates version**: `MyNet.Utilities` → `1.5.0-beta.123` (beta suffix for feature branch)
+   - ✅ **Builds with version**: All projects built with their computed semantic versions
+   - ✅ **Runs tests** with coverage collection
+   - ✅ **Creates NuGet packages** with `-beta` versions as artifacts
+   - ❌ **No deployment** (not main branch)
 
 3. **Create Pull Request**:
    - ✅ CI runs again with PR-specific features
    - ✅ **Coverage comment added to PR** with diff coverage
+   - ✅ **Version preview**: Shows what versions will be used when merged
    - ✅ Review process with automated checks
    - ✅ Merge to `main` after approval
 
-4. **Main branch CI**:
-   - ✅ Full CI pipeline runs automatically
+4. **Main branch CI** (post-merge):
+   - 🏷️ **Recalculates versions**: `MyNet.Utilities` → `1.5.0-pre.124` (pre suffix for main)
+   - ✅ **Builds with production versions**: All projects built with `-pre` versions  
+   - ✅ **Full CI pipeline** runs automatically
    - ✅ **Coverage deployed to GitHub Pages** (`https://sandre58.github.io/MyNet/`)
-   - ✅ All artifacts available for download
-   - ✅ Codecov integration for coverage tracking
+   - ✅ **Packages ready for release**: All artifacts available with computed versions
+   - ✅ **Codecov integration** for coverage tracking
 
-5. **Create tags manually** (smart detection):
-   ```
-   Go to Actions → Manual - Tag Projects → Run workflow
-   
-   Step 1: Set dry_run: true
-   Step 2: Click "Run workflow" 
-   Step 3: Review output (e.g., "MyNet.Utilities will be tagged as v2.1.0")
-   Step 4: Run again with dry_run: false to create actual tags
+5. **Ready for distribution**:
+   ```bash
+   # Packages are automatically generated with semantic versions:
+   # MyNet.Utilities.1.5.0-pre.124.nupkg (ready for pre-release)
+   # MyNet.Observable.2.3.1-pre.124.nupkg (if it had changes too)
    ```
 
-6. **Automatic release** (triggered by tags):
-   - 🎯 Tag `MyNet.Utilities/v2.1.0` triggers release workflow
-   - 🏗️ Builds and tests only MyNet.Utilities project
-   - 📦 Packs and publishes NuGet package
-   - 📝 **Generates professional changelog** using git-chglog:
-     ```markdown
-     # MyNet.Utilities v2.1.0
-     
-     ## 🚀 Features
-     - **cache:** add memory caching with TTL support ([a1b2c3d])
-     
-     ## 📚 Documentation  
-     - **cache:** add caching documentation and examples ([e4f5g6h])
-     
-     ## ✅ Tests
-     - **cache:** add comprehensive caching tests ([i7j8k9l])
-     ```
-   - 📄 **Updates `src/MyNet.Utilities/CHANGELOG.md`** with complete project history
-   - 🎉 **Creates GitHub Release** with changelog and attached packages
-   - 🔄 **Commits CHANGELOG.md back to main** automatically
+**🎯 Version Calculation Examples:**
+
+Based on conventional commits, the system automatically determines version increments:
+
+```bash
+# Patch version (1.4.0 → 1.4.1-pre.X)
+git commit -m "fix(cache): resolve memory leak in TTL cleanup"
+
+# Minor version (1.4.0 → 1.5.0-pre.X)  
+git commit -m "feat(cache): add distributed caching support"
+
+# Major version (1.4.0 → 2.0.0-pre.X)
+git commit -m "feat(cache)!: redesign caching API
+
+BREAKING CHANGE: CacheManager constructor signature changed"
+```
+
+**🔄 Continuous Integration Benefits:**
+- **No manual version management**: Versions computed automatically from commits
+- **Per-project independence**: Each project versioned separately based on its changes  
+- **Branch-aware versioning**: Different suffixes for different branches
+- **Ready-to-ship packages**: All packages built with proper semantic versions
+- **Consistent numbering**: Semantic versioning enforced through conventional commits
 
 ---
 
 ## 🔧 Configuration
 
+### Automatic Versioning Setup
+
+**Required files:**
+- `scripts/compute-version.js` - Semantic version calculation script
+- `package.json` - Node.js dependencies for semantic-release tools
+- `.github/workflows/ci.yml` - CI workflow with integrated versioning
+
+**Dependencies (auto-installed):**
+```json
+{
+  "type": "module",
+  "dependencies": {
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0", 
+    "semver": "^7.6.3"
+  }
+}
+```
+
 ### Required Secrets
 
 | Secret | Purpose | Required | Notes |
 |--------|---------|----------|-------|
-| `NUGET_API_KEY` | Publish to NuGet.org | Optional | Get from nuget.org profile |
 | `CODECOV_TOKEN` | Upload to Codecov | Optional | Enhanced coverage reporting |
 
 ### Repository Settings
@@ -199,23 +206,24 @@ MyNet.Http/v3.0.1
 
 ### Workflow Permissions
 
-The workflows are configured with minimal required permissions:
-- **CI**: `contents: read`, `pages: write`, `id-token: write`
-- **Manual Tag**: `contents: write` (to create tags and push CHANGELOG.md)
-- **Release**: `contents: write`, `packages: write` (to create releases and publish)
+The CI workflow is configured with required permissions:
+- **CI**: `contents: write`, `pages: write`, `id-token: write`, `checks: write`, `pull-requests: write`, `actions: read`
 
-### Changelog Configuration
+### Conventional Commits Configuration
 
-**git-chglog setup:**
-- **Full changelogs**: `.chglog/config.yml` + `CHANGELOG.tpl.md`
-- **Release changelogs**: `.chglog/release-config.yml` + `RELEASE.tpl.md`
-- **Conventional commits**: Automatic parsing and categorization
-- **Project changelogs**: Updated in `src/{ProjectName}/CHANGELOG.md`
+**Semantic versioning rules:**
+- **patch**: `fix:` commits increment patch version (1.0.0 → 1.0.1)
+- **minor**: `feat:` commits increment minor version (1.0.0 → 1.1.0)
+- **major**: Breaking changes (`!` or `BREAKING CHANGE:`) increment major version (1.0.0 → 2.0.0)
 
 **Supported commit types:**
 - `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
-- **Breaking changes**: `BREAKING CHANGE:` in commit footer
+- **Breaking changes**: `feat!:` or `BREAKING CHANGE:` in commit footer
 - **Scopes**: `auth`, `utils`, `http`, `observable`, `ui`, `wpf`, `avalonia`, etc.
+
+**Version format:**
+- **Main branch**: `X.Y.Z-pre.BUILD` (e.g., `1.5.0-pre.124`)
+- **Feature/other branches**: `X.Y.Z-beta.BUILD` (e.g., `1.5.0-beta.89`)
 
 ---
 
@@ -223,20 +231,21 @@ The workflows are configured with minimal required permissions:
 
 ### Adding new projects
 
-New projects in `src/` are automatically detected. Ensure they:
+New projects in `src/` are automatically detected by the versioning system. Ensure they:
 - Have a `.csproj` file with appropriate metadata
 - Are packable (`<IsPackable>true</IsPackable>` or omit for default true)
-- Have a `version.json` file for Nerdbank.GitVersioning
-- Follow conventional commit patterns for changelog generation
+- Follow conventional commit patterns for automatic versioning
+- Use project-scoped commits: `feat(projectname): description` for targeted versioning
 
 ### Modifying CI pipeline
 
 **Edit `.github/workflows/ci.yml`**:
 - **Add/remove .NET versions**: Update `dotnet-version` matrix
-- **Modify build parameters**: Adjust `dotnet build` command options
+- **Modify versioning**: Update `scripts/compute-version.js` script  
+- **Modify build parameters**: Adjust `dotnet build` command options with version injection
 - **Platform-specific builds**: Update workload installations
 - **Coverage configuration**: Modify ReportGenerator settings
-- **Demo projects**: Add/remove demo build steps
+- **Package versioning**: Modify version application in build and pack steps
 
 ### Modifying release pipeline
 
@@ -289,23 +298,23 @@ commit_groups:
 
 ### Common Issues
 
-**1. Version mismatch in release workflow**
-- **Problem**: "Tag version (1.2.3) does not match project version (1.2.4)"
-- **Solution**: Ensure the tag version matches NBGV calculated version
-- **Check**: Review `version.json` configuration and commit history
-- **Debug**: Run `nbgv get-version` in project directory
+**1. Version calculation issues**
+- **Problem**: Incorrect versions calculated or script failures
+- **Solution**: Check conventional commit format and `compute-version.js` script
+- **Check**: Review commit messages for proper `feat:`, `fix:`, etc. prefixes
+- **Debug**: Run `node scripts/compute-version.js <ProjectName>` locally
 
-**2. Project file not found**
-- **Problem**: "Project file not found for: MyNet.SomeProject"
-- **Solution**: Verify project name in tag matches `.csproj` filename exactly
-- **Check**: Ensure project is in `src/` directory structure
-- **Example**: Tag `MyNet.Utilities/v1.0.0` expects `src/MyNet.Utilities/MyNet.Utilities.csproj`
+**2. No version changes detected**  
+- **Problem**: All projects get same version despite different changes
+- **Solution**: Use project-scoped conventional commits: `feat(utilities): new feature`
+- **Check**: Ensure commits affect files in specific project directories
+- **Example**: `git log --oneline -- src/MyNet.Utilities/` to see project-specific commits
 
-**3. NuGet publish failures**
-- **Problem**: Package already exists or authentication failed
-- **Solution**: Check `NUGET_API_KEY` secret configuration
-- **Alternative**: Version conflicts (package version already published)
-- **Debug**: Check NuGet.org for existing package versions
+**3. Node.js/npm dependencies issues**
+- **Problem**: `@semantic-release/commit-analyzer` not found or import errors  
+- **Solution**: Ensure `package.json` has `"type": "module"` and correct dependencies
+- **Check**: Verify Node.js 20 is used and npm install runs successfully
+- **Debug**: Run `npm install` locally and test `node scripts/compute-version.js`
 
 **4. Coverage not deploying to GitHub Pages**
 - **Problem**: Coverage report not accessible via GitHub Pages
@@ -313,17 +322,17 @@ commit_groups:
 - **Check**: Workflow has `pages: write` permission
 - **Verify**: Main branch push triggered the deployment
 
-**5. Changelog generation issues**
-- **Problem**: Empty or malformed changelogs
+**5. Semantic-release analysis failures**
+- **Problem**: Version calculation script fails to analyze commits
 - **Solution**: Use conventional commit format (`type(scope): description`)
-- **Check**: git-chglog configuration in `.chglog/` directory
-- **Debug**: Test git-chglog locally with `git-chglog --dry-run`
+- **Check**: Ensure commits follow `feat:`, `fix:`, `docs:` etc. patterns
+- **Debug**: Test semantic-release locally with conventional commits
 
-**6. Manual tagging workflow not detecting changes**
-- **Problem**: "No projects need to be tagged" when changes exist
-- **Solution**: Ensure commits affect files in project directories
-- **Check**: Git history with `git log --oneline -- src/ProjectName/`
-- **Alternative**: Use `force_all: true` to tag all projects
+**6. Build version injection failures**
+- **Problem**: Packages built without computed versions
+- **Solution**: Check version parsing and JSON output in CI logs
+- **Check**: Verify `steps.versions.outputs.projects_versions` contains valid JSON  
+- **Debug**: Look for version calculation step output in GitHub Actions logs
 
 ### Debug Steps
 
@@ -340,23 +349,29 @@ commit_groups:
 
 **3. Test locally**
 ```bash
-# Test NBGV version calculation
-nbgv get-version
+# Test version calculation script
+node scripts/compute-version.js MyNet.Utilities
 
-# Test git-chglog generation  
-git-chglog --config .chglog/config.yml --dry-run
+# Test semantic-release commit analysis
+npm install
+node -e "import('@semantic-release/commit-analyzer').then(console.log)"
 
-# Test project detection
+# Test project detection  
 find src -name "*.csproj" -not -path "*/Demo*" -not -path "*/Test*"
+
+# Test conventional commits parsing
+git log --oneline --grep="^feat\|^fix\|^docs" -- src/MyNet.Utilities/
 ```
 
 **4. Validate project structure**
 ```
 src/
 ├── MyNet.Utilities/
-│   ├── MyNet.Utilities.csproj    ← Must match tag name
-│   ├── version.json              ← NBGV configuration
-│   └── CHANGELOG.md              ← Updated automatically
+│   ├── MyNet.Utilities.csproj    ← Detected automatically
+│   └── ... (project files)
+scripts/
+├── compute-version.js            ← Version calculation script
+package.json                      ← Node.js dependencies
 ```
 
 **5. Check conventional commits**
@@ -371,7 +386,7 @@ git log --grep="BREAKING CHANGE"
 ### Getting Help
 
 - **Workflow documentation**: [GitHub Actions Docs](https://docs.github.com/en/actions)
-- **Nerdbank.GitVersioning**: [Official Documentation](https://github.com/dotnet/Nerdbank.GitVersioning)
-- **git-chglog**: [Configuration Guide](https://github.com/git-chglog/git-chglog)
+- **Semantic Release**: [@semantic-release/commit-analyzer](https://github.com/semantic-release/commit-analyzer)
 - **Conventional Commits**: [Specification](https://conventionalcommits.org/)
-- **Project-specific**: Check `.github/docs/` for additional documentation
+- **Semver**: [Semantic Versioning](https://semver.org/)
+- **Project-specific**: Check `scripts/compute-version.js` for version calculation logic

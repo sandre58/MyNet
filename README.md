@@ -10,9 +10,7 @@
   <img src="assets/MyNetCsvHelper.png" width="128" alt="MyNetCsvHelper">
   <img src="assets/MyNetAutoMapper.png" width="128" alt="MyNetAutoMapper">
   <img src="assets/MyNetHttp.png" width="128" alt="MyNetHttp">
-  <img src="assets/MyNetXaml.png" width="128" alt="MyNetXaml">
-  <img src="assets/MyNetAvalonia.png" width="128" alt="MyNetAvalonia">
-  <img src="assets/MyNetWpf.png" width="128" alt="MyNetWpf">
+
 </div>
 
 <h1 align="center">My .NET</h1>
@@ -27,10 +25,20 @@
 
 A comprehensive collection of powerful libraries and extensions for modern .NET development (8.0, 9.0, and 10.0). Each package is carefully designed to be independent, modular, and production-ready, enabling developers to pick exactly what they need to enhance their applications.
 
+**✨ Features:**
+- 🏷️ **Automatic semantic versioning** based on conventional commits
+- 🔄 **Independent package versioning** for each library  
+- 📦 **Ready-to-use NuGet packages** with semantic versions
+- 🧪 **Comprehensive testing** with code coverage
+- 📊 **Continuous integration** with automated builds and releases
+
 ## Packages
 
 [![Build][build-shield]][build-url]
 [![Coverage](https://codecov.io/gh/sandre58/mynet/branch/main/graph/badge.svg)](https://codecov.io/gh/sandre58/mynet)
+[![Coverage Report](https://img.shields.io/badge/Coverage%20Report-GitHub%20Pages-blue?style=flat&logo=github)](https://sandre58.github.io/MyNet/)
+[![Semantic Versioning](https://img.shields.io/badge/Semantic%20Versioning-Enabled-green?style=flat&logo=semver)](https://semver.org/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow?style=flat&logo=conventionalcommits)](https://conventionalcommits.org/)
 [![C#](https://img.shields.io/badge/language-C%23-blue)](#)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](#)
 [![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple)](#)
@@ -50,16 +58,6 @@ A comprehensive collection of powerful libraries and extensions for modern .NET 
 | [**MyNet.Utilities.Localization.Extensions**](src/MyNet.Utilities.Localization.Extensions) | 🌐 Localization resources and helpers for multi-language applications. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Localization.Extensions)](https://www.nuget.org/packages/MyNet.Utilities.Localization.Extensions) |
 | [**MyNet.Utilities.Logging.NLog**](src/MyNet.Utilities.Logging.NLog) | 📝 Logging integration with NLog for structured logging. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Logging.NLog)](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
 | [**MyNet.Utilities.Mail.MailKit**](src/MyNet.Utilities.Mail.MailKit) | 📧 Email sending capabilities with MailKit integration. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Mail.MailKit)](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit) |
-| [**MyNet.Avalonia**](src/Avalonia/MyNet.Avalonia) | 🖥️ Avalonia UI helpers and extensions for cross-platform desktop applications. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Avalonia)](https://www.nuget.org/packages/MyNet.Avalonia) |
-| [**MyNet.Avalonia.Controls**](src/Avalonia/MyNet.Avalonia.Controls) | 🎛️ Custom Avalonia controls and components. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Avalonia.Controls)](https://www.nuget.org/packages/MyNet.Avalonia.Controls) |
-| [**MyNet.Avalonia.Theme**](src/Avalonia/MyNet.Avalonia.Theme) | 🎨 Avalonia theming resources and styles. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Avalonia.Theme)](https://www.nuget.org/packages/MyNet.Avalonia.Theme) |
-| [**MyNet.Avalonia.UI**](src/Avalonia/MyNet.Avalonia.UI) | 🖼️ UI extensions and utilities for Avalonia applications. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Avalonia.UI)](https://www.nuget.org/packages/MyNet.Avalonia.UI) |
-| [**MyNet.Xaml.Html**](src/Wpf/MyNet.Xaml.Html) | 🔄 XAML to HTML conversion and helpers. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Xaml.Html)](https://www.nuget.org/packages/MyNet.Xaml.Html) |
-| [**MyNet.Wpf**](src/Wpf/MyNet.Wpf) | 🪟 WPF helpers and extensions for Windows desktop applications. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Wpf)](https://www.nuget.org/packages/MyNet.Wpf) |
-| [**MyNet.Wpf.DragAndDrop**](src/Wpf/MyNet.Wpf.DragAndDrop) | 🖱️ WPF drag and drop helpers and utilities. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Wpf.DragAndDrop)](https://www.nuget.org/packages/MyNet.Wpf.DragAndDrop) |
-| [**MyNet.Wpf.LiveCharts**](src/Wpf/MyNet.Wpf.LiveCharts) | 📈 WPF LiveCharts integration for data visualization. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Wpf.LiveCharts)](https://www.nuget.org/packages/MyNet.Wpf.LiveCharts) |
-| [**MyNet.Wpf.Presentation**](src/Wpf/MyNet.Wpf.Presentation) | 📽️ WPF presentation helpers and MVVM utilities. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Wpf.Presentation)](https://www.nuget.org/packages/MyNet.Wpf.Presentation) |
-| [**MyNet.Wpf.Web**](src/Wpf/MyNet.Wpf.Web) | 🌐 WPF web integration and browser components. | [![NuGet](https://img.shields.io/nuget/v/MyNet.Wpf.Web)](https://www.nuget.org/packages/MyNet.Wpf.Web) |
 
 ## 🚀 Getting Started
 
@@ -90,11 +88,11 @@ dotnet add package MyNet.Humanizer
 # CSV operations package
 dotnet add package MyNet.CsvHelper.Extensions
 
-# Avalonia UI package
-dotnet add package MyNet.Avalonia
+# AutoMapper extensions package
+dotnet add package MyNet.AutoMapper.Extensions
 
-# WPF extensions package
-dotnet add package MyNet.Wpf
+# HTTP utilities package
+dotnet add package MyNet.Http
 ```
 
 **Using Package Manager Console:**
@@ -114,6 +112,43 @@ Install-Package MyNet.UI
 
 After installing a package, explore the package-specific documentation in the `src/` directory of each project for detailed usage examples and API references.
 
+## 🏷️ Versioning System
+
+This repository uses **automatic semantic versioning** powered by conventional commits:
+
+### 📋 Version Format
+- **Main branch**: `X.Y.Z-pre.BUILD` (e.g., `1.5.0-pre.124`)
+- **Feature branches**: `X.Y.Z-beta.BUILD` (e.g., `1.5.0-beta.89`)
+- **Released packages**: `X.Y.Z` (e.g., `1.5.0`)
+
+### 🔄 Version Calculation
+Versions are automatically calculated based on conventional commit messages:
+
+```bash
+# Patch version increment (1.0.0 → 1.0.1)
+git commit -m "fix(utils): resolve null reference exception"
+
+# Minor version increment (1.0.0 → 1.1.0)  
+git commit -m "feat(ui): add new dialog component"
+
+# Major version increment (1.0.0 → 2.0.0)
+git commit -m "feat(api)!: redesign authentication API
+
+BREAKING CHANGE: Authentication interface signature changed"
+```
+
+### 🎯 Per-Project Versioning
+Each package is versioned independently based on its specific changes:
+- **MyNet.Utilities**: `2.3.1-pre.156`
+- **MyNet.UI**: `1.8.0-pre.156` 
+- **MyNet.Observable**: `1.2.4-pre.156`
+
+### 📊 CI/CD Integration
+- ✅ **Automatic builds** with computed semantic versions
+- ✅ **NuGet packages** generated with proper version numbers
+- ✅ **Coverage reports** deployed to [GitHub Pages](https://sandre58.github.io/MyNet/)
+- ✅ **Quality gates** with automated testing
+
 ## 📁 Repository Structure
 
 - **`src/`** — Source code for all packages organized by category:
@@ -124,18 +159,16 @@ After installing a package, explore the package-specific documentation in the `s
   - **`MyNet.CsvHelper.Extensions`** — CSV import/export utilities
   - **`MyNet.AutoMapper.Extensions`** — Object mapping helpers
   - **`MyNet.Http`** — HTTP client utilities
-  - **`Avalonia/`** — Cross-platform UI packages for Avalonia
-  - **`Wpf/`** — Windows-specific WPF packages
-
-- **`demos/`** — Example applications showcasing library features
-  - **`MyNet.Avalonia.Demo/`** — Cross-platform Avalonia demo
-  - **`MyNet.Wpf.Demo/`** — Windows WPF demo
   
 - **`tests/`** — Comprehensive unit and integration tests
 - **`assets/`** — Project logos, icons, and visual assets
 - **`build/`** — MSBuild configuration and shared properties
 - **`scripts/`** — Build automation and utility scripts
+  - **`compute-version.js`** — Semantic version calculation based on conventional commits
 - **`.github/`** — CI/CD workflows and GitHub automation
+  - **`workflows/ci.yml`** — Integrated CI/CD with automatic versioning
+- **`docs/`** — Documentation and workflow guides
+  - **`WORKFLOWS.md`** — Complete CI/CD documentation
 
 ## 🛠️ Development
 
@@ -146,19 +179,58 @@ After installing a package, explore the package-specific documentation in the `s
 git clone https://github.com/sandre58/MyNet.git
 cd MyNet
 
-# Build all projects
+# Install Node.js dependencies (for versioning)
+npm install
+
+# Build all projects (with automatic versioning)
 dotnet build
 
-# Run tests
-dotnet test
+# Run tests with coverage
+dotnet test --collect:"XPlat Code Coverage"
 
-# Create packages
+# Create packages with semantic versions
 dotnet pack
 ```
+
+### 🔧 Development Workflow
+
+**Using conventional commits for automatic versioning:**
+
+```bash
+# Create a feature branch
+git checkout -b feature/add-caching-support
+
+# Make changes with conventional commit messages
+git commit -m "feat(utils): add memory caching with TTL support"
+git commit -m "test(utils): add comprehensive caching tests"
+git commit -m "docs(utils): add caching documentation"
+
+# Push and create pull request
+git push origin feature/add-caching-support
+```
+
+**Automatic CI process:**
+1. 🏷️ **Version calculation**: Each project gets semantic version based on commits
+2. ✅ **Build & test**: All projects built with computed versions  
+3. 📦 **Package creation**: NuGet packages with semantic versions
+4. 📊 **Coverage reports**: Generated and deployed to GitHub Pages
+5. 🔄 **Artifacts**: Ready-to-ship packages available for download
 
 ### Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details on how to get involved.
+
+**📝 Contribution Requirements:**
+- Use **conventional commit messages** for automatic versioning
+- Follow **semantic versioning** principles  
+- Ensure **test coverage** for new features
+- Update documentation as needed
+
+**🔍 Useful Resources:**
+- 📖 **[CI/CD Documentation](docs/WORKFLOWS.md)** - Complete workflow guide
+- 🏷️ **[Conventional Commits](https://conventionalcommits.org/)** - Commit message format
+- 📊 **[Coverage Report](https://sandre58.github.io/MyNet/)** - Live test coverage
+- 🔧 **[Semantic Versioning](https://semver.org/)** - Versioning specification
 
 ## 📄 License
 
