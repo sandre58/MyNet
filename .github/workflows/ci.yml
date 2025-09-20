@@ -46,10 +46,7 @@ jobs:
 
       - name: Install tools
         run: |
-          dotnet tool install --global nbgv
           npm install
-        env:
-          PATH: $PATH:/home/runner/.dotnet/tools
 
       - name: Versions
         id: versions

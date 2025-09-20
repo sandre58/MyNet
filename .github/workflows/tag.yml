@@ -47,6 +47,10 @@ jobs:
             9.0.x
             8.0.x
 
+      - name: Install tools
+        run: |
+          npm install
+
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
