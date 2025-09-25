@@ -15,6 +15,14 @@ function printResult(version, changed) {
   process.exit(0);
 }
 
+const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
+let suffix;
+if (branch === "main") {
+    suffix = "pre";
+} else {
+    suffix = "beta";
+}
+
 // 1️⃣ Check if we are on a project tag
 let currentTag = "";
 try {
@@ -48,7 +56,8 @@ const rawCommitsCmd = fromRef
 const rawCommits = execSync(rawCommitsCmd).toString().trim();
 
 if (!rawCommits) {
-  printResult(lastVersion, false);
+    semver.inc(lastVersion, releaseType || "patch", suffix);
+    printResult(lastVersion, false);
 }
 
 const commits = rawCommits
@@ -78,13 +87,6 @@ const commits = rawCommits
   }
 
   // 5️⃣ Calculate version based on context
-  const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
-  let suffix;
-  if (branch === "main") {
-    suffix = "pre";
-  } else {
-    suffix = "beta";
-  }
   let nextVersion = semver.inc(lastVersion, releaseType || "patch", suffix);
 
   printResult(nextVersion, true);
