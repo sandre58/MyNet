@@ -27,18 +27,11 @@
     <DataCollectionRunSettings>
         <DataCollectors>
             <!-- Using XPlat Code Coverage (Coverlet) -->
-            <DataCollector friendlyName="XPlat Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+            <DataCollector friendlyName="XPlat Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0">
                 <Configuration>
 
                     <!-- Output formats: lcov (GitHub Actions), opencover (ReportGenerator), cobertura (SonarQube) -->
                     <Format>cobertura</Format>
-                    <OutputName>coverage.cobertura</OutputName>
-
-                    <!-- Output location for coverage reports -->
-                    <OutputDirectory>TestResults\Coverage</OutputDirectory>
-
-                    <!-- Merge multiple test results (important for parallel runs) -->
-                    <MergeWith>TestResults\Coverage\*.cobertura.xml</MergeWith>
 
                     <!-- Exclude unwanted assemblies -->
                     <Exclude>[*.Tests]*</Exclude>

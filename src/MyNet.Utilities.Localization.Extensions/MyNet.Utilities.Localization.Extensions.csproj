@@ -5,7 +5,6 @@
       <PackageIcon>MyNetUtilities.png</PackageIcon>
     <Description>A versatile .NET library providing localization resources and tools for handling cultures, countries, and multilingual data. MyNet.Utilities.Localization.Extensions makes it easy to integrate and manage localization features in your applications.</Description>
     <PackageTags>My;Utilities;Localization;Countries;Resources</PackageTags>
-    <VersionPrefix>8.0.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,5 +20,12 @@
       <LastGenOutput>CultureResources.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.8.106-alpha">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

@@ -7,9 +7,6 @@
         <!-- Force VSTest to use our runsettings -->
         <VSTestSetting>$(RunSettingsFile)</VSTestSetting>
         <VSTestCLIRunSettings>$(RunSettingsFile)</VSTestCLIRunSettings>
-        
-        <!-- Test results directory -->
-        <VSTestResultsDirectory>$(MSBuildThisFileDirectory)TestResults</VSTestResultsDirectory>
     </PropertyGroup>
 
     <!-- Include runsettings file in test projects -->
