@@ -3,59 +3,59 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/26/2025 - 16:17:56 |
-| Parser: | Cobertura |
+| Generated on: | 09/26/2025 - 16:40:00 |
+| Parser: | MultiReport (5x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 292 |
+| Classes: | 295 |
 | Files: | 235 |
-| **Line coverage:** | 41.9% (4471 of 10656) |
-| Covered lines: | 4471 |
-| Uncovered lines: | 6185 |
-| Coverable lines: | 10656 |
+| **Line coverage:** | 38.7% (4802 of 12400) |
+| Covered lines: | 4802 |
+| Uncovered lines: | 7598 |
+| Coverable lines: | 12400 |
 | Total lines: | 23286 |
-| **Branch coverage:** | 21.4% (1099 of 5123) |
-| Covered branches: | 1099 |
-| Total branches: | 5123 |
+| **Branch coverage:** | 22.7% (1505 of 6622) |
+| Covered branches: | 1505 |
+| Total branches: | 6622 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 160_18043204272 |
+| Tag: | 161_18043683637 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 88.6%</summary>
+<details><summary>MyNet.Humanizer - 88.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.6%**|**82%**|
-|MyNet.Humanizer.CasingExtensions|53.8%||
+|**MyNet.Humanizer**|**88.1%**|**80.3%**|
+|MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
-|MyNet.Humanizer.DateTimeHumanizeExtensions|87.9%|50%|
+|MyNet.Humanizer.DateTimeHumanizeExtensions|87.9%|83.1%|
 |MyNet.Humanizer.DateTimes.DateTimeFormatter|90%|100%|
 |MyNet.Humanizer.DateTimes.EnglishDateTimeFormatter|100%||
 |MyNet.Humanizer.DateTimes.FrenchDateTimeFormatter|100%||
 |MyNet.Humanizer.EnumClassDehumanizeExtensions|0%|0%|
 |MyNet.Humanizer.EnumClassHumanizeExtensions|0%|0%|
-|MyNet.Humanizer.EnumDehumanizeExtensions|92.3%|100%|
-|MyNet.Humanizer.EnumHumanizeExtensions|83.3%|37.5%|
+|MyNet.Humanizer.EnumDehumanizeExtensions|92.3%|71.4%|
+|MyNet.Humanizer.EnumHumanizeExtensions|83.3%|42.8%|
 |MyNet.Humanizer.Inflections.EnglishInflector|100%||
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
-|MyNet.Humanizer.Inflections.InflectorBase|100%|100%|
+|MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|78.3%|44.4%|
+|MyNet.Humanizer.InflectorExtensions|78.3%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
-|MyNet.Humanizer.NumberHumanizeExtensions|94.1%|100%|
-|MyNet.Humanizer.OrdinalizeExtensions|80%|0%|
+|MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
+|MyNet.Humanizer.OrdinalizeExtensions|80%|37.5%|
 |MyNet.Humanizer.Ordinalizing.DefaultOrdinalizer|50%||
 |MyNet.Humanizer.Ordinalizing.EnglishOrdinalizer|100%|100%|
 |MyNet.Humanizer.Ordinalizing.FrenchOrdinalizer|100%|100%|
-|MyNet.Humanizer.RegexOptionsUtil|100%||
+|MyNet.Humanizer.RegexOptionsUtil|100%|50%|
 |MyNet.Humanizer.ResourceLocator|100%|100%|
 |MyNet.Humanizer.StringDehumanizeExtensions|100%|100%|
-|MyNet.Humanizer.StringHumanizeExtensions|100%|100%|
-|MyNet.Humanizer.TimeSpanHumanizeExtensions|95.5%|100%|
-|MyNet.Humanizer.ToQuantityExtensions|94.7%|100%|
+|MyNet.Humanizer.StringHumanizeExtensions|100%|95.8%|
+|MyNet.Humanizer.TimeSpanHumanizeExtensions|95.5%|90.9%|
+|MyNet.Humanizer.ToQuantityExtensions|94.7%|87.5%|
 |MyNet.Humanizer.Transformer.To|100%|100%|
 |MyNet.Humanizer.Transformer.ToLowerCase|100%||
 |MyNet.Humanizer.Transformer.ToSentenceCase|100%|100%|
@@ -63,9 +63,10 @@
 |MyNet.Humanizer.Transformer.ToUpperCase|100%||
 |MyNet.Humanizer.TruncateExtensions|100%||
 |MyNet.Humanizer.Truncation.FixedLengthTruncator|100%|100%|
-|MyNet.Humanizer.Truncation.FixedNumberOfCharactersTruncator|94.7%|100%|
-|MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator|93.3%|100%|
+|MyNet.Humanizer.Truncation.FixedNumberOfCharactersTruncator|94.7%|95.8%|
+|MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator|93.3%|90.9%|
 |MyNet.Humanizer.Truncation.Truncator|100%||
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
 </details>
@@ -73,12 +74,12 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer.UnitTests**|**97.4%**|**100%**|
+|**MyNet.Humanizer.UnitTests**|**97.4%**|**91.2%**|
 |MyNet.Humanizer.UnitTests.CasingExtensionsTests|100%||
 |MyNet.Humanizer.UnitTests.CollectionHumanizeTests|100%|100%|
 |MyNet.Humanizer.UnitTests.CustomDescriptionAttribute|0%||
 |MyNet.Humanizer.UnitTests.CustomPropertyAttribute|0%||
-|MyNet.Humanizer.UnitTests.DateTimeHumanize|92.1%|100%|
+|MyNet.Humanizer.UnitTests.DateTimeHumanize|92.1%|76%|
 |MyNet.Humanizer.UnitTests.DateTimeHumanizeExtensionsFrTests|100%||
 |MyNet.Humanizer.UnitTests.DateTimeHumanizeExtensionsTests|100%||
 |MyNet.Humanizer.UnitTests.DehumanizeToEnumTests|100%|100%|
@@ -88,7 +89,7 @@
 |MyNet.Humanizer.UnitTests.FrenchPluralTestSource|90.9%||
 |MyNet.Humanizer.UnitTests.ImposterDescriptionAttribute|0%||
 |MyNet.Humanizer.UnitTests.InflectorExtensionsTests|100%||
-|MyNet.Humanizer.UnitTests.MetricNumeralExtensionsTests|96%|100%|
+|MyNet.Humanizer.UnitTests.MetricNumeralExtensionsTests|96%|75%|
 |MyNet.Humanizer.UnitTests.NumberHumanizeExtensionsTests|100%|100%|
 |MyNet.Humanizer.UnitTests.OrdinalizeTests|100%||
 |MyNet.Humanizer.UnitTests.SomeClass|100%||
@@ -98,14 +99,14 @@
 |MyNet.Humanizer.UnitTests.ToQuantityExtensionsTests|100%||
 |MyNet.Humanizer.UnitTests.TransformersTests|100%||
 |MyNet.Humanizer.UnitTests.TruncatorExtensionsTests|100%|100%|
-|MyNet.Humanizer.UnitTests.UseCultureAttribute|100%||
+|MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 18.3%</summary>
+<details><summary>MyNet.Utilities - 15.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**18.3%**|**7.6%**|
+|**MyNet.Utilities**|**15.4%**|**8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -115,9 +116,9 @@
 |MyNet.Utilities.Authentication.Windows.WindowsAuthenticationService|0%||
 |MyNet.Utilities.Authentication.Windows.WindowsAuthenticationService<TPrinci<br/>pal>|0%|0%|
 |MyNet.Utilities.Authentication.Windows.WindowsUserPrincipal|0%||
-|MyNet.Utilities.Caching.CacheStorage<TKey, TValue>|79.8%|61.5%|
-|MyNet.Utilities.Caching.CacheStorage<TKey, TValue>|85.1%|100%|
-|MyNet.Utilities.Caching.CacheStorageValueInfo<TValue>|50%|0%|
+|MyNet.Utilities.Caching.CacheStorage<TKey, TValue>|79.8%|56.2%|
+|MyNet.Utilities.Caching.CacheStorage<TKey, TValue>|85.1%|61.5%|
+|MyNet.Utilities.Caching.CacheStorageValueInfo<TValue>|50%|50%|
 |MyNet.Utilities.Caching.ExpiredEventArgs<TKey, TValue>|100%||
 |MyNet.Utilities.Caching.ExpiringEventArgs<TKey, TValue>|100%||
 |MyNet.Utilities.Caching.Policies.AbsoluteExpirationPolicy|60%||
@@ -125,7 +126,7 @@
 |MyNet.Utilities.Caching.Policies.DurationExpirationPolicy|100%||
 |MyNet.Utilities.Caching.Policies.ExpirationPolicy|18.7%|22.2%|
 |MyNet.Utilities.Caching.Policies.SlidingExpirationPolicy|0%||
-|MyNet.Utilities.CollectionExtensions|64.7%|33.3%|
+|MyNet.Utilities.CollectionExtensions|64.7%|37.5%|
 |MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|0%|0%|
 |MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|0%|0%|
 |MyNet.Utilities.Collections.OptimizedObservableCollection<T>|0%|0%|
@@ -140,14 +141,14 @@
 |MyNet.Utilities.Comparers.PredicateEqualityComparer<T>|0%|0%|
 |MyNet.Utilities.Comparers.ReferenceEqualityComparer|0%||
 |MyNet.Utilities.Comparers.ReferenceEqualityComparer<T>|0%||
-|MyNet.Utilities.Comparers.ReflectionComparer<T>|93.7%|85.7%|
+|MyNet.Utilities.Comparers.ReflectionComparer<T>|93.7%|77.2%|
 |MyNet.Utilities.Comparers.ReflectionSortDescription|100%||
 |MyNet.Utilities.DateOnlyExtensions|0%|0%|
 |MyNet.Utilities.DateTimeExtensions|60.9%|51.1%|
 |MyNet.Utilities.DateTimeOffsetExtensions|0%|0%|
 |MyNet.Utilities.DateTimes.DatePeriod|0%||
 |MyNet.Utilities.DateTimes.DatePeriodWithOptionalEnd|0%|0%|
-|MyNet.Utilities.DateTimes.FluentTimeSpan|93.9%|100%|
+|MyNet.Utilities.DateTimes.FluentTimeSpan|93.9%|75%|
 |MyNet.Utilities.DateTimes.ImmutableDatePeriod|0%||
 |MyNet.Utilities.DateTimes.ImmutablePeriod|0%||
 |MyNet.Utilities.DateTimes.ImmutableTimePeriod|0%||
@@ -162,14 +163,14 @@
 |MyNet.Utilities.DictionaryExtensions|11.1%|20%|
 |MyNet.Utilities.DictionaryExtensions<TKey, TValue>|11.1%|20%|
 |MyNet.Utilities.DriveExtensions|0%|0%|
-|MyNet.Utilities.Encryption.AesEncryptionService|100%|100%|
-|MyNet.Utilities.EnumClass|40.6%|42.8%|
-|MyNet.Utilities.EnumClass<T, TValue>|40.6%|42.8%|
-|MyNet.Utilities.EnumClass<T>|40.6%|42.8%|
+|MyNet.Utilities.Encryption.AesEncryptionService|100%|75%|
+|MyNet.Utilities.EnumClass|40.6%|33.3%|
+|MyNet.Utilities.EnumClass<T, TValue>|40.6%|33.3%|
+|MyNet.Utilities.EnumClass<T>|40.6%|33.3%|
 |MyNet.Utilities.EnumClass<TEnum, TValue>|10.3%|7.1%|
-|MyNet.Utilities.EnumClass<TEnum, TValue>|40.6%|42.8%|
+|MyNet.Utilities.EnumClass<TEnum, TValue>|40.6%|33.3%|
 |MyNet.Utilities.EnumClass<TEnum>|100%||
-|MyNet.Utilities.EnumClass<TFieldType>|40.6%|42.8%|
+|MyNet.Utilities.EnumClass<TFieldType>|40.6%|33.3%|
 |MyNet.Utilities.EnumerableExtensions|1.9%|0%|
 |MyNet.Utilities.EnumerableExtensions<T, TId>|1.9%|0%|
 |MyNet.Utilities.EnumerableExtensions<TSource>|1.9%|0%|
@@ -184,8 +185,8 @@
 |MyNet.Utilities.Exceptions.NullOrEmptyException|0%||
 |MyNet.Utilities.Exceptions.OutOfRangeException|0%||
 |MyNet.Utilities.Exceptions.TranslatableException|0%||
-|MyNet.Utilities.Generator.RandomGenerator|77%|51.8%|
-|MyNet.Utilities.Generator.RandomGenerator<T>|77%|51.8%|
+|MyNet.Utilities.Generator.RandomGenerator|77%|51.7%|
+|MyNet.Utilities.Generator.RandomGenerator<T>|77%|51.7%|
 |MyNet.Utilities.Generator.SentenceGenerator|0%|0%|
 |MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
 |MyNet.Utilities.Generator.WeightedRandom<T>|0%||
@@ -219,7 +220,7 @@
 |MyNet.Utilities.IO.FileExtensions.FileExtensionFilterBuilder|94.7%|100%|
 |MyNet.Utilities.IO.FileExtensions.FileExtensionFilterBuilderProvider|0%||
 |MyNet.Utilities.IO.FileExtensions.FileExtensionInfo|80%|50%|
-|MyNet.Utilities.IO.FileExtensions.FileExtensionInfoExtensions|100%|100%|
+|MyNet.Utilities.IO.FileExtensions.FileExtensionInfoExtensions|100%|81.8%|
 |MyNet.Utilities.IO.FileExtensions.FileExtensionInfoProvider|100%||
 |MyNet.Utilities.IO.FileHistory.RecentFile|0%|0%|
 |MyNet.Utilities.IO.FileHistory.RecentFilesService|0%|0%|
@@ -240,11 +241,11 @@
 |MyNet.Utilities.ListExtensions|0%|0%|
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
-|MyNet.Utilities.Localization.GlobalizationService|37%|0%|
-|MyNet.Utilities.Localization.LocalizationService|91.4%|100%|
-|MyNet.Utilities.Localization.TranslationService|80.5%|50%|
+|MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
+|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
+|MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
-|MyNet.Utilities.Logging.LogManager|6.6%|0%|
+|MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
 |MyNet.Utilities.Logging.PerformanceLogger|0%|0%|
 |MyNet.Utilities.Mail.Email|0%|0%|
 |MyNet.Utilities.Mail.EmailFactory|0%||
@@ -274,8 +275,8 @@
 |MyNet.Utilities.Messaging.WeakFunc<TResult>|0%|0%|
 |MyNet.Utilities.NullableExtensions|7.6%|17.6%|
 |MyNet.Utilities.NullableExtensions<T>|7.6%|17.6%|
-|MyNet.Utilities.NumberExtensions|92.2%|100%|
-|MyNet.Utilities.NumberExtensions<T>|92.2%|100%|
+|MyNet.Utilities.NumberExtensions|92.2%|89.2%|
+|MyNet.Utilities.NumberExtensions<T>|92.2%|89.2%|
 |MyNet.Utilities.NumberToTimeSpanExtensions|37.9%|0%|
 |MyNet.Utilities.ObjectExtensions|0%|0%|
 |MyNet.Utilities.OverridableValue<T, TItem>|0%|0%|
@@ -295,9 +296,9 @@
 |MyNet.Utilities.Progress.ProgressStep<T>|0%|0%|
 |MyNet.Utilities.Providers.ItemsProvider<T>|0%||
 |MyNet.Utilities.Providers.PredicateItemsProvider<T>|0%||
-|MyNet.Utilities.ReflectionExtensions|41.1%|5%|
-|MyNet.Utilities.ReflectionExtensions<T>|41.1%|5%|
-|MyNet.Utilities.ReflectionExtensions<TAttribute>|41.1%|5%|
+|MyNet.Utilities.ReflectionExtensions|41.1%|8.4%|
+|MyNet.Utilities.ReflectionExtensions<T>|41.1%|8.4%|
+|MyNet.Utilities.ReflectionExtensions<TAttribute>|41.1%|8.4%|
 |MyNet.Utilities.Sequences.AcceptableValueRange<T>|0%|0%|
 |MyNet.Utilities.Sequences.ImmutableInterval<T>|0%||
 |MyNet.Utilities.Sequences.IntegerSequence|0%||
@@ -312,9 +313,11 @@
 |MyNet.Utilities.Suspending.SuspendScope|0%||
 |MyNet.Utilities.Threading.SingleTaskRunner|0%|0%|
 |MyNet.Utilities.TimeOnlyExtensions|0%|0%|
-|MyNet.Utilities.TimeSpanExtensions|28.3%|55.1%|
+|MyNet.Utilities.TimeSpanExtensions|28.3%|59.3%|
 |MyNet.Utilities.ValidationExtensions|0%|0%|
 |MyNet.Utilities.ValueObject|0%|0%|
+|System.Text.RegularExpressions.Generated|0%|0%|
+|System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
@@ -322,7 +325,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**99.8%**|**100%**|
+|**MyNet.Utilities.Tests**|**99.8%**|**96.8%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
 |MyNet.Utilities.Tests.Comparers.NullableComparerTests|100%||
 |MyNet.Utilities.Tests.Comparers.ReflectionComparerTests|100%||
@@ -338,7 +341,7 @@
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
 |MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
-|MyNet.Utilities.Tests.UseCultureAttribute|100%||
+|MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
 |MyNet.Utilities.Tests.UseCultureTests|100%||
 
 </details>
