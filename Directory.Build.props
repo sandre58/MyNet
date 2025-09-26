@@ -28,6 +28,21 @@
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
+    <!-- Configuration for test projects - use .runsettings for coverage -->
+    <PropertyGroup Condition="'$(IsTestProject)' == 'True'">
+        <!-- Path to the .runsettings file -->
+        <RunSettingsFile>$(MSBuildThisFileDirectory).runsettings</RunSettingsFile>
+
+        <!-- Force VSTest to use our runsettings -->
+        <VSTestSetting>$(RunSettingsFile)</VSTestSetting>
+        <VSTestCLIRunSettings>$(RunSettingsFile)</VSTestCLIRunSettings>
+    </PropertyGroup>
+
+    <!-- Include runsettings file in test projects -->
+    <ItemGroup Condition="'$(IsTestProject)' == 'True' And Exists('$(RunSettingsFile)')">
+        <None Include="$(RunSettingsFile)" Link=".runsettings" Visible="false" />
+    </ItemGroup>
+
     <!-- Imports -->
     <Import Project="$(MSBuildThisFileDirectory)/build/code-analysis.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/code-analysis.props')" />
     <Import Project="$(MSBuildThisFileDirectory)/build/dependencies.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/dependencies.props')" />

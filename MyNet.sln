@@ -29,11 +29,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{2E7433DA-B
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		docs\CONVENTIONAL_COMMITS.md = docs\CONVENTIONAL_COMMITS.md
 		LICENSE = LICENSE
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
-		docs\WORKFLOWS.md = docs\WORKFLOWS.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{892DFD87-4C6A-412C-8243-7E9709DF5209}"
@@ -75,17 +73,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.UI", "src\MyNet.UI\MyNet.UI.csproj", "{C49DBB04-263E-DEE7-04DA-837EDB813775}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Humanizer.UnitTests", "tests\MyNet.Humanizer.UnitTests\MyNet.Humanizer.UnitTests.csproj", "{2090F530-BECF-6B20-D9BD-5E7E19A89366}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{ECE90391-AE4A-42D9-8332-508DC90BABE6}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\compute-version.js = scripts\compute-version.js
-		package.json = package.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4942B6F1-961C-4D26-A566-06D348BA98C1}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\test-coverage.ps1 = scripts\test-coverage.ps1
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.AutoMapper.Extensions", "src\MyNet.AutoMapper.Extensions\MyNet.AutoMapper.Extensions.csproj", "{A0F36FB9-5442-CC32-B310-7A83D2CAA776}"
 EndProject
@@ -174,8 +161,6 @@ Global
 		{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{015D541F-7A6E-4FF7-A267-7FA869C00DE0} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{2090F530-BECF-6B20-D9BD-5E7E19A89366} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
-		{ECE90391-AE4A-42D9-8332-508DC90BABE6} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
-		{4942B6F1-961C-4D26-A566-06D348BA98C1} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{9C3385D2-1E72-4723-83A9-35A106A6ACBA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
