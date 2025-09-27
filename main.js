@@ -253,7 +253,6 @@ var assemblies = [
       { "name": "MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator", "rp": "MyNet.Humanizer_FixedNumberOfWordsTruncator.html", "cl": 28, "ucl": 2, "cal": 30, "tl": 78, "cb": 20, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Truncation.Truncator", "rp": "MyNet.Humanizer_Truncator.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 330, "ucl": 54, "cal": 384, "tl": 1198, "cb": 133, "tb": 168, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 331, "ucl": 54, "cal": 385, "tl": 1197, "cb": 133, "tb": 168, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 991, "ucl": 162, "cal": 1153, "tl": 3593, "cb": 399, "tb": 504, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "VisualStudioConfiguration.Main", "rp": "MyNet.Humanizer_Main.html", "cl": 0, "ucl": 27, "cal": 27, "tl": 250, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
@@ -499,8 +498,8 @@ var assemblies = [
       { "name": "MyNet.Utilities.ValidationExtensions", "rp": "MyNet.Utilities_ValidationExtensions.html", "cl": 0, "ucl": 23, "cal": 23, "tl": 448, "cb": 0, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.ValueObject", "rp": "MyNet.Utilities_ValueObject.html", "cl": 0, "ucl": 16, "cal": 16, "tl": 88, "cb": 0, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 712, "cal": 712, "tl": 2109, "cb": 0, "tb": 460, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 2071, "cal": 2071, "tl": 6188, "cb": 0, "tb": 1356, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 647, "cal": 647, "tl": 1969, "cb": 0, "tb": 436, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 2071, "cal": 2071, "tl": 6188, "cb": 0, "tb": 1356, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "VisualStudioConfiguration.Main", "rp": "MyNet.Utilities_Main.html", "cl": 0, "ucl": 27, "cal": 27, "tl": 250, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -999,6 +998,12 @@ var riskHotspots = [
       { "value": 8, "exceeded": false },
     ]},
   {
+    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Localization.LocalizationService", "reportPath": "MyNet.Utilities_LocalizationService.html", "methodName": "Get<TProvider>(System.Globalization.CultureInfo)", "methodShortName": "Get<TProvider>(...)", "fileIndex": 0, "line": 95,
+    "metrics": [
+      { "value": 72, "exceeded": true },
+      { "value": 8, "exceeded": false },
+    ]},
+  {
     "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Logging.LogManager", "reportPath": "MyNet.Utilities_LogManager.html", "methodName": "MeasureTime(string, MyNet.Utilities.Logging.TraceLevel)", "methodShortName": "MeasureTime(...)", "fileIndex": 0, "line": 66,
     "metrics": [
       { "value": 72, "exceeded": true },
@@ -1108,12 +1113,6 @@ var riskHotspots = [
     ]},
   {
     "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ArrayExtensions.ArrayTraverse", "reportPath": "MyNet.Utilities_ArrayTraverse.html", "methodName": "Step()", "methodShortName": "Step()", "fileIndex": 0, "line": 61,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Caching.CacheStorage<TKey, TValue>", "reportPath": "MyNet.Utilities_CacheStorage_TKey__TValue_.html", "methodName": "UpdateTimer()", "methodShortName": "UpdateTimer()", "fileIndex": 0, "line": 259,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1257,6 +1256,12 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
+    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Localization.LocalizationService", "reportPath": "MyNet.Utilities_LocalizationService.html", "methodName": "Register<TInterface, TProvider>(System.Globalization.CultureInfo, TProvider)", "methodShortName": "Register<TInterface, TProvider>(...)", "fileIndex": 0, "line": 50,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
     "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Mail.Email", "reportPath": "MyNet.Utilities_Email.html", "methodName": "AddAddresses(System.Collections.Generic.IList<MyNet.Utilities.Mail.Models.EmailAddress>, string, string)", "methodShortName": "AddAddresses(...)", "fileIndex": 0, "line": 216,
     "metrics": [
       { "value": 42, "exceeded": true },
@@ -1389,18 +1394,6 @@ var riskHotspots = [
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 197,
-    "metrics": [
-      { "value": 23, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 813,
-    "metrics": [
-      { "value": 21, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
     "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 1, "line": 199,
     "metrics": [
       { "value": 23, "exceeded": false },
@@ -1426,12 +1419,6 @@ var riskHotspots = [
     ]},
   {
     "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 647,
-    "metrics": [
-      { "value": 19, "exceeded": false },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 645,
     "metrics": [
       { "value": 19, "exceeded": false },
       { "value": 16, "exceeded": true },
