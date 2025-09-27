@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/27/2025 - 12:06:54 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 09/27/2025 - 12:21:47 |
+| Parser: | MultiReport (5x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 296 |
 | Files: | 235 |
-| **Line coverage:** | 40.1% (5139 of 12787) |
-| Covered lines: | 5139 |
-| Uncovered lines: | 7648 |
-| Coverable lines: | 12787 |
-| Total lines: | 26552 |
-| **Branch coverage:** | 24.1% (1639 of 6790) |
-| Covered branches: | 1639 |
+| **Line coverage:** | 40.1% (5128 of 12777) |
+| Covered lines: | 5128 |
+| Uncovered lines: | 7649 |
+| Coverable lines: | 12777 |
+| Total lines: | 28640 |
+| **Branch coverage:** | 24.1% (1638 of 6790) |
+| Covered branches: | 1638 |
 | Total branches: | 6790 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 175_18059508291 |
+| Tag: | 176_18059666240 |
 
 </details>
 
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|75.7%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -322,11 +322,11 @@
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
-<details><summary>MyNet.Utilities.Tests - 99.8%</summary>
+<details><summary>MyNet.Utilities.Tests - 99.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**99.8%**|**96.8%**|
+|**MyNet.Utilities.Tests**|**99.7%**|**93.7%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
 |MyNet.Utilities.Tests.Comparers.NullableComparerTests|100%||
 |MyNet.Utilities.Tests.Comparers.ReflectionComparerTests|100%||
@@ -340,7 +340,7 @@
 |MyNet.Utilities.Tests.FileExtensionsTests|100%|100%|
 |MyNet.Utilities.Tests.FluentTimeSpanOperatorOverloadsTests|100%||
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
-|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
+|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|99.4%|92.8%|
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
 |MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
 |MyNet.Utilities.Tests.UseCultureTests|100%||
