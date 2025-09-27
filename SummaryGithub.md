@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/27/2025 - 12:56:48 |
+| Generated on: | 09/27/2025 - 13:27:49 |
 | Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 296 |
+| Classes: | 295 |
 | Files: | 235 |
-| **Line coverage:** | 43.2% (5129 of 11860) |
-| Covered lines: | 5129 |
-| Uncovered lines: | 6731 |
-| Coverable lines: | 11860 |
-| Total lines: | 28641 |
-| **Branch coverage:** | 25.8% (1639 of 6344) |
-| Covered branches: | 1639 |
-| Total branches: | 6344 |
+| **Line coverage:** | 41.5% (4798 of 11540) |
+| Covered lines: | 4798 |
+| Uncovered lines: | 6742 |
+| Coverable lines: | 11540 |
+| Total lines: | 28781 |
+| **Branch coverage:** | 24.2% (1506 of 6200) |
+| Covered branches: | 1506 |
+| Total branches: | 6200 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 178_18060038074 |
+| Tag: | 179_18060383168 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 87.8%</summary>
+<details><summary>MyNet.Humanizer - 88.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**87.8%**|**80.1%**|
+|**MyNet.Humanizer**|**88.1%**|**80.3%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -68,7 +68,6 @@
 |MyNet.Humanizer.Truncation.Truncator|100%||
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
-|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -103,11 +102,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 17.3%</summary>
+<details><summary>MyNet.Utilities - 17.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**17.3%**|**8.8%**|
+|**MyNet.Utilities**|**17.1%**|**8.7%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
