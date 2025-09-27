@@ -7,18 +7,6 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-permissions:
-  contents: write      # Required to checkout code and push to gh-pages
-  pages: write         # Required to publish to GitHub Pages
-  id-token: write      # Required for OIDC authentication
-  checks: write        # Required to publish test results
-  actions: read        # Required to read workflow runs
-
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/ci.yml@main

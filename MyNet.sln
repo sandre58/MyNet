@@ -80,14 +80,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Http", "src\MyNet.Htt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{761E88AC-1747-465B-BFFA-B7EFFD3F47B6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{9C3385D2-1E72-4723-83A9-35A106A6ACBA}"
-	ProjectSection(SolutionItems) = preProject
-		.github\.chglog\CHANGELOG.tpl.md = .github\.chglog\CHANGELOG.tpl.md
-		.github\.chglog\config.yml = .github\.chglog\config.yml
-		.github\.chglog\release-config.yml = .github\.chglog\release-config.yml
-		.github\.chglog\RELEASE.tpl.md = .github\.chglog\RELEASE.tpl.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,7 +153,6 @@ Global
 		{FB9A9AA6-6119-43F3-9F1B-A4539F2DD1A3} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{015D541F-7A6E-4FF7-A267-7FA869C00DE0} = {761E88AC-1747-465B-BFFA-B7EFFD3F47B6}
 		{2090F530-BECF-6B20-D9BD-5E7E19A89366} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
-		{9C3385D2-1E72-4723-83A9-35A106A6ACBA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {075CDC9E-861B-4CC2-87C4-C6DD6DDB77B6}

@@ -7,14 +7,10 @@ on:
   repository_dispatch:
     types: [tag_created]  # Triggered by tag.yml workflow
 
-permissions:
-  contents: write      # Required to create releases
-
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/release.yml@main
+    secrets:
+      RELEASE_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      PRERELEASE_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
