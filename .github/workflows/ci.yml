@@ -10,3 +10,6 @@ on:
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/ci.yml@main
+    with:
+      app-projects: ""
+      nuget-projects: "src"
