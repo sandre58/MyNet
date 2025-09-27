@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/27/2025 - 12:21:47 |
-| Parser: | MultiReport (5x Cobertura) |
+| Generated on: | 09/27/2025 - 12:50:19 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 296 |
+| Classes: | 295 |
 | Files: | 235 |
-| **Line coverage:** | 40.1% (5128 of 12777) |
-| Covered lines: | 5128 |
-| Uncovered lines: | 7649 |
-| Coverable lines: | 12777 |
-| Total lines: | 28640 |
-| **Branch coverage:** | 24.1% (1638 of 6790) |
-| Covered branches: | 1638 |
-| Total branches: | 6790 |
+| **Line coverage:** | 41.8% (4808 of 11485) |
+| Covered lines: | 4808 |
+| Uncovered lines: | 6677 |
+| Coverable lines: | 11485 |
+| Total lines: | 26414 |
+| **Branch coverage:** | 24.3% (1506 of 6176) |
+| Covered branches: | 1506 |
+| Total branches: | 6176 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 176_18059666240 |
+| Tag: | 177_18059964968 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 87.8%</summary>
+<details><summary>MyNet.Humanizer - 88.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**87.8%**|**80.1%**|
+|**MyNet.Humanizer**|**88.1%**|**80.3%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|75.7%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -66,7 +66,6 @@
 |MyNet.Humanizer.Truncation.FixedNumberOfCharactersTruncator|94.7%|95.8%|
 |MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator|93.3%|90.9%|
 |MyNet.Humanizer.Truncation.Truncator|100%||
-|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
@@ -103,11 +102,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 15.4%</summary>
+<details><summary>MyNet.Utilities - 17.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**15.4%**|**8%**|
+|**MyNet.Utilities**|**17.3%**|**8.8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -322,11 +321,11 @@
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
-<details><summary>MyNet.Utilities.Tests - 99.7%</summary>
+<details><summary>MyNet.Utilities.Tests - 99.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**99.7%**|**93.7%**|
+|**MyNet.Utilities.Tests**|**99.8%**|**96.8%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
 |MyNet.Utilities.Tests.Comparers.NullableComparerTests|100%||
 |MyNet.Utilities.Tests.Comparers.ReflectionComparerTests|100%||
@@ -340,7 +339,7 @@
 |MyNet.Utilities.Tests.FileExtensionsTests|100%|100%|
 |MyNet.Utilities.Tests.FluentTimeSpanOperatorOverloadsTests|100%||
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
-|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|99.4%|92.8%|
+|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
 |MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
 |MyNet.Utilities.Tests.UseCultureTests|100%||
