@@ -32,5 +32,5 @@ jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/tag.yml@main
     with:
-      force-tag: {{ github.event.inputs.force_all }}
-      dry-run: {{ github.event.inputs.dry_run }}
+      force-tag: ${{ github.event.inputs.force_all || 'false' }}  # Pass the force_all input to the reusable workflow
+      dry-run: ${{ github.event.inputs.dry_run || 'false' }}      # Pass the dry_run input to the reusable workflow
