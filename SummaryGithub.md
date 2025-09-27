@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/27/2025 - 06:17:38 |
-| Parser: | MultiReport (5x Cobertura) |
+| Generated on: | 09/27/2025 - 06:18:53 |
+| Parser: | MultiReport (7x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 297 |
+| Classes: | 298 |
 | Files: | 237 |
-| **Line coverage:** | 38.5% (4801 of 12453) |
-| Covered lines: | 4801 |
-| Uncovered lines: | 7652 |
-| Coverable lines: | 12453 |
+| **Line coverage:** | 39.9% (5132 of 12838) |
+| Covered lines: | 5132 |
+| Uncovered lines: | 7706 |
+| Coverable lines: | 12838 |
 | Total lines: | 23786 |
-| **Branch coverage:** | 22.6% (1505 of 6630) |
-| Covered branches: | 1505 |
-| Total branches: | 6630 |
+| **Branch coverage:** | 24% (1638 of 6798) |
+| Covered branches: | 1638 |
+| Total branches: | 6798 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 165_18056089697 |
+| Tag: | 166_18056104645 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 87.1%</summary>
+<details><summary>MyNet.Humanizer - 86.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**87.1%**|**80%**|
+|**MyNet.Humanizer**|**86.9%**|**79.9%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -66,6 +66,7 @@
 |MyNet.Humanizer.Truncation.FixedNumberOfCharactersTruncator|94.7%|95.8%|
 |MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator|93.3%|90.9%|
 |MyNet.Humanizer.Truncation.Truncator|100%||
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |VisualStudioConfiguration.Main|0%|0%|
