@@ -6,23 +6,17 @@ on:
       dry_run:
         description: 'Dry run - Only show what would be tagged without creating tags'
         required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
+        default: false
+        type: boolean
       force_all:
         description: 'Force tag all projects regardless of changes'
         required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
+        default: false
+        type: boolean
 
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/tag.yml@main
     with:
-      force-tag: ${{ github.event.inputs.force_all || 'false' }}  # Pass the force_all input to the reusable workflow
-      dry-run: ${{ github.event.inputs.dry_run || 'false' }}      # Pass the dry_run input to the reusable workflow
+      force-tag: ${{ github.event.inputs.force_all }}
+      dry-run: ${{ github.event.inputs.dry_run }}
