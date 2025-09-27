@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/27/2025 - 06:18:53 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 09/27/2025 - 11:04:07 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 298 |
 | Files: | 237 |
-| **Line coverage:** | 39.9% (5132 of 12838) |
-| Covered lines: | 5132 |
-| Uncovered lines: | 7706 |
-| Coverable lines: | 12838 |
-| Total lines: | 23786 |
+| **Line coverage:** | 40% (5137 of 12841) |
+| Covered lines: | 5137 |
+| Uncovered lines: | 7704 |
+| Coverable lines: | 12841 |
+| Total lines: | 27048 |
 | **Branch coverage:** | 24% (1638 of 6798) |
 | Covered branches: | 1638 |
 | Total branches: | 6798 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 166_18056104645 |
+| Tag: | 173_18058900755 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 86.9%</summary>
+<details><summary>MyNet.Humanizer - 87%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**86.9%**|**79.9%**|
+|**MyNet.Humanizer**|**87%**|**79.9%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|78.3%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -104,11 +104,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 15.3%</summary>
+<details><summary>MyNet.Utilities - 15.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**15.3%**|**8%**|
+|**MyNet.Utilities**|**15.4%**|**8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
