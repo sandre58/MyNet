@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 09/26/2025 - 16:40:00 |
-| Parser: | MultiReport (5x Cobertura) |
+| Generated on: | 09/27/2025 - 05:39:29 |
+| Parser: | MultiReport (7x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 295 |
-| Files: | 235 |
-| **Line coverage:** | 38.7% (4802 of 12400) |
-| Covered lines: | 4802 |
-| Uncovered lines: | 7598 |
-| Coverable lines: | 12400 |
-| Total lines: | 23286 |
-| **Branch coverage:** | 22.7% (1505 of 6622) |
-| Covered branches: | 1505 |
-| Total branches: | 6622 |
+| Classes: | 298 |
+| Files: | 237 |
+| **Line coverage:** | 39.7% (5131 of 12902) |
+| Covered lines: | 5131 |
+| Uncovered lines: | 7771 |
+| Coverable lines: | 12902 |
+| Total lines: | 23786 |
+| **Branch coverage:** | 24% (1638 of 6822) |
+| Covered branches: | 1638 |
+| Total branches: | 6822 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 161_18043683637 |
+| Tag: | 162_18055697454 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 88.1%</summary>
+<details><summary>MyNet.Humanizer - 86.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.1%**|**80.3%**|
+|**MyNet.Humanizer**|**86.9%**|**79.9%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -68,6 +68,8 @@
 |MyNet.Humanizer.Truncation.Truncator|100%||
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
+|VisualStudioConfiguration.Main|0%|0%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -102,11 +104,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 15.4%</summary>
+<details><summary>MyNet.Utilities - 15.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**15.4%**|**8%**|
+|**MyNet.Utilities**|**15.2%**|**8%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -319,6 +321,7 @@
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
+|VisualStudioConfiguration.Main|0%|0%|
 
 </details>
 <details><summary>MyNet.Utilities.Tests - 99.8%</summary>
