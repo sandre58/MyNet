@@ -18,5 +18,6 @@ jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/tag.yml@main
     with:
-      force-tag: ${{ github.event.inputs.force_all }}
-      dry-run: ${{ github.event.inputs.dry_run }}
+      dry-run: ${{ inputs.dry_run }}
+      force-tag: ${{ inputs.force_all }}
+

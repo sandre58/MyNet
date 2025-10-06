@@ -13,4 +13,3 @@ jobs:
     secrets:
       RELEASE_API_KEY: ${{ secrets.NUGET_API_KEY }}
       PRERELEASE_API_KEY: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
