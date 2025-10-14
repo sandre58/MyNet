@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace MyNet.UI.Dialogs.CustomDialogs;
+namespace MyNet.UI.Dialogs.ContentDialogs;
 
 /// <summary>
 /// Defines the contract for a dialog view model, including title, result, and loading behavior.

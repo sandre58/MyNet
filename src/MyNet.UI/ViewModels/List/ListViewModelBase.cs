@@ -26,7 +26,7 @@ using MyNet.Observable.Collections.Sorting;
 using MyNet.UI.Collections;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
-using MyNet.UI.Dialogs.CustomDialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.MessageBox;
 using MyNet.UI.Resources;
 using MyNet.UI.ViewModels.Display;

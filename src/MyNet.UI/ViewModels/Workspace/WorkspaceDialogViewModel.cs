@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MyNet.Observable.Attributes;
 using MyNet.UI.Commands;
-using MyNet.UI.Dialogs.CustomDialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 
 namespace MyNet.UI.ViewModels.Workspace;
 

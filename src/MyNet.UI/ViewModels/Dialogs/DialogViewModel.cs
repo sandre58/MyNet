@@ -12,7 +12,7 @@ using System.Windows.Input;
 using MyNet.Observable;
 using MyNet.Observable.Attributes;
 using MyNet.UI.Commands;
-using MyNet.UI.Dialogs.CustomDialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 
 namespace MyNet.UI.ViewModels.Dialogs;
 

@@ -1,61 +1,50 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="DialogManager.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="DialogManager.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using MyNet.UI.Dialogs.CustomDialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.FileDialogs;
 using MyNet.UI.Dialogs.MessageBox;
-using MyNet.UI.Locators;
-using MyNet.UI.Resources;
-using MyNet.Utilities.Messaging;
 
 namespace MyNet.UI.Dialogs;
 
 /// <summary>
-/// Provides methods and properties to display a window dialog.
+/// Static facade for accessing the default dialog manager instance.
+/// Provides backward compatibility with legacy code.
 /// </summary>
 public static class DialogManager
 {
-    #region Fields
+    private static IDialogService? _defaultInstance;
 
-    private static ICustomDialogService? _customDialogService;
-    private static IMessageBoxService? _messageBoxService;
-    private static IFileDialogService? _fileDialogService;
-    private static IMessageBoxFactory? _messageBoxFactory;
-    private static IViewResolver? _viewResolver;
-    private static IViewLocator? _viewLocator;
-    private static IViewModelLocator? _viewModelLocator;
+    /// <summary>
+    /// Gets the default dialog manager instance.
+    /// </summary>
+    public static IDialogService Default => _defaultInstance ?? throw new InvalidOperationException("DialogService has not been initialized. Call Initialize() first.");
 
-    #endregion Fields
+    /// <summary>
+    /// Gets a value indicating whether the default instance has been set.
+    /// </summary>
+    public static bool IsInitialized => _defaultInstance is not null;
 
-    #region Members
+    /// <summary>
+    /// Initializes the <see cref="DialogManager"/> with the specified <see cref="IDialogService"/>.
+    /// </summary>
+    public static void Initialize(IDialogService dialogService) => _defaultInstance = dialogService;
 
-    public static IList<IDialogViewModel>? OpenedDialogs => _customDialogService?.OpenedDialogs;
+    /// <summary>
+    /// Gets the collection of currently opened dialogs.
+    /// </summary>
+    public static IList<IDialogViewModel>? OpenedDialogs => Default.OpenedContentDialogs;
 
-    public static bool HasOpenedDialogs => OpenedDialogs?.Any() == true;
-
-    public static ICustomDialogService CustomDialogService => _customDialogService ?? throw new InvalidOperationException("CustomDialogService has not been initialized.");
-
-    public static IMessageBoxService MessageBoxService => _messageBoxService ?? throw new InvalidOperationException("MessageBoxService has not been initialized.");
-
-    public static IFileDialogService FileDialogService => _fileDialogService ?? throw new InvalidOperationException("FileDialogService has not been initialized.");
-
-    #endregion Members
-
-    public static void Initialize(
-        ICustomDialogService customDialogService,
-        IMessageBoxService messageBoxService,
-        IFileDialogService fileDialogService,
-        IMessageBoxFactory messageBoxFactory,
-        IViewResolver viewResolver,
-        IViewLocator viewLocator,
-        IViewModelLocator viewModelLocator) => (_customDialogService, _messageBoxService, _fileDialogService, _messageBoxFactory, _viewResolver, _viewLocator, _viewModelLocator) = (customDialogService, messageBoxService, fileDialogService, messageBoxFactory, viewResolver, viewLocator, viewModelLocator);
+    /// <summary>
+    /// Gets a value indicating whether there are opened dialogs.
+    /// </summary>
+    public static bool HasOpenedDialogs => Default.HasOpenedContentDialogs;
 
     #region Show
 
@@ -64,48 +53,20 @@ public static class DialogManager
     /// </summary>
     public static async Task ShowAsync<T>(Action<T>? closeAction = null)
         where T : class, IDialogViewModel
-    {
-        var vm = GetViewModel<T>();
-
-        if (vm is not null)
-        {
-            await ShowAsync(vm, closeAction).ConfigureAwait(false);
-        }
-    }
+        => await Default.ShowAsync(closeAction).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a modal dialog.
     /// </summary>
     public static async Task ShowAsync(Type typeViewModel, Action<IDialogViewModel>? closeAction = null)
-    {
-        var vm = GetViewModel<IDialogViewModel>(typeViewModel);
-
-        if (vm is not null)
-        {
-            await ShowAsync(vm, closeAction).ConfigureAwait(false);
-        }
-    }
+        => await Default.ShowAsync(typeViewModel, closeAction).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a message dialog.
     /// </summary>
     public static async Task ShowAsync<T>(T viewModel, Action<T>? closeAction = null)
         where T : IDialogViewModel
-    {
-        if (_customDialogService is null) return;
-
-        var view = GetViewFromViewModel(viewModel.GetType());
-
-        if (view is not null)
-        {
-            if (closeAction is not null)
-                viewModel.CloseRequest += (_, _) => closeAction(viewModel);
-
-            Messenger.Default?.Send(new OpenDialogMessage(DialogType.Dialog, viewModel));
-
-            await _customDialogService.ShowAsync(view, viewModel).ConfigureAwait(false);
-        }
-    }
+        => await Default.ShowAsync(viewModel, closeAction).ConfigureAwait(false);
 
     #endregion Show
 
@@ -116,13 +77,14 @@ public static class DialogManager
     /// </summary>
     public static async Task<bool?> ShowDialogAsync<TViewModel>()
         where TViewModel : class, IDialogViewModel
-        => await ShowDialogAsync(typeof(TViewModel)).ConfigureAwait(false);
+        => await Default.ShowDialogAsync<TViewModel>().ConfigureAwait(false);
 
     /// <summary>
     /// Displays a modal dialog.
     /// </summary>
     /// <param name="typeViewModel">The view to include in workspace dialog.</param>
-    public static async Task<bool?> ShowDialogAsync(Type typeViewModel) => GetViewModel<IDialogViewModel>(typeViewModel) is not { } vm ? false : await ShowDialogAsync(vm).ConfigureAwait(false);
+    public static async Task<bool?> ShowDialogAsync(Type typeViewModel)
+        => await Default.ShowDialogAsync(typeViewModel).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a message dialog.
@@ -130,105 +92,66 @@ public static class DialogManager
     /// <param name="viewModel">The view to include in workspace dialog.</param>
     public static async Task<bool?> ShowDialogAsync<T>(T viewModel)
         where T : IDialogViewModel
-    {
-        if (_customDialogService is null) return null;
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.ModalDialog, viewModel));
-
-        var view = GetViewFromViewModel(viewModel.GetType());
-
-        return view is null ? false : await _customDialogService.ShowDialogAsync(view, viewModel).ConfigureAwait(false);
-    }
+        => await Default.ShowDialogAsync(viewModel).ConfigureAwait(false);
 
     #endregion ShowDialog
 
     #region MessageBox
 
+    /// <summary>
+    /// Displays a success message dialog.
+    /// </summary>
     public static async Task<MessageBoxResult> ShowSuccessAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => await ShowMessageAsync(message, title ?? UiResources.Success, buttons, MessageSeverity.Success, MessageBoxResult.Ok).ConfigureAwait(false);
+        => await Default.ShowSuccessAsync(message, title, buttons).ConfigureAwait(false);
 
     /// <summary>
-    /// Displays a message dialog.
+    /// Displays an information message dialog.
     /// </summary>
     public static async Task<MessageBoxResult> ShowInformationAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => await ShowMessageAsync(message, title ?? UiResources.Information, buttons, MessageSeverity.Information, MessageBoxResult.Ok).ConfigureAwait(false);
+        => await Default.ShowInformationAsync(message, title, buttons).ConfigureAwait(false);
 
     /// <summary>
-    /// Displays a message dialog.
+    /// Displays an error message dialog.
     /// </summary>
     public static async Task<MessageBoxResult> ShowErrorAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => await ShowMessageAsync(message, title ?? UiResources.Error, buttons, MessageSeverity.Error, MessageBoxResult.Ok).ConfigureAwait(false);
+        => await Default.ShowErrorAsync(message, title, buttons).ConfigureAwait(false);
 
     /// <summary>
-    /// Displays a message dialog.
+    /// Displays a warning message dialog.
     /// </summary>
     public static async Task<MessageBoxResult> ShowWarningAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => await ShowMessageAsync(message, title ?? UiResources.Warning, buttons, MessageSeverity.Warning, MessageBoxResult.Ok).ConfigureAwait(false);
+        => await Default.ShowWarningAsync(message, title, buttons).ConfigureAwait(false);
 
     /// <summary>
-    /// Displays a message dialog.
+    /// Displays a question message dialog.
     /// </summary>
-    public static async Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null) => await ShowMessageAsync(message, title ?? UiResources.Question, MessageBoxResultOption.YesNo, MessageSeverity.Question, MessageBoxResult.Yes).ConfigureAwait(false);
+    public static async Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null)
+        => await Default.ShowQuestionAsync(message, title).ConfigureAwait(false);
 
     /// <summary>
-    /// Displays a message dialog.
+    /// Displays a question message dialog with cancel option.
     /// </summary>
-    public static async Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null) => await ShowMessageAsync(message, title ?? UiResources.Question, MessageBoxResultOption.YesNoCancel, MessageSeverity.Question, MessageBoxResult.Yes).ConfigureAwait(false);
+    public static async Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null)
+        => await Default.ShowQuestionWithCancelAsync(message, title).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a message box that has a message, title bar caption, button, and icon; and
     /// that accepts a default message box result and returns a result.
     /// </summary>
-    /// <param name="message">
-    /// A <see cref="string"/> that specifies the text to display.
-    /// </param>
-    /// <param name="caption">
-    /// A <see cref="string"/> that specifies the title bar caption to display. Default value
-    /// is an empty string.
-    /// </param>
-    /// <param name="button">
-    /// A MessageBoxButton value that specifies which button or buttons to
-    /// display. Default value is MessageBoxButton.OK.
-    /// </param>
-    /// <param name="severity">
-    /// A MessageBoxImage value that specifies the icon to display. Default value
-    /// is MessageBoxImage.None.
-    /// </param>
-    /// <param name="defaultResult">
-    /// A <see cref="MessageBoxResult"/> value that specifies the default result of the
-    /// message box. Default value is <see cref="MessageBoxResult.None"/>.
-    /// </param>
-    /// <returns>
-    /// A <see cref="MessageBoxResult"/> value that specifies which message box button is
-    /// clicked by the user.
-    /// </returns>
     public static async Task<MessageBoxResult> ShowMessageAsync(
         string message,
         string? caption = "",
         MessageBoxResultOption button = MessageBoxResultOption.Ok,
         MessageSeverity severity = MessageSeverity.Information,
         MessageBoxResult defaultResult = MessageBoxResult.None)
-    {
-        var vm = _messageBoxFactory?.Create(message, caption, severity, button, defaultResult);
-        return vm is null ? MessageBoxResult.None : await ShowMessageBoxAsync(vm).ConfigureAwait(false);
-    }
+        => await Default.ShowMessageAsync(message, caption, button, severity, defaultResult).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a message box that has a message, title bar caption, button, and icon; and
     /// that accepts a default message box result and returns a result.
     /// </summary>
-    /// <returns>
-    /// A <see cref="MessageBoxResult"/> value that specifies which message box button is
-    /// clicked by the user.
-    /// </returns>
     public static async Task<MessageBoxResult> ShowMessageBoxAsync(IMessageBox viewModel)
-    {
-        if (_messageBoxService is null) return MessageBoxResult.None;
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.MessageBox, viewModel));
-
-        return await _messageBoxService.ShowMessageBoxAsync(viewModel).ConfigureAwait(false) ?? MessageBoxResult.None;
-    }
+        => await Default.ShowMessageBoxAsync(viewModel).ConfigureAwait(false);
 
     #endregion MessageBox
 
@@ -237,93 +160,29 @@ public static class DialogManager
     /// <summary>
     /// Displays the OpenFileDialog.
     /// </summary>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
     public static async Task<(bool? Result, string Filename)> ShowOpenFileDialogAsync()
-    {
-        if (_fileDialogService is null) return (false, string.Empty);
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.FileDialog, null));
-
-        var settings = new OpenFileDialogSettings();
-        var result = await _fileDialogService.ShowOpenFileDialogAsync(settings).ConfigureAwait(false);
-        return (result, settings.FileName);
-    }
+        => await Default.ShowOpenFileDialogAsync().ConfigureAwait(false);
 
     /// <summary>
     /// Displays the OpenFileDialog.
     /// </summary>
     /// <param name="settings">The settings for the open file dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
     public static async Task<(bool? Result, string Filename)> ShowOpenFileDialogAsync(OpenFileDialogSettings settings)
-    {
-        if (_fileDialogService is null) return (false, string.Empty);
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.FileDialog, null));
-
-        var result = await _fileDialogService.ShowOpenFileDialogAsync(settings).ConfigureAwait(false);
-        return (result, settings.FileName);
-    }
+        => await Default.ShowOpenFileDialogAsync(settings).ConfigureAwait(false);
 
     /// <summary>
     /// Displays the SaveFileDialog.
     /// </summary>
     /// <param name="settings">The settings for the save file dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
     public static async Task<(bool? Result, string Filename)> ShowSaveFileDialogAsync(SaveFileDialogSettings settings)
-    {
-        if (_fileDialogService is null) return (false, string.Empty);
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.FileDialog, null));
-
-        var result = await _fileDialogService.ShowSaveFileDialogAsync(settings).ConfigureAwait(false);
-        return (result, settings.FileName);
-    }
+        => await Default.ShowSaveFileDialogAsync(settings).ConfigureAwait(false);
 
     /// <summary>
     /// Displays the FolderBrowserDialog.
     /// </summary>
     /// <param name="settings">The settings for the folder browser dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
     public static async Task<(bool? Result, string? SelectedPath)> ShowFolderBrowserDialogAsync(OpenFolderDialogSettings settings)
-    {
-        if (_fileDialogService is null) return (false, string.Empty);
-
-        Messenger.Default?.Send(new OpenDialogMessage(DialogType.FileDialog, null));
-
-        var result = await _fileDialogService.ShowFolderDialogAsync(settings).ConfigureAwait(false);
-        return (result, settings.Folder);
-    }
+        => await Default.ShowFolderBrowserDialogAsync(settings).ConfigureAwait(false);
 
     #endregion Files
-
-    private static T? GetViewModel<T>()
-        where T : class
-        => GetViewModel<T>(typeof(T));
-
-    private static T? GetViewModel<T>(Type typeViewModel)
-        where T : class
-        => (T?)_viewModelLocator?.Get(typeViewModel);
-
-    private static object? GetViewFromViewModel(Type viewModelType)
-    {
-        var viewType = _viewResolver?.Resolve(viewModelType);
-
-        if (viewType is null) throw new InvalidOperationException($"{viewType} has not been resolved.");
-
-        var view = _viewLocator?.Get(viewType);
-
-        return view;
-    }
 }

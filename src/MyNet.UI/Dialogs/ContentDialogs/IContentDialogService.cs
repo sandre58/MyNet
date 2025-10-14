@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="ICustomDialogService.cs" company="Stéphane ANDRE">
+// <copyright file="IContentDialogService.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,22 +8,22 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace MyNet.UI.Dialogs.CustomDialogs;
+namespace MyNet.UI.Dialogs.ContentDialogs;
 
 /// <summary>
 /// Service for opening and managing custom dialogs.
 /// </summary>
-public interface ICustomDialogService
+public interface IContentDialogService
 {
     /// <summary>
     /// Occurs when a dialog is opened.
     /// </summary>
-    event EventHandler<DialogEventArgs> DialogOpened;
+    event EventHandler<ContentDialogEventArgs> DialogOpened;
 
     /// <summary>
     /// Occurs when a dialog is closed.
     /// </summary>
-    event EventHandler<DialogEventArgs> DialogClosed;
+    event EventHandler<ContentDialogEventArgs> DialogClosed;
 
     /// <summary>
     /// Gets the collection of currently opened dialogs.
@@ -42,11 +42,11 @@ public interface ICustomDialogService
     /// </summary>
     /// <param name="view">The type of the custom dialog to show.</param>
     /// <param name="viewModel">The view model of the new custom dialog.</param>
-    Task<bool?> ShowDialogAsync(object view, IDialogViewModel viewModel);
+    Task<bool?> ShowModalAsync(object view, IDialogViewModel viewModel);
 
     /// <summary>
     /// Closes the specified dialog.
     /// </summary>
     /// <param name="dialog">The dialog to close.</param>
-    void CloseDialog(IDialogViewModel dialog);
+    Task<bool?> CloseAsync(IDialogViewModel dialog);
 }

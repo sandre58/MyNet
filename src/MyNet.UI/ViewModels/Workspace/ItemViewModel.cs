@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
-using MyNet.UI.Dialogs.CustomDialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Extensions;
 using MyNet.UI.Locators;
 using MyNet.UI.ViewModels.Edition;
