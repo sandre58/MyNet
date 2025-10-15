@@ -10,17 +10,19 @@
     <PropertyGroup>
 
         <!-- NuGet information -->
-        <RepositoryUrl>https://github.com/sandre58/MyNet</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryBranch>main</RepositoryBranch>
+        <PackageVersion Condition="'$(VersionSuffix)' != ''">$(Version)-$(VersionSuffix)</PackageVersion>
+        <PackageVersion Condition="'$(VersionSuffix)' == ''">$(Version)</PackageVersion>
         <PackageOutputPath>$(MSBuildThisFileDirectory)..\packages</PackageOutputPath>
         <PackageProjectUrl>https://github.com/sandre58/MyNet</PackageProjectUrl>
         <PackageReleaseNotes>https://github.com/sandre58/MyNet/releases</PackageReleaseNotes>
         <PackageIconUrl>$(PackageIcon)</PackageIconUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/sandre58/MyNet</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryBranch>main</RepositoryBranch>
 
         <!-- Build configuration -->
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>

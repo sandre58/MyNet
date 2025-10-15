@@ -1,0 +1,23 @@
+mode: ContinuousDelivery
+tag-prefix: 'v'
+
+# Configuration for Conventional Commits
+major-version-bump-message: '^(breaking|BREAKING CHANGE:|feat!:|fix!:)'
+minor-version-bump-message: '^(feat:|feature:)'
+patch-version-bump-message: '^(fix:|chore:|docs:|style:|refactor:|perf:|test:)'
+no-bump-message: '\+semver:\s?(none|skip)'
+
+branches:
+  main:
+    regex: ^main$|^master$
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    is-release-branch: true
+    
+  feature:
+    regex: ^features?[/-]
+    mode: ContinuousDeployment
+    tag: 'alpha'
+    increment: Minor
+    source-branches: ['main']
