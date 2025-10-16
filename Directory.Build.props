@@ -32,13 +32,13 @@
     <!-- Versioning -->
     <PropertyGroup>
 
-        <!-- GitVersion - Version de base synchronisée -->
+        <!-- GitVersion -->
         <GitVersionMajor Condition="'$(GitVersion_Major)' != ''">$(GitVersion_Major)</GitVersionMajor>
         <GitVersionMinor Condition="'$(GitVersion_Minor)' != ''">$(GitVersion_Minor)</GitVersionMinor>
         <GitVersionMajor Condition="'$(GitVersionMajor)' == ''">1</GitVersionMajor>
         <GitVersionMinor Condition="'$(GitVersionMinor)' == ''">0</GitVersionMinor>
 
-        <!-- Patch by defaullt (Can be override by each project) -->
+        <!-- Patch by default (Can be override by each project) -->
         <PatchVersion Condition="'$(PatchVersion)' == ''">0</PatchVersion>
 
         <!-- Final version -->

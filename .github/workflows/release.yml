@@ -3,9 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - '*/v*'  # Matches tags like MyNet.Utilities/v1.2.3
-  repository_dispatch:
-    types: [tag_created]  # Triggered by tag.yml workflow
+      - 'v*'  # Matches tags like v1.2.3
 
 jobs:
   build:
