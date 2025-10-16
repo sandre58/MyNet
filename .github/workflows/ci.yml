@@ -11,3 +11,5 @@ on:
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/ci.yml@main
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
