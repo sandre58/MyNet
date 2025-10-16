@@ -1,4 +1,4 @@
-name: CI - Build and Test
+name: CI - Build, Test, Pack and Publish
 
 on:
   push:
