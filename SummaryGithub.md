@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/16/2025 - 05:16:20 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 10/16/2025 - 05:19:38 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 296 |
 | Files: | 235 |
-| **Line coverage:** | 41% (4678 of 11386) |
-| Covered lines: | 4678 |
-| Uncovered lines: | 6708 |
-| Coverable lines: | 11386 |
-| Total lines: | 28783 |
-| **Branch coverage:** | 24.2% (1499 of 6192) |
-| Covered branches: | 1499 |
-| Total branches: | 6192 |
+| **Line coverage:** | 41.3% (4677 of 11322) |
+| Covered lines: | 4677 |
+| Uncovered lines: | 6645 |
+| Coverable lines: | 11322 |
+| Total lines: | 28782 |
+| **Branch coverage:** | 24.2% (1498 of 6168) |
+| Covered branches: | 1498 |
+| Total branches: | 6168 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 183_18550977070 |
+| Tag: | 185_18551033320 |
 
 </details>
 
@@ -66,9 +66,9 @@
 |MyNet.Humanizer.Truncation.FixedNumberOfCharactersTruncator|94.7%|95.8%|
 |MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator|93.3%|90.9%|
 |MyNet.Humanizer.Truncation.Truncator|100%||
-|System.Text.RegularExpressions.Generated|85.9%|79.1%|
-|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|87.9%|78.9%|
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -103,11 +103,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 17.1%</summary>
+<details><summary>MyNet.Utilities - 17.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**17.1%**|**8.7%**|
+|**MyNet.Utilities**|**17.2%**|**8.7%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -243,7 +243,7 @@
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
-|MyNet.Utilities.Localization.LocalizationService|97.1%|85%|
+|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
 |MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
