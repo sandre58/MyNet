@@ -35,16 +35,15 @@
         <!-- GitVersion -->
         <GitVersionMajor Condition="'$(GitVersion_Major)' != ''">$(GitVersion_Major)</GitVersionMajor>
         <GitVersionMinor Condition="'$(GitVersion_Minor)' != ''">$(GitVersion_Minor)</GitVersionMinor>
+        <GitVersionPatch Condition="'$(GitVersion_Patch)' != ''">$(GitVersion_Patch)</GitVersionPatch>
         <GitVersionMajor Condition="'$(GitVersionMajor)' == ''">1</GitVersionMajor>
         <GitVersionMinor Condition="'$(GitVersionMinor)' == ''">0</GitVersionMinor>
-
-        <!-- Patch by default (Can be override by each project) -->
-        <PatchVersion Condition="'$(PatchVersion)' == ''">0</PatchVersion>
+        <GitVersionPatch Condition="'$(GitVersionPatch)' == ''">0</GitVersionPatch>
 
         <!-- Final version -->
-        <Version>$(GitVersionMajor).$(GitVersionMinor).$(PatchVersion)</Version>
+        <Version>$(GitVersionMajor).$(GitVersionMinor).$(GitVersionPatch)</Version>
         <AssemblyVersion>$(GitVersionMajor).$(GitVersionMinor).0.0</AssemblyVersion>
-        <FileVersion>$(GitVersionMajor).$(GitVersionMinor).$(PatchVersion).0</FileVersion>
+        <FileVersion>$(GitVersionMajor).$(GitVersionMinor).$(GitVersionPatch).0</FileVersion>
 
         <!-- Preversion (preview, alpha, etc.) -->
         <VersionSuffix Condition="'$(GitVersion_PreReleaseLabel)' != ''">$(GitVersion_PreReleaseLabel).$(GitVersion_PreReleaseNumber)</VersionSuffix>
