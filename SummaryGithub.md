@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/16/2025 - 05:42:54 |
-| Parser: | MultiReport (6x Cobertura) |
+| Generated on: | 10/16/2025 - 14:49:16 |
+| Parser: | MultiReport (5x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 295 |
+| Classes: | 294 |
 | Files: | 234 |
-| **Line coverage:** | 39.5% (4348 of 11002) |
-| Covered lines: | 4348 |
-| Uncovered lines: | 6654 |
-| Coverable lines: | 11002 |
-| Total lines: | 27584 |
-| **Branch coverage:** | 22.6% (1366 of 6024) |
-| Covered branches: | 1366 |
-| Total branches: | 6024 |
+| **Line coverage:** | 38.7% (4346 of 11207) |
+| Covered lines: | 4346 |
+| Uncovered lines: | 6861 |
+| Coverable lines: | 11207 |
+| Total lines: | 27444 |
+| **Branch coverage:** | 22.7% (1365 of 6010) |
+| Covered branches: | 1365 |
+| Total branches: | 6010 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 187_18551424249 |
+| Tag: | 191_18565144421 |
 
 </details>
 
@@ -102,11 +102,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 17.1%</summary>
+<details><summary>MyNet.Utilities - 16.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**17.1%**|**8.7%**|
+|**MyNet.Utilities**|**16.7%**|**8.7%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -242,7 +242,7 @@
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
-|MyNet.Utilities.Localization.LocalizationService|97.1%|85%|
+|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
 |MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
@@ -316,7 +316,6 @@
 |MyNet.Utilities.TimeSpanExtensions|28.3%|59.3%|
 |MyNet.Utilities.ValidationExtensions|0%|0%|
 |MyNet.Utilities.ValueObject|0%|0%|
-|System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 
