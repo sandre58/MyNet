@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/16/2025 - 18:29:52 |
-| Parser: | MultiReport (6x Cobertura) |
+| Generated on: | 10/17/2025 - 07:49:14 |
+| Parser: | MultiReport (4x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 296 |
 | Files: | 235 |
-| **Line coverage:** | 39.9% (5138 of 12855) |
-| Covered lines: | 5138 |
-| Uncovered lines: | 7717 |
+| **Line coverage:** | 39.9% (5136 of 12855) |
+| Covered lines: | 5136 |
+| Uncovered lines: | 7719 |
 | Coverable lines: | 12855 |
 | Total lines: | 22581 |
-| **Branch coverage:** | 24% (1639 of 6814) |
-| Covered branches: | 1639 |
+| **Branch coverage:** | 24% (1638 of 6814) |
+| Covered branches: | 1638 |
 | Total branches: | 6814 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 200_18570897668 |
+| Tag: | 209_18586078956 |
 
 </details>
 
@@ -243,7 +243,7 @@
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
-|MyNet.Utilities.Localization.LocalizationService|97.1%|85%|
+|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
 |MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
