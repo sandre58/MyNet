@@ -1,4 +1,4 @@
-# Changelog for v1.2.2
+# Changelog for v13.0.0
 
 All notable changes to this project will be documented in this file.  
 This file is generated automatically based on commit history and tags.
@@ -6,7 +6,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v1.2.2] - 2025-10-16
+## [v13.0.0] - 2025-10-16
 
 
 ### ♻️ Code Refactoring
