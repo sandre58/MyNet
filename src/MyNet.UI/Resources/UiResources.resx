@@ -838,4 +838,10 @@ Veuillez sélectionner un seul élément.</value>
   <data name="NoFullScreen" xml:space="preserve">
     <value>Enlever le plein écran</value>
   </data>
+  <data name="GenderTypeMale" xml:space="preserve">
+    <value>Homme</value>
+  </data>
+  <data name="GenderTypeFemale" xml:space="preserve">
+    <value>Femme</value>
+  </data>
 </root>
