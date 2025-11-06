@@ -67,6 +67,8 @@ public static class DateTimeHelper
             ? time2
             : time1;
 
+    public static bool IsConsecutiveDays(this IEnumerable<DateTime> dates) => dates.Order().Zip(dates.Order().Skip(1), (a, b) => (a, b)).All(pair => (pair.b - pair.a).TotalDays == 1);
+
     public static IEnumerable<DateTime> Range(DateTime min, DateTime max, int step = 1, TimeUnit unit = TimeUnit.Day)
     {
         Func<DateTime, DateTime> increment = unit switch
@@ -111,7 +113,7 @@ public static class DateTimeHelper
             TimeUnit.Millisecond => x => x.Add(step.Milliseconds()),
             TimeUnit.Second => x => x.Add(step.Seconds()),
             TimeUnit.Minute => x => x.AddMinutes(step),
-            TimeUnit.Hour => throw new InvalidOperationException(),
+            TimeUnit.Hour => x => x.AddHours(step),
             TimeUnit.Day => throw new InvalidOperationException(),
             TimeUnit.Week => throw new InvalidOperationException(),
             TimeUnit.Month => throw new InvalidOperationException(),
