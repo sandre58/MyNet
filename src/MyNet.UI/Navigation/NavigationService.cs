@@ -115,30 +115,28 @@ public class NavigationService : INavigationService
     /// <param name="context">The context to remove.</param>
     protected virtual void RemoveBackEntry(NavigationContext context)
     {
-        // Remove is not a native Stack<T> operation; optimize by using a temp stack only if needed
         if (_backStack.Count == 0) return;
+
+        // Fast path: if the item to remove is at the top
         if (ReferenceEquals(_backStack.Peek(), context))
         {
             _ = _backStack.Pop();
             return;
         }
 
-        var temp = new Stack<NavigationContext>(_backStack.Count);
-        var found = false;
-        while (_backStack.Count > 0)
+        // Use a list for efficient removal in the middle
+        var items = _backStack.ToList();
+        var index = items.FindIndex(x => ReferenceEquals(x, context));
+
+        if (index >= 0)
         {
-            var item = _backStack.Pop();
-            if (!found && ReferenceEquals(item, context))
-            {
-                found = true;
-                continue;
-            }
+            items.RemoveAt(index);
+            _backStack.Clear();
 
-            temp.Push(item);
+            // Rebuild stack in reverse order to maintain LIFO behavior
+            for (var i = items.Count - 1; i >= 0; i--)
+                _backStack.Push(items[i]);
         }
-
-        while (temp.Count > 0)
-            _backStack.Push(temp.Pop());
     }
 
     /// <summary>
@@ -148,28 +146,27 @@ public class NavigationService : INavigationService
     protected virtual void RemoveForwardEntry(NavigationContext context)
     {
         if (_forwardStack.Count == 0) return;
+
+        // Fast path: if the item to remove is at the top
         if (ReferenceEquals(_forwardStack.Peek(), context))
         {
             _ = _forwardStack.Pop();
             return;
         }
 
-        var temp = new Stack<NavigationContext>(_forwardStack.Count);
-        var found = false;
-        while (_forwardStack.Count > 0)
+        // Use a list for efficient removal in the middle
+        var items = _forwardStack.ToList();
+        var index = items.FindIndex(x => ReferenceEquals(x, context));
+
+        if (index >= 0)
         {
-            var item = _forwardStack.Pop();
-            if (!found && ReferenceEquals(item, context))
-            {
-                found = true;
-                continue;
-            }
+            items.RemoveAt(index);
+            _forwardStack.Clear();
 
-            temp.Push(item);
+            // Rebuild stack in reverse order to maintain LIFO behavior
+            for (var i = items.Count - 1; i >= 0; i--)
+                _forwardStack.Push(items[i]);
         }
-
-        while (temp.Count > 0)
-            _forwardStack.Push(temp.Pop());
     }
 
     /// <summary>
@@ -227,7 +224,7 @@ public class NavigationService : INavigationService
     }
 
     /// <inheritdoc/>
-    public bool NavigateTo(INavigationPage page, NavigationParameters? navigationParameters = null) => Navigate(CurrentContext?.Page, page, NavigationMode.Normal, navigationParameters);
+    public virtual bool NavigateTo(INavigationPage page, NavigationParameters? navigationParameters = null) => Navigate(CurrentContext?.Page, page, NavigationMode.Normal, navigationParameters);
 
     /// <summary>
     /// Performs navigation between pages, handling events and updating context and history.
