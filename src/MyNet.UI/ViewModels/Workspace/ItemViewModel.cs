@@ -137,11 +137,11 @@ public abstract class ItemDialogViewModel<TModel> : ItemViewModel<TModel>, IDial
 
     public virtual Task<bool> CanCloseAsync() => Task.FromResult(true);
 
-    public virtual void Load()
+    public virtual async Task LoadAsync()
     {
         DialogResult = null;
 
-        Refresh();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     #endregion Methods

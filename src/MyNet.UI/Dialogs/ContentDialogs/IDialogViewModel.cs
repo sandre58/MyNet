@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 namespace MyNet.UI.Dialogs.ContentDialogs;
 
 /// <summary>
@@ -29,5 +31,5 @@ public interface IDialogViewModel : IClosable
     /// <summary>
     /// Loads the dialog content or data.
     /// </summary>
-    void Load();
+    Task LoadAsync();
 }

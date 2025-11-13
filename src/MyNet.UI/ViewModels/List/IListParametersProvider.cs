@@ -7,6 +7,7 @@
 using MyNet.UI.ViewModels.Display;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
+using MyNet.UI.ViewModels.List.Paging;
 using MyNet.UI.ViewModels.List.Sorting;
 
 namespace MyNet.UI.ViewModels.List;

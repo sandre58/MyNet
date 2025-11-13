@@ -9,7 +9,7 @@ using MyNet.Observable.Attributes;
 using MyNet.UI.Commands;
 using MyNet.UI.ViewModels.Workspace;
 
-namespace MyNet.UI.ViewModels.List;
+namespace MyNet.UI.ViewModels.Dialogs;
 
 [CanBeValidatedForDeclaredClassOnly(false)]
 [CanSetIsModifiedAttributeForDeclaredClassOnly(false)]

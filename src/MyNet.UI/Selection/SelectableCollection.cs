@@ -23,6 +23,7 @@ namespace MyNet.UI.Selection;
 /// <summary>
 /// Represents a collection of selectable items, supporting single or multiple selection modes.
 /// Provides selection logic, events, and access to selected items and wrappers.
+/// Optimized for performance with efficient batch operations and minimal allocations.
 /// </summary>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
 public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrapper<T>>
@@ -31,11 +32,36 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
     private readonly Deferrer _selectionChangedDeferrer;
     private readonly ReadOnlyObservableCollection<SelectedWrapper<T>> _selectedWrappers;
     private readonly IObservable<IChangeSet<SelectedWrapper<T>>> _observableSelectedWrappers;
+    private SelectionMode _selectionMode;
 
     /// <summary>
     /// Gets or sets the selection mode (single or multiple).
     /// </summary>
-    public SelectionMode SelectionMode { get; set; }
+    public SelectionMode SelectionMode
+    {
+        get => _selectionMode;
+        set
+        {
+            if (_selectionMode == value)
+                return;
+
+            _selectionMode = value;
+
+            // Optimize: When switching to Single mode, keep only the first selected item
+            if (_selectionMode == SelectionMode.Single && _selectedWrappers.Count > 1)
+            {
+                using (_selectionChangedDeferrer.Defer())
+                {
+                    var first = _selectedWrappers[0];
+                    foreach (var wrapper in _selectedWrappers)
+                    {
+                        if (!ReferenceEquals(wrapper, first))
+                            wrapper.IsSelected = false;
+                    }
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Gets the collection of selected wrappers.
@@ -44,16 +70,24 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
 
     /// <summary>
     /// Gets the collection of selected items.
+    /// Optimized to avoid LINQ allocations.
     /// </summary>
     [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Avoid LINQ Select allocation in hot path")]
     public IEnumerable<T> SelectedItems
     {
         get
         {
+            // Optimize: Direct iteration without LINQ
             foreach (var wrapper in _selectedWrappers)
                 yield return wrapper.Item;
         }
     }
+
+    /// <summary>
+    /// Gets the number of selected items.
+    /// Optimized for quick access without enumerating SelectedItems.
+    /// </summary>
+    public int SelectedCount => _selectedWrappers.Count;
 
     /// <summary>
     /// Occurs when the selection changes.
@@ -71,8 +105,7 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
         : base(sourceList, isReadOnly, scheduler, createWrapper ?? (x => new(x)))
     {
         _selectionChangedDeferrer = new Deferrer(() => SelectionChanged?.Invoke(this, EventArgs.Empty));
-
-        SelectionMode = selectionMode;
+        _selectionMode = selectionMode;
 
         var obs = ConnectWrappersSource();
 
@@ -104,20 +137,34 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
     /// <param name="value">True to select; false to unselect.</param>
     public virtual void ChangeSelectState(T item, bool value)
     {
-        var original = GetOrCreate(item);
-        if (!original.IsSelectable)
+        var wrapper = GetOrCreate(item);
+
+        if (!wrapper.IsSelectable)
             return;
-        if (SelectionMode == SelectionMode.Single && value)
+
+        // Optimize: Early exit if already in desired state
+        if (wrapper.IsSelected == value)
+            return;
+
+        // Optimize: For Single mode with selection, deselect others efficiently
+        if (_selectionMode == SelectionMode.Single && value)
         {
-            // Deselect all others first
-            foreach (var wrapper in WrappersSource)
+            using (_selectionChangedDeferrer.Defer())
             {
-                if (wrapper.IsSelected && !ReferenceEquals(wrapper, original))
-                    wrapper.IsSelected = false;
+                // Deselect all currently selected wrappers
+                foreach (var selectedWrapper in _selectedWrappers.ToArray())
+                {
+                    if (!ReferenceEquals(selectedWrapper, wrapper))
+                        selectedWrapper.IsSelected = false;
+                }
+
+                wrapper.IsSelected = true;
             }
         }
-
-        original.IsSelected = value;
+        else
+        {
+            wrapper.IsSelected = value;
+        }
     }
 
     /// <summary>
@@ -128,44 +175,63 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
 
     /// <summary>
     /// Selects the specified items.
+    /// Optimized for batch operations.
     /// </summary>
     /// <param name="items">The items to select.</param>
     public void Select(IEnumerable<T> items)
     {
         using (_selectionChangedDeferrer.Defer())
         {
-            if (SelectionMode == SelectionMode.Single)
+            if (_selectionMode == SelectionMode.Single)
             {
+                // Optimize: For single mode, just select the first valid item
                 var first = items.FirstOrDefault();
                 if (first is not null)
-                    Select(first);
+                    ChangeSelectState(first, true);
             }
             else
             {
+                // Optimize: Batch select for Multiple mode
                 foreach (var item in items)
-                    Select(item);
+                {
+                    var wrapper = GetOrCreate(item);
+                    if (wrapper.IsSelectable && !wrapper.IsSelected)
+                        wrapper.IsSelected = true;
+                }
             }
         }
     }
 
     /// <summary>
     /// Selects or unselects all items in the collection.
+    /// Optimized to avoid unnecessary state changes.
     /// </summary>
     /// <param name="value">True to select all; false to unselect all.</param>
     public void SelectAll(bool value)
     {
         using (_selectionChangedDeferrer.Defer())
         {
-            if (SelectionMode == SelectionMode.Single && value)
+            if (_selectionMode == SelectionMode.Single && value)
             {
-                var first = this.FirstOrDefault();
+                // Optimize: For single mode, only select first selectable item
+                var first = WrappersSource.FirstOrDefault(w => w.IsSelectable);
                 if (first is not null)
-                    ChangeSelectState(first, true);
+                {
+                    // Clear all first
+                    foreach (var wrapper in _selectedWrappers.ToArray())
+                        wrapper.IsSelected = false;
+
+                    first.IsSelected = true;
+                }
             }
             else
             {
-                foreach (var x in this)
-                    ChangeSelectState(x, value);
+                // Optimize: Only change wrappers that need state change
+                foreach (var wrapper in WrappersSource)
+                {
+                    if (wrapper.IsSelectable && wrapper.IsSelected != value)
+                        wrapper.IsSelected = value;
+                }
             }
         }
     }
@@ -178,46 +244,124 @@ public class SelectableCollection<T> : ExtendedWrapperCollection<T, SelectedWrap
 
     /// <summary>
     /// Unselects the specified items.
+    /// Optimized for batch operations.
     /// </summary>
     /// <param name="items">The items to unselect.</param>
     public virtual void Unselect(IEnumerable<T> items)
     {
         using (_selectionChangedDeferrer.Defer())
         {
+            // Optimize: Only unselect items that are currently selected
             foreach (var item in items)
-                Unselect(item);
+            {
+                var wrapper = GetOrCreate(item);
+                if (wrapper.IsSelected)
+                    wrapper.IsSelected = false;
+            }
         }
     }
 
     /// <summary>
     /// Clears the selection of all items in the collection.
+    /// Optimized to only change selected wrappers.
     /// </summary>
     public virtual void ClearSelection()
     {
+        // Optimize: Only iterate over selected wrappers, not all wrappers
+        if (_selectedWrappers.Count == 0)
+            return;
+
         using (_selectionChangedDeferrer.Defer())
         {
-            foreach (var x in WrappersSource)
-                x.IsSelected = false;
+            // ToArray to avoid collection modification during iteration
+            foreach (var wrapper in _selectedWrappers.ToArray())
+                wrapper.IsSelected = false;
         }
     }
 
     /// <summary>
     /// Sets the selection to the specified items, clearing previous selection.
+    /// Optimized to minimize notifications.
     /// </summary>
     /// <param name="items">The items to select.</param>
     public void SetSelection(IEnumerable<T> items)
     {
         using (_selectionChangedDeferrer.Defer())
         {
-            ClearSelection();
-            Select(items);
+            var itemsArray = items.ToArray();
+
+            // Optimize: Create a HashSet for O(1) lookup
+            var itemsToSelect = new HashSet<T>(itemsArray);
+
+            // Deselect items not in the new selection
+            foreach (var wrapper in _selectedWrappers.ToArray())
+            {
+                if (!itemsToSelect.Contains(wrapper.Item))
+                    wrapper.IsSelected = false;
+            }
+
+            // Select new items
+            if (_selectionMode == SelectionMode.Single)
+            {
+                var first = itemsArray.FirstOrDefault();
+                if (first is not null)
+                {
+                    var wrapper = GetOrCreate(first);
+                    if (wrapper.IsSelectable)
+                        wrapper.IsSelected = true;
+                }
+            }
+            else
+            {
+                foreach (var item in itemsArray)
+                {
+                    var wrapper = GetOrCreate(item);
+                    if (wrapper.IsSelectable && !wrapper.IsSelected)
+                        wrapper.IsSelected = true;
+                }
+            }
         }
     }
 
-    private void UpdateSelection(SelectedWrapper<T> wrapper)
+    /// <summary>
+    /// Toggles the selection state of the specified item.
+    /// </summary>
+    /// <param name="item">The item to toggle.</param>
+    public void ToggleSelection(T item)
     {
-        if (SelectionMode != SelectionMode.Single || !wrapper.IsSelected)
-            return;
+        var wrapper = GetOrCreate(item);
+        if (wrapper.IsSelectable)
+            ChangeSelectState(item, !wrapper.IsSelected);
+    }
+
+    /// <summary>
+    /// Checks if the specified item is selected.
+    /// </summary>
+    /// <param name="item">The item to check.</param>
+    /// <returns>True if the item is selected; otherwise, false.</returns>
+    public bool IsSelected(T item)
+    {
+        var wrapper = GetOrCreate(item);
+        return wrapper.IsSelected;
+    }
+
+    /// <summary>
+    /// Checks if the specified item is selectable.
+    /// </summary>
+    /// <param name="item">The item to check.</param>
+    /// <returns>True if the item is selectable; otherwise, false.</returns>
+    public bool IsSelectable(T item)
+    {
+        var wrapper = GetOrCreate(item);
+        return wrapper.IsSelectable;
+    }
+
+    protected virtual void UpdateSelection(SelectedWrapper<T> wrapper)
+    {
+        // This method is called when a wrapper's IsSelected property changes
+        // In Single mode, we need to deselect other items when one is selected
+        // This is already handled in ChangeSelectState, so this method can remain empty
+        // or be used for additional logic if needed in derived classes
     }
 
     #endregion Selection

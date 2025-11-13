@@ -7,6 +7,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using MyNet.UI.Loading;
 using MyNet.UI.Navigation;
 using MyNet.Utilities;
@@ -35,9 +36,9 @@ public interface IWorkspaceViewModel : INotifyPropertyChanged, IIdentifiable<Gui
 
     void GoToTab(object indexOrSubWorkspace);
 
-    void Refresh();
+    Task RefreshAsync();
 
-    void Reset();
+    Task ResetAsync();
 
     event EventHandler? RefreshCompleted;
 }

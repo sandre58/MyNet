@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using MyNet.Observable.Attributes;
 using MyNet.UI.Navigation.Models;
 
@@ -32,8 +33,13 @@ public class NavigableWorkspaceViewModel : WorkspaceViewModel, INavigableWorkspa
         var canRefresh = CanRefreshOnNavigatedTo(navigationContext);
         LoadParameters(navigationContext.Parameters);
 
+        // Optimize: Only refresh if not loaded or explicitly required
+        // Use async refresh to avoid blocking UI
         if (!IsLoaded || canRefresh)
-            Refresh();
+        {
+            // Fire and forget async refresh to improve perceived performance
+            _ = Task.Run(RefreshAsync);
+        }
     }
 
     public virtual void OnNavigatingFrom(NavigatingContext navigatingContext) { }

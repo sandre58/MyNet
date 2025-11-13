@@ -13,10 +13,8 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
-using MyNet.Observable;
 using MyNet.Observable.Attributes;
 using MyNet.UI.Commands;
-using MyNet.UI.Extensions;
 using MyNet.UI.Loading;
 using MyNet.UI.Navigation;
 using MyNet.UI.Navigation.Models;
@@ -28,7 +26,7 @@ namespace MyNet.UI.ViewModels.Workspace;
 
 [CanBeValidatedForDeclaredClassOnly(false)]
 [CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
-public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
+public abstract class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel
 {
     public const string TabParameterKey = "Tab";
 
@@ -36,13 +34,12 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose in Cleanup")]
     private readonly SourceCache<INavigableWorkspaceViewModel, Guid> _allSubworkspaces = new(x => x.Id);
 
+    // Cache for SelectedWorkspaceIndex to avoid repeated IndexOf calls
+    private int _cachedSelectedWorkspaceIndex = -1;
+
     public event EventHandler? RefreshCompleted;
 
     #region Members
-
-    public Guid Id { get; } = Guid.NewGuid();
-
-    public bool IsLoaded { get; protected set; }
 
     [UpdateOnCultureChanged]
     public string? Title { get; set; }
@@ -50,8 +47,6 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     public bool IsEnabled { get; set; } = true;
 
     public ScreenMode Mode { get; set; } = ScreenMode.Read;
-
-    public IBusyService BusyService { get; set; }
 
     public SubWorkspaceNavigationService NavigationService { get; }
 
@@ -65,7 +60,7 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
 
     public INavigableWorkspaceViewModel? SelectedWorkspace => NavigationService.CurrentContext?.Page as INavigableWorkspaceViewModel;
 
-    public int SelectedWorkspaceIndex => SelectedWorkspace is not null ? _subworkspaces.IndexOf(SelectedWorkspace) : -1;
+    public int SelectedWorkspaceIndex => _cachedSelectedWorkspaceIndex;
 
     public ICommand GoToTabCommand { get; set; }
 
@@ -75,51 +70,37 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
 
     public ICommand RefreshCommand { get; }
 
-    public ICommand RefreshAsyncCommand { get; }
-
     public ICommand ResetCommand { get; }
-
-    public ICommand ResetAsyncCommand { get; }
 
     #endregion Members
 
-    protected WorkspaceViewModel()
+    protected WorkspaceViewModel(IBusyService? busyService = null)
+     : base(busyService)
     {
-        BusyService = BusyManager.Create();
         GoToTabCommand = CommandsManager.CreateNotNull<object>(GoToTab, CanGoToTab);
         GoToNextTabCommand = CommandsManager.Create(GoToNextTab, CanGoToNextTab);
         GoToPreviousTabCommand = CommandsManager.Create(GoToPreviousTab, CanGoToPreviousTab);
-        RefreshCommand = CommandsManager.Create(Refresh, CanRefresh);
-        RefreshAsyncCommand = CommandsManager.Create(async () => await RefreshAsync().ConfigureAwait(false), CanRefresh);
-        ResetCommand = CommandsManager.Create(ResetWithChecking, CanReset);
-        ResetAsyncCommand = CommandsManager.Create(async () => await ResetAsync().ConfigureAwait(false), CanReset);
+        RefreshCommand = CommandsManager.Create(async () => await RefreshAsync().ConfigureAwait(false), CanRefresh);
+        ResetCommand = CommandsManager.Create(async () => await ResetWithCheckingAsync().ConfigureAwait(false), CanReset);
 
         var obs = _allSubworkspaces.Connect();
         Disposables.AddRange([
 
             obs.ForEachChange(x =>
             {
-                switch (x.Reason)
-                {
-                    case ChangeReason.Add:
-                        x.Current.SetParentPage(this);
-                        break;
-                    case ChangeReason.Update:
-                    case ChangeReason.Remove:
-                    case ChangeReason.Refresh:
-                    case ChangeReason.Moved:
-                    default:
-                        break;
-                }
+     if (x.Reason == ChangeReason.Add)
+         {
+       x.Current.SetParentPage(this);
+ }
             }).Subscribe(),
 
             obs.DisposeMany()
-                .AutoRefresh(x => x.IsEnabled)
-                .Filter(x => x.IsEnabled)
-                .ObserveOn(Scheduler.UiOrCurrent)
-                .Bind(out _subworkspaces)
-                .Subscribe()
-        ]);
+         .AutoRefresh(x => x.IsEnabled)
+          .Filter(x => x.IsEnabled)
+     .ObserveOn(Scheduler.UiOrCurrent)
+  .Bind(out _subworkspaces)
+        .Subscribe(_ => InvalidateSelectedWorkspaceIndexCache())
+  ]);
 
         NavigationService = new SubWorkspaceNavigationService(this);
         NavigationService.Navigated += OnSelectedSubWorkspaceChangedCallBack;
@@ -138,17 +119,24 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     protected void ClearSubWorkspaces() => _allSubworkspaces.Clear();
 
     protected void SetSubWorkspaces(IEnumerable<INavigableWorkspaceViewModel> workspaces) => _allSubworkspaces.Edit(x =>
-    {
-        x.Clear();
-        x.AddOrUpdate(workspaces);
-    });
+  {
+      x.Clear();
+      x.AddOrUpdate(workspaces);
+  });
 
     public T? GetSubWorkspace<T>()
         where T : INavigableWorkspaceViewModel
-        => AllWorkspaces.OfType<T>().FirstOrDefault();
+   => AllWorkspaces.OfType<T>().FirstOrDefault();
+
+    private void InvalidateSelectedWorkspaceIndexCache()
+    {
+        var selected = SelectedWorkspace;
+        _cachedSelectedWorkspaceIndex = selected is not null ? _subworkspaces.IndexOf(selected) : -1;
+    }
 
     private void OnSelectedSubWorkspaceChangedCallBack(object? sender, NavigationEventArgs e)
     {
+        InvalidateSelectedWorkspaceIndexCache();
         OnPropertyChanged(nameof(SelectedWorkspace));
         OnPropertyChanged(nameof(SelectedWorkspaceIndex));
 
@@ -161,58 +149,40 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
 
     #region Refresh
 
-    public virtual void Refresh()
-    {
-        using (IsModifiedSuspender.Suspend())
-        {
-            OnRefreshRequested();
-
-            RefreshCore();
-
-            foreach (var x in SubWorkspaces)
-                x.Refresh();
-
-            ResetValidation();
-
-            ResetIsModified();
-
-            OnRefreshCompleted();
-
-            _ = NavigationService.CheckSelectedWorkspace();
-
-            RefreshCompleted?.Invoke(this, EventArgs.Empty);
-            IsLoaded = true;
-        }
-    }
-
+    /// <summary>
+    /// Refreshes the workspace and all its sub-workspaces asynchronously.
+    /// Sub-workspaces are refreshed in parallel for optimal performance.
+    /// This is the primary refresh method. For synchronous scenarios, use RefreshCommand which handles async execution.
+    /// </summary>
     public virtual async Task RefreshAsync()
     {
         using (IsModifiedSuspender.Suspend())
         {
             OnRefreshRequested();
 
-            await ExecuteAsync(() =>
-            {
-                RefreshCore();
+            await ExecuteAsync(async () =>
+                   {
+                       RefreshCore();
 
-                foreach (var x in SubWorkspaces)
-                    x.Refresh();
+                       // Refresh all sub-workspaces in parallel for better performance
+                       var subWorkSpacesList = SubWorkspaces;
+                       if (subWorkSpacesList.Count > 0)
+                       {
+                           await Task.WhenAll(subWorkSpacesList.Select(w => w.RefreshAsync())).ConfigureAwait(false);
+                       }
 
-                ResetValidation();
+                       ResetValidation();
+                       ResetIsModified();
 
-                ResetIsModified();
-
-                OnRefreshCompleted();
-            }).ConfigureAwait(false);
+                       OnRefreshCompleted();
+                   }).ConfigureAwait(false);
 
             _ = NavigationService.CheckSelectedWorkspace();
 
             RefreshCompleted?.Invoke(this, EventArgs.Empty);
-            IsLoaded = true;
+            MarkAsLoaded();
         }
     }
-
-    protected virtual async Task ExecuteAsync(Action action) => await BusyService.WaitIndeterminateAsync(action).ConfigureAwait(false);
 
     protected virtual void RefreshCore() { }
 
@@ -228,15 +198,19 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
 
     public virtual void GoToTab(object indexOrSubWorkspace)
     {
-        if (!Equals(indexOrSubWorkspace, SelectedWorkspace) && !Equals(indexOrSubWorkspace, SelectedWorkspaceIndex))
-            _ = NavigationService.NavigateTo(indexOrSubWorkspace);
+        // Early exit if already selected
+        if (Equals(indexOrSubWorkspace, SelectedWorkspace) || Equals(indexOrSubWorkspace, _cachedSelectedWorkspaceIndex))
+            return;
+
+        _ = NavigationService.NavigateTo(indexOrSubWorkspace);
     }
 
     public virtual void GoToPreviousTab()
     {
         if (SelectedWorkspace is null) return;
 
-        var currentIndex = SubWorkspaces.IndexOf(SelectedWorkspace);
+        var currentIndex = _cachedSelectedWorkspaceIndex;
+        if (currentIndex <= 0) return;
 
         GoToTab(currentIndex - 1);
     }
@@ -245,7 +219,8 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     {
         if (SelectedWorkspace is null) return;
 
-        var currentIndex = SubWorkspaces.IndexOf(SelectedWorkspace);
+        var currentIndex = _cachedSelectedWorkspaceIndex;
+        if (currentIndex < 0 || currentIndex >= SubWorkspaces.Count - 1) return;
 
         GoToTab(currentIndex + 1);
     }
@@ -256,56 +231,50 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     {
         if (SelectedWorkspace is null) return false;
 
-        var currentIndex = SubWorkspaces.IndexOf(SelectedWorkspace);
-
-        return SubWorkspaces.GetByIndex(currentIndex + 1) is not null;
+        var currentIndex = _cachedSelectedWorkspaceIndex;
+        return currentIndex >= 0 && currentIndex < SubWorkspaces.Count - 1;
     }
 
     protected virtual bool CanGoToPreviousTab()
     {
         if (SelectedWorkspace is null) return false;
 
-        var currentIndex = SubWorkspaces.IndexOf(SelectedWorkspace);
-
-        return SubWorkspaces.GetByIndex(currentIndex - 1) is not null;
+        var currentIndex = _cachedSelectedWorkspaceIndex;
+        return currentIndex > 0;
     }
 
     #endregion GoToTab
 
     #region Reset
 
-    protected void ResetWithChecking()
+    protected async Task ResetWithCheckingAsync()
     {
         if (CheckCanReset())
-            Reset();
+            await ResetAsync().ConfigureAwait(false);
     }
 
-    public void Reset()
-    {
-        using (IsModifiedSuspender.Suspend())
-        {
-            ResetCore();
-
-            foreach (var x in SubWorkspaces)
-                x.Reset();
-
-            ResetIsModified();
-        }
-    }
-
+    /// <summary>
+    /// Resets the workspace asynchronously with busy indication.
+    /// Sub-workspaces are reset in parallel for optimal performance.
+    /// Use this when ResetCore contains heavy operations.
+    /// </summary>
     public virtual async Task ResetAsync()
     {
         using (IsModifiedSuspender.Suspend())
         {
-            await ExecuteAsync(() =>
-            {
-                ResetCore();
+            await ExecuteAsync(async () =>
+                   {
+                       ResetCore();
 
-                foreach (var x in SubWorkspaces)
-                    x.Reset();
+                       // Reset all sub-workspaces in parallel for better performance
+                       var subWorkspacesList = SubWorkspaces;
+                       if (subWorkspacesList.Count > 0)
+                       {
+                           await Task.WhenAll(subWorkspacesList.Select(w => w.ResetAsync())).ConfigureAwait(false);
+                       }
 
-                ResetIsModified();
-            }).ConfigureAwait(false);
+                       ResetIsModified();
+                   }).ConfigureAwait(false);
         }
     }
 
@@ -332,9 +301,9 @@ public abstract class WorkspaceViewModel : EditableObject, IWorkspaceViewModel
     protected override void Cleanup()
     {
         base.Cleanup();
-        _allSubworkspaces.Dispose();
         NavigationService.Navigated -= OnSelectedSubWorkspaceChangedCallBack;
         NavigationService.Dispose();
+        _allSubworkspaces.Dispose();
     }
 
     protected virtual void OnModeChanged() => UpdateTitle();

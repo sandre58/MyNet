@@ -13,6 +13,7 @@ using MyNet.Observable.Collections.Providers;
 using MyNet.UI.Resources;
 using MyNet.UI.Selection;
 using MyNet.UI.Toasting;
+using MyNet.UI.ViewModels.Dialogs;
 using MyNet.UI.ViewModels.List;
 using MyNet.Utilities.Providers;
 

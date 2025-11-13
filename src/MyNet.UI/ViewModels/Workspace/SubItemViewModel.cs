@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using MyNet.Observable.Attributes;
@@ -17,7 +16,6 @@ namespace MyNet.UI.ViewModels.Workspace;
 [CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
 public class SubItemViewModel<T> : NavigableWorkspaceViewModel, IItemViewModel<T>
 {
-    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global", Justification = "Use by children classes")]
     protected CompositeDisposable? ItemSubscriptions { get; private set; }
 
     [DoNotCheckEquality]

@@ -12,12 +12,11 @@ using MyNet.Observable;
 using MyNet.Observable.Attributes;
 using MyNet.Observable.Extensions;
 using MyNet.UI.Commands;
-using MyNet.UI.ViewModels.Workspace;
 using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.Edition;
 
-public class StringListEditionViewModel : WorkspaceViewModel
+public class StringListEditionViewModel : ViewModelBase
 {
     public ICommand AddCommand { get; set; }
 
@@ -29,12 +28,10 @@ public class StringListEditionViewModel : WorkspaceViewModel
     [CanSetIsModified]
     public ObservableCollection<StringWrapper> Items { get; } = [];
 
-    public StringListEditionViewModel(string? title = null)
+    public StringListEditionViewModel()
     {
         AddCommand = CommandsManager.CreateNotNull<StringWrapper>(_ => Add(), CanAdd);
         RemoveCommand = CommandsManager.CreateNotNull<StringWrapper>(Remove, CanRemove);
-
-        Title = title;
 
         Disposables.Add(Items.ToObservableChangeSet().SubscribeAll(() => OnPropertyChanged(nameof(Count))));
     }

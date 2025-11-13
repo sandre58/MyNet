@@ -86,10 +86,10 @@ public abstract class ImportBySourcesDialogViewModel<T, TListViewModel> : Import
             }
         }).ConfigureAwait(false);
 
-    public override async void Load()
+    public override async Task LoadAsync()
     {
         DialogResult = null;
-        await Task.WhenAll([.. Sources.Select(x => x.InitializeAsync())]).ConfigureAwait(false);
+        await Task.WhenAll(Sources.Select(x => x.InitializeAsync())).ConfigureAwait(false);
     }
 
     protected override bool CanRefresh() => ShowList;

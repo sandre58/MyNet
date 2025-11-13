@@ -31,7 +31,6 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     // Optimize: Cache for properties that can be validated/modified to avoid repeated filtering
     private PropertyInfo[]? _validatableProperties;
     private PropertyInfo[]? _modifiableProperties;
-    private PropertyInfo[]? _notifiableProperties;
 
     private bool _isModified;
 
@@ -533,7 +532,6 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
         // Clear caches
         _validatableProperties = null;
         _modifiableProperties = null;
-        _notifiableProperties = null;
 
         base.Cleanup();
     }

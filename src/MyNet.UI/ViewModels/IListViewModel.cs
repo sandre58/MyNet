@@ -8,9 +8,9 @@ using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using MyNet.UI.ViewModels.Display;
-using MyNet.UI.ViewModels.List;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
+using MyNet.UI.ViewModels.List.Paging;
 using MyNet.UI.ViewModels.List.Sorting;
 using MyNet.Utilities;
 

@@ -14,9 +14,10 @@ using MyNet.Observable.Collections.Providers;
 using MyNet.UI.Commands;
 using MyNet.UI.Resources;
 using MyNet.UI.Selection;
+using MyNet.UI.ViewModels.List;
 using MyNet.Utilities.Providers;
 
-namespace MyNet.UI.ViewModels.List;
+namespace MyNet.UI.ViewModels.Dialogs;
 
 [CanBeValidatedForDeclaredClassOnly(false)]
 [CanSetIsModifiedAttributeForDeclaredClassOnly(false)]

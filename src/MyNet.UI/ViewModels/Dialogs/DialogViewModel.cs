@@ -90,7 +90,7 @@ public abstract class DialogViewModel : EditableObject, IDialogViewModel
 
     public virtual Task<bool> CanCloseAsync() => Task.FromResult(true);
 
-    public virtual void Load() => DialogResult = null;
+    public virtual Task LoadAsync() => Task.Run(() => DialogResult = null);
 
     #endregion Methods
 

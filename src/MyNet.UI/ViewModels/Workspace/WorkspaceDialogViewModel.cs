@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MyNet.Observable.Attributes;
@@ -71,7 +70,6 @@ public abstract class WorkspaceDialogViewModel : WorkspaceViewModel, IDialogView
     /// <summary>
     /// Closes the dialog.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     protected virtual void OnCloseRequest(CancelEventArgs e)
     {
         // Method intentionally left empty.
@@ -79,11 +77,11 @@ public abstract class WorkspaceDialogViewModel : WorkspaceViewModel, IDialogView
 
     public virtual Task<bool> CanCloseAsync() => Task.FromResult(true);
 
-    public virtual void Load()
+    public virtual async Task LoadAsync()
     {
         DialogResult = null;
 
-        Refresh();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     #endregion Methods
