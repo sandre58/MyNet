@@ -25,13 +25,25 @@ namespace MyNet.Observable;
 [CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
 public abstract class EditableObject : LocalizableObject, IEditableObject
 {
-    private readonly List<PropertyInfo> _publicProperties;
+    private readonly PropertyInfo[] _publicProperties;
+    private readonly List<INotifyCollectionChanged> _observableCollections;
+
+    // Optimize: Cache for properties that can be validated/modified to avoid repeated filtering
+    private PropertyInfo[]? _validatableProperties;
+    private PropertyInfo[]? _modifiableProperties;
+    private PropertyInfo[]? _notifiableProperties;
+
     private bool _isModified;
 
     protected EditableObject()
     {
         _publicProperties = [.. GetType().GetPublicProperties()];
-        GetObservableCollections().ForEach(x => x.CollectionChanged += CollectionChanged);
+        _observableCollections = GetObservableCollectionsList();
+
+        foreach (var collection in _observableCollections)
+        {
+            collection.CollectionChanged += CollectionChanged;
+        }
     }
 
     private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -103,22 +115,37 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     /// Gets a value indicating whether the object has validation errors.
     /// </summary>
     /// <value><c>true</c> if this instance has errors, otherwise <c>false</c>.</value>
-    public virtual bool HasErrors => Errors.Any();
+    public virtual bool HasErrors => ValidationErrors.Values.Any(errors => errors.Any(e => e.Severity == ValidationRuleSeverity.Error));
 
     /// <summary>
     /// Gets a value indicating whether the object has validation errors.
     /// </summary>
     /// <value><c>true</c> if this instance has errors, otherwise <c>false</c>.</value>
-    public virtual bool HasWarnings => Warnings.Any();
+    public virtual bool HasWarnings => ValidationErrors.Values.Any(errors => errors.Any(e => e.Severity == ValidationRuleSeverity.Warning));
 
     /// <summary>
     /// Gets a value indicating whether the object has validation errors.
     /// </summary>
     /// <value><c>true</c> if this instance has errors, otherwise <c>false</c>.</value>
-    public virtual bool HasInformations => Informations.Any();
+    public virtual bool HasInformations => ValidationErrors.Values.Any(errors => errors.Any(e => e.Severity == ValidationRuleSeverity.Information));
 
+    // Optimize: Reduce LINQ allocations by iterating once
     private IEnumerable<string> GetValidationMessages(ValidationRuleSeverity severity)
-        => ValidationErrors.SelectMany(x => x.Value.Where(y => y.Severity == severity && !string.IsNullOrEmpty(y.ErrorMessage)).Select(y => y.ErrorMessage!)).Distinct();
+    {
+        var messages = new List<string>();
+        foreach (var kvp in ValidationErrors)
+        {
+            foreach (var result in kvp.Value)
+            {
+                if (result.Severity == severity && !string.IsNullOrEmpty(result.ErrorMessage))
+                {
+                    messages.Add(result.ErrorMessage!);
+                }
+            }
+        }
+
+        return messages.Distinct();
+    }
 
     /// <summary>
     /// Gets the validation errors for a specified property or for the entire object.
@@ -126,9 +153,30 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     /// <param name="propertyName">Name of the property to retrieve errors for. <c>null</c> to
     /// retrieve all errors for this instance.</param>
     /// <returns>A collection of errors.</returns>
-    public IEnumerable GetErrors(string? propertyName) => string.IsNullOrEmpty(propertyName)
-            ? GetValidationMessages(ValidationRuleSeverity.Error).ToList()
-            : ValidationErrors.TryGetValue(propertyName, out var errors) ? errors.Where(y => y.Severity == ValidationRuleSeverity.Error).Select(x => x.ErrorMessage).ToList() : Array.Empty<string?>();
+    public IEnumerable GetErrors(string? propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            return GetValidationMessages(ValidationRuleSeverity.Error).ToList();
+        }
+
+        if (!ValidationErrors.TryGetValue(propertyName, out var errors))
+        {
+            return Array.Empty<string>();
+        }
+
+        // Optimize: Build list once
+        var errorMessages = new List<string?>(errors.Count);
+        foreach (var error in errors)
+        {
+            if (error.Severity == ValidationRuleSeverity.Error)
+            {
+                errorMessages.Add(error.ErrorMessage);
+            }
+        }
+
+        return errorMessages;
+    }
 
     /// <summary>
     /// Gets the validation errors for the entire object.
@@ -136,21 +184,29 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     /// <returns>A collection of errors.</returns>
     public virtual IEnumerable<string> GetValidationErrors()
     {
-        var result = new List<string>();
-        result.AddRange((IEnumerable<string>)GetErrors(string.Empty));
+        var result = new List<string>((IEnumerable<string>)GetErrors(string.Empty));
 
-        var complexValidationErrors = _publicProperties.Where(x => x.CanBeValidated(this))
-                                                       .GetValuesOfType<IValidatable>(this)
-                                                       .SelectMany(x => x?.GetValidationErrors() ?? [])
-                                                       .ToList();
-        result.AddRange(complexValidationErrors);
+        // Optimize: Use cached validatable properties
+        var validatableProps = GetValidatableProperties();
 
-        var collectionValidationErrors =
-            _publicProperties.Where(x => x.CanBeValidated(this) && !typeof(IValidatable).IsAssignableFrom(x.PropertyType))
-                             .GetValuesOfType<IEnumerable>(this)
-                             .SelectMany(x => x?.OfType<IValidatable>() ?? [])
-                             .SelectMany(x => x.GetValidationErrors()).ToList();
-        result.AddRange(collectionValidationErrors);
+        // Complex validation errors
+        foreach (var prop in validatableProps)
+        {
+            if (prop.GetValue(this) is IValidatable entity)
+            {
+                result.AddRange(entity.GetValidationErrors());
+            }
+            else if (prop.GetValue(this) is IEnumerable collection && !typeof(IValidatable).IsAssignableFrom(prop.PropertyType))
+            {
+                foreach (var item in collection)
+                {
+                    if (item is IValidatable validatable)
+                    {
+                        result.AddRange(validatable.GetValidationErrors());
+                    }
+                }
+            }
+        }
 
         return result;
     }
@@ -172,35 +228,43 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     /// <param name="value">The value.</param>
     protected virtual void ValidateProperty(string propertyName, object? value)
     {
-        var prop = GetType().GetProperty(propertyName);
-        if (ValidatePropertySuspender.IsSuspended || prop?.CanBeValidated(this) != true) return;
+        if (ValidatePropertySuspender.IsSuspended) return;
 
-        var metadataValidationResults = new List<ValidationResult>();
+        var prop = GetPropertyByName(propertyName);
+        if (prop?.CanBeValidated(this) != true) return;
+
+        var validationResults = new List<SeverityValidationResult>();
 
         // Validation by Metadata
-        _ = Validator.TryValidateProperty(value, new ValidationContext(this) { MemberName = propertyName }, metadataValidationResults);
+        var metadataResults = new List<ValidationResult>();
+        _ = Validator.TryValidateProperty(value, new ValidationContext(this) { MemberName = propertyName }, metadataResults);
 
-        var validationResults = metadataValidationResults.ConvertAll(x => new SeverityValidationResult(x.ErrorMessage, x.MemberNames));
+        foreach (var result in metadataResults)
+        {
+            validationResults.Add(new SeverityValidationResult(result.ErrorMessage, result.MemberNames));
+        }
 
         // Custom Validation
-        var customValidations = ValidationRules.Apply(this, propertyName).Select(x => new SeverityValidationResult(x.Error, [propertyName], x.Severity)).ToList();
-        if (customValidations.Count > 0)
-            validationResults.AddRange(customValidations);
+        var customValidations = ValidationRules.Apply(this, propertyName);
+        foreach (var validation in customValidations)
+        {
+            validationResults.Add(new SeverityValidationResult(validation.Error, [propertyName], validation.Severity));
+        }
 
         // Is Valid
         if (validationResults.Count == 0)
         {
-            if (!ValidationErrors.ContainsKey(propertyName)) return;
+            if (ValidationErrors.Remove(propertyName))
+            {
+                RaiseValidation();
+                OnErrorsChanged(propertyName);
+            }
 
-            _ = ValidationErrors.Remove(propertyName);
-            RaiseValidation();
-            OnErrorsChanged(propertyName);
             return;
         }
 
         // Is not valid
-        if (!ValidationErrors.TryAdd(propertyName, validationResults))
-            ValidationErrors[propertyName] = validationResults;
+        ValidationErrors[propertyName] = validationResults;
         RaiseValidation();
         OnErrorsChanged(propertyName);
     }
@@ -210,20 +274,33 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
         if (ValidatePropertySuspender.IsSuspended) return true;
 
         var result = true;
-        var properties = _publicProperties.Where(x => x.CanBeValidated(this)).ToList();
+        var properties = GetValidatableProperties();
+
         foreach (var property in properties)
         {
-            // All Property
-            ValidateProperty(property.Name, property.GetValue(this));
+            var value = property.GetValue(this);
+
+            // Validate property
+            ValidateProperty(property.Name, value);
             result = result && !HasErrors;
 
             // Complex property
-            if (property.GetValue(this) is IValidatable entity)
+            if (value is IValidatable entity)
+            {
                 result = result && entity.ValidateProperties();
+            }
 
             // Collection property
-            else if (property.GetValue(this) is ICollection collection)
-                result = result && collection.OfType<IValidatable>().All(validatable => validatable.ValidateProperties());
+            else if (value is ICollection collection)
+            {
+                foreach (var item in collection)
+                {
+                    if (item is IValidatable validatable)
+                    {
+                        result = result && validatable.ValidateProperties();
+                    }
+                }
+            }
         }
 
         return result;
@@ -231,11 +308,14 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
 
     public void ResetValidation()
     {
-        var propertiesNotValid = ValidationErrors.Keys;
+        var propertiesNotValid = ValidationErrors.Keys.ToArray();
         ValidationErrors.Clear();
         RaiseValidation();
 
-        propertiesNotValid.ForEach(OnErrorsChanged);
+        foreach (var propertyName in propertiesNotValid)
+        {
+            OnErrorsChanged(propertyName);
+        }
     }
 
     private void RaiseValidation()
@@ -262,7 +342,7 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     {
         if (PropertyChangedSuspender.IsSuspended || GetType().GetCustomAttributes<CanNotifyAttribute>().Any(x => !x.Value)) return;
 
-        var prop = _publicProperties.FirstOrDefault(x => x.Name == propertyName);
+        var prop = GetPropertyByName(propertyName);
         if (prop?.CanNotify() != true) return;
 
         // Validation
@@ -271,12 +351,16 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
             ValidateProperty(propertyName, after);
 
             // Validate other property defined by [ValidateProperty(<PropertyName>)] attributes.
-            prop.GetCustomAttributes().OfType<ValidatePropertyAttribute>().ForEach(x =>
+            var validateAttributes = prop.GetCustomAttributes<ValidatePropertyAttribute>();
+            foreach (var attr in validateAttributes)
             {
-                var property = GetType().GetProperty(x.PropertyName);
-                var value = property?.GetValue(this);
-                ValidateProperty(x.PropertyName, value);
-            });
+                var property = GetPropertyByName(attr.PropertyName);
+                if (property != null)
+                {
+                    var value = property.GetValue(this);
+                    ValidateProperty(attr.PropertyName, value);
+                }
+            }
         }
 
         // Modification
@@ -305,17 +389,31 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     {
         if (_isModified) return true;
 
-        var propertiesToChecked = _publicProperties.Where(x => x.CanSetIsModified(this)).ToList();
+        var propertiesToCheck = GetModifiableProperties();
 
-        var complexIsModified =
-            propertiesToChecked.GetValuesOfType<IModifiable>(this).Any(x => x?.IsModified() == true);
-        if (complexIsModified) return true;
+        // Check complex properties
+        foreach (var prop in propertiesToCheck)
+        {
+            var value = prop.GetValue(this);
 
-        var collectionIsModified =
-                propertiesToChecked.Where(x => !typeof(IModifiable).IsAssignableFrom(x.PropertyType)).GetValuesOfType<ICollection>(this)
-                .SelectMany(x => x?.OfType<IModifiable>() ?? [])
-                .Any(x => x.IsModified());
-        return collectionIsModified;
+            if (value is IModifiable modifiable && modifiable.IsModified())
+            {
+                return true;
+            }
+
+            if (value is ICollection collection && !typeof(IModifiable).IsAssignableFrom(prop.PropertyType))
+            {
+                foreach (var item in collection)
+                {
+                    if (item is IModifiable itemModifiable && itemModifiable.IsModified())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <inheritdoc />
@@ -325,27 +423,118 @@ public abstract class EditableObject : LocalizableObject, IEditableObject
     public virtual void ResetIsModified()
     {
         _isModified = false;
-        var propertiesToChecked = _publicProperties.Where(x => x.CanSetIsModified(this)).ToList();
+        var propertiesToCheck = GetModifiableProperties();
 
-        // Complex properties
-        propertiesToChecked.GetValuesOfType<IModifiable>(this).ToList().ForEach(x => x?.ResetIsModified());
+        // Reset complex properties
+        foreach (var prop in propertiesToCheck)
+        {
+            var value = prop.GetValue(this);
 
-        // Collection properties
-        propertiesToChecked.Where(x => !typeof(IModifiable).IsAssignableFrom(x.PropertyType)).GetValuesOfType<ICollection>(this)
-            .SelectMany(x => x?.OfType<IModifiable>() ?? [])
-            .ToList().ForEach(x => x.ResetIsModified());
+            if (value is IModifiable modifiable)
+            {
+                modifiable.ResetIsModified();
+            }
+            else if (value is ICollection collection && !typeof(IModifiable).IsAssignableFrom(prop.PropertyType))
+            {
+                foreach (var item in collection)
+                {
+                    if (item is IModifiable itemModifiable)
+                    {
+                        itemModifiable.ResetIsModified();
+                    }
+                }
+            }
+        }
     }
 
     protected virtual void SetIsModified() => _isModified = true;
 
     #endregion IModifiable
 
-    protected override void Cleanup()
+    #region Helper Methods - Optimize property lookups
+
+    /// <summary>
+    /// Gets a property by name with caching.
+    /// </summary>
+    private PropertyInfo? GetPropertyByName(string propertyName) => Array.Find(_publicProperties, p => p.Name == propertyName);
+
+    /// <summary>
+    /// Gets cached validatable properties.
+    /// </summary>
+    private PropertyInfo[] GetValidatableProperties()
     {
-        base.Cleanup();
-        GetObservableCollections().ForEach(x => x.CollectionChanged -= CollectionChanged);
+        if (_validatableProperties != null)
+            return _validatableProperties;
+
+        var props = new List<PropertyInfo>(_publicProperties.Length);
+        foreach (var prop in _publicProperties)
+        {
+            if (prop.CanBeValidated(this))
+            {
+                props.Add(prop);
+            }
+        }
+
+        _validatableProperties = [.. props];
+        return _validatableProperties;
     }
 
-    private List<INotifyCollectionChanged> GetObservableCollections() =>
-            [.. _publicProperties.Where(x => x.CanSetIsModified() && typeof(ICollection).IsAssignableFrom(x.PropertyType)).GetValuesOfType<INotifyCollectionChanged>(this).NotNull()];
+    /// <summary>
+    /// Gets cached modifiable properties.
+    /// </summary>
+    private PropertyInfo[] GetModifiableProperties()
+    {
+        if (_modifiableProperties != null)
+            return _modifiableProperties;
+
+        var props = new List<PropertyInfo>(_publicProperties.Length);
+        foreach (var prop in _publicProperties)
+        {
+            if (prop.CanSetIsModified(this))
+            {
+                props.Add(prop);
+            }
+        }
+
+        _modifiableProperties = [.. props];
+        return _modifiableProperties;
+    }
+
+    /// <summary>
+    /// Gets observable collections that need to be monitored.
+    /// </summary>
+    private List<INotifyCollectionChanged> GetObservableCollectionsList()
+    {
+        var collections = new List<INotifyCollectionChanged>();
+
+        foreach (var prop in _publicProperties)
+        {
+            if (prop.CanSetIsModified() && typeof(ICollection).IsAssignableFrom(prop.PropertyType))
+            {
+                if (prop.GetValue(this) is INotifyCollectionChanged collection)
+                {
+                    collections.Add(collection);
+                }
+            }
+        }
+
+        return collections;
+    }
+
+    #endregion
+
+    protected override void Cleanup()
+    {
+        foreach (var collection in _observableCollections)
+        {
+            collection.CollectionChanged -= CollectionChanged;
+        }
+
+        // Clear caches
+        _validatableProperties = null;
+        _modifiableProperties = null;
+        _notifiableProperties = null;
+
+        base.Cleanup();
+    }
 }
