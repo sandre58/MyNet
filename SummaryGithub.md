@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/30/2025 - 13:36:48 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 11/13/2025 - 19:53:14 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 296 |
-| Files: | 235 |
-| **Line coverage:** | 39.9% (5136 of 12855) |
-| Covered lines: | 5136 |
-| Uncovered lines: | 7719 |
-| Coverable lines: | 12855 |
-| Total lines: | 22581 |
-| **Branch coverage:** | 24% (1638 of 6814) |
-| Covered branches: | 1638 |
-| Total branches: | 6814 |
+| Classes: | 309 |
+| Files: | 241 |
+| **Line coverage:** | 46.9% (6632 of 14125) |
+| Covered lines: | 6632 |
+| Uncovered lines: | 7493 |
+| Coverable lines: | 14125 |
+| Total lines: | 31698 |
+| **Branch coverage:** | 27.7% (1949 of 7034) |
+| Covered branches: | 1949 |
+| Total branches: | 7034 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 212_18942389508 |
+| Tag: | 214_19343915772 |
 
 </details>
 
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|75.7%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -103,11 +103,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 15.3%</summary>
+<details><summary>MyNet.Utilities - 21.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**15.3%**|**8%**|
+|**MyNet.Utilities**|**21.2%**|**11.9%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -128,15 +128,15 @@
 |MyNet.Utilities.Caching.Policies.ExpirationPolicy|18.7%|22.2%|
 |MyNet.Utilities.Caching.Policies.SlidingExpirationPolicy|0%||
 |MyNet.Utilities.CollectionExtensions|64.7%|37.5%|
-|MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|0%|0%|
-|MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|0%|0%|
-|MyNet.Utilities.Collections.OptimizedObservableCollection<T>|0%|0%|
-|MyNet.Utilities.Collections.OptimizedObservableCollection<T>|0%|0%|
+|MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|77.6%|65%|
+|MyNet.Utilities.Collections.ObservableKeyedCollection<TKey, T>|75%|57.4%|
+|MyNet.Utilities.Collections.OptimizedObservableCollection<T>|89.1%|75.6%|
+|MyNet.Utilities.Collections.OptimizedObservableCollection<T>|100%|100%|
 |MyNet.Utilities.Collections.ReadOnlyObservableKeyedCollection<TKey, T>|0%||
-|MyNet.Utilities.Collections.SortableObservableCollection<T>|0%|0%|
-|MyNet.Utilities.Collections.SortableObservableCollection<T>|0%||
-|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|0%|0%|
-|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|0%||
+|MyNet.Utilities.Collections.SortableObservableCollection<T>|90.4%|75%|
+|MyNet.Utilities.Collections.SortableObservableCollection<T>|100%|100%|
+|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|79.5%|66.6%|
+|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|63.6%|0%|
 |MyNet.Utilities.ComparableExtensions|0%|0%|
 |MyNet.Utilities.Comparers.NullableComparer<T>|50%|50%|
 |MyNet.Utilities.Comparers.PredicateEqualityComparer<T>|0%|0%|
@@ -159,8 +159,8 @@
 |MyNet.Utilities.DateTimes.PeriodWithOptionalEnd|0%|0%|
 |MyNet.Utilities.DateTimes.TimePeriod|0%||
 |MyNet.Utilities.DateTimes.TimePeriodWithOptionalEnd|0%|0%|
-|MyNet.Utilities.Deferring.Deferrer|0%|0%|
-|MyNet.Utilities.Deferring.DeferScope|0%||
+|MyNet.Utilities.Deferring.Deferrer|84.6%|33.3%|
+|MyNet.Utilities.Deferring.DeferScope|100%||
 |MyNet.Utilities.DictionaryExtensions|11.1%|20%|
 |MyNet.Utilities.DictionaryExtensions<TKey, TValue>|11.1%|20%|
 |MyNet.Utilities.DriveExtensions|0%|0%|
@@ -204,7 +204,7 @@
 |MyNet.Utilities.Google.Maps.Step|0%||
 |MyNet.Utilities.Helpers.CharHelper|0%|0%|
 |MyNet.Utilities.Helpers.CollectionHelper|0%|0%|
-|MyNet.Utilities.Helpers.DateTimeHelper|0%|0%|
+|MyNet.Utilities.Helpers.DateTimeHelper|88.5%|67.6%|
 |MyNet.Utilities.Helpers.EnumerableHelper|0%|0%|
 |MyNet.Utilities.Helpers.FileHelper|0%|0%|
 |MyNet.Utilities.Helpers.MathHelper|0%|0%|
@@ -303,31 +303,43 @@
 |MyNet.Utilities.Sequences.AcceptableValueRange<T>|0%|0%|
 |MyNet.Utilities.Sequences.ImmutableInterval<T>|0%||
 |MyNet.Utilities.Sequences.IntegerSequence|0%||
-|MyNet.Utilities.Sequences.Interval<T, TClass>|0%|0%|
-|MyNet.Utilities.Sequences.Interval<T>|0%||
+|MyNet.Utilities.Sequences.Interval<T, TClass>|14.2%|0%|
+|MyNet.Utilities.Sequences.Interval<T>|50%||
 |MyNet.Utilities.Sequences.IntervalWithOptionalEnd<T>|0%|0%|
 |MyNet.Utilities.StackExtensions|0%|0%|
 |MyNet.Utilities.StreamExtensions|0%|0%|
 |MyNet.Utilities.StreamExtensions<T>|0%|0%|
 |MyNet.Utilities.StringExtensions|4.4%|0%|
-|MyNet.Utilities.Suspending.Suspender|0%|0%|
-|MyNet.Utilities.Suspending.SuspendScope|0%||
+|MyNet.Utilities.Suspending.Suspender|83.3%|75%|
+|MyNet.Utilities.Suspending.SuspendScope|100%||
 |MyNet.Utilities.Threading.SingleTaskRunner|0%|0%|
 |MyNet.Utilities.TimeOnlyExtensions|0%|0%|
 |MyNet.Utilities.TimeSpanExtensions|28.3%|59.3%|
-|MyNet.Utilities.ValidationExtensions|0%|0%|
+|MyNet.Utilities.ValidationExtensions|23.8%|18.1%|
 |MyNet.Utilities.ValueObject|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
-<details><summary>MyNet.Utilities.Tests - 99.8%</summary>
+<details><summary>MyNet.Utilities.Tests - 97.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**99.8%**|**96.8%**|
+|**MyNet.Utilities.Tests**|**97.7%**|**95.8%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
+|MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests|99.4%|83.3%|
+|MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests.KeyedItem|100%||
+|MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests.TestKeyedC<br/>ollection|87.5%||
+|MyNet.Utilities.Tests.Collections.OptimizedObservableCollectionTests|94.4%|75%|
+|MyNet.Utilities.Tests.Collections.OptimizedObservableCollectionTests.TestOp<br/>timizedCollection|50%||
+|MyNet.Utilities.Tests.Collections.SortableObservableCollectionTests|98.5%|100%|
+|MyNet.Utilities.Tests.Collections.SortableObservableCollectionTests.Product|100%||
+|MyNet.Utilities.Tests.Collections.ThreadSafeObservableCollectionTests|96.3%|96.8%|
+|MyNet.Utilities.Tests.Collections.UiCollectionsIntegrationTests|75%|100%|
+|MyNet.Utilities.Tests.Collections.UiCollectionsIntegrationTests.TestSchedul<br/>eObservableCollection<T>|100%||
+|MyNet.Utilities.Tests.Collections.UiCollectionsIntegrationTests.TestSchedul<br/>eObservableCollection<T>|0%||
+|MyNet.Utilities.Tests.Collections.UiCollectionsIntegrationTests.TestSchedul<br/>er|0%||
 |MyNet.Utilities.Tests.Comparers.NullableComparerTests|100%||
 |MyNet.Utilities.Tests.Comparers.ReflectionComparerTests|100%||
 |MyNet.Utilities.Tests.EncryptionServiceTests|100%||
@@ -341,6 +353,7 @@
 |MyNet.Utilities.Tests.FluentTimeSpanOperatorOverloadsTests|100%||
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
 |MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
+|MyNet.Utilities.Tests.Helpers.DateTimeHelperTests|100%||
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
 |MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
 |MyNet.Utilities.Tests.UseCultureTests|100%||
