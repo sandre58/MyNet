@@ -19,7 +19,6 @@ using DynamicData;
 using DynamicData.Binding;
 using DynamicData.Operators;
 using MyNet.Humanizer;
-using MyNet.Observable;
 using MyNet.Observable.Attributes;
 using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Filters;
@@ -30,9 +29,7 @@ using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.MessageBox;
 using MyNet.UI.Loading;
-using MyNet.UI.Loading.Models;
 using MyNet.UI.Resources;
-using MyNet.UI.Threading;
 using MyNet.UI.ViewModels.Display;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
@@ -583,7 +580,6 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// Called after an item has been successfully added. Override to perform post-add operations.
     /// </summary>
     /// <param name="item">The item that was added.</param>
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     protected virtual void OnAddCompleted(T item) { }
 
     #endregion
@@ -762,25 +758,6 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// <param name="oldItems">The items that were removed.</param>
     [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     protected virtual void OnRemoveCompleted(IEnumerable<T> oldItems) { }
-
-    #endregion
-
-    #region Refresh
-
-    /// <summary>
-    /// Synchronously refreshes the list. Calls RefreshAsync synchronously.
-    /// </summary>
-    public void Refresh() => RefreshAsync().GetAwaiter().GetResult();
-
-    /// <summary>
-    /// Asynchronously refreshes the list. Override to provide custom refresh logic.
-    /// </summary>
-    public virtual async Task RefreshAsync() => await ExecuteAsync(RefreshCore).ConfigureAwait(false);
-
-    /// <summary>
-    /// Core refresh logic. Override in derived classes to implement custom refresh behavior.
-    /// </summary>
-    protected virtual void RefreshCore() { }
 
     #endregion
 

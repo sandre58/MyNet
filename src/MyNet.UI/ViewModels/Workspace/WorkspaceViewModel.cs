@@ -154,6 +154,7 @@ public abstract class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel
     /// Sub-workspaces are refreshed in parallel for optimal performance.
     /// This is the primary refresh method. For synchronous scenarios, use RefreshCommand which handles async execution.
     /// </summary>
+    [SuppressMessage("Performance", "CA1849:Call async methods when in an async method", Justification = "Provide two options")]
     public virtual async Task RefreshAsync()
     {
         using (IsModifiedSuspender.Suspend())
@@ -161,21 +162,25 @@ public abstract class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel
             OnRefreshRequested();
 
             await ExecuteAsync(async () =>
-                   {
-                       RefreshCore();
+                {
+                    // Execute synchronous core logic first
+                    RefreshCore();
 
-                       // Refresh all sub-workspaces in parallel for better performance
-                       var subWorkSpacesList = SubWorkspaces;
-                       if (subWorkSpacesList.Count > 0)
-                       {
-                           await Task.WhenAll(subWorkSpacesList.Select(w => w.RefreshAsync())).ConfigureAwait(false);
-                       }
+                    // Execute asynchronous core logic if overridden
+                    await RefreshCoreAsync().ConfigureAwait(false);
 
-                       ResetValidation();
-                       ResetIsModified();
+                    // Refresh all sub-workspaces in parallel for better performance
+                    var subWorkSpacesList = SubWorkspaces;
+                    if (subWorkSpacesList.Count > 0)
+                    {
+                        await Task.WhenAll(subWorkSpacesList.Select(w => w.RefreshAsync())).ConfigureAwait(false);
+                    }
 
-                       OnRefreshCompleted();
-                   }).ConfigureAwait(false);
+                    ResetValidation();
+                    ResetIsModified();
+
+                    OnRefreshCompleted();
+                }).ConfigureAwait(false);
 
             _ = NavigationService.CheckSelectedWorkspace();
 
@@ -184,7 +189,36 @@ public abstract class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel
         }
     }
 
+    /// <summary>
+    /// Override this method to perform synchronous refresh operations.
+    /// For simple data initialization, property assignments, or lightweight operations.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// protected override void RefreshCore()
+    /// {
+    ///     Title = "My Workspace";
+    ///     IsReadOnly = false;
+    /// }
+    /// </code>
+    /// </example>
     protected virtual void RefreshCore() { }
+
+    /// <summary>
+    /// Override this method to perform asynchronous refresh operations.
+    /// For I/O operations like database queries, API calls, or file loading.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// protected override async Task RefreshCoreAsync()
+    /// {
+    ///     Items = await _repository.GetAllAsync();
+    ///     Statistics = await _service.ComputeStatsAsync();
+    /// }
+    /// </code>
+    /// </example>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    protected virtual Task RefreshCoreAsync() => Task.CompletedTask;
 
     protected virtual void OnRefreshRequested() { }
 
@@ -258,27 +292,61 @@ public abstract class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel
     /// Sub-workspaces are reset in parallel for optimal performance.
     /// Use this when ResetCore contains heavy operations.
     /// </summary>
+    [SuppressMessage("Performance", "CA1849:Call async methods when in an async method", Justification = "Provide two options")]
     public virtual async Task ResetAsync()
     {
         using (IsModifiedSuspender.Suspend())
         {
             await ExecuteAsync(async () =>
-                   {
-                       ResetCore();
+             {
+                 // Execute synchronous core logic first
+                 ResetCore();
 
-                       // Reset all sub-workspaces in parallel for better performance
-                       var subWorkspacesList = SubWorkspaces;
-                       if (subWorkspacesList.Count > 0)
-                       {
-                           await Task.WhenAll(subWorkspacesList.Select(w => w.ResetAsync())).ConfigureAwait(false);
-                       }
+                 // Execute asynchronous core logic if overridden
+                 await ResetCoreAsync().ConfigureAwait(false);
 
-                       ResetIsModified();
-                   }).ConfigureAwait(false);
+                 // Reset all sub-workspaces in parallel for better performance
+                 var subWorkspacesList = SubWorkspaces;
+                 if (subWorkspacesList.Count > 0)
+                 {
+                     await Task.WhenAll(subWorkspacesList.Select(w => w.ResetAsync())).ConfigureAwait(false);
+                 }
+
+                 ResetIsModified();
+             }).ConfigureAwait(false);
         }
     }
 
+    /// <summary>
+    /// Override this method to perform synchronous reset operations.
+    /// For simple state resets, property clearing, or lightweight operations.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// protected override void ResetCore()
+    /// {
+    ///     SelectedItem = null;
+    ///     SearchText = string.Empty;
+    /// }
+    /// </code>
+    /// </example>
     protected virtual void ResetCore() { }
+
+    /// <summary>
+    /// Override this method to perform asynchronous reset operations.
+    /// For operations that require I/O like clearing caches, resetting remote state, etc.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// protected override async Task ResetCoreAsync()
+    /// {
+    ///     await _cache.ClearAsync();
+    ///     await _service.ResetUserPreferencesAsync();
+    /// }
+    /// </code>
+    /// </example>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    protected virtual Task ResetCoreAsync() => Task.CompletedTask;
 
     protected virtual bool CheckCanReset() => true;
 

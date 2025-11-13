@@ -37,6 +37,4 @@ public abstract class ListDialogViewModelBase<T, TListViewModel> : WorkspaceDial
     protected virtual bool CanValidate() => true;
 
     protected virtual bool CanCancel() => true;
-
-    protected override void RefreshCore() => List.Refresh();
 }

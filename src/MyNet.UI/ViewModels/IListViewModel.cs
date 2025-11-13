@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using MyNet.UI.ViewModels.Display;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
@@ -59,8 +60,6 @@ public interface IListViewModel<T> : IListViewModel
     ReadOnlyObservableCollection<T> Items { get; }
 
     ReadOnlyObservableCollection<T> Source { get; }
-
-    void Refresh();
 }
 
 public interface IWrapperListViewModel : IListViewModel;
