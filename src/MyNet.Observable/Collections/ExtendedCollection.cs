@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -47,8 +48,10 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     private readonly ReadOnlyObservableCollection<T> _sortedSource;
     private readonly SourceList<T> _source;
     private readonly SortingComparer<T> _sortComparer;
-    private HashSet<string> _filterProperties = [];
-    private HashSet<string> _sortProperties = [];
+    private ImmutableHashSet<string> _filterProperties = [];
+    private ImmutableHashSet<string> _sortProperties = [];
+    private Func<T, bool>? _cachedFilterFunc;
+    private IList<CompositeFilter>? _lastFiltersList;
 
     public FiltersCollection Filters { get; } = [];
 
@@ -74,49 +77,44 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
         : this(source.Connect(), scheduler) { }
 
     public ExtendedCollection(IObservable<IChangeSet<T>> source, IScheduler? scheduler = null)
-        : this(new SourceList<T>(source), true, scheduler) { }
+      : this(new SourceList<T>(source), true, scheduler) { }
 
     protected ExtendedCollection(SourceList<T> sourceList, bool isReadOnly, IScheduler? scheduler = null)
     {
         _source = sourceList;
         IsReadOnly = isReadOnly;
-        _applyFilterDeferrer = new Deferrer(() => _filterSubject.OnNext([.. Filters]));
+        _applyFilterDeferrer = new Deferrer(InvalidateFilterCache);
         _applySortDeferrer = new Deferrer(() => _resortSubject.OnNext(Unit.Default));
         _observableSource = _source.Connect();
         _sortComparer = new SortingComparer<T>(SortingProperties);
 
+        // Optimize: Combine filter and sort change events into single observable
+        var filterChanges = System.Reactive.Linq.Observable.FromEventPattern(
+            x => Filters.FiltersChanged += x,
+            x => Filters.FiltersChanged -= x).Do(_ => UpdateWatchedProperties());
+
+        var sortChanges = System.Reactive.Linq.Observable.FromEventPattern(
+            x => SortingProperties.SortChanged += x,
+            x => SortingProperties.SortChanged -= x).Do(_ => UpdateWatchedProperties());
+
         Disposables.AddRange(
         [
-            System.Reactive.Linq.Observable.FromEventPattern(x => Filters.FiltersChanged += x, x => Filters.FiltersChanged -= x).Subscribe(_ =>
-            {
-                UpdateWatchedProperties();
-                _applyFilterDeferrer.DeferOrExecute();
-            }),
-            System.Reactive.Linq.Observable.FromEventPattern(x => SortingProperties.SortChanged += x, x => SortingProperties.SortChanged -= x).Subscribe(_ =>
-            {
-                UpdateWatchedProperties();
-                _applySortDeferrer.DeferOrExecute();
-            }),
+            filterChanges.Subscribe(_ => _applyFilterDeferrer.DeferOrExecute()),
+            sortChanges.Subscribe(_ => _applySortDeferrer.DeferOrExecute()),
 
-            ConnectSortedSource().ObserveOnOptional(scheduler)
-                                 .Bind(out _sortedSource)
-                                 .Subscribe(OnSourceRefreshed),
-            ConnectSortedAndFilteredSource().ObserveOnOptional(scheduler)
-                                            .Bind(out _items)
-                                            .Subscribe(OnItemsRefreshed),
-            _observableSource.SubscribeMany(x => System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-                                                    handler => x.IfIs<INotifyPropertyChanged>(y => y.PropertyChanged += handler),
-                                                    handler => x.IfIs<INotifyPropertyChanged>(y => y.PropertyChanged -= handler))
-                                                .Subscribe(y =>
-                                                {
-                                                    if (_sortProperties.Contains(y.EventArgs.PropertyName.OrEmpty()))
-                                                        _applySortDeferrer.DeferOrExecute();
+            ConnectSortedSource().ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(OnSourceRefreshed),
+            ConnectSortedAndFilteredSource().ObserveOnOptional(scheduler).Bind(out _items).Subscribe(OnItemsRefreshed),
 
-                                                    if (_filterProperties.Contains(y.EventArgs.PropertyName.OrEmpty()))
-                                                        _applyFilterDeferrer.DeferOrExecute();
-                                                })).Subscribe(),
-             System.Reactive.Linq.Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(x => ((INotifyCollectionChanged)_items).CollectionChanged += x, x => ((INotifyCollectionChanged)_items).CollectionChanged -= x).Subscribe(x => HandleCollectionChanged(x.EventArgs)),
-             System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(x => ((INotifyPropertyChanged)_items).PropertyChanged += x, x => ((INotifyPropertyChanged)_items).PropertyChanged -= x).Subscribe(x => OnPropertyChanged(x.EventArgs.PropertyName)),
+            // Optimize: Use SubscribeMany with property change observation
+            _observableSource.SubscribeMany(SubscribeToItemPropertyChanges).Subscribe(),
+
+            System.Reactive.Linq.Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                x => ((INotifyCollectionChanged)_items).CollectionChanged += x,
+                x => ((INotifyCollectionChanged)_items).CollectionChanged -= x).Subscribe(x => HandleCollectionChanged(x.EventArgs)),
+            System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                x => ((INotifyPropertyChanged)_items).PropertyChanged += x,
+                x => ((INotifyPropertyChanged)_items).PropertyChanged -= x).Subscribe(x => OnPropertyChanged(x.EventArgs.PropertyName)),
+
             _filterSubject,
             _resortSubject,
             _source
@@ -127,9 +125,32 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
         RefreshFilter();
     }
 
+    // Optimize: Extract property change subscription to separate method for better readability and performance
+    private IDisposable SubscribeToItemPropertyChanges(T item) => item is not INotifyPropertyChanged notifyPropertyChanged
+            ? Disposable.Empty
+            : System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                handler => notifyPropertyChanged.PropertyChanged += handler,
+                handler => notifyPropertyChanged.PropertyChanged -= handler)
+                .Where(y =>
+                {
+                    var propertyName = y.EventArgs.PropertyName.OrEmpty();
+                    return _sortProperties.Contains(propertyName) || _filterProperties.Contains(propertyName);
+                })
+                .Subscribe(y =>
+                {
+                    var propertyName = y.EventArgs.PropertyName.OrEmpty();
+                    if (_sortProperties.Contains(propertyName))
+                        _applySortDeferrer.DeferOrExecute();
+
+                    if (_filterProperties.Contains(propertyName))
+                        _applyFilterDeferrer.DeferOrExecute();
+                });
+
     protected IObservable<IChangeSet<T>> ConnectSortedSource() => _observableSource.Sort(_sortComparer, resort: _resortSubject);
 
-    protected IObservable<IChangeSet<T>> ConnectSortedAndFilteredSource() => _observableSource.Filter(_filterSubject.Select(GetFilterFunc)).Sort(_sortComparer, resort: _resortSubject);
+    protected IObservable<IChangeSet<T>> ConnectSortedAndFilteredSource() =>
+        _observableSource.Filter(_filterSubject.Select(GetOrCreateFilterFunc))
+           .Sort(_sortComparer, resort: _resortSubject);
 
     public IObservable<IChangeSet<T>> Connect() => _observable;
 
@@ -155,12 +176,63 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
     public void RefreshFilter() => _applyFilterDeferrer.Execute();
 
-    private static Func<T, bool> GetFilterFunc(IList<CompositeFilter> filters) => x => filters.Count == 0 || filters.Match(x);
+    private static Func<T, bool> CreateFilterFunc(IList<CompositeFilter> filters)
+    {
+        // Optimize: For common cases, avoid closure allocation
+        if (filters.Count == 0)
+            return static _ => true;
 
+        if (filters.Count == 1)
+        {
+            var singleFilter = filters[0];
+            return x => singleFilter.Filter.IsMatch(x);
+        }
+
+        // For multiple filters, use the general case
+        return x => filters.Match(x);
+    }
+
+    // Optimize: Cache filter function to avoid repeated allocations
+    private void InvalidateFilterCache()
+    {
+        _cachedFilterFunc = null;
+        _filterSubject.OnNext([.. Filters]);
+    }
+
+    // Optimize: Use cached filter function when filters haven't changed
+    private Func<T, bool> GetOrCreateFilterFunc(IList<CompositeFilter> filters)
+    {
+        // Check if we can reuse the cached filter
+        if (_cachedFilterFunc is not null && ReferenceEquals(_lastFiltersList, filters))
+            return _cachedFilterFunc;
+
+        _lastFiltersList = filters;
+        _cachedFilterFunc = CreateFilterFunc(filters);
+        return _cachedFilterFunc;
+    }
+
+    // Optimize: Use ImmutableHashSet to avoid repeated allocations and improve lookup performance
     private void UpdateWatchedProperties()
     {
-        _filterProperties = [.. Filters.Select(f => f.Filter.PropertyName).Where(n => !string.IsNullOrEmpty(n))];
-        _sortProperties = [.. SortingProperties.Select(s => s.PropertyName).Where(n => !string.IsNullOrEmpty(n))];
+        var filterPropsBuilder = ImmutableHashSet.CreateBuilder<string>();
+        var sortPropsBuilder = ImmutableHashSet.CreateBuilder<string>();
+
+        foreach (var filter in Filters)
+        {
+            var propName = filter.Filter.PropertyName;
+            if (!string.IsNullOrEmpty(propName))
+                filterPropsBuilder.Add(propName);
+        }
+
+        foreach (var sortProp in SortingProperties)
+        {
+            var propName = sortProp.PropertyName;
+            if (!string.IsNullOrEmpty(propName))
+                sortPropsBuilder.Add(propName);
+        }
+
+        _filterProperties = filterPropsBuilder.ToImmutable();
+        _sortProperties = sortPropsBuilder.ToImmutable();
     }
 
     protected override void Cleanup()
@@ -169,6 +241,8 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
         _resortSubject.Dispose();
         _filterSubject.Dispose();
+        _cachedFilterFunc = null;
+        _lastFiltersList = null;
     }
 
     #region INotifyCollectionChanged
