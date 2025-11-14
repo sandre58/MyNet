@@ -127,10 +127,6 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
         Filters.Reset();
         Sorting.Reset();
         Grouping.Reset();
-
-        // Initialize paging if enabled
-        if (CanPage)
-            OnCanPageChangedInternal();
     }
 
     /// <summary>
@@ -465,11 +461,6 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// <summary>
     /// Called when the CanPage property changes. Initializes or disposes the paging pipeline.
     /// </summary>
-    private void OnCanPageChangedInternal() => OnCanPageChanged();
-
-    /// <summary>
-    /// Called when the CanPage property changes. Initializes or disposes the paging pipeline.
-    /// </summary>
     protected virtual void OnCanPageChanged()
     {
         _pagedDisposable?.Dispose();
@@ -495,14 +486,22 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
                                      .Bind(_pagedItems)
                                      .Subscribe();
 
-        // Also subscribe to collection count changes to update paging info
+        // Subscribe to collection count changes to update paging metadata
+        // This ensures TotalPages is recalculated even when the current page content doesn't change
         var countSubscription = Collection.WhenPropertyChanged(x => x.Count)
                                           .Subscribe(_ =>
                                           {
-                                              // Force a paging refresh by re-emitting the current page request
-                                              // This ensures paging info (TotalPages, etc.) is recalculated
-                                              if (CanPage)
-                                                  _pager.OnNext(new PageRequest(Paging.CurrentPage, Paging.PageSize));
+                                              if (!CanPage) return;
+
+                                              // Calculate total pages based on current count and page size
+                                              var totalItems = Collection.Count;
+                                              var pageSize = Paging.PageSize;
+                                              var totalPages = totalItems == 0 ? 1 : (int)Math.Ceiling((double)totalItems / pageSize);
+                                              var currentPage = Math.Min(Paging.CurrentPage, totalPages);
+
+                                              // Update paging directly without triggering the pipeline
+                                              // PagingResponse constructor: (currentPage, totalPages, totalItems)
+                                              Paging.Update(new PagingResponse(currentPage, totalPages, totalItems));
                                           });
 
         return new CompositeDisposable(subscription, countSubscription);

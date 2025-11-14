@@ -156,7 +156,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
     public IObservable<IChangeSet<T>> ConnectSource() => _observableSource;
 
-    protected virtual void OnItemsRefreshed(IChangeSet<T> changeSet) => OnPropertyChanged(nameof(Count));
+    protected virtual void OnItemsRefreshed(IChangeSet<T> changeSet) { }
 
     protected virtual void OnSourceRefreshed(IChangeSet<T> changeSet) => OnPropertyChanged(nameof(SourceCount));
 
