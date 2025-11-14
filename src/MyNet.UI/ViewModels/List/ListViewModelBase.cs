@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -126,6 +127,10 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
         Filters.Reset();
         Sorting.Reset();
         Grouping.Reset();
+
+        // Initialize paging if enabled
+        if (CanPage)
+            OnCanPageChangedInternal();
     }
 
     /// <summary>
@@ -460,6 +465,11 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// <summary>
     /// Called when the CanPage property changes. Initializes or disposes the paging pipeline.
     /// </summary>
+    private void OnCanPageChangedInternal() => OnCanPageChanged();
+
+    /// <summary>
+    /// Called when the CanPage property changes. Initializes or disposes the paging pipeline.
+    /// </summary>
     protected virtual void OnCanPageChanged()
     {
         _pagedDisposable?.Dispose();
@@ -478,7 +488,25 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// <param name="pager">The observable page request stream.</param>
     /// <returns>A disposable subscription to the paging pipeline.</returns>
     protected virtual IDisposable SubscribePager(IObservable<PageRequest> pager)
-        => Collection.Connect().Page(pager).Do(x => UpdatePaging(x.Response)).Bind(_pagedItems).Subscribe();
+    {
+        var subscription = Collection.Connect()
+                                     .Page(pager)
+                                     .Do(x => UpdatePaging(x.Response))
+                                     .Bind(_pagedItems)
+                                     .Subscribe();
+
+        // Also subscribe to collection count changes to update paging info
+        var countSubscription = Collection.WhenPropertyChanged(x => x.Count)
+                                          .Subscribe(_ =>
+                                          {
+                                              // Force a paging refresh by re-emitting the current page request
+                                              // This ensures paging info (TotalPages, etc.) is recalculated
+                                              if (CanPage)
+                                                  _pager.OnNext(new PageRequest(Paging.CurrentPage, Paging.PageSize));
+                                          });
+
+        return new CompositeDisposable(subscription, countSubscription);
+    }
 
     #endregion
 
