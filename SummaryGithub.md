@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 11/13/2025 - 19:53:14 |
-| Parser: | MultiReport (6x Cobertura) |
+| Generated on: | 11/14/2025 - 09:31:43 |
+| Parser: | MultiReport (7x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 309 |
 | Files: | 241 |
-| **Line coverage:** | 46.9% (6632 of 14125) |
-| Covered lines: | 6632 |
-| Uncovered lines: | 7493 |
+| **Line coverage:** | 46.9% (6634 of 14125) |
+| Covered lines: | 6634 |
+| Uncovered lines: | 7491 |
 | Coverable lines: | 14125 |
 | Total lines: | 31698 |
-| **Branch coverage:** | 27.7% (1949 of 7034) |
-| Covered branches: | 1949 |
+| **Branch coverage:** | 27.7% (1950 of 7034) |
+| Covered branches: | 1950 |
 | Total branches: | 7034 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 214_19343915772 |
+| Tag: | 218_19360178816 |
 
 </details>
 
@@ -107,7 +107,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**21.2%**|**11.9%**|
+|**MyNet.Utilities**|**21.2%**|**12%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -243,7 +243,7 @@
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
-|MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
+|MyNet.Utilities.Localization.LocalizationService|97.1%|85%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
 |MyNet.Utilities.Logging.LogManager|6.6%|4.5%|
