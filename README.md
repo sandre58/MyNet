@@ -227,7 +227,6 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - Update documentation as needed
 
 **🔍 Useful Resources:**
-- 📖 **[CI/CD Documentation](docs/WORKFLOWS.md)** - Complete workflow guide
 - 🏷️ **[Conventional Commits](https://conventionalcommits.org/)** - Commit message format
 - 📊 **[Coverage Report](https://sandre58.github.io/MyNet/)** - Live test coverage
 - 🔧 **[Semantic Versioning](https://semver.org/)** - Versioning specification

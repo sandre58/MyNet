@@ -1,7 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <NoWarn>$(NoWarn);SYSLIB0013;SYSLIB1054;CS1591;CS1574;NU5104;NETSDK1206;NETSDK1057</NoWarn>
+        <NoWarn>$(NoWarn);SYSLIB0013;SYSLIB1054;CS1591;CS1574;NU5104;NU5017;NETSDK1206;NETSDK1057</NoWarn>
         <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     </PropertyGroup>
     

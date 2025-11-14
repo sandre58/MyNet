@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Update="Resources\InternalResources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>InternalResources.resx</DependentUpon>
-      </Compile>
+        <Compile Update="Resources\InternalResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>InternalResources.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -20,5 +20,11 @@
             <LastGenOutput>InternalResources.Designer.cs</LastGenOutput>
             <Generator>ResXFileCodeGenerator</Generator>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <!-- Add a minimal framework dependency to satisfy NuGet packaging requirements -->
+    <!-- This is a workaround for NU5017 error for base utility libraries -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     </ItemGroup>
 </Project>

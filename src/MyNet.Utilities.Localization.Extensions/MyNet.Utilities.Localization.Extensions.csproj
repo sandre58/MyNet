@@ -1,24 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <Product>My .NET Utilities - Localization Extensions</Product>
-      <PackageIcon>MyNetUtilities.png</PackageIcon>
-    <Description>A versatile .NET library providing localization resources and tools for handling cultures, countries, and multilingual data. MyNet.Utilities.Localization.Extensions makes it easy to integrate and manage localization features in your applications.</Description>
-    <PackageTags>My;Utilities;Localization;Countries;Resources</PackageTags>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Product>My .NET Utilities - Localization Extensions</Product>
+        <PackageIcon>MyNetUtilities.png</PackageIcon>
+        <Description>A versatile .NET library providing localization resources and tools for handling cultures, countries, and multilingual data. MyNet.Utilities.Localization.Extensions makes it easy to integrate and manage localization features in your applications.</Description>
+        <PackageTags>My;Utilities;Localization;Countries;Resources</PackageTags>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Update="CultureResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CultureResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="CultureResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>CultureResources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="CultureResources.resx">
-      <LastGenOutput>CultureResources.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="CultureResources.resx">
+            <LastGenOutput>CultureResources.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    </ItemGroup>
 </Project>
