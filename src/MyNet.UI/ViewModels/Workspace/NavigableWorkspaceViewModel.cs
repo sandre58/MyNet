@@ -46,8 +46,7 @@ public class NavigableWorkspaceViewModel : WorkspaceViewModel, INavigableWorkspa
 
     public virtual void OnNavigatingTo(NavigatingContext navigatingContext) => navigatingContext.Cancel = !CanNavigateTo(navigatingContext);
 
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
-    protected virtual bool CanRefreshOnNavigatedTo(NavigationContext navigationContext) => false;
+    protected virtual bool CanRefreshOnNavigatedTo(NavigationContext navigationContext) => !IsLoaded;
 
     protected virtual bool CanNavigateTo(NavigatingContext navigatingContext) => navigatingContext.OldPage is null || !Equals(navigatingContext.OldPage, navigatingContext.Page) || (!navigatingContext.Parameters?.Equals(NavigationService.CurrentContext) ?? false);
 }
