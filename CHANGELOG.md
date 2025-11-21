@@ -6,15 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v14.0.4] - 2025-11-14
+## [v14.1.0] - 2025-11-21
 
 
-### 🐛 Bug Fixes
+### 🚀 Features
 
-- Update Paging when count cllection change *(commit by **Stéphane ANDRE (E104915)** in [ce2facde](https://github.com/sandre58/MyNet/commit/ce2facdeca002bf5b85cc769f38464d44fbe18ba))*
-
-
-
+- Refactor the logging mechanism by replacing the `TraceLevel` enum with a new `PerformanceTraceLevel` enum, adding more granular logging levels such as `Console`, `Information`, `Warning`, and `Error`. Update the `LogManager` class to use this new enum and overload the `MeasureTime` method to dynamically determine logging levels based on elapsed time. *(commit by **Stéphane ANDRE (E104915)** in [6abbc930](https://github.com/sandre58/MyNet/commit/6abbc93096869ed9e1dca0d6e62226a310c4c9bf))*
 
 
 
@@ -22,7 +19,10 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v14.0.3...v14.0.4](https://github.com/sandre58/MyNet/compare/v14.0.3...v14.0.4)
+
+
+
+**Full Changelog:** [compare v14.0.4...v14.1.0](https://github.com/sandre58/MyNet/compare/v14.0.4...v14.1.0)
 
 
 ---
