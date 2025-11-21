@@ -61,10 +61,13 @@ public static class LogManager
     /// <param name="ex">Critical non managed exception.</param>
     public static void Fatal(Exception ex) => _logger?.Fatal(ex);
 
-    public static IDisposable MeasureTime(string title = "", TraceLevel traceLevel = TraceLevel.Trace)
+    public static IDisposable MeasureTime(string title = "", PerformanceTraceLevel traceLevel = PerformanceTraceLevel.Trace) => MeasureTime(_ => traceLevel, title);
+
+    public static IDisposable MeasureTime(Func<TimeSpan, PerformanceTraceLevel> provideTraceLevel, string title = "")
     {
+        var settings = new PerformanceLoggerSettings(false, false, provideTraceLevel);
         var message = title;
-        if (!string.IsNullOrEmpty(message)) return new PerformanceLogger(message, traceLevel);
+        if (!string.IsNullOrEmpty(message)) return new PerformanceLogger(message, settings);
         var st = new StackTrace(new StackFrame(1));
         var method = st.GetFrame(0)?.GetMethod();
 
@@ -73,6 +76,21 @@ public static class LogManager
             message = $"{method.DeclaringType}.{method.Name}({string.Join(", ", method.GetParameters().Select(x => x.Name))})";
         }
 
-        return new PerformanceLogger(message, traceLevel);
+        return new PerformanceLogger(message, settings);
+    }
+
+    public static IDisposable MeasureTime(PerformanceLoggerSettings settings, string title = "")
+    {
+        var message = title;
+        if (!string.IsNullOrEmpty(message)) return new PerformanceLogger(message, settings);
+        var st = new StackTrace(new StackFrame(1));
+        var method = st.GetFrame(0)?.GetMethod();
+
+        if (method != null)
+        {
+            message = $"{method.DeclaringType}.{method.Name}({string.Join(", ", method.GetParameters().Select(x => x.Name))})";
+        }
+
+        return new PerformanceLogger(message, settings);
     }
 }

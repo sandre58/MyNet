@@ -28,7 +28,7 @@ public sealed class RecentFilesManager(RecentFilesService recentFilesService)
     /// <param name="path">The path of the file.</param>
     public void Add(string name, string path)
     {
-        using (LogManager.MeasureTime($"Add recent File : {name} | {path}", TraceLevel.Debug))
+        using (LogManager.MeasureTime($"Add recent File : {name} | {path}", PerformanceTraceLevel.Debug))
         {
             _ = recentFilesService.Add(name, path);
             Messenger.Default?.Send(new RecentFilesChangedMessage());

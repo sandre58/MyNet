@@ -66,7 +66,7 @@ public class SplashScreenViewModel : DialogViewModel
                 UpdateMessage(message);
 
                 await Task.Delay(200).ConfigureAwait(false);
-                using (LogManager.MeasureTime(message, TraceLevel.Debug))
+                using (LogManager.MeasureTime(message, PerformanceTraceLevel.Debug))
                     await task.Value.Action.Invoke().ConfigureAwait(false);
             }
 

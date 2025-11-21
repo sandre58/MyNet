@@ -26,27 +26,31 @@ public sealed class PerformanceLogger : IDisposable
     private static readonly object CurrentObject = new();
 #endif
 
-    private static readonly Dictionary<TraceLevel, Action<string>> GroupLogAction = new()
+    private static readonly Dictionary<PerformanceTraceLevel, Action<string>> GroupLogAction = new()
     {
-        [TraceLevel.Trace] = LogManager.Trace,
-        [TraceLevel.Debug] = LogManager.Debug,
-        [TraceLevel.Info] = LogManager.Info
+        [PerformanceTraceLevel.Console] = x => Debug.WriteLine(x),
+        [PerformanceTraceLevel.Information] = LogManager.Info,
+        [PerformanceTraceLevel.Trace] = LogManager.Trace,
+        [PerformanceTraceLevel.Debug] = LogManager.Debug,
+        [PerformanceTraceLevel.Warning] = LogManager.Warning,
+        [PerformanceTraceLevel.Error] = LogManager.Error
     };
 
-    private readonly Dictionary<string, (TraceLevel Level, TimeSpan Time)> _registeredTimes = [];
+    private readonly Dictionary<string, (PerformanceTraceLevel Level, TimeSpan Time)> _registeredTimes = [];
 
     private readonly string _title;
-    private readonly TraceLevel _traceLevel;
+    private readonly PerformanceLoggerSettings _settings;
     private readonly Stopwatch _stopwatch;
 
-    internal PerformanceLogger(string title, TraceLevel traceLevel = TraceLevel.Debug)
+    internal PerformanceLogger(string title, PerformanceLoggerSettings settings)
     {
         _title = title ?? throw new ArgumentNullException(nameof(title));
-        _traceLevel = traceLevel;
+        _settings = settings;
 
         OperationGroups.Push(this);
 
-        LogManager.Trace($"START - {_title}");
+        if (settings.ShowStartMessage)
+            LogManager.Trace($"START - {_title}");
 
         _stopwatch = new Stopwatch();
         _stopwatch.Start();
@@ -64,7 +68,8 @@ public sealed class PerformanceLogger : IDisposable
 
             _stopwatch.Stop();
 
-            LogManager.Trace($"END - {_title} : {_stopwatch.Elapsed}");
+            if (_settings.ShowEndMessage)
+                LogManager.Trace($"END - {_title} : {_stopwatch.Elapsed}");
 
             if (Current == null)
             {
@@ -72,13 +77,13 @@ public sealed class PerformanceLogger : IDisposable
             }
             else
             {
-                Current.AddTime(_title, _stopwatch.Elapsed, _traceLevel);
+                Current.AddTime(_title, _stopwatch.Elapsed, _settings.ProvideTraceLevel(_stopwatch.Elapsed));
                 Current.AddGroupTime(this);
             }
         }
     }
 
-    internal void AddTime(string key, TimeSpan time, TraceLevel level)
+    internal void AddTime(string key, TimeSpan time, PerformanceTraceLevel level)
     {
         lock (TimeLocker)
         {
@@ -92,14 +97,14 @@ public sealed class PerformanceLogger : IDisposable
             _ = OperationGroups.Pop();
     }
 
-    private static void DisplayTime(KeyValuePair<string, (TraceLevel Level, TimeSpan Time)> item) =>
+    private static void DisplayTime(KeyValuePair<string, (PerformanceTraceLevel Level, TimeSpan Time)> item) =>
         GroupLogAction[item.Value.Level]($"{item.Key} - {item.Value.Time}");
 
     private void AddGroupTime(PerformanceLogger group)
     {
         if (group._registeredTimes.Count == 0) return;
 
-        KeyValuePair<string, (TraceLevel, TimeSpan)>[] times;
+        KeyValuePair<string, (PerformanceTraceLevel, TimeSpan)>[] times;
 
         lock (TimeLocker)
         {
@@ -112,15 +117,18 @@ public sealed class PerformanceLogger : IDisposable
 
     private void TraceTimes()
     {
+        var traceLevel = _settings.ProvideTraceLevel(TotalTime);
         var stars = new string('*', 20);
-        GroupLogAction[_traceLevel]($"{stars} {_title} {stars}");
+        GroupLogAction[traceLevel]($"{stars} {_title} {stars}");
 
         foreach (var item in _registeredTimes)
         {
             DisplayTime(item);
         }
 
-        GroupLogAction[_traceLevel]($"Total Time : {TotalTime}");
-        GroupLogAction[_traceLevel]($"{stars} {_title} {stars}");
+        GroupLogAction[traceLevel]($"Total Time : {TotalTime}");
+        GroupLogAction[traceLevel]($"{stars} {_title} {stars}");
     }
 }
+
+public record PerformanceLoggerSettings(bool ShowStartMessage, bool ShowEndMessage, Func<TimeSpan, PerformanceTraceLevel> ProvideTraceLevel);
