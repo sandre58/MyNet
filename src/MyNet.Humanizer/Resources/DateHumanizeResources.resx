@@ -300,4 +300,31 @@
   <data name="TimeSpanYearZero" xml:space="preserve">
     <value>0 an</value>
   </data>
+  <data name="Month" xml:space="preserve">
+    <value>Mois</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Année</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Jour</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>Heure</value>
+  </data>
+  <data name="Second" xml:space="preserve">
+    <value>Seconde</value>
+  </data>
+  <data name="Millisecond" xml:space="preserve">
+    <value>Milliseconde</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>Minute</value>
+  </data>
+  <data name="Decade" xml:space="preserve">
+    <value>Décennie</value>
+  </data>
+  <data name="Century" xml:space="preserve">
+    <value>Siècle</value>
+  </data>
 </root>
