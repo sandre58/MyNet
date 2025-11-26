@@ -6,12 +6,19 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v14.1.0] - 2025-11-21
+## [v14.2.0] - 2025-11-26
+
+
+### 🔧 Chores
+
+- **deps:** Update NuGet package versions *(commit by **Stéphane ANDRE (E104915)** in [cf244714](https://github.com/sandre58/MyNet/commit/cf244714b5139ecd584e8e8eeac5eeff6a0ae28a))*
 
 
 ### 🚀 Features
 
-- Refactor the logging mechanism by replacing the `TraceLevel` enum with a new `PerformanceTraceLevel` enum, adding more granular logging levels such as `Console`, `Information`, `Warning`, and `Error`. Update the `LogManager` class to use this new enum and overload the `MeasureTime` method to dynamically determine logging levels based on elapsed time. *(commit by **Stéphane ANDRE (E104915)** in [6abbc930](https://github.com/sandre58/MyNet/commit/6abbc93096869ed9e1dca0d6e62226a310c4c9bf))*
+- Add support for 12/24-hour time formats *(commit by **Stéphane ANDRE (E104915)** in [229b4b26](https://github.com/sandre58/MyNet/commit/229b4b269f67a8d08c19001dda5e8ee84a180fc6))*
+
+- Add new localized time terms *(commit by **Stéphane ANDRE (E104915)** in [4e276d5c](https://github.com/sandre58/MyNet/commit/4e276d5c404c86ed1390e4ce9c81834df869b24d))*
 
 
 
@@ -22,7 +29,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v14.0.4...v14.1.0](https://github.com/sandre58/MyNet/compare/v14.0.4...v14.1.0)
+**Full Changelog:** [compare v14.1.0...v14.2.0](https://github.com/sandre58/MyNet/compare/v14.1.0...v14.2.0)
 
 
 ---
