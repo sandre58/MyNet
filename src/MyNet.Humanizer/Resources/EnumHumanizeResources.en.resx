@@ -393,4 +393,10 @@
   <data name="DisplayModeDay" xml:space="preserve">
     <value>Day view</value>
   </data>
+  <data name="TimeFormatTwelveHour" xml:space="preserve">
+    <value>12-hour</value>
+  </data>
+  <data name="TimeFormatTwentyFourHour" xml:space="preserve">
+    <value>24-hour</value>
+  </data>
 </root>

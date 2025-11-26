@@ -19,7 +19,7 @@ namespace MyNet.Humanizer.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class EnumHumanizeResources {
@@ -741,6 +741,24 @@ namespace MyNet.Humanizer.Resources {
         public static string StringOperatorStartsWith {
             get {
                 return ResourceManager.GetString("StringOperatorStartsWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 12 heures.
+        /// </summary>
+        public static string TimeFormatTwelveHour {
+            get {
+                return ResourceManager.GetString("TimeFormatTwelveHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 24 heures.
+        /// </summary>
+        public static string TimeFormatTwentyFourHour {
+            get {
+                return ResourceManager.GetString("TimeFormatTwentyFourHour", resourceCulture);
             }
         }
         
