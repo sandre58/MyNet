@@ -190,7 +190,7 @@ Consulter les logs pour plus d'informations.</value>
     <value>Le fichier spécifié dans le champ "{0}" n'a pas été trouvé.</value>
   </data>
   <data name="FileXAlreadyUsedError" xml:space="preserve">
-    <value>Le fichier "{0}" est utilisé par un autre processus</value>
+    <value>Le fichier "{0}" est utilisé par un autre processus.</value>
   </data>
   <data name="FieldXMustBeInPastError" xml:space="preserve">
     <value>Le champ "{0}" doit être dans le passé.</value>

@@ -205,6 +205,15 @@ namespace MyNet.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Am.
+        /// </summary>
+        public static string Am {
+            get {
+                return ResourceManager.GetString("Am", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Et.
         /// </summary>
         public static string And {
@@ -1435,6 +1444,15 @@ namespace MyNet.UI.Resources {
         public static string PleaseSelectOneItem {
             get {
                 return ResourceManager.GetString("PleaseSelectOneItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pm.
+        /// </summary>
+        public static string Pm {
+            get {
+                return ResourceManager.GetString("Pm", resourceCulture);
             }
         }
         

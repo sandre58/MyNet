@@ -8,6 +8,8 @@ namespace MyNet.Utilities.Logging;
 
 public enum PerformanceTraceLevel
 {
+    None,
+
     Console,
 
     Trace,

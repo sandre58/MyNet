@@ -844,4 +844,10 @@ Please select only one item.</value>
   <data name="GenderTypeFemale" xml:space="preserve">
     <value>Female</value>
   </data>
+  <data name="Am" xml:space="preserve">
+    <value>Am</value>
+  </data>
+  <data name="Pm" xml:space="preserve">
+    <value>Pm</value>
+  </data>
 </root>

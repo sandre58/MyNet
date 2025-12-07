@@ -188,7 +188,7 @@ Use Ctrl + V, or Right click then Paste to recover the element.</value>
     <value>The file specified in field "{0}" has not been found.</value>
   </data>
   <data name="FileXAlreadyUsedError" xml:space="preserve">
-    <value>File "{0}" is used by another process</value>
+    <value>File "{0}" is used by another process.</value>
   </data>
   <data name="FieldXMustBeInPastError" xml:space="preserve">
     <value>The field "{0}" must be in past.</value>
