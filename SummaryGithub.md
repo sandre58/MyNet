@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 11/26/2025 - 08:03:00 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 12/07/2025 - 14:55:37 |
+| Parser: | MultiReport (6x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 310 |
 | Files: | 241 |
-| **Line coverage:** | 48.9% (6183 of 12622) |
-| Covered lines: | 6183 |
-| Uncovered lines: | 6439 |
-| Coverable lines: | 12622 |
-| Total lines: | 31863 |
-| **Branch coverage:** | 28.2% (1809 of 6400) |
-| Covered branches: | 1809 |
-| Total branches: | 6400 |
+| **Line coverage:** | 50.1% (6642 of 13255) |
+| Covered lines: | 6642 |
+| Uncovered lines: | 6613 |
+| Coverable lines: | 13255 |
+| Total lines: | 29680 |
+| **Branch coverage:** | 29.4% (1949 of 6616) |
+| Covered branches: | 1949 |
+| Total branches: | 6616 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 227_19696531812 |
+| Tag: | 229_20005931166 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 88.8%</summary>
+<details><summary>MyNet.Humanizer - 87.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.8%**|**80.2%**|
+|**MyNet.Humanizer**|**87.8%**|**80.1%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|75.7%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -68,7 +68,7 @@
 |MyNet.Humanizer.Truncation.Truncator|100%||
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
-|System.Text.RegularExpressions.Generated|87.9%|78.9%|
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -103,11 +103,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 23.8%</summary>
+<details><summary>MyNet.Utilities - 23.5%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**23.8%**|**13%**|
+|**MyNet.Utilities**|**23.5%**|**12.9%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
