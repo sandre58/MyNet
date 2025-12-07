@@ -6,19 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v14.2.0] - 2025-11-26
-
-
-### 🔧 Chores
-
-- **deps:** Update NuGet package versions *(commit by **Stéphane ANDRE (E104915)** in [cf244714](https://github.com/sandre58/MyNet/commit/cf244714b5139ecd584e8e8eeac5eeff6a0ae28a))*
+## [v14.3.0] - 2025-12-07
 
 
 ### 🚀 Features
 
-- Add support for 12/24-hour time formats *(commit by **Stéphane ANDRE (E104915)** in [229b4b26](https://github.com/sandre58/MyNet/commit/229b4b269f67a8d08c19001dda5e8ee84a180fc6))*
-
-- Add new localized time terms *(commit by **Stéphane ANDRE (E104915)** in [4e276d5c](https://github.com/sandre58/MyNet/commit/4e276d5c404c86ed1390e4ce9c81834df869b24d))*
+- Refactored `PerformanceLogger.cs` for improved thread safety and readability, including the use of `StackLocker` and `Stopwatch.StartNew()`. Introduced `None` level in `PerformanceTraceLevel.cs`. *(commit by **Stéphane ANDRE (E104915)** in [06b7a0c0](https://github.com/sandre58/MyNet/commit/06b7a0c0ea4434e65b64e34bd05cb263e4b1db26))*
 
 
 
@@ -29,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v14.1.0...v14.2.0](https://github.com/sandre58/MyNet/compare/v14.1.0...v14.2.0)
+**Full Changelog:** [compare v14.2.0...v14.3.0](https://github.com/sandre58/MyNet/compare/v14.2.0...v14.3.0)
 
 
 ---
