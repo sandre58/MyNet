@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v14.3.0] - 2025-12-07
+## [v14.4.0] - 2025-12-21
 
 
 ### 🚀 Features
 
-- Refactored `PerformanceLogger.cs` for improved thread safety and readability, including the use of `StackLocker` and `Stopwatch.StartNew()`. Introduced `None` level in `PerformanceTraceLevel.cs`. *(commit by **Stéphane ANDRE (E104915)** in [06b7a0c0](https://github.com/sandre58/MyNet/commit/06b7a0c0ea4434e65b64e34bd05cb263e4b1db26))*
+- improve reflection and add WeekEvent *(commit by **Stéphane ANDRE (E104915)** in [71d41f53](https://github.com/sandre58/MyNet/commit/71d41f5355ee87e0cbe38f40851b8ed058996abe))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v14.2.0...v14.3.0](https://github.com/sandre58/MyNet/compare/v14.2.0...v14.3.0)
+**Full Changelog:** [compare v14.3.0...v14.4.0](https://github.com/sandre58/MyNet/compare/v14.3.0...v14.4.0)
 
 
 ---
