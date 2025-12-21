@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Windows.Input;
 using DynamicData.Binding;
 using MyNet.Observable;
+using MyNet.Observable.Globalization;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Helpers;
@@ -28,6 +29,8 @@ namespace MyNet.UI.ViewModels.Shell;
 
 public class MainWindowViewModelBase : LocalizableObject
 {
+    protected IObservableGlobalization Globalization { get; }
+
     public bool IsDebug { get; }
 
     public bool IsDark { get; set; }
@@ -63,12 +66,14 @@ public class MainWindowViewModelBase : LocalizableObject
     public MainWindowViewModelBase(
         INotificationsManager notificationsManager,
         IAppCommandsService appCommandsService,
-        IBusyService mainBusyService)
+        IBusyService mainBusyService,
+        IObservableGlobalization globalization)
     {
 #if DEBUG
         IsDebug = true;
 #endif
 
+        Globalization = globalization;
         NotificationsViewModel = new(notificationsManager);
         BusyService = mainBusyService;
 
@@ -103,7 +108,7 @@ public class MainWindowViewModelBase : LocalizableObject
 
         using (PropertyChangedSuspender.Suspend())
         {
-            Cultures.AddRange(GlobalizationService.Current.SupportedCultures);
+            Cultures.AddRange(Globalization.SupportedCultures);
             IsDark = ThemeManager.CurrentTheme?.Base == ThemeBase.Dark;
             UpdateSelectedCulture();
         }
@@ -153,9 +158,9 @@ public class MainWindowViewModelBase : LocalizableObject
     // ReSharper disable once TailRecursiveCall
     private CultureInfo? GetSelectedCulture(CultureInfo culture) => Cultures.Contains(culture) ? culture : GetSelectedCulture(culture.Parent);
 
-    private void UpdateSelectedCulture() => SelectedCulture = GetSelectedCulture(GlobalizationService.Current.Culture);
+    private void UpdateSelectedCulture() => SelectedCulture = GetSelectedCulture(Globalization.Culture);
 
-    protected virtual void OnSelectedCultureChanged() => GlobalizationService.Current.SetCulture(SelectedCulture?.ToString() ?? CultureInfo.InstalledUICulture.ToString());
+    protected virtual void OnSelectedCultureChanged() => Globalization.SetCulture(SelectedCulture?.ToString() ?? CultureInfo.InstalledUICulture.ToString());
 
     #endregion
 

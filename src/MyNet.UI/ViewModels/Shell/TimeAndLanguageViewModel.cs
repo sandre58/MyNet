@@ -7,16 +7,19 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using DynamicData;
 using DynamicData.Binding;
+using MyNet.Observable.Globalization;
 using MyNet.UI.Resources;
 using MyNet.UI.ViewModels.Workspace;
 using MyNet.Utilities;
-using MyNet.Utilities.Localization;
 
 namespace MyNet.UI.ViewModels.Shell;
 
 public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
 {
+    private readonly IObservableGlobalization _globalization;
+
     public virtual CultureInfo? SelectedCulture { get; set; }
 
     public virtual bool AutomaticCulture { get; set; }
@@ -29,10 +32,11 @@ public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
 
     public ObservableCollection<TimeZoneInfo> TimeZones { get; } = [];
 
-    public TimeAndLanguageViewModel()
+    public TimeAndLanguageViewModel(IObservableGlobalization globalization)
     {
-        Cultures.AddRange(GlobalizationService.Current.SupportedCultures);
-        TimeZones.AddRange(GlobalizationService.Current.SupportedTimeZones);
+        _globalization = globalization;
+        Cultures.AddRange(globalization.SupportedCultures);
+        TimeZones.AddRange(globalization.SupportedTimeZones);
 
         Disposables.AddRange(
         [
@@ -61,7 +65,7 @@ public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
         }
     }
 
-    private void RefreshCulture() => SelectedCulture = GetSelectedCulture(GlobalizationService.Current.Culture);
+    private void RefreshCulture() => SelectedCulture = GetSelectedCulture(_globalization.Culture);
 
     protected override void OnCultureChanged()
     {
@@ -77,15 +81,15 @@ public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
 
         var culture = SelectedCulture is null || AutomaticCulture ? CultureInfo.InstalledUICulture.ToString() : SelectedCulture.ToString();
 
-        if (culture != GlobalizationService.Current.Culture.Name && culture != GlobalizationService.Current.Culture.Parent.Name)
-            GlobalizationService.Current.SetCulture(culture);
+        if (culture != _globalization.Culture.Name && culture != _globalization.Culture.Parent.Name)
+            _globalization.SetCulture(culture);
     }
 
     #endregion
 
     #region TimeZone
 
-    private void RefreshTimeZone() => SelectedTimeZone = GlobalizationService.Current.TimeZone;
+    private void RefreshTimeZone() => SelectedTimeZone = _globalization.TimeZone;
 
     protected override void OnTimeZoneChanged()
     {
@@ -101,8 +105,8 @@ public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
 
         var timeZone = SelectedTimeZone is null || AutomaticTimeZone ? TimeZoneInfo.Local : SelectedTimeZone;
 
-        if (!timeZone.Equals(GlobalizationService.Current.TimeZone))
-            GlobalizationService.Current.SetTimeZone(timeZone);
+        if (!timeZone.Equals(_globalization.TimeZone))
+            _globalization.SetTimeZone(timeZone);
     }
 
     #endregion

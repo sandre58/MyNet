@@ -5,15 +5,13 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using MyNet.Utilities.Events;
 using MyNet.Utilities.Logging;
 
 namespace MyNet.Utilities.Localization;
 
-public class GlobalizationService
+public class GlobalizationService : ICultureService, ITimeZoneService
 {
     private readonly Action<CultureInfo>? _onCultureChanged;
     private readonly WeakEventSource<EventArgs> _cultureChanged = new();
@@ -49,14 +47,6 @@ public class GlobalizationService
         CultureInfo.CurrentCulture = x;
         CultureInfo.CurrentUICulture = x;
     });
-
-    public IList<CultureInfo> SupportedCultures { get; } =
-    [
-        Cultures.English,
-        Cultures.French
-    ];
-
-    public ReadOnlyCollection<TimeZoneInfo> SupportedTimeZones { get; } = TimeZoneInfo.GetSystemTimeZones();
 
     public TimeZoneInfo TimeZone { get; private set; }
 

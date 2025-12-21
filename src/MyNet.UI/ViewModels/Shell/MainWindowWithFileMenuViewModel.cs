@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Observable.Globalization;
 using MyNet.UI.Loading;
 using MyNet.UI.Notifications;
 using MyNet.UI.Services;
@@ -14,7 +15,8 @@ public class MainWindowWithFileMenuViewModel(
     FileMenuViewModelBase fileMenuViewModel,
     INotificationsManager notificationsManager,
     IAppCommandsService appCommandsService,
-    IBusyService mainBusyService) : MainWindowViewModelBase(notificationsManager, appCommandsService, mainBusyService)
+    IBusyService mainBusyService,
+    IObservableGlobalization globalization) : MainWindowViewModelBase(notificationsManager, appCommandsService, mainBusyService, globalization)
 {
     public FileMenuViewModelBase FileMenuViewModel { get; } = fileMenuViewModel;
 
