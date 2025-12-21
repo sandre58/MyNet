@@ -228,7 +228,7 @@ var assemblies = [
       { "name": "MyNet.Humanizer.Inflections.FrenchInflector", "rp": "MyNet.Humanizer_FrenchInflector.html", "cl": 48, "ucl": 0, "cal": 48, "tl": 62, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Inflections.InflectorBase", "rp": "MyNet.Humanizer_InflectorBase.html", "cl": 40, "ucl": 0, "cal": 40, "tl": 131, "cb": 39, "tb": 40, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Inflections.InflectorBase.Rule", "rp": "MyNet.Humanizer_Rule.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 131, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Humanizer.InflectorExtensions", "rp": "MyNet.Humanizer_InflectorExtensions.html", "cl": 33, "ucl": 8, "cal": 41, "tl": 363, "cb": 14, "tb": 30, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Humanizer.InflectorExtensions", "rp": "MyNet.Humanizer_InflectorExtensions.html", "cl": 25, "ucl": 8, "cal": 33, "tl": 195, "cb": 14, "tb": 30, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.MetricNumeralExtensions", "rp": "MyNet.Humanizer_MetricNumeralExtensions.html", "cl": 104, "ucl": 0, "cal": 104, "tl": 289, "cb": 40, "tb": 40, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.NoMatchFoundException", "rp": "MyNet.Humanizer_NoMatchFoundException.html", "cl": 2, "ucl": 4, "cal": 6, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.NumberHumanizeExtensions", "rp": "MyNet.Humanizer_NumberHumanizeExtensions.html", "cl": 16, "ucl": 1, "cal": 17, "tl": 54, "cb": 14, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -245,7 +245,7 @@ var assemblies = [
       { "name": "MyNet.Humanizer.Transformer.To", "rp": "MyNet.Humanizer_To.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 54, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Transformer.ToLowerCase", "rp": "MyNet.Humanizer_ToLowerCase.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Transformer.ToSentenceCase", "rp": "MyNet.Humanizer_ToSentenceCase.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 14, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Humanizer.Transformer.ToTitleCase", "rp": "MyNet.Humanizer_ToTitleCase.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 357, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Humanizer.Transformer.ToTitleCase", "rp": "MyNet.Humanizer_ToTitleCase.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 143, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Transformer.ToUpperCase", "rp": "MyNet.Humanizer_ToUpperCase.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.TruncateExtensions", "rp": "MyNet.Humanizer_TruncateExtensions.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 70, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Truncation.FixedLengthTruncator", "rp": "MyNet.Humanizer_FixedLengthTruncator.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 27, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -253,8 +253,8 @@ var assemblies = [
       { "name": "MyNet.Humanizer.Truncation.FixedNumberOfWordsTruncator", "rp": "MyNet.Humanizer_FixedNumberOfWordsTruncator.html", "cl": 28, "ucl": 2, "cal": 30, "tl": 77, "cb": 20, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Humanizer.Truncation.Truncator", "rp": "MyNet.Humanizer_Truncator.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 330, "ucl": 54, "cal": 384, "tl": 1198, "cb": 133, "tb": 168, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 330, "ucl": 54, "cal": 384, "tl": 1198, "cb": 133, "tb": 168, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 991, "ucl": 162, "cal": 1153, "tl": 3593, "cb": 399, "tb": 504, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 331, "ucl": 54, "cal": 385, "tl": 1197, "cb": 133, "tb": 168, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Humanizer_Generated.html", "cl": 541, "ucl": 74, "cal": 615, "tl": 1198, "cb": 259, "tb": 328, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Humanizer.UnitTests",
@@ -356,6 +356,9 @@ var assemblies = [
       { "name": "MyNet.Utilities.EnumerableExtensions<T, TId>", "rp": "MyNet.Utilities_EnumerableExtensions_T__TId_.html", "cl": 1, "ucl": 51, "cal": 52, "tl": 248, "cb": 0, "tb": 38, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.EnumerableExtensions<TSource>", "rp": "MyNet.Utilities_EnumerableExtensions_TSource_.html", "cl": 1, "ucl": 51, "cal": 52, "tl": 248, "cb": 0, "tb": 38, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.EnumExtensions", "rp": "MyNet.Utilities_EnumExtensions.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Events.WeakEventSource.WeakHandler<TEventArgs>", "rp": "MyNet.Utilities_WeakHandler_TEventArgs_.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 57, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Events.WeakEventSource<TEventArgs>", "rp": "MyNet.Utilities_WeakEventSource_TEventArgs_.html", "cl": 3, "ucl": 4, "cal": 7, "tl": 30, "cb": 1, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Events.WeakEventSource<TEventArgs>", "rp": "MyNet.Utilities_WeakEventSource_TEventArgs_.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 57, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Exceptions.FileAlreadyUsedException", "rp": "MyNet.Utilities_FileAlreadyUsedException.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Exceptions.FutureDateException", "rp": "MyNet.Utilities_FutureDateException.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Exceptions.InvalidEmailAddressException", "rp": "MyNet.Utilities_InvalidEmailAddressException.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -369,8 +372,8 @@ var assemblies = [
       { "name": "MyNet.Utilities.Generator.RandomGenerator", "rp": "MyNet.Utilities_RandomGenerator.html", "cl": 101, "ucl": 30, "cal": 131, "tl": 521, "cb": 30, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Generator.RandomGenerator<T>", "rp": "MyNet.Utilities_RandomGenerator_T_.html", "cl": 101, "ucl": 30, "cal": 131, "tl": 521, "cb": 30, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Generator.SentenceGenerator", "rp": "MyNet.Utilities_SentenceGenerator.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 50, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.Generator.WeightedRandom<T>", "rp": "MyNet.Utilities_WeightedRandom_T_.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 37, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Generator.WeightedRandom<T>", "rp": "MyNet.Utilities_WeightedRandom_T_.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 35, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Generator.WeightedRandom<T>", "rp": "MyNet.Utilities_WeightedRandom_T_.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 37, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Geography.Address", "rp": "MyNet.Utilities_Address.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 26, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Geography.Coordinates", "rp": "MyNet.Utilities_Coordinates.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Geography.Country", "rp": "MyNet.Utilities_Country.html", "cl": 251, "ucl": 4, "cal": 255, "tl": 272, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -422,7 +425,7 @@ var assemblies = [
       { "name": "MyNet.Utilities.ListExtensions", "rp": "MyNet.Utilities_ListExtensions.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 51, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.ListExtensions<TSource, TDestination>", "rp": "MyNet.Utilities_ListExtensions_TSource__TDestination_.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 51, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Localization.Cultures", "rp": "MyNet.Utilities_Cultures.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.Localization.GlobalizationService", "rp": "MyNet.Utilities_GlobalizationService.html", "cl": 23, "ucl": 39, "cal": 62, "tl": 117, "cb": 4, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Localization.GlobalizationService", "rp": "MyNet.Utilities_GlobalizationService.html", "cl": 26, "ucl": 42, "cal": 68, "tl": 128, "cb": 3, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Localization.LocalizationService", "rp": "MyNet.Utilities_LocalizationService.html", "cl": 32, "ucl": 3, "cal": 35, "tl": 115, "cb": 16, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Localization.TranslationService", "rp": "MyNet.Utilities_TranslationService.html", "cl": 29, "ucl": 7, "cal": 36, "tl": 86, "cb": 6, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.LocalizationExtensions", "rp": "MyNet.Utilities_LocalizationExtensions.html", "cl": 3, "ucl": 7, "cal": 10, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -478,9 +481,9 @@ var assemblies = [
       { "name": "MyNet.Utilities.Progress.ProgressStep<T>", "rp": "MyNet.Utilities_ProgressStep_T_.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 98, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Providers.ItemsProvider<T>", "rp": "MyNet.Utilities_ItemsProvider_T_.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Providers.PredicateItemsProvider<T>", "rp": "MyNet.Utilities_PredicateItemsProvider_T_.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.ReflectionExtensions", "rp": "MyNet.Utilities_ReflectionExtensions.html", "cl": 21, "ucl": 30, "cal": 51, "tl": 243, "cb": 11, "tb": 130, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.ReflectionExtensions<T>", "rp": "MyNet.Utilities_ReflectionExtensions_T_.html", "cl": 21, "ucl": 30, "cal": 51, "tl": 243, "cb": 11, "tb": 130, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.ReflectionExtensions<TAttribute>", "rp": "MyNet.Utilities_ReflectionExtensions_TAttribute_.html", "cl": 21, "ucl": 30, "cal": 51, "tl": 243, "cb": 11, "tb": 130, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.ReflectionExtensions", "rp": "MyNet.Utilities_ReflectionExtensions.html", "cl": 13, "ucl": 28, "cal": 41, "tl": 134, "cb": 10, "tb": 46, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.ReflectionExtensions<T>", "rp": "MyNet.Utilities_ReflectionExtensions_T_.html", "cl": 13, "ucl": 28, "cal": 41, "tl": 134, "cb": 10, "tb": 46, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.ReflectionExtensions<TAttribute>", "rp": "MyNet.Utilities_ReflectionExtensions_TAttribute_.html", "cl": 13, "ucl": 28, "cal": 41, "tl": 134, "cb": 10, "tb": 46, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Sequences.AcceptableValueRange<T>", "rp": "MyNet.Utilities_AcceptableValueRange_T_.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 49, "cb": 0, "tb": 28, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Sequences.ImmutableInterval<T>", "rp": "MyNet.Utilities_ImmutableInterval_T_.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Sequences.IntegerSequence", "rp": "MyNet.Utilities_IntegerSequence.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -499,7 +502,7 @@ var assemblies = [
       { "name": "MyNet.Utilities.ValidationExtensions", "rp": "MyNet.Utilities_ValidationExtensions.html", "cl": 5, "ucl": 16, "cal": 21, "tl": 198, "cb": 4, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.ValueObject", "rp": "MyNet.Utilities_ValueObject.html", "cl": 0, "ucl": 16, "cal": 16, "tl": 87, "cb": 0, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 712, "cal": 712, "tl": 2109, "cb": 0, "tb": 460, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 712, "cal": 712, "tl": 2110, "cb": 0, "tb": 460, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 647, "cal": 647, "tl": 1969, "cb": 0, "tb": 436, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "System.Text.RegularExpressions.Generated", "rp": "MyNet.Utilities_Generated.html", "cl": 0, "ucl": 1154, "cal": 1154, "tl": 2110, "cb": 0, "tb": 910, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -561,10 +564,10 @@ var riskHotspots = [
       { "value": 230, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 1117,
+    "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 1065,
     "metrics": [
-      { "value": 53130, "exceeded": true },
-      { "value": 230, "exceeded": true },
+      { "value": 46010, "exceeded": true },
+      { "value": 214, "exceeded": true },
     ]},
   {
     "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 1065,
@@ -585,34 +588,16 @@ var riskHotspots = [
       { "value": 208, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 203,
-    "metrics": [
-      { "value": 43472, "exceeded": true },
-      { "value": 208, "exceeded": true },
-    ]},
-  {
     "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 201,
     "metrics": [
       { "value": 40200, "exceeded": true },
       { "value": 200, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions", "reportPath": "MyNet.Utilities_ReflectionExtensions.html", "methodName": "GetMemberExpression(System.Linq.Expressions.Expression)", "methodShortName": "GetMemberExpression(...)", "fileIndex": 0, "line": 139,
+    "assembly": "MyNet.Utilities", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Utilities_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 201,
     "metrics": [
-      { "value": 7482, "exceeded": true },
-      { "value": 86, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<T>", "reportPath": "MyNet.Utilities_ReflectionExtensions_T_.html", "methodName": "GetMemberExpression(System.Linq.Expressions.Expression)", "methodShortName": "GetMemberExpression(...)", "fileIndex": 0, "line": 139,
-    "metrics": [
-      { "value": 7482, "exceeded": true },
-      { "value": 86, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<TAttribute>", "reportPath": "MyNet.Utilities_ReflectionExtensions_TAttribute_.html", "methodName": "GetMemberExpression(System.Linq.Expressions.Expression)", "methodShortName": "GetMemberExpression(...)", "fileIndex": 0, "line": 139,
-    "metrics": [
-      { "value": 7482, "exceeded": true },
-      { "value": 86, "exceeded": true },
+      { "value": 40200, "exceeded": true },
+      { "value": 200, "exceeded": true },
     ]},
   {
     "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.Google.Maps.GoogleLocationService", "reportPath": "MyNet.Utilities_GoogleLocationService.html", "methodName": "GetAddressFromCoordinates(double, double)", "methodShortName": "GetAddressFromCoordinates(...)", "fileIndex": 0, "line": 57,
@@ -1251,19 +1236,19 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions", "reportPath": "MyNet.Utilities_ReflectionExtensions.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 58,
+    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions", "reportPath": "MyNet.Utilities_ReflectionExtensions.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 37,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<T>", "reportPath": "MyNet.Utilities_ReflectionExtensions_T_.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 58,
+    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<T>", "reportPath": "MyNet.Utilities_ReflectionExtensions_T_.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 37,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<TAttribute>", "reportPath": "MyNet.Utilities_ReflectionExtensions_TAttribute_.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 58,
+    "assembly": "MyNet.Utilities", "class": "MyNet.Utilities.ReflectionExtensions<TAttribute>", "reportPath": "MyNet.Utilities_ReflectionExtensions_TAttribute_.html", "methodName": "HasPublicSetterOrGetter(System.Reflection.PropertyInfo)", "methodShortName": "HasPublicSetterOrGetter(...)", "fileIndex": 0, "line": 37,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1311,6 +1296,18 @@ var riskHotspots = [
       { "value": 20, "exceeded": true },
     ]},
   {
+    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 197,
+    "metrics": [
+      { "value": 23, "exceeded": false },
+      { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 813,
+    "metrics": [
+      { "value": 21, "exceeded": false },
+      { "value": 20, "exceeded": true },
+    ]},
+  {
     "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 199,
     "metrics": [
       { "value": 23, "exceeded": false },
@@ -1335,36 +1332,6 @@ var riskHotspots = [
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 1, "line": 199,
-    "metrics": [
-      { "value": 23, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 1, "line": 815,
-    "metrics": [
-      { "value": 21, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 2, "line": 199,
-    "metrics": [
-      { "value": 23, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 2, "line": 815,
-    "metrics": [
-      { "value": 21, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 647,
-    "metrics": [
-      { "value": 19, "exceeded": false },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
     "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 647,
     "metrics": [
       { "value": 19, "exceeded": false },
@@ -1377,13 +1344,13 @@ var riskHotspots = [
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 1, "line": 647,
+    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 647,
     "metrics": [
       { "value": 19, "exceeded": false },
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 2, "line": 647,
+    "assembly": "MyNet.Humanizer", "class": "System.Text.RegularExpressions.Generated", "reportPath": "MyNet.Humanizer_Generated.html", "methodName": "TryMatchAtCurrentPosition(System.ReadOnlySpan<char>)", "methodShortName": "TryMatchAtCurrentPosition(...)", "fileIndex": 0, "line": 645,
     "metrics": [
       { "value": 19, "exceeded": false },
       { "value": 16, "exceeded": true },

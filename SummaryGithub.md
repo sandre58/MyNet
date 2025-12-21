@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 12/07/2025 - 14:55:37 |
-| Parser: | MultiReport (6x Cobertura) |
+| Generated on: | 12/21/2025 - 13:03:25 |
+| Parser: | MultiReport (7x Cobertura) |
 | Assemblies: | 4 |
-| Classes: | 310 |
-| Files: | 241 |
-| **Line coverage:** | 50.1% (6642 of 13255) |
-| Covered lines: | 6642 |
-| Uncovered lines: | 6613 |
-| Coverable lines: | 13255 |
-| Total lines: | 29680 |
-| **Branch coverage:** | 29.4% (1949 of 6616) |
-| Covered branches: | 1949 |
-| Total branches: | 6616 |
+| Classes: | 313 |
+| Files: | 242 |
+| **Line coverage:** | 48.7% (6165 of 12655) |
+| Covered lines: | 6165 |
+| Uncovered lines: | 6490 |
+| Coverable lines: | 12655 |
+| Total lines: | 31723 |
+| **Branch coverage:** | 29.2% (1806 of 6184) |
+| Covered branches: | 1806 |
+| Total branches: | 6184 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 229_20005931166 |
+| Tag: | 231_20410175562 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 87.8%</summary>
+<details><summary>MyNet.Humanizer - 88.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**87.8%**|**80.1%**|
+|**MyNet.Humanizer**|**88.8%**|**80.2%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -42,7 +42,7 @@
 |MyNet.Humanizer.Inflections.FrenchInflector|100%||
 |MyNet.Humanizer.Inflections.InflectorBase|100%|97.5%|
 |MyNet.Humanizer.Inflections.InflectorBase.Rule|100%|100%|
-|MyNet.Humanizer.InflectorExtensions|80.4%|46.6%|
+|MyNet.Humanizer.InflectorExtensions|75.7%|46.6%|
 |MyNet.Humanizer.MetricNumeralExtensions|100%|100%|
 |MyNet.Humanizer.NoMatchFoundException|33.3%||
 |MyNet.Humanizer.NumberHumanizeExtensions|94.1%|77.7%|
@@ -68,7 +68,7 @@
 |MyNet.Humanizer.Truncation.Truncator|100%||
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
-|System.Text.RegularExpressions.Generated|85.9%|79.1%|
+|System.Text.RegularExpressions.Generated|87.9%|78.9%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -103,11 +103,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 23.5%</summary>
+<details><summary>MyNet.Utilities - 23.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**23.5%**|**12.9%**|
+|**MyNet.Utilities**|**23.4%**|**13.6%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -176,6 +176,9 @@
 |MyNet.Utilities.EnumerableExtensions<T, TId>|1.9%|0%|
 |MyNet.Utilities.EnumerableExtensions<TSource>|1.9%|0%|
 |MyNet.Utilities.EnumExtensions|0%||
+|MyNet.Utilities.Events.WeakEventSource.WeakHandler<TEventArgs>|0%|0%|
+|MyNet.Utilities.Events.WeakEventSource<TEventArgs>|42.8%|25%|
+|MyNet.Utilities.Events.WeakEventSource<TEventArgs>|0%|0%|
 |MyNet.Utilities.Exceptions.FileAlreadyUsedException|0%||
 |MyNet.Utilities.Exceptions.FutureDateException|0%||
 |MyNet.Utilities.Exceptions.InvalidEmailAddressException|0%||
@@ -189,8 +192,8 @@
 |MyNet.Utilities.Generator.RandomGenerator|77%|51.7%|
 |MyNet.Utilities.Generator.RandomGenerator<T>|77%|51.7%|
 |MyNet.Utilities.Generator.SentenceGenerator|0%|0%|
-|MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
 |MyNet.Utilities.Generator.WeightedRandom<T>|0%||
+|MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
 |MyNet.Utilities.Geography.Address|0%|0%|
 |MyNet.Utilities.Geography.Coordinates|0%||
 |MyNet.Utilities.Geography.Country|98.4%||
@@ -242,7 +245,7 @@
 |MyNet.Utilities.ListExtensions|0%|0%|
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
-|MyNet.Utilities.Localization.GlobalizationService|37%|16.6%|
+|MyNet.Utilities.Localization.GlobalizationService|38.2%|15%|
 |MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
@@ -298,9 +301,9 @@
 |MyNet.Utilities.Progress.ProgressStep<T>|0%|0%|
 |MyNet.Utilities.Providers.ItemsProvider<T>|0%||
 |MyNet.Utilities.Providers.PredicateItemsProvider<T>|0%||
-|MyNet.Utilities.ReflectionExtensions|41.1%|8.4%|
-|MyNet.Utilities.ReflectionExtensions<T>|41.1%|8.4%|
-|MyNet.Utilities.ReflectionExtensions<TAttribute>|41.1%|8.4%|
+|MyNet.Utilities.ReflectionExtensions|31.7%|21.7%|
+|MyNet.Utilities.ReflectionExtensions<T>|31.7%|21.7%|
+|MyNet.Utilities.ReflectionExtensions<TAttribute>|31.7%|21.7%|
 |MyNet.Utilities.Sequences.AcceptableValueRange<T>|0%|0%|
 |MyNet.Utilities.Sequences.ImmutableInterval<T>|0%||
 |MyNet.Utilities.Sequences.IntegerSequence|0%||
