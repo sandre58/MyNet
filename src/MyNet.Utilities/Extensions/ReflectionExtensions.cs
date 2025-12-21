@@ -5,15 +5,12 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
-#if NET9_0_OR_GREATER
-using System.Threading;
-#endif
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Utilities;
@@ -21,37 +18,19 @@ namespace MyNet.Utilities;
 
 public static class ReflectionExtensions
 {
-    private static readonly Dictionary<Type, IList<PropertyInfo>> PropertiesCache = [];
-
-#if NET9_0_OR_GREATER
-    private static readonly Lock LockObject = new();
-#else
-    private static readonly object LockObject = new();
-#endif
+    private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertiesCache = new();
+    private static readonly ConcurrentDictionary<(Type, Type), PropertyInfo[]> AttributeCache = new();
 
     public static IList<PropertyInfo> GetPublicProperties(this Type type)
-    {
-        lock (LockObject)
-        {
-            if (!PropertiesCache.ContainsKey(type))
-            {
-                PropertiesCache.Add(type, [.. type.GetProperties().Where(x => x.CanWrite || x.CanRead)]);
-            }
-        }
-
-        lock (LockObject)
-        {
-            return PropertiesCache[type];
-        }
-    }
+        => PropertiesCache.GetOrAdd(type, t => [.. t.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead || x.CanWrite)]);
 
     public static IList<PropertyInfo> GetPublicPropertiesWithAttribute<TAttribute>(this Type type)
         where TAttribute : Attribute
-        => [.. type.GetPublicProperties().Where(x => x.HasAttribute<TAttribute>())];
+        => AttributeCache.GetOrAdd((type, typeof(TAttribute)), _ => [.. type.GetPublicProperties().Where(p => p.IsDefined(typeof(TAttribute), true))]);
 
     public static bool HasAttribute<T>(this PropertyInfo property)
         where T : Attribute
-        => property.GetCustomAttributes<T>().Any() || property.PropertyType.GetCustomAttributes<T>().Any();
+        => property.IsDefined(typeof(T), true);
 
     public static bool HasPublicSetterOrGetter(this PropertyInfo property)
     {
@@ -136,107 +115,19 @@ public static class ReflectionExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static MemberExpression? GetMemberExpression(this Expression expression)
     {
-        MemberExpression? memberExpression = null;
         switch (expression.NodeType)
         {
             case ExpressionType.Convert:
                 {
                     var body = (UnaryExpression)expression;
-                    memberExpression = body.Operand as MemberExpression;
-                    break;
+                    return body.Operand as MemberExpression;
                 }
 
             case ExpressionType.MemberAccess:
-                memberExpression = expression as MemberExpression;
-                break;
-            case ExpressionType.Add:
-            case ExpressionType.AddChecked:
-            case ExpressionType.And:
-            case ExpressionType.AndAlso:
-            case ExpressionType.ArrayLength:
-            case ExpressionType.ArrayIndex:
-            case ExpressionType.Call:
-            case ExpressionType.Coalesce:
-            case ExpressionType.Conditional:
-            case ExpressionType.Constant:
-            case ExpressionType.ConvertChecked:
-            case ExpressionType.Divide:
-            case ExpressionType.Equal:
-            case ExpressionType.ExclusiveOr:
-            case ExpressionType.GreaterThan:
-            case ExpressionType.GreaterThanOrEqual:
-            case ExpressionType.Invoke:
-            case ExpressionType.Lambda:
-            case ExpressionType.LeftShift:
-            case ExpressionType.LessThan:
-            case ExpressionType.LessThanOrEqual:
-            case ExpressionType.ListInit:
-            case ExpressionType.MemberInit:
-            case ExpressionType.Modulo:
-            case ExpressionType.Multiply:
-            case ExpressionType.MultiplyChecked:
-            case ExpressionType.Negate:
-            case ExpressionType.UnaryPlus:
-            case ExpressionType.NegateChecked:
-            case ExpressionType.New:
-            case ExpressionType.NewArrayInit:
-            case ExpressionType.NewArrayBounds:
-            case ExpressionType.Not:
-            case ExpressionType.NotEqual:
-            case ExpressionType.Or:
-            case ExpressionType.OrElse:
-            case ExpressionType.Parameter:
-            case ExpressionType.Power:
-            case ExpressionType.Quote:
-            case ExpressionType.RightShift:
-            case ExpressionType.Subtract:
-            case ExpressionType.SubtractChecked:
-            case ExpressionType.TypeAs:
-            case ExpressionType.TypeIs:
-            case ExpressionType.Assign:
-            case ExpressionType.Block:
-            case ExpressionType.DebugInfo:
-            case ExpressionType.Decrement:
-            case ExpressionType.Dynamic:
-            case ExpressionType.Default:
-            case ExpressionType.Extension:
-            case ExpressionType.Goto:
-            case ExpressionType.Increment:
-            case ExpressionType.Index:
-            case ExpressionType.Label:
-            case ExpressionType.RuntimeVariables:
-            case ExpressionType.Loop:
-            case ExpressionType.Switch:
-            case ExpressionType.Throw:
-            case ExpressionType.Try:
-            case ExpressionType.Unbox:
-            case ExpressionType.AddAssign:
-            case ExpressionType.AndAssign:
-            case ExpressionType.DivideAssign:
-            case ExpressionType.ExclusiveOrAssign:
-            case ExpressionType.LeftShiftAssign:
-            case ExpressionType.ModuloAssign:
-            case ExpressionType.MultiplyAssign:
-            case ExpressionType.OrAssign:
-            case ExpressionType.PowerAssign:
-            case ExpressionType.RightShiftAssign:
-            case ExpressionType.SubtractAssign:
-            case ExpressionType.AddAssignChecked:
-            case ExpressionType.MultiplyAssignChecked:
-            case ExpressionType.SubtractAssignChecked:
-            case ExpressionType.PreIncrementAssign:
-            case ExpressionType.PreDecrementAssign:
-            case ExpressionType.PostIncrementAssign:
-            case ExpressionType.PostDecrementAssign:
-            case ExpressionType.TypeEqual:
-            case ExpressionType.OnesComplement:
-            case ExpressionType.IsTrue:
-            case ExpressionType.IsFalse:
-            default:
-                break;
+                return expression as MemberExpression;
         }
 
-        return memberExpression;
+        return null;
     }
 
     private static T? GetDefault<T>() => default;

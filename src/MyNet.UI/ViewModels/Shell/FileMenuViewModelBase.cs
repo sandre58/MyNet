@@ -77,8 +77,6 @@ public class FileMenuViewModelBase : ObservableObject
                 SetVisibility(visibilityAction);
                 HideContent();
                 break;
-
-            case VisibilityAction.Toggle:
             default:
                 {
                     if (IsVisible)

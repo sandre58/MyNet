@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using MyNet.Utilities.Events;
 using MyNet.Utilities.Logging;
 
 namespace MyNet.Utilities.Localization;
@@ -15,6 +16,20 @@ namespace MyNet.Utilities.Localization;
 public class GlobalizationService
 {
     private readonly Action<CultureInfo>? _onCultureChanged;
+    private readonly WeakEventSource<EventArgs> _cultureChanged = new();
+    private readonly WeakEventSource<EventArgs> _timeZoneChanged = new();
+
+    public event EventHandler<EventArgs> CultureChanged
+    {
+        add => _cultureChanged.Subscribe(value);
+        remove => _cultureChanged.Unsubscribe(value);
+    }
+
+    public event EventHandler<EventArgs> TimeZoneChanged
+    {
+        add => _timeZoneChanged.Subscribe(value);
+        remove => _timeZoneChanged.Unsubscribe(value);
+    }
 
     public GlobalizationService()
         : this(CultureInfo.CurrentCulture, TimeZoneInfo.Local) { }
@@ -28,10 +43,6 @@ public class GlobalizationService
         TimeZone = timeZoneInfo;
         _onCultureChanged = onCultureChanged;
     }
-
-    public event EventHandler? CultureChanged;
-
-    public event EventHandler? TimeZoneChanged;
 
     public static GlobalizationService Current { get; } = new(CultureInfo.CurrentCulture, TimeZoneInfo.Local, x =>
     {
@@ -65,7 +76,7 @@ public class GlobalizationService
         Culture = culture;
         _onCultureChanged?.Invoke(Culture);
 
-        CultureChanged?.Invoke(this, EventArgs.Empty);
+        _cultureChanged.Raise(this, EventArgs.Empty);
     }
 
     public void SetTimeZone(TimeZoneInfo timeZone)
@@ -75,7 +86,7 @@ public class GlobalizationService
         LogManager.Debug($"Time zone Changed : {TimeZone} => {timeZone}");
         TimeZone = timeZone;
 
-        TimeZoneChanged?.Invoke(this, EventArgs.Empty);
+        _timeZoneChanged.Raise(this, EventArgs.Empty);
     }
 
     public DateTime Convert(DateTime dateTime) => dateTime.Kind switch

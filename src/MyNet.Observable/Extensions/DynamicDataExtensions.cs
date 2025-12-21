@@ -139,9 +139,6 @@ public static class DynamicDataExtensions
                     case ChangeReason.Moved:
                         source.Move(change.PreviousIndex, change.CurrentIndex);
                         break;
-                    case ChangeReason.Refresh:
-                    default:
-                        break;
                 }
             });
 

@@ -66,7 +66,6 @@ public abstract class EditionViewModel : WorkspaceDialogViewModel
             case MessageBoxResult.Cancel or MessageBoxResult.None:
                 DialogResult = null;
                 return false;
-            case MessageBoxResult.Ok:
             default:
                 return true;
         }

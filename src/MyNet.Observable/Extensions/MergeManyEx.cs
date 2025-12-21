@@ -48,15 +48,6 @@ internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> so
                                     ForwardWhenRemove(observer, x.Item.Current);
                                     break;
                                 }
-
-                            case ListChangeReason.Add:
-                            case ListChangeReason.AddRange:
-                            case ListChangeReason.Replace:
-                            case ListChangeReason.Refresh:
-                            case ListChangeReason.Moved:
-                            case ListChangeReason.Clear:
-                            default:
-                                break;
                         }
                     }
                 },
@@ -110,13 +101,6 @@ internal sealed class MergeManyEx<T, TKey, TDestination, TDestinationKey>(IObser
                                     ForwardWhenRemove(observer, x.Current);
                                     break;
                                 }
-
-                            case ChangeReason.Add:
-                            case ChangeReason.Update:
-                            case ChangeReason.Refresh:
-                            case ChangeReason.Moved:
-                            default:
-                                break;
                         }
                     }
                 },
