@@ -6,7 +6,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v15.0.0] - 2025-12-21
+## [v16.0.0] - 2026-02-19
 
 
 
@@ -17,7 +17,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v14.4.0...v15.0.0](https://github.com/sandre58/MyNet/compare/v14.4.0...v15.0.0)
+**Full Changelog:** [compare v15.0.0...v16.0.0](https://github.com/sandre58/MyNet/compare/v15.0.0...v16.0.0)
 
 
 ---
