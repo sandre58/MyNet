@@ -3,30 +3,30 @@
 
 |||
 |:---|:---|
-| Generated on: | 12/21/2025 - 13:03:25 |
-| Parser: | MultiReport (7x Cobertura) |
+| Generated on: | 02/19/2026 - 05:39:42 |
+| Parser: | MultiReport (5x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 313 |
 | Files: | 242 |
-| **Line coverage:** | 48.7% (6165 of 12655) |
-| Covered lines: | 6165 |
-| Uncovered lines: | 6490 |
-| Coverable lines: | 12655 |
-| Total lines: | 31723 |
-| **Branch coverage:** | 29.2% (1806 of 6184) |
-| Covered branches: | 1806 |
-| Total branches: | 6184 |
+| **Line coverage:** | 50.1% (6610 of 13187) |
+| Covered lines: | 6610 |
+| Uncovered lines: | 6577 |
+| Coverable lines: | 13187 |
+| Total lines: | 31857 |
+| **Branch coverage:** | 30.5% (1944 of 6360) |
+| Covered branches: | 1944 |
+| Total branches: | 6360 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 231_20410175562 |
+| Tag: | 237_22169952410 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Humanizer - 88.8%</summary>
+<details><summary>MyNet.Humanizer - 87.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.8%**|**80.2%**|
+|**MyNet.Humanizer**|**87.8%**|**80.1%**|
 |MyNet.Humanizer.CasingExtensions|53.8%|66.6%|
 |MyNet.Humanizer.CollectionHumanizeExtensions|100%|100%|
 |MyNet.Humanizer.CollectionHumanizeExtensions<T>|100%|100%|
@@ -68,7 +68,7 @@
 |MyNet.Humanizer.Truncation.Truncator|100%||
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
 |System.Text.RegularExpressions.Generated|85.9%|79.1%|
-|System.Text.RegularExpressions.Generated|87.9%|78.9%|
+|System.Text.RegularExpressions.Generated|85.9%|79.1%|
 
 </details>
 <details><summary>MyNet.Humanizer.UnitTests - 97.4%</summary>
@@ -107,7 +107,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**23.4%**|**13.6%**|
+|**MyNet.Utilities**|**23.4%**|**13.5%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -135,7 +135,7 @@
 |MyNet.Utilities.Collections.ReadOnlyObservableKeyedCollection<TKey, T>|0%||
 |MyNet.Utilities.Collections.SortableObservableCollection<T>|90.4%|75%|
 |MyNet.Utilities.Collections.SortableObservableCollection<T>|100%|100%|
-|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|79.5%|66.6%|
+|MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|79.5%|50%|
 |MyNet.Utilities.Collections.ThreadSafeObservableCollection<T>|63.6%|0%|
 |MyNet.Utilities.ComparableExtensions|0%|0%|
 |MyNet.Utilities.Comparers.NullableComparer<T>|50%|50%|
@@ -192,8 +192,8 @@
 |MyNet.Utilities.Generator.RandomGenerator|77%|51.7%|
 |MyNet.Utilities.Generator.RandomGenerator<T>|77%|51.7%|
 |MyNet.Utilities.Generator.SentenceGenerator|0%|0%|
-|MyNet.Utilities.Generator.WeightedRandom<T>|0%||
 |MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
+|MyNet.Utilities.Generator.WeightedRandom<T>|0%||
 |MyNet.Utilities.Geography.Address|0%|0%|
 |MyNet.Utilities.Geography.Coordinates|0%||
 |MyNet.Utilities.Geography.Country|98.4%||
@@ -245,7 +245,7 @@
 |MyNet.Utilities.ListExtensions|0%|0%|
 |MyNet.Utilities.ListExtensions<TSource, TDestination>|0%|0%|
 |MyNet.Utilities.Localization.Cultures|100%||
-|MyNet.Utilities.Localization.GlobalizationService|38.2%|15%|
+|MyNet.Utilities.Localization.GlobalizationService|33.8%|15%|
 |MyNet.Utilities.Localization.LocalizationService|91.4%|80%|
 |MyNet.Utilities.Localization.TranslationService|80.5%|60%|
 |MyNet.Utilities.LocalizationExtensions|30%||
