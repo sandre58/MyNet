@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v16.0.1] - 2026-02-19
+## [v16.0.2] - 2026-02-19
 
 
 ### 🐛 Bug Fixes
 
-- Refactor Theme class to use C# record type *(commit by **Stéphane ANDRE (E104915)** in [a4787290](https://github.com/sandre58/MyNet/commit/a47872906d361cf108eeb54b10752a08d078706d))*
+- Add high contrast theme support to theming system *(commit by **Stéphane ANDRE (E104915)** in [7e887266](https://github.com/sandre58/MyNet/commit/7e887266dd16e97303aee308258714333a8cdd45))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v16.0.0...v16.0.1](https://github.com/sandre58/MyNet/compare/v16.0.0...v16.0.1)
+**Full Changelog:** [compare v16.0.1...v16.0.2](https://github.com/sandre58/MyNet/compare/v16.0.1...v16.0.2)
 
 
 ---
