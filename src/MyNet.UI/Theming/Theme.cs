@@ -9,30 +9,14 @@ namespace MyNet.UI.Theming;
 /// <summary>
 /// Represents a theme configuration for the application, including base theme and color settings.
 /// </summary>
-public sealed class Theme
-{
-    /// <summary>
-    /// Gets the base theme (e.g. Dark, Light, HighContrast).
-    /// </summary>
-    public IThemeBase? Base { get; }
-
-    /// <summary>
-    /// Gets the primary color of the theme.
-    /// </summary>
-    public string? PrimaryColor { get; }
-
-    /// <summary>
-    /// Gets the foreground color for the primary color.
-    /// </summary>
-    public string? PrimaryForegroundColor { get; }
-
-    /// <summary>
-    /// Gets the accent color of the theme.
-    /// </summary>
-    public string? AccentColor { get; }
-
-    /// <summary>
-    /// Gets the foreground color for the accent color.
-    /// </summary>
-    public string? AccentForegroundColor { get; }
-}
+/// <param name="Base">Gets the base theme (e.g. Dark, Light, HighContrast).</param>
+/// <param name="PrimaryColor">Gets the primary color used in the theme.</param>
+/// <param name="AccentColor">Gets the accent color used in the theme.</param>
+/// <param name="PrimaryForegroundColor">Gets the optional foreground color for the primary color. If not specified, it will be determined automatically based on the primary color.</param>
+/// <param name="AccentForegroundColor">Gets the optional foreground color for the accent color. If not specified, it will be determined automatically based on the accent color.</param>
+public sealed record Theme(
+    IThemeBase Base,
+    string PrimaryColor,
+    string AccentColor,
+    string? PrimaryForegroundColor = null,
+    string? AccentForegroundColor = null);
