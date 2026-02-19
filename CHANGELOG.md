@@ -6,7 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v16.0.0] - 2026-02-19
+## [v16.0.1] - 2026-02-19
+
+
+### 🐛 Bug Fixes
+
+- Refactor Theme class to use C# record type *(commit by **Stéphane ANDRE (E104915)** in [a4787290](https://github.com/sandre58/MyNet/commit/a47872906d361cf108eeb54b10752a08d078706d))*
 
 
 
@@ -17,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v15.0.0...v16.0.0](https://github.com/sandre58/MyNet/compare/v15.0.0...v16.0.0)
+**Full Changelog:** [compare v16.0.0...v16.0.1](https://github.com/sandre58/MyNet/compare/v16.0.0...v16.0.1)
 
 
 ---
