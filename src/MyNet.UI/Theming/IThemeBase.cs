@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ThemeBase.cs" company="Stéphane ANDRE">
+// <copyright file="IThemeBase.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,25 +9,15 @@ namespace MyNet.UI.Theming;
 /// <summary>
 /// Specifies the base theme type for the application.
 /// </summary>
-public enum ThemeBase
+public interface IThemeBase
 {
     /// <summary>
-    /// Inherit the theme from the parent or system.
+    /// Gets the name of the base theme (e.g. "Dark", "Light", "HighContrast").
     /// </summary>
-    Inherit,
+    string Name { get; }
 
     /// <summary>
-    /// Dark theme.
+    /// Gets a value indicating whether the base theme is a dark theme.
     /// </summary>
-    Dark,
-
-    /// <summary>
-    /// Light theme.
-    /// </summary>
-    Light,
-
-    /// <summary>
-    /// High contrast theme for accessibility.
-    /// </summary>
-    HighContrast
+    bool IsDark { get; }
 }

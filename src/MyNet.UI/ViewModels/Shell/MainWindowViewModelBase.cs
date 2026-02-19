@@ -109,7 +109,7 @@ public class MainWindowViewModelBase : LocalizableObject
         using (PropertyChangedSuspender.Suspend())
         {
             Cultures.AddRange(Globalization.SupportedCultures);
-            IsDark = ThemeManager.CurrentTheme?.Base == ThemeBase.Dark;
+            IsDark = ThemeManager.CurrentTheme?.Base?.IsDark ?? false;
             UpdateSelectedCulture();
         }
 
@@ -166,9 +166,9 @@ public class MainWindowViewModelBase : LocalizableObject
 
     #region Theme management
 
-    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base == ThemeBase.Dark;
+    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base?.IsDark ?? false;
 
-    protected void OnIsDarkChanged() => ThemeManager.ApplyBase(IsDark ? ThemeBase.Dark : ThemeBase.Light);
+    protected void OnIsDarkChanged() => ThemeManager.ApplyBase(IsDark ? ThemeManager.Dark! : ThemeManager.Light!);
 
     #endregion
 

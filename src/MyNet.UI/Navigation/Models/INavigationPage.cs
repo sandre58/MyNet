@@ -4,9 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace MyNet.UI.Navigation.Models;
 
 /// <summary>
@@ -14,12 +11,6 @@ namespace MyNet.UI.Navigation.Models;
 /// </summary>
 public interface INavigationPage
 {
-    /// <summary>
-    /// Gets the parent page type, if any.
-    /// </summary>
-    /// <returns>The parent page type, or null if none.</returns>
-    Type? GetParentPageType();
-
     /// <summary>
     /// Called when the page has been navigated to.
     /// </summary>
@@ -30,7 +21,6 @@ public interface INavigationPage
     /// Called when the page is about to be navigated from.
     /// </summary>
     /// <param name="navigatingContext">The navigating context.</param>
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     void OnNavigatingFrom(NavigatingContext navigatingContext);
 
     /// <summary>

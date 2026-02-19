@@ -4,8 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MyNet.Observable.Attributes;
 using MyNet.UI.Navigation.Models;
@@ -19,8 +17,6 @@ public class NavigableWorkspaceViewModel : WorkspaceViewModel, INavigableWorkspa
     public IWorkspaceViewModel? ParentPage { get; private set; }
 
     public virtual void SetParentPage(IWorkspaceViewModel parentPage) => ParentPage = parentPage;
-
-    public virtual Type? GetParentPageType() => null;
 
     public virtual void LoadParameters(INavigationParameters? parameters)
     {

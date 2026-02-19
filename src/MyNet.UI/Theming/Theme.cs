@@ -9,30 +9,30 @@ namespace MyNet.UI.Theming;
 /// <summary>
 /// Represents a theme configuration for the application, including base theme and color settings.
 /// </summary>
-public class Theme
+public sealed class Theme
 {
     /// <summary>
-    /// Gets or sets the base theme (e.g. Dark, Light, HighContrast).
+    /// Gets the base theme (e.g. Dark, Light, HighContrast).
     /// </summary>
-    public ThemeBase? Base { get; set; }
+    public IThemeBase? Base { get; }
 
     /// <summary>
-    /// Gets or sets the primary color of the theme.
+    /// Gets the primary color of the theme.
     /// </summary>
-    public string? PrimaryColor { get; set; }
+    public string? PrimaryColor { get; }
 
     /// <summary>
-    /// Gets or sets the foreground color for the primary color.
+    /// Gets the foreground color for the primary color.
     /// </summary>
-    public string? PrimaryForegroundColor { get; set; }
+    public string? PrimaryForegroundColor { get; }
 
     /// <summary>
-    /// Gets or sets the accent color of the theme.
+    /// Gets the accent color of the theme.
     /// </summary>
-    public string? AccentColor { get; set; }
+    public string? AccentColor { get; }
 
     /// <summary>
-    /// Gets or sets the foreground color for the accent color.
+    /// Gets the foreground color for the accent color.
     /// </summary>
-    public string? AccentForegroundColor { get; set; }
+    public string? AccentForegroundColor { get; }
 }
