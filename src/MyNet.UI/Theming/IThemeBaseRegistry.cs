@@ -21,6 +21,11 @@ public interface IThemeBaseRegistry
     IThemeBase Dark { get; }
 
     /// <summary>
+    /// Gets the default high contrast base theme. This is the base theme that will be used when the application is in high contrast mode.
+    /// </summary>
+    IThemeBase HighContrast { get; }
+
+    /// <summary>
     /// Gets the collection of available themes supported by the application.
     /// </summary>
     /// <remarks>The collection is read-only and reflects the themes currently accessible for use. The

@@ -62,6 +62,11 @@ public static class ThemeManager
     public static IThemeBase? Light => _themeBaseRegistry?.Light;
 
     /// <summary>
+    /// Gets the default high contrast base theme. This is the base theme that will be used when the application is in high contrast mode.
+    /// </summary>
+    public static IThemeBase? HighContrast => _themeBaseRegistry?.HighContrast;
+
+    /// <summary>
     /// Gets the collection of available themes supported by the application.
     /// </summary>
     public static IReadOnlyCollection<IThemeBase>? AvailableBases => _themeBaseRegistry?.Availables;

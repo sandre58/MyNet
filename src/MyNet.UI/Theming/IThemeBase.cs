@@ -20,4 +20,9 @@ public interface IThemeBase
     /// Gets a value indicating whether the base theme is a dark theme.
     /// </summary>
     bool IsDark { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the base theme is a high contrast theme.
+    /// </summary>
+    bool IsHighContrast { get; }
 }
