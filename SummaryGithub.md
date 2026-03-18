@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 03/18/2026 - 12:01:55 |
+| Generated on: | 03/18/2026 - 22:10:44 |
 | Parser: | MultiReport (3x Cobertura) |
 | Assemblies: | 4 |
 | Classes: | 309 |
 | Files: | 238 |
-| **Line coverage:** | 53.9% (5219 of 9682) |
-| Covered lines: | 5219 |
-| Uncovered lines: | 4463 |
+| **Line coverage:** | 53.8% (5218 of 9682) |
+| Covered lines: | 5218 |
+| Uncovered lines: | 4464 |
 | Coverable lines: | 9682 |
 | Total lines: | 25064 |
-| **Branch coverage:** | 32.7% (1411 of 4314) |
-| Covered branches: | 1411 |
+| **Branch coverage:** | 32.6% (1410 of 4314) |
+| Covered branches: | 1410 |
 | Total branches: | 4314 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 241_23243530571 |
+| Tag: | 244_23269400777 |
 
 </details>
 
@@ -322,11 +322,11 @@
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
-<details><summary>MyNet.Utilities.Tests - 97.7%</summary>
+<details><summary>MyNet.Utilities.Tests - 97.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**97.7%**|**95.8%**|
+|**MyNet.Utilities.Tests**|**97.6%**|**95%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
 |MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests|99.4%|83.3%|
 |MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests.KeyedItem|100%||
@@ -352,7 +352,7 @@
 |MyNet.Utilities.Tests.FileExtensionsTests|100%|100%|
 |MyNet.Utilities.Tests.FluentTimeSpanOperatorOverloadsTests|100%||
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
-|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
+|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|99.4%|92.8%|
 |MyNet.Utilities.Tests.Helpers.DateTimeHelperTests|100%||
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
 |MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
