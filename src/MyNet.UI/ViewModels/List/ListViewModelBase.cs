@@ -455,8 +455,7 @@ public abstract class ListViewModelBase<T, TCollection> : ViewModelBase, IListVi
     /// Updates the paging view model with the response from the paging operation.
     /// </summary>
     /// <param name="response">The page response containing total size, pages, and current page.</param>
-    private void UpdatePaging(IPageResponse response)
-        => Paging.Update(new PagingResponse(response.Page, response.Pages, response.TotalSize));
+    private void UpdatePaging(IPageResponse response) => Paging.Update(new(response.TotalSize == 0 ? 1 : response.TotalSize, response.Pages, response.Page));
 
     /// <summary>
     /// Called when the CanPage property changes. Initializes or disposes the paging pipeline.
