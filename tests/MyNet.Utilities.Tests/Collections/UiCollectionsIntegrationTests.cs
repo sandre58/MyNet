@@ -94,19 +94,6 @@ public class UiCollectionsIntegrationTests
     }
 
     [Fact]
-    public void ScheduleObservableCollection_Dispose_ShouldNotThrow()
-    {
-        // Arrange
-        var scheduler = new TestScheduler();
-        var collection = new TestScheduleObservableCollection<int>(
-          scheduler: () => scheduler);
-        collection.AddRange([1, 2, 3]);
-
-        // Act & Assert
-        collection.Dispose(); // Should not throw
-    }
-
-    [Fact]
     public void ScheduleObservableCollection_WithDifferentList_ShouldWork()
     {
         // Arrange

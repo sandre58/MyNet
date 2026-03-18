@@ -19,19 +19,12 @@ namespace MyNet.Utilities.Collections;
 /// Optimized to minimize lock contention and support concurrent reads.
 /// </summary>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
-public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T>, IDisposable
+public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T>
 {
-#if NET9_0_OR_GREATER
     private readonly Lock _localLock = new();
-#else
-    // ReaderWriterLockSlim for better concurrent read performance
-    // Using SupportsRecursion to handle nested locks in derived classes
-    private readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
-#endif
 
     private readonly Action<Action>? _notifyOnUi;
     private readonly bool _useAsyncNotifications;
-    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ThreadSafeObservableCollection{T}"/> class.
@@ -87,12 +80,7 @@ public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T
 
     protected override void SetItem(int index, T item) => ExecuteWriteLocked(() => base.SetItem(index, item));
 
-    protected override void ClearItems() => ExecuteWriteLocked(() =>
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-
-            base.ClearItems();
-        });
+    protected override void ClearItems() => ExecuteWriteLocked(base.ClearItems);
 
     #endregion
 
@@ -189,7 +177,6 @@ public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T
     /// </summary>
     protected void ExecuteWriteLocked(Action action)
     {
-#if NET9_0_OR_GREATER
         _localLock.Enter();
         try
         {
@@ -199,17 +186,6 @@ public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T
         {
             _localLock.Exit();
         }
-#else
-        _lock.EnterWriteLock();
-        try
-        {
-            action();
-        }
-        finally
-        {
-            _lock.ExitWriteLock();
-        }
-#endif
     }
 
     /// <summary>
@@ -217,7 +193,6 @@ public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T
     /// </summary>
     protected TResult ExecuteWriteLocked<TResult>(Func<TResult> func)
     {
-#if NET9_0_OR_GREATER
         _localLock.Enter();
         try
         {
@@ -227,69 +202,6 @@ public class ThreadSafeObservableCollection<T> : OptimizedObservableCollection<T
         {
             _localLock.Exit();
         }
-#else
-        _lock.EnterWriteLock();
-        try
-        {
-            return func();
-        }
-        finally
-        {
-            _lock.ExitWriteLock();
-        }
-#endif
-    }
-
-    /// <summary>
-    /// Executes an action under a read lock (for reads that don't modify collection).
-    /// Only available on .NET 8/10 (not .NET 9+ Lock which doesn't support read locks).
-    /// </summary>
-    protected void ExecuteReadLocked(Action action)
-    {
-#if NET9_0_OR_GREATER
-        // Lock type doesn't support read locks, fallback to write lock
-        ExecuteWriteLocked(action);
-#else
-        _lock.EnterReadLock();
-        try
-        {
-            action();
-        }
-        finally
-        {
-            _lock.ExitReadLock();
-        }
-#endif
-    }
-
-    #endregion
-
-    #region IDisposable Support
-
-    /// <summary>
-    /// Disposes resources used by this collection.
-    /// </summary>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed) return;
-
-        if (disposing)
-        {
-#if !NET9_0_OR_GREATER
-            _lock.Dispose();
-#endif
-        }
-
-        _disposed = true;
-    }
-
-    /// <summary>
-    /// Disposes the collection and releases locks.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     #endregion

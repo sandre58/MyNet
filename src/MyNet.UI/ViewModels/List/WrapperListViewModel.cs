@@ -98,15 +98,6 @@ public abstract class WrapperListViewModel<T, TWrapper, TCollection> : ListViewM
                       .Bind(_pagedWrappers)
                       .Subscribe());
     }
-
-    /// <summary>
-    /// Releases resources and performs cleanup operations.
-    /// </summary>
-    protected override void Cleanup()
-    {
-        _pagedWrappers.Dispose();
-        base.Cleanup();
-    }
 }
 
 /// <summary>

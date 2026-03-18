@@ -217,10 +217,4 @@ public class PagingViewModel : ObservableObject, IPagingViewModel
         => PagingChanged?.Invoke(this, new PagingChangedEventArgs(CurrentPage, PageSize));
 
     #endregion
-
-    protected override void Cleanup()
-    {
-        base.Cleanup();
-        _pages.Dispose();
-    }
 }

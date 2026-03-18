@@ -22,9 +22,4 @@
         </EmbeddedResource>
     </ItemGroup>
 
-    <!-- Add a minimal framework dependency to satisfy NuGet packaging requirements -->
-    <!-- This is a workaround for NU5017 error for base utility libraries -->
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    </ItemGroup>
 </Project>

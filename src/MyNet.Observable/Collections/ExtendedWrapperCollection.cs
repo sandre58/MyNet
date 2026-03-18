@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Concurrency;
+using System.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using MyNet.Observable.Collections.Providers;
@@ -22,11 +23,7 @@ public class ExtendedWrapperCollection<T, TWrapper> : ExtendedCollection<T>
     where T : notnull
 {
     // Optimize: Cache compiled expression tree for better performance
-#if NET9_0_OR_GREATER
-    private static readonly System.Threading.Lock FactoryLock = new();
-#else
-    private static readonly object FactoryLock = new();
-#endif
+    private static readonly Lock FactoryLock = new();
     private static Func<T, TWrapper>? _cachedWrapperFactory;
 
     private readonly Func<T, TWrapper> _createWrapper;
@@ -35,11 +32,7 @@ public class ExtendedWrapperCollection<T, TWrapper> : ExtendedCollection<T>
     private readonly IObservable<IChangeSet<TWrapper>> _observableWrapperSource;
     private readonly IObservable<IChangeSet<TWrapper>> _observableWrappers;
     private readonly Dictionary<T, TWrapper> _cache;
-#if NET9_0_OR_GREATER
-    private readonly System.Threading.Lock _cacheLock = new();
-#else
-    private readonly object _cacheLock = new();
-#endif
+    private readonly Lock _cacheLock = new();
 
     public ReadOnlyObservableCollection<TWrapper> Wrappers => _wrappers;
 

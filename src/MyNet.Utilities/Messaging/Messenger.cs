@@ -19,21 +19,10 @@ namespace MyNet.Utilities.Messaging;
 /// </summary>
 public class Messenger : IMessenger
 {
-#if NET9_0_OR_GREATER
     private static readonly Lock CreationLock = new();
-#else
-    private static readonly object CreationLock = new();
-#endif
-
-#if NET9_0_OR_GREATER
     private readonly Lock _recipientsOfSubclassesActionLock = new();
     private readonly Lock _recipientsStrictActionLock = new();
     private readonly Lock _registerLock = new();
-#else
-    private readonly object _recipientsOfSubclassesActionLock = new();
-    private readonly object _recipientsStrictActionLock = new();
-    private readonly object _registerLock = new();
-#endif
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;
 

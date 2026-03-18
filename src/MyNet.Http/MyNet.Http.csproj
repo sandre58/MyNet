@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Product>My .NET HTTP</Product>
-    <PackageIcon>MyNetHttp.png</PackageIcon>
-    <Description>A versatile class library designed to simplify the consumption of Web APIs in .NET applications.</Description>
-    <PackageTags>My;Utilities;Web;Http</PackageTags>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Product>My .NET HTTP</Product>
+        <PackageIcon>MyNetHttp.png</PackageIcon>
+        <Description>A versatile class library designed to simplify the consumption of Web APIs in .NET applications.</Description>
+        <PackageTags>My;Utilities;Web;Http</PackageTags>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNet.WebApi.Client" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    </ItemGroup>
 </Project>

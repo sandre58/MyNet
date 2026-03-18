@@ -8,11 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MyNet.Utilities.Geography;
-
-#if NET9_0_OR_GREATER
 using System.Threading;
-#endif
+using MyNet.Utilities.Geography;
 
 #pragma warning disable CA5394
 namespace MyNet.Utilities.Generator;
@@ -24,11 +21,7 @@ public static class RandomGenerator
     /// </summary>
     public static readonly Random Seed = new();
 
-#if NET9_0_OR_GREATER
     private static readonly Lock Locker = new();
-#else
-    private static readonly object Locker = new();
-#endif
 
     /// <summary>
     /// Get an int from min to max.

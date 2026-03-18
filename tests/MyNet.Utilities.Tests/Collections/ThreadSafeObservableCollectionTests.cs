@@ -170,19 +170,6 @@ public class ThreadSafeObservableCollectionTests
     }
 
     [Fact]
-    public void Dispose_ShouldReleaseResources()
-    {
-        // Arrange
-        var collection = new ThreadSafeObservableCollection<int>();
-
-        // Act
-        collection.Dispose();
-
-        // Assert - Should not throw
-        Assert.NotNull(collection);
-    }
-
-    [Fact]
     public async Task ConcurrentReadWrite_ShouldNotDeadlockAsync()
     {
         // Arrange

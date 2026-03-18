@@ -7,10 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
-#if NET9_0_OR_GREATER
 using System.Threading;
-#endif
 
 namespace MyNet.Utilities.Logging;
 
@@ -18,11 +15,7 @@ public sealed class PerformanceLogger : IDisposable
 {
     private static readonly Stack<PerformanceLogger> OperationGroups = new();
 
-#if NET9_0_OR_GREATER
     private static readonly Lock StackLocker = new();
-#else
-    private static readonly object StackLocker = new();
-#endif
 
     private static readonly Dictionary<PerformanceTraceLevel, Action<string>> LogActions = new()
     {
@@ -37,11 +30,7 @@ public sealed class PerformanceLogger : IDisposable
 
     private readonly Dictionary<string, (PerformanceTraceLevel Level, TimeSpan Time)> _registeredTimes = [];
 
-#if NET9_0_OR_GREATER
     private readonly Lock _timesLocker = new();
-#else
-    private readonly object _timesLocker = new();
-#endif
 
     private readonly string _title;
     private readonly PerformanceLoggerSettings _settings;

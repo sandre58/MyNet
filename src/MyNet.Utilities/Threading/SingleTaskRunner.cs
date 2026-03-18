@@ -17,11 +17,7 @@ public class SingleTaskRunner(
     Action? onCancelled = null,
     ILogger? logger = null) : IDisposable
 {
-#if NET9_0_OR_GREATER
     private readonly Lock _lock = new();
-#else
-    private readonly object _lock = new();
-#endif
     private volatile bool _isRunning;
 
     private CancellationTokenSource? _tokenSource;

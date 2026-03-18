@@ -60,7 +60,7 @@ public sealed class MailKitService(SmtpClientOptions smtpClientOptions) : IMailS
             builder.HtmlBody = data.Body;
         }
 
-        data.Attachments.ForEach(x => _ = builder.Attachments.Add(x.Filename, x.Data, ContentType.Parse(x.ContentType)));
+        data.Attachments.ForEach(x => _ = builder.Attachments.Add(x.Filename, x.Data!, ContentType.Parse(x.ContentType)));
 
         message.Body = builder.ToMessageBody();
 
