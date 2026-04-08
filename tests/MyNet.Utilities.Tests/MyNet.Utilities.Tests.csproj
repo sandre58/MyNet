@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MyNet.Utilities\MyNet.Utilities.csproj" />
+    <ProjectReference Include="..\..\src\MyNet.Utilities.Geography.Extensions\MyNet.Utilities.Geography.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -24,5 +24,6 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>CountryResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Include="Images/**/*.png" />
     </ItemGroup>
 </Project>

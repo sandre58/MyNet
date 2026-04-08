@@ -6,6 +6,13 @@
 
 namespace MyNet.Utilities.Geography;
 
+/// <summary>
+/// Represents a country using standardized ISO 3166 codes and associated continent information.
+/// </summary>
+/// <remarks>The Country class provides a strongly-typed representation of countries, including their ISO 3166
+/// numeric, alpha-2, and alpha-3 codes, as well as the continent to which each country belongs. This enables consistent
+/// handling of country data across applications, particularly when interoperating with external systems or data formats
+/// that require standardized country identifiers.</remarks>
 public sealed class Country : EnumClass<Country>
 {
     public static readonly Country Afghanistan = new(4, nameof(Afghanistan), "af", "afg", Continent.Asia);
@@ -258,15 +265,38 @@ public sealed class Country : EnumClass<Country>
     public static readonly Country Yemen = new(887, nameof(Yemen), "ye", "yem", Continent.Asia);
     public static readonly Country Zambia = new(894, nameof(Zambia), "zm", "zmb", Continent.Africa);
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Country"/> class with the specified ISO code, name, alpha-2 code, alpha-3 code, and continent.
+    /// </summary>
+    /// <param name="iso">The ISO code of the country.</param>
+    /// <param name="name">The name of the country.</param>
+    /// <param name="alpha2">The alpha-2 code of the country.</param>
+    /// <param name="alpha3">The alpha-3 code of the country.</param>
+    /// <param name="continent">The continent of the country.</param>
     private Country(int iso, string name, string alpha2, string alpha3, Continent continent)
         : base(name, iso)
         => (Iso, Alpha2, Alpha3, Continent) = (iso, alpha2, alpha3, continent);
 
+    /// <summary>
+    /// Gets the ISO 3166 numeric code that uniquely identifies the country.
+    /// </summary>
+    /// <remarks>The ISO code is a standardized numeric identifier as defined by the ISO 3166-1 specification.
+    /// This value is commonly used for interoperability with external systems and data formats that require country
+    /// codes.</remarks>
     public int Iso { get; }
 
+    /// <summary>
+    /// Gets the two-letter country code as defined by ISO 3166-1 alpha-2.
+    /// </summary>
     public string Alpha2 { get; }
 
+    /// <summary>
+    /// Gets the three-letter country code as defined by ISO 3166-1.
+    /// </summary>
     public string Alpha3 { get; }
 
+    /// <summary>
+    /// Gets the continent associated with the current instance.
+    /// </summary>
     public Continent Continent { get; }
 }

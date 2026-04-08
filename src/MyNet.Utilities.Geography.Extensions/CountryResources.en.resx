@@ -867,14 +867,14 @@
   <data name="ContinentEurope" xml:space="preserve">
     <value>Europe</value>
   </data>
+  <data name="ContinentAsia" xml:space="preserve">
+    <value>Asia</value>
+  </data>
   <data name="ContinentAfrica" xml:space="preserve">
     <value>Africa</value>
   </data>
-  <data name="ContinentAntarctica" xml:space="preserve">
-    <value>Antarctica</value>
-  </data>
-  <data name="ContinentAsia" xml:space="preserve">
-    <value>Asia</value>
+  <data name="ContinentSouthAmerica" xml:space="preserve">
+    <value>South america</value>
   </data>
   <data name="ContinentNorthAmerica" xml:space="preserve">
     <value>North america</value>
@@ -882,7 +882,7 @@
   <data name="ContinentOceania" xml:space="preserve">
     <value>Oceania</value>
   </data>
-  <data name="ContinentSouthAmerica" xml:space="preserve">
-    <value>South america</value>
+  <data name="ContinentAntarctica" xml:space="preserve">
+    <value>Antarctica</value>
   </data>
 </root>

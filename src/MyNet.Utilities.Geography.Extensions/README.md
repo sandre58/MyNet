@@ -52,7 +52,6 @@ var flag = CountryExtensions.GetFlag("US", FlagSize.Large);
 |---|---|---|
 | [**MyNet.Utilities**](../MyNet.Utilities) | Core utilities for .NET development. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities) |
 | [**MyNet.Utilities.Generator.Extensions**](../MyNet.Utilities.Generator.Extensions) | Generate random data for .NET apps. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Generator.Extensions) |
-| [**MyNet.Utilities.Localization.Extensions**](../MyNet.Utilities.Localization.Extensions) | Localization resources and helpers. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Localization.Extensions) |
 | [**MyNet.Utilities.Logging.NLog**](../MyNet.Utilities.Logging.NLog) | Logging integration with NLog. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
 | [**MyNet.Utilities.Mail.MailKit**](../MyNet.Utilities.Mail.MailKit) | Email sending with MailKit. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit) |
 

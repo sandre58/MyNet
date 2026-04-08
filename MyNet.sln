@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Generator.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Geography.Extensions", "src\MyNet.Utilities.Geography.Extensions\MyNet.Utilities.Geography.Extensions.csproj", "{0EA96C51-4D2C-3580-7BEB-56F28B462F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Localization.Extensions", "src\MyNet.Utilities.Localization.Extensions\MyNet.Utilities.Localization.Extensions.csproj", "{98A07169-BE4E-56C9-7F6D-8D418089094F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Logging.NLog", "src\MyNet.Utilities.Logging.NLog\MyNet.Utilities.Logging.NLog.csproj", "{000C0847-A9F8-414D-1049-06F1C386F9CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNet.Utilities.Mail.MailKit", "src\MyNet.Utilities.Mail.MailKit\MyNet.Utilities.Mail.MailKit.csproj", "{A679D2FE-03FB-659A-EC60-379ECEB8FEA0}"
@@ -97,10 +95,6 @@ Global
 		{0EA96C51-4D2C-3580-7BEB-56F28B462F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA96C51-4D2C-3580-7BEB-56F28B462F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA96C51-4D2C-3580-7BEB-56F28B462F39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98A07169-BE4E-56C9-7F6D-8D418089094F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98A07169-BE4E-56C9-7F6D-8D418089094F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98A07169-BE4E-56C9-7F6D-8D418089094F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98A07169-BE4E-56C9-7F6D-8D418089094F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{000C0847-A9F8-414D-1049-06F1C386F9CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{000C0847-A9F8-414D-1049-06F1C386F9CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000C0847-A9F8-414D-1049-06F1C386F9CA}.Release|Any CPU.ActiveCfg = Release|Any CPU

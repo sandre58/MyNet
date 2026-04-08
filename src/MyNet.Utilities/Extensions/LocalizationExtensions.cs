@@ -4,7 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Globalization;
+using System.Linq;
+using MyNet.Utilities.Geography;
 using MyNet.Utilities.Localization;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
@@ -14,6 +17,30 @@ namespace MyNet.Utilities;
 public static class LocalizationExtensions
 {
     public const string AbbreviationSuffix = "Abbr";
+
+    /// <summary>
+    /// Gets the country associated with the specified culture, if available. This method attempts to determine the country by examining the culture's name and region information. If the culture is a neutral culture (e.g., "en"), it will try to create a specific culture (e.g., "en-US") to extract the region information. If the culture does not have an associated country or if any errors occur during this process, the method returns null.
+    /// </summary>
+    /// <param name="culture">The culture for which to retrieve the associated country.</param>
+    /// <returns>The country associated with the specified culture, or null if no country is found.</returns>
+    public static Country? GetCountry(this CultureInfo culture)
+    {
+        ArgumentNullException.ThrowIfNull(culture);
+
+        if (string.IsNullOrEmpty(culture.Name)) return null;
+
+        try
+        {
+            var specificCulture = culture.IsNeutralCulture ? CultureInfo.CreateSpecificCulture(culture.Name) : culture;
+
+            var alpha2 = new RegionInfo(specificCulture.Name).TwoLetterISORegionName;
+            return EnumClass.GetAll<Country>().FirstOrDefault(c => string.Equals(c.Alpha2, alpha2, StringComparison.OrdinalIgnoreCase));
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+    }
 
     public static string ToAbbreviationKey(this string key) => $"{key}{AbbreviationSuffix}";
 

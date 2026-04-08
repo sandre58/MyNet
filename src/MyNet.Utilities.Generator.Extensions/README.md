@@ -50,7 +50,6 @@ var email = Internet.GenerateEmail();
 |---|---|---|
 | [**MyNet.Utilities**](../MyNet.Utilities) | Core utilities for .NET development. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities) |
 | [**MyNet.Utilities.Geography.Extensions**](../MyNet.Utilities.Geography.Extensions) | Access detailed geography info. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Geography.Extensions) |
-| [**MyNet.Utilities.Localization.Extensions**](../MyNet.Utilities.Localization.Extensions) | Localization resources and helpers. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Localization.Extensions) |
 | [**MyNet.Utilities.Logging.NLog**](../MyNet.Utilities.Logging.NLog) | Logging integration with NLog. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
 | [**MyNet.Utilities.Mail.MailKit**](../MyNet.Utilities.Mail.MailKit) | Email sending with MailKit. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit) |
 
