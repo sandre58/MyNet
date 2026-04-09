@@ -4,17 +4,32 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Globalization;
 using System.Linq;
 using MyNet.Utilities.Geography;
 using MyNet.Utilities.Geography.Extensions;
-using MyNet.Utilities.Localization;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Extensions;
 
-[Collection("UseCultureSequential")]
-public class CountryExtensionsTests
+public sealed class CountryExtensionsTests : IDisposable
 {
+    private readonly CultureInfo _originalCulture = CultureInfo.CurrentCulture;
+
+    public void Dispose()
+    {
+        CultureInfo.CurrentCulture = _originalCulture;
+        CultureInfo.CurrentUICulture = _originalCulture;
+    }
+
+    private static void SetCulture(string cultureName)
+    {
+        var culture = CultureInfo.GetCultureInfo(cultureName);
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+    }
+
     #region GetFlag
 
     [Theory]
@@ -108,7 +123,7 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_French_Germany_ReturnsAllemagne()
     {
-        GlobalizationService.Current.SetCulture("fr-FR");
+        SetCulture("fr-FR");
 
         Assert.Equal("Allemagne", Country.Germany.GetDisplayName());
     }
@@ -116,7 +131,7 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_English_Germany_ReturnsGermany()
     {
-        GlobalizationService.Current.SetCulture("en-US");
+        SetCulture("en-US");
 
         Assert.Equal("Germany", Country.Germany.GetDisplayName());
     }
@@ -124,7 +139,7 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_French_Japan_ReturnsJapon()
     {
-        GlobalizationService.Current.SetCulture("fr-FR");
+        SetCulture("fr-FR");
 
         Assert.Equal("Japon", Country.Japan.GetDisplayName());
     }
@@ -132,7 +147,7 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_English_Japan_ReturnsJapan()
     {
-        GlobalizationService.Current.SetCulture("en-US");
+        SetCulture("en-US");
 
         Assert.Equal("Japan", Country.Japan.GetDisplayName());
     }
@@ -140,7 +155,7 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_French_France_ReturnsFrance()
     {
-        GlobalizationService.Current.SetCulture("fr-FR");
+        SetCulture("fr-FR");
 
         Assert.Equal("France", Country.France.GetDisplayName());
     }
@@ -148,10 +163,10 @@ public class CountryExtensionsTests
     [Fact]
     public void GetDisplayName_ChangingCulture_ReturnsUpdatedName()
     {
-        GlobalizationService.Current.SetCulture("fr-FR");
+        SetCulture("fr-FR");
         var nameFr = Country.Germany.GetDisplayName();
 
-        GlobalizationService.Current.SetCulture("en-US");
+        SetCulture("en-US");
         var nameEn = Country.Germany.GetDisplayName();
 
         Assert.Equal("Allemagne", nameFr);
