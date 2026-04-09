@@ -6,12 +6,17 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v17.0.1] - 2026-03-18
+## [v17.1.0] - 2026-04-09
 
 
 ### 🐛 Bug Fixes
 
-- Update PagingResponse construction in UpdatePaging method *(commit by **Stéphane ANDRE (E104915)** in [13425f6d](https://github.com/sandre58/MyNet/commit/13425f6d180c8d4c026a27a368cff79eb9dd06c2))*
+- Refactor tests to set culture via CultureInfo, not service *(commit by **Stéphane ANDRE (E104915)** in [d28bef9b](https://github.com/sandre58/MyNet/commit/d28bef9bc723aa448274f751603be21ce3dcd9ac))*
+
+
+### 🚀 Features
+
+- new management for country flags and add mapping for culture info *(commit by **Stéphane ANDRE (E104915)** in [81e92b07](https://github.com/sandre58/MyNet/commit/81e92b07f2f78d5b7462aeaaff8e0eb3d96c603a))*
 
 
 
@@ -22,7 +27,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v17.0.0...v17.0.1](https://github.com/sandre58/MyNet/compare/v17.0.0...v17.0.1)
+**Full Changelog:** [compare v17.0.1...v17.1.0](https://github.com/sandre58/MyNet/compare/v17.0.1...v17.1.0)
 
 
 ---
