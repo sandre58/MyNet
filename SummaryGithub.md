@@ -3,21 +3,21 @@
 
 |||
 |:---|:---|
-| Generated on: | 03/18/2026 - 22:10:44 |
+| Generated on: | 04/09/2026 - 07:12:16 |
 | Parser: | MultiReport (3x Cobertura) |
-| Assemblies: | 4 |
-| Classes: | 309 |
-| Files: | 238 |
-| **Line coverage:** | 53.8% (5218 of 9682) |
-| Covered lines: | 5218 |
-| Uncovered lines: | 4464 |
-| Coverable lines: | 9682 |
-| Total lines: | 25064 |
-| **Branch coverage:** | 32.6% (1410 of 4314) |
-| Covered branches: | 1410 |
-| Total branches: | 4314 |
+| Assemblies: | 5 |
+| Classes: | 312 |
+| Files: | 241 |
+| **Line coverage:** | 54.6% (5358 of 9801) |
+| Covered lines: | 5358 |
+| Uncovered lines: | 4443 |
+| Coverable lines: | 9801 |
+| Total lines: | 25512 |
+| **Branch coverage:** | 32.9% (1427 of 4328) |
+| Covered branches: | 1427 |
+| Total branches: | 4328 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 244_23269400777 |
+| Tag: | 247_24177402733 |
 
 </details>
 
@@ -101,11 +101,11 @@
 |MyNet.Humanizer.UnitTests.UseCultureAttribute|100%|50%|
 
 </details>
-<details><summary>MyNet.Utilities - 30%</summary>
+<details><summary>MyNet.Utilities - 30.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**30%**|**19%**|
+|**MyNet.Utilities**|**30.3%**|**19.2%**|
 |MyNet.Utilities.AddressExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions|0%|0%|
 |MyNet.Utilities.ArrayExtensions.ArrayTraverse|0%|0%|
@@ -190,11 +190,11 @@
 |MyNet.Utilities.Generator.RandomGenerator|75.8%|51.7%|
 |MyNet.Utilities.Generator.RandomGenerator<T>|75.8%|51.7%|
 |MyNet.Utilities.Generator.SentenceGenerator|0%|0%|
-|MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
 |MyNet.Utilities.Generator.WeightedRandom<T>|0%||
+|MyNet.Utilities.Generator.WeightedRandom<T>|0%|0%|
 |MyNet.Utilities.Geography.Address|0%|0%|
 |MyNet.Utilities.Geography.Coordinates|0%||
-|MyNet.Utilities.Geography.Country|98.4%||
+|MyNet.Utilities.Geography.Country|98.8%||
 |MyNet.Utilities.Google.Maps.Directions|0%||
 |MyNet.Utilities.Google.Maps.GoogleLocationService|0%|0%|
 |MyNet.Utilities.Google.Maps.GoogleMapsHelper|0%|0%|
@@ -245,8 +245,8 @@
 |MyNet.Utilities.Localization.Cultures|100%||
 |MyNet.Utilities.Localization.GlobalizationService|33.8%|15%|
 |MyNet.Utilities.Localization.LocalizationService|90%|80%|
-|MyNet.Utilities.Localization.TranslationService|79.3%|60%|
-|MyNet.Utilities.LocalizationExtensions|30%||
+|MyNet.Utilities.Localization.TranslationService|100%|100%|
+|MyNet.Utilities.LocalizationExtensions|88.8%|100%|
 |MyNet.Utilities.Logging.LogManager|4.1%|3.3%|
 |MyNet.Utilities.Logging.PerformanceLogger|0%|0%|
 |MyNet.Utilities.Logging.PerformanceLoggerSettings|0%||
@@ -322,11 +322,19 @@
 |System.Text.RegularExpressions.Generated|0%|0%|
 
 </details>
-<details><summary>MyNet.Utilities.Tests - 97.6%</summary>
+<details><summary>MyNet.Utilities.Geography.Extensions - 100%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities.Tests**|**97.6%**|**95%**|
+|**MyNet.Utilities.Geography.Extensions**|**100%**|**75%**|
+|MyNet.Utilities.Geography.Extensions.CountryExtensions|100%|75%|
+
+</details>
+<details><summary>MyNet.Utilities.Tests - 97.8%</summary>
+
+|**Name**|**Line**|**Branch**|
+|:---|---:|---:|
+|**MyNet.Utilities.Tests**|**97.8%**|**95.9%**|
 |MyNet.Utilities.Tests.CacheStorageTests|94.4%|100%|
 |MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests|99.4%|83.3%|
 |MyNet.Utilities.Tests.Collections.ObservableKeyedCollectionTests.KeyedItem|100%||
@@ -344,7 +352,9 @@
 |MyNet.Utilities.Tests.Comparers.ReflectionComparerTests|100%||
 |MyNet.Utilities.Tests.EncryptionServiceTests|100%||
 |MyNet.Utilities.Tests.Extensions.CollectionExtensionsTests|100%|100%|
+|MyNet.Utilities.Tests.Extensions.CountryExtensionsTests|100%||
 |MyNet.Utilities.Tests.Extensions.DateTimeExtensionsTests|100%|100%|
+|MyNet.Utilities.Tests.Extensions.LocalizationExtensionsTests|100%|100%|
 |MyNet.Utilities.Tests.Extensions.NumberExtensionsTests|100%||
 |MyNet.Utilities.Tests.Extensions.NumberToTimeSpanExtensionsTests|100%||
 |MyNet.Utilities.Tests.Extensions.StringExtensionsTests|100%|100%|
@@ -352,7 +362,7 @@
 |MyNet.Utilities.Tests.FileExtensionsTests|100%|100%|
 |MyNet.Utilities.Tests.FluentTimeSpanOperatorOverloadsTests|100%||
 |MyNet.Utilities.Tests.FluentTimeSpanTests|100%||
-|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|99.4%|92.8%|
+|MyNet.Utilities.Tests.Generator.RandomGeneratorTests|100%|100%|
 |MyNet.Utilities.Tests.Helpers.DateTimeHelperTests|100%||
 |MyNet.Utilities.Tests.LocalizationServiceTests|100%||
 |MyNet.Utilities.Tests.UseCultureAttribute|100%|50%|
