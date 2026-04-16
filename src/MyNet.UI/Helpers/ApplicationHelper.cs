@@ -5,8 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Reflection;
-using MyNet.UI.Resources;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Helpers;
 
@@ -22,7 +20,7 @@ public static class ApplicationHelper
     public static string GetVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
-        return UiResources.VersionAbbrX.FormatWith(assembly?.GetName().Version?.ToString() ?? string.Empty);
+        return assembly?.GetName().Version?.ToString() ?? string.Empty;
     }
 
     public static string GetCopyright()
