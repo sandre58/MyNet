@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Windows.Input;
 using MyNet.Observable;
 using MyNet.UI.ViewModels.FileHistory;
 using MyNet.UI.ViewModels.List;
@@ -82,9 +81,6 @@ public class RecentFilesSorting : ObservableObject, ISortingViewModel
     /// Gets or sets a value indicating whether sorting is ascending.
     /// </summary>
     public bool IsAscending { get; set; }
-
-    /// <inheritdoc/>
-    ICommand ISortingViewModel.ApplyCommand => throw new NotImplementedException();
 
     /// <inheritdoc/>
     public event EventHandler<SortingChangedEventArgs>? SortingChanged;

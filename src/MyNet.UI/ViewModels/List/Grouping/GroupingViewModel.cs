@@ -5,339 +5,161 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using DynamicData.Binding;
-using DynamicData.Kernel;
 using MyNet.Observable;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Extensions;
-using MyNet.UI.Commands;
+using MyNet.Observable.Collections.Grouping;
 using MyNet.Utilities;
 using MyNet.Utilities.Deferring;
-using PropertyChanged;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
 
 /// <summary>
-/// View model for managing grouping configuration of a collection.
-/// Provides commands to add, remove, and reset grouping properties.
-/// Supports hierarchical grouping (primary, secondary, tertiary groups, etc.).
+/// Represents a view model for managing grouping configuration of a collection.
 /// </summary>
-/// <remarks>
-/// This class implements <see cref="ICollection{T}"/> and <see cref="INotifyCollectionChanged"/>
-/// to allow direct manipulation of grouping properties while providing change notifications.
-/// Changes are deferred and batched for optimal performance.
-/// </remarks>
-[CanBeValidated(false)]
-[CanSetIsModified(false)]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix", Justification = "It's a viewModel")]
-public class GroupingViewModel : EditableObject, IGroupingViewModel, ICollection<IGroupingPropertyViewModel>, INotifyCollectionChanged
+/// <typeparam name="T">The type of items in the collection.</typeparam>
+public class GroupingViewModel<T> : EditableObject, IGroupingViewModel<T>
 {
-    private readonly IReadOnlyCollection<string> _defaultGroupingProperties;
-    private readonly Deferrer _groupingChangedDeferrer;
+    private readonly Deferrer _deferrer;
 
     /// <summary>
-    /// Gets the collection of grouping properties managed by this view model.
+    /// Creates a fluent builder used to configure and instantiate a <see cref="GroupingViewModel{T}"/>.
     /// </summary>
-    protected GroupingPropertiesCollection GroupingProperties { get; } = [];
-
-    #region Properties
+    public static GroupingViewModelBuilder<T> CreateBuilder() => new();
 
     /// <summary>
-    /// Gets the currently active (enabled) grouping property with the lowest order number.
-    /// This represents the primary group if multiple groups are enabled.
-    /// Returns null if no grouping properties are active.
+    /// Initializes a new instance of the <see cref="GroupingViewModel{T}"/> class with the specified grouping properties and optional default grouping configuration. The provided properties are wrapped in a read-only observable collection for UI binding, and the default grouping is stored for resetting purposes. The constructor also sets up event handlers to react to changes in the properties and trigger grouping updates accordingly.
     /// </summary>
-    public IGroupingPropertyViewModel? ActiveGroupingProperty
-     => GroupingProperties.OrderBy(x => x.Order).FirstOrDefault(x => x.IsEnabled);
-
-    /// <summary>
-    /// Gets the count of currently active (enabled) grouping properties.
-    /// </summary>
-    public int ActiveCount => GroupingProperties.Count(x => x.IsEnabled);
-
-    #endregion
-
-    #region Commands
-
-    /// <summary>
-    /// Gets the command to add a grouping property by name.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand AddCommand { get; }
-
-    /// <summary>
-    /// Gets the command to apply a specific grouping configuration.
-    /// Parameter: string (property name) to set as the sole active grouping.
-    /// </summary>
-    public ICommand ApplyCommand { get; }
-
-    /// <summary>
-    /// Gets the command to remove a grouping property by name.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand RemoveCommand { get; }
-
-    /// <summary>
-    /// Gets the command to reset grouping to the default configuration.
-    /// </summary>
-    public ICommand ResetCommand { get; }
-
-    /// <summary>
-    /// Gets the command to clear all active grouping properties.
-    /// </summary>
-    public ICommand ClearCommand { get; }
-
-    #endregion
-
-    #region Events
-
-    /// <summary>
-    /// Occurs when the grouping configuration has changed.
-    /// Fired after all pending changes are applied (deferred execution).
-    /// </summary>
-    public event EventHandler<GroupingChangedEventArgs>? GroupingChanged;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GroupingViewModel"/> class with no default grouping.
-    /// </summary>
-    public GroupingViewModel()
-      : this([]) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GroupingViewModel"/> class with default grouping properties.
-    /// </summary>
-    /// <param name="defaultProperties">The list of property names to group by default.</param>
-    public GroupingViewModel(IEnumerable<string> defaultProperties)
+    /// <param name="properties">The grouping properties for the collection.</param>
+    /// <param name="defaultGrouping">The optional default grouping configuration.</param>
+    public GroupingViewModel(IEnumerable<IGroupingPropertyViewModel<T>> properties, IEnumerable<IGroupingProperty<T>>? defaultGrouping = null)
     {
-        _groupingChangedDeferrer = new Deferrer(OnSortChanged);
-        _defaultGroupingProperties = defaultProperties.AsList().AsReadOnly();
+        Properties = new(new(properties));
+        DefaultGrouping = defaultGrouping?.ToList() ?? [];
 
-        // Initialize commands
-        ClearCommand = CommandsManager.Create(Clear);
-        AddCommand = CommandsManager.CreateNotNull<string>(x => Add(x));
-        ApplyCommand = CommandsManager.CreateNotNull<string>(Set);
-        RemoveCommand = CommandsManager.CreateNotNull<string>(Remove);
-        ResetCommand = CommandsManager.Create(Reset);
+        _deferrer = new(RaiseGroupingChanged);
 
-        // Apply default grouping
         Reset();
 
-        // Subscribe to property changes with deferred execution
-        Disposables.Add(GroupingProperties
-          .ToObservableChangeSet(x => x.PropertyName)
-                  .SubscribeAll(() => _groupingChangedDeferrer.DeferOrExecute()));
-
-        GroupingProperties.CollectionChanged += HandleCollectionChanged;
+        foreach (var property in Properties)
+            property.PropertyChanged += HandlePropertyChanged;
     }
 
-    #endregion
-
-    #region Grouping Operations
+    /// <summary>
+    /// Gets the collection of grouping property view models that can be configured for grouping. This collection is read-only and observable, allowing UI components to bind to it and react to changes in the properties. Each property view model represents a specific grouping option that can be enabled or disabled, and may include additional information such as display names.
+    /// </summary>
+    public ReadOnlyObservableCollection<IGroupingPropertyViewModel<T>> Properties { get; }
 
     /// <summary>
-    /// Creates a deferral scope for batch changes.
-    /// Changes made within the scope are applied and notified only when the scope is disposed.
+    /// Gets the current grouping configuration built from the UI. This collection is read-only and represents the active grouping properties based on the user's configuration. It is computed from the enabled properties in the Properties collection and ordered by their activation time to reflect the order in which grouping options were applied. Subscribers can use this collection to apply the grouping configuration to their collections when the GroupingChanged event is raised.
     /// </summary>
-    /// <returns>A disposable deferral scope.</returns>
-    protected IDisposable DeferChanged() => _groupingChangedDeferrer.Defer();
+    public IReadOnlyList<IGroupingProperty<T>> CurrentGrouping { get; private set; } = [];
 
     /// <summary>
-    /// Creates a grouping property view model instance.
-    /// Override this method to create custom grouping property view models.
+    /// Gets the default grouping configuration for the collection. This collection is read-only and represents the initial grouping properties that are applied when the view model is first created or when the Reset method is called.
     /// </summary>
-    /// <param name="propertyName">The name of the property to group by.</param>
-    /// <param name="sortingPropertyName">Optional property name for sorting groups. If null, uses <paramref name="propertyName"/>.</param>
-    /// <param name="order">The group order. If null, uses the next available order (ActiveCount + 1).</param>
-    /// <returns>A new grouping property view model instance.</returns>
-    protected virtual IGroupingPropertyViewModel CreateGroupingProperty(
-        string propertyName,
-        string? sortingPropertyName = null,
-        int? order = null)
-        => new GroupingPropertyViewModel(propertyName, propertyName, sortingPropertyName, order ?? ActiveCount + 1)
-        {
-            IsEnabled = true
-        };
+    public IReadOnlyList<IGroupingProperty<T>> DefaultGrouping { get; }
 
     /// <summary>
-    /// Adds a grouping property to the collection.
-    /// If a property with the same name exists, it replaces it.
+    /// Gets a value indicating whether there are any active grouping properties in the current configuration. This property returns true if there is at least one grouping property that is enabled and contributing to the grouping configuration, and false if there are no active grouping properties. This can be used by UI components to determine whether to display grouping indicators or to enable/disable grouping-related actions based on the presence of active grouping properties.
     /// </summary>
-    /// <param name="propertyName">The name of the property to group by.</param>
-    /// <param name="sortingPropertyName">Optional property name for sorting groups.</param>
-    /// <param name="order">The group order. If null, assigns the next available order.</param>
-    public virtual void Add(string propertyName, string? sortingPropertyName = null, int? order = null)
-     => GroupingProperties.TryAdd(CreateGroupingProperty(propertyName, sortingPropertyName, order));
+    public bool HasActiveGrouping => CurrentGrouping.Any();
 
     /// <summary>
-    /// Removes a grouping property from the collection by name.
+    /// Occurs when the grouping configuration has changed. Subscribers can react to this event to apply the new grouping configuration to their collections. The event provides data in the form of <see cref="GroupingChangedEventArgs{T}"/>, which contains the current grouping properties that define the active grouping configuration based on the user's selections in the UI.
     /// </summary>
-    /// <param name="propertyName">The name of the property to remove.</param>
-    public virtual void Remove(string propertyName) => GroupingProperties.Remove(propertyName);
+    public event EventHandler<GroupingChangedEventArgs<T>>? GroupingChanged;
 
     /// <summary>
-    /// Sets a single property as the sole active grouping.
-    /// Clears all existing groups and adds the specified property.
+    /// Applies the current grouping configuration. This method triggers the grouping update process by invoking the deferrer, which will call the OnGroupingChanged method to compute the current grouping configuration and raise the GroupingChanged event. Consumers can call this method after making changes to the grouping properties to ensure that the new configuration is applied to their collections.
     /// </summary>
-    /// <param name="propertyName">The name of the property to set as the sole grouping.</param>
-    public void Set(string propertyName)
+    public void Apply() => _deferrer.DeferOrExecute();
+
+    /// <summary>
+    /// Clears all active grouping by disabling all grouping properties. This method iterates through the Properties collection and sets the IsEnabled property of each grouping property view model to false, effectively removing all grouping criteria from the current configuration. After clearing the grouping properties, it triggers the grouping update process to reflect the changes in the UI and notify subscribers of the new (empty) grouping configuration.
+    /// </summary>
+    public void Clear()
     {
-        using (_groupingChangedDeferrer.Defer())
+        using (_deferrer.Defer())
+            Properties.ForEach(p => p.IsEnabled = false);
+    }
+
+    /// <summary>
+    /// Resets the grouping configuration to its default state. This method first clears all active grouping properties and then iterates through the DefaultGrouping collection to find matching grouping properties in the Properties collection. For each matching property, it enables it according to the default configuration. After resetting the grouping properties, it triggers the grouping update process to reflect the changes in the UI and notify subscribers of the new grouping configuration based on the default settings.
+    /// </summary>
+    public void Reset()
+    {
+        using (_deferrer.Defer())
         {
             Clear();
-            Add(propertyName);
+
+            foreach (var def in DefaultGrouping)
+            {
+                var vm = FindMatching(def);
+
+                vm?.IsEnabled = true;
+            }
         }
     }
 
     /// <summary>
-    /// Replaces all grouping properties with the specified collection.
+    /// Sets the active state of a grouping property identified by the specified key. This method finds the grouping property view model with the given key in the Properties collection and updates its IsEnabled property based on the provided isActive parameter. If the property is found, it triggers the grouping update process to reflect the changes in the UI and notify subscribers of the new grouping configuration. If no property with the specified key is found, the method does nothing.
     /// </summary>
-    /// <param name="properties">The new collection of grouping properties.</param>
-    public virtual void Set(IEnumerable<IGroupingPropertyViewModel> properties)
+    /// <param name="key">The key of the grouping property to update.</param>
+    /// <param name="isActive">A value indicating whether the grouping property should be active.</param>
+    public void SetActive(string key, bool isActive)
     {
-        using (_groupingChangedDeferrer.Defer())
-            GroupingProperties.Set(properties);
+        var property = Find(key);
+
+        if (property is null) return;
+
+        using (_deferrer.Defer())
+            property.IsEnabled = isActive;
     }
 
     /// <summary>
-    /// Clears all grouping properties from the collection.
+    /// Computes the current grouping configuration based on the enabled grouping properties in the Properties collection. This method filters the Properties collection to include only those properties that are currently enabled (IsEnabled is true), orders them by their activation time (ActivatedAt) to maintain the order in which they were activated, and then builds the corresponding <see cref="IGroupingProperty{T}"/> instances for each active property. The resulting list represents the current grouping configuration that should be applied to the collection based on the user's selections in the UI.
     /// </summary>
-    public virtual void Clear() => GroupingProperties.Clear();
+    /// <returns>A read-only list of the current grouping properties.</returns>
+    private IReadOnlyList<IGroupingProperty<T>> ComputeCurrentGrouping() =>
+    [
+        .. Properties
+            .Where(p => p.IsEnabled)
+            .OrderBy(p => p.ActivatedAt)
+            .Select(p => p.Build())
+    ];
 
     /// <summary>
-    /// Resets the grouping configuration to its default state.
-    /// The default state is defined by the properties passed to the constructor.
+    /// Handles the PropertyChanged event for the grouping property view models. When any property of a grouping property view model changes (such as IsEnabled or Direction), this method is called to trigger the grouping update process. It uses the deferrer to ensure that multiple changes are batched together and that the grouping update is performed efficiently after all changes have been processed. This allows the UI to react to changes in the grouping properties and update the grouping configuration accordingly.
     /// </summary>
-    public void Reset()
-         => Set(_defaultGroupingProperties.Select((x, index) => CreateGroupingProperty(x, order: index + 1)));
-
-    #endregion
-
-    #region Event Handlers
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e) => _deferrer.DeferOrExecute();
 
     /// <summary>
-    /// Called when the grouping configuration has changed.
-    /// Raises the <see cref="GroupingChanged"/> event and updates dependent properties.
+    /// Handles the logic for when the grouping configuration has changed. This method computes the current grouping configuration by calling ComputeCurrentGrouping, updates the CurrentGrouping property, and raises the GroupingChanged event to notify subscribers of the new grouping configuration. This method is called by the deferrer after changes to the grouping properties have been processed, ensuring that the grouping update is performed efficiently and that subscribers receive the latest grouping configuration based on the user's selections in the UI.
     /// </summary>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnSortChanged()
+    private void RaiseGroupingChanged()
     {
-        OnPropertyChanged(nameof(Count));
-        OnPropertyChanged(nameof(ActiveCount));
-        OnPropertyChanged(nameof(ActiveGroupingProperty));
-        GroupingChanged?.Invoke(this, new GroupingChangedEventArgs(GroupingProperties));
-    }
-
-    #endregion
-
-    #region ICollection Implementation
-
-    /// <summary>
-    /// Gets the total number of grouping properties in the collection (enabled and disabled).
-    /// </summary>
-    public int Count => GroupingProperties.Count;
-
-    /// <summary>
-    /// Gets a value indicating whether the collection is read-only.
-    /// Returns false by default, can be overridden in derived classes.
-    /// </summary>
-    public virtual bool IsReadOnly => false;
-
-    /// <summary>
-    /// Adds a grouping property view model to the collection.
-    /// </summary>
-    /// <param name="item">The grouping property view model to add.</param>
-    public virtual void Add(IGroupingPropertyViewModel item)
-        => IsReadOnly.IfFalse(() => GroupingProperties.Add(item));
-
-    /// <summary>
-    /// Removes a grouping property view model from the collection.
-    /// </summary>
-    /// <param name="item">The grouping property view model to remove.</param>
-    /// <returns>True if the item was removed; otherwise, false.</returns>
-    public virtual bool Remove(IGroupingPropertyViewModel item)
-        => !IsReadOnly && GroupingProperties.Remove(item);
-
-    /// <summary>
-    /// Determines whether the collection contains a specific grouping property view model.
-    /// </summary>
-    /// <param name="item">The grouping property view model to locate.</param>
-    /// <returns>True if the item is found; otherwise, false.</returns>
-    public bool Contains(IGroupingPropertyViewModel item) => GroupingProperties.Contains(item);
-
-    /// <summary>
-    /// Copies the elements of the collection to an array, starting at a particular array index.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-    public void CopyTo(IGroupingPropertyViewModel[] array, int arrayIndex)
-        => GroupingProperties.CopyTo(array, arrayIndex);
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    public IEnumerator<IGroupingPropertyViewModel> GetEnumerator() => GroupingProperties.GetEnumerator();
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    IEnumerator IEnumerable.GetEnumerator() => GroupingProperties.GetEnumerator();
-
-    #endregion
-
-    #region INotifyCollectionChanged Implementation
-
-    /// <summary>
-    /// Occurs when the collection changes.
-    /// </summary>
-    event NotifyCollectionChangedEventHandler? INotifyCollectionChanged.CollectionChanged
-    {
-        add => CollectionChanged += value;
-        remove => CollectionChanged -= value;
+        CurrentGrouping = ComputeCurrentGrouping();
+        GroupingChanged?.Invoke(this, new(CurrentGrouping));
     }
 
     /// <summary>
-    /// Occurs when the collection changes.
+    /// Finds a grouping property view model in the Properties collection by its unique key. This method searches through the Properties collection to find the first grouping property view model that has a Key property matching the specified key parameter. If a matching property is found, it is returned; otherwise, the method returns null. This method is used by other methods in the class to locate specific grouping properties for updating their active state based on user interactions in the UI.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1159:Use EventHandler<T>", Justification = "INotifyCollectionChanged implementation")]
-    protected event NotifyCollectionChangedEventHandler? CollectionChanged;
+    /// <param name="key">The unique key of the grouping property to find.</param>
+    /// <returns>The grouping property view model with the specified key, or null if not found.</returns>
+    private IGroupingPropertyViewModel<T>? Find(string key)
+        => Properties.FirstOrDefault(p => p.Key == key);
 
     /// <summary>
-    /// Raises the <see cref="CollectionChanged"/> event.
+    /// Finds a grouping property view model in the Properties collection that matches the specified grouping property. This method searches through the Properties collection to find the first grouping property view model whose built grouping property (obtained by calling Build()) has an expression that is equal to the expression of the provided groupingProperty parameter. If a matching property is found, it is returned; otherwise, the method returns null. This method is used by the Reset method to locate the corresponding view models for the default grouping properties and update their active state accordingly.
     /// </summary>
-    /// <param name="args">The event arguments.</param>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
-        => CollectionChanged?.Invoke(this, args);
-
-    /// <summary>
-    /// Handles collection change events from the underlying grouping properties collection.
-    /// </summary>
-    private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-  => OnCollectionChanged(e);
-
-    #endregion
-
-    #region Cleanup
-
-    /// <summary>
-    /// Releases resources and performs cleanup operations.
-    /// </summary>
-    protected override void Cleanup()
-    {
-        GroupingProperties.CollectionChanged -= HandleCollectionChanged;
-        base.Cleanup();
-    }
-
-    #endregion
+    /// <param name="property">The grouping property to match.</param>
+    /// <returns>The grouping property view model that matches the specified grouping property, or null if not found.</returns>
+    private IGroupingPropertyViewModel<T>? FindMatching(IGroupingProperty<T> property)
+        => Properties.FirstOrDefault(p => p.Matches(property));
 }

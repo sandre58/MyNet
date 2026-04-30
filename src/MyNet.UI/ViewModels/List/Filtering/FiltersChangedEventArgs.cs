@@ -5,19 +5,19 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using MyNet.Observable.Collections.Filters;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 
 /// <summary>
 /// Provides data for the FiltersChanged event, containing the composite filter view models that define the current filter configuration.
 /// </summary>
-/// <param name="filters">The collection of composite filter view models representing the current filter configuration.</param>
-public class FiltersChangedEventArgs(IEnumerable<ICompositeFilterViewModel> filters) : EventArgs
+/// <param name="filter">The composite filter view model representing the current filter configuration.</param>
+public class FiltersChangedEventArgs<T>(IFilter<T>? filter) : EventArgs
 {
     /// <summary>
-    /// Gets the collection of composite filter view models that define the current filter configuration.
+    /// Gets the composite filter view model that defines the current filter configuration.
     /// Each composite filter wraps an inner filter with UI state (enabled/disabled, logical operator).
     /// </summary>
-    public IEnumerable<ICompositeFilterViewModel> Filters { get; } = filters;
+    public IFilter<T>? Filter { get; } = filter;
 }

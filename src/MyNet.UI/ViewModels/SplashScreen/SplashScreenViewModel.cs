@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Helpers;
 using MyNet.UI.Resources;
+using MyNet.UI.ViewModels.Dialog;
 using MyNet.UI.ViewModels.Dialogs;
 using MyNet.Utilities;
 using MyNet.Utilities.Logging;
@@ -21,7 +22,7 @@ namespace MyNet.UI.ViewModels.SplashScreen;
 /// ViewModel for a splash screen that supports sequential tasks, parallel groups,
 /// UI-thread tasks, background tasks, retry, progress reporting and cancellation.
 /// </summary>
-public class SplashScreenViewModel : DialogViewModel
+public class SplashScreenViewModel : DialogViewModel<bool>
 {
     // Internal representation: either a single SplashScreenTask or a SplashScreenParallelGroup.
     private readonly List<object> _steps = [];

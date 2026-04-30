@@ -37,7 +37,7 @@ public class NotificationsViewModel : ObservableObject
 
     public NotificationsViewModel(INotificationsManager notificationsManager)
     {
-        Notifications = new ExtendedCollection<IClosableNotification>(notificationsManager.Notifications.ToObservableChangeSet(), Scheduler.Ui);
+        Notifications = ExtendedCollection.FromObservable(notificationsManager.Notifications.ToObservableChangeSet(), Scheduler.Ui);
 
         ExecuteActionCommand = CommandsManager.CreateNotNull<ActionNotification>(ExecuteAction, x => x.Action is not null);
         CloseCommand = CommandsManager.CreateNotNull<IClosableNotification>(x => x.Close());

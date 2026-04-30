@@ -1,391 +1,155 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="FiltersViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Windows.Input;
-using DynamicData.Binding;
+using System.ComponentModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using MyNet.Observable;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Extensions;
-using MyNet.UI.Commands;
-using MyNet.Utilities;
-using MyNet.Utilities.Comparison;
+using MyNet.Observable.Collections.Filters;
 using MyNet.Utilities.Deferring;
-using PropertyChanged;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 
 /// <summary>
-/// View model for managing a collection of composite filters.
-/// Provides commands to add, remove, and configure filters with automatic or manual application.
-/// Supports multiple filter types combined with logical operators (AND/OR).
+/// Represents the view model for managing filters applied to a collection of items of type T. It maintains a tree of filter conditions and groups, computes the current composite filter based on the active conditions, and raises events when the filters change. The FiltersViewModel allows for applying, clearing, and resetting filters, and supports automatic application of filters when changes occur. It also tracks whether there are active filters and whether the current filter configuration is dirty (i.e., has unsaved changes).
 /// </summary>
-/// <remarks>
-/// This class implements <see cref="ICollection{T}"/> and <see cref="INotifyCollectionChanged"/>
-/// to allow direct manipulation of filters while providing change notifications.
-/// Changes are deferred and batched for optimal performance.
-/// <para><strong>Key Features:</strong></para>
-/// <list type="bullet">
-/// <item>Automatic or manual filter application</item>
-/// <item>Deferred execution for batch changes</item>
-/// <item>Support for composite filters with logical operators</item>
-/// <item>Commands for common filter operations</item>
-/// </list>
-/// </remarks>
-[CanBeValidated(false)]
-[CanSetIsModified(false)]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix", Justification = "It's a viewModel")]
-public class FiltersViewModel : EditableObject, IFiltersViewModel, ICollection<ICompositeFilterViewModel>, INotifyCollectionChanged
+/// <typeparam name="T">The type of items to be filtered.</typeparam>
+public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
 {
-    private readonly Deferrer _filtersChangedDeferrer;
-    private ICollection<ICompositeFilterViewModel>? _currentFilters;
+    private readonly Deferrer _deferrer;
 
     /// <summary>
-    /// Gets the collection of composite filters managed by this view model.
+    /// Initializes a new instance of the <see cref="FiltersViewModel{T}"/> class with the specified root filter group view model. The constructor sets up the necessary event subscriptions to track changes in the filter configuration and initializes the deferrer to manage deferred execution of filter change notifications.
     /// </summary>
-    protected FiltersCollection CompositeFilters { get; } = [];
-
-    #region Properties
-
-    /// <summary>
-    /// Gets or sets a value indicating whether filters are automatically applied when changed.
-    /// When true, filter changes immediately trigger <see cref="FiltersChanged"/> event.
-    /// When false, filters must be manually applied using <see cref="Apply"/> or <see cref="ApplyCommand"/>.
-    /// Default is true.
-    /// </summary>
-    public bool AutoFilter { get; set; } = true;
-
-    /// <summary>
-    /// Gets the count of currently active (enabled and non-empty) filters.
-    /// </summary>
-    public int ActiveCount => CompositeFilters.Count(x => x.IsEnabled && !x.Item.IsEmpty());
-
-    #endregion
-
-    #region Commands
-
-    /// <summary>
-    /// Gets the command to add a new filter.
-    /// Override <see cref="Add()"/> to implement custom filter creation.
-    /// </summary>
-    public ICommand AddCommand { get; }
-
-    /// <summary>
-    /// Gets the command to remove a specific composite filter.
-    /// Parameter: ICompositeFilterViewModel (the filter to remove).
-    /// </summary>
-    public ICommand RemoveCommand { get; }
-
-    /// <summary>
-    /// Gets the command to clear all filters.
-    /// Enabled when there are filters in the collection.
-    /// </summary>
-    public ICommand ClearCommand { get; }
-
-    /// <summary>
-    /// Gets the command to clear dirty filters.
-    /// Override <see cref="ClearDirtyFilters"/> to implement custom logic.
-    /// </summary>
-    public ICommand ClearDirtyFiltersCommand { get; }
-
-    /// <summary>
-    /// Gets the command to refresh filters with the last applied state.
-    /// </summary>
-    public ICommand RefreshCommand { get; }
-
-    /// <summary>
-    /// Gets the command to reset all filters to their default state.
-    /// </summary>
-    public ICommand ResetCommand { get; }
-
-    /// <summary>
-    /// Gets the command to manually apply filters.
-    /// Useful when <see cref="AutoFilter"/> is false.
-    /// </summary>
-    public ICommand ApplyCommand { get; }
-
-    #endregion
-
-    #region Events
-
-    /// <summary>
-    /// Occurs when the filter configuration has changed and filters are applied.
-    /// Subscribers can react to apply the new filters to their collections.
-    /// Fired after all pending changes are applied (deferred execution).
-    /// </summary>
-    public event EventHandler<FiltersChangedEventArgs>? FiltersChanged;
-
-    #endregion
-
-    #region Constructor
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FiltersViewModel"/> class.
-    /// </summary>
-    public FiltersViewModel()
+    /// <param name="root">The root filter group view model.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the root parameter is null.</exception>
+    public FiltersViewModel(IFilterGroupViewModel<T> root)
     {
-        _filtersChangedDeferrer = new Deferrer(OnFiltersChanged);
+        Root = root ?? throw new ArgumentNullException(nameof(root));
 
-        // Initialize commands
-        ClearCommand = CommandsManager.Create(Clear, () => Count > 0);
-        ClearDirtyFiltersCommand = CommandsManager.Create(ClearDirtyFilters, () => Count > 0);
-        AddCommand = CommandsManager.Create(Add);
-        RefreshCommand = CommandsManager.Create(Refresh);
-        ApplyCommand = CommandsManager.Create(Apply);
-        ResetCommand = CommandsManager.Create(Reset);
-        RemoveCommand = CommandsManager.CreateNotNull<ICompositeFilterViewModel>(x => Remove(x));
+        _deferrer = new(HandleFiltersChanged);
 
-        // Subscribe to changes with deferred execution
-        Disposables.AddRange(
-        [
-    CompositeFilters.ToObservableChangeSet().SubscribeAll(() => _filtersChangedDeferrer.DeferOrExecute()),
-        this.WhenPropertyChanged(x => x.AutoFilter).Subscribe(_ => _filtersChangedDeferrer.DeferOrExecute())
-        ]);
-
-        CompositeFilters.CollectionChanged += HandleCollectionChanged;
+        Disposables.Add(Subscribe(Root));
     }
 
-    #endregion
-
-    #region Filter Operations
+    /// <summary>
+    /// Gets the root filter group view model, which represents the full filter tree configured in the UI. This property provides access to the top-level filter group, allowing clients to navigate and manipulate the filter hierarchy as needed. The root filter group serves as the entry point for building the composite filter based on the active conditions defined in the filter tree.
+    /// </summary>
+    public IFilterGroupViewModel<T> Root { get; }
 
     /// <summary>
-    /// Creates a deferral scope for batch changes.
-    /// Changes made within the scope are applied and notified only when the scope is disposed.
+    /// Gets the current filter built from the UI configuration. This property returns an instance of <see cref="IFilter{T}"/> that represents the composite filter constructed based on the active conditions defined in the filter tree. If no filters are active or if the filter tree is empty, this property returns null. The CurrentFilter property allows clients to retrieve the effective filter that can be applied to a collection of items of type T, based on the current configuration of filters in the UI.
     /// </summary>
-    /// <returns>A disposable deferral scope.</returns>
-    protected IDisposable Defer() => _filtersChangedDeferrer.Defer();
+    public IFilter<T>? CurrentFilter { get; private set; }
 
     /// <summary>
-    /// Defers the filter changed notification or executes it immediately if not already deferred.
+    /// Gets a value indicating whether there are any active filters in the current configuration. This property returns true if the CurrentFilter property is not null, indicating that there are active filter conditions defined in the filter tree. If CurrentFilter is null, it means that there are no active filters, and this property will return false. The HasActiveFilters property provides a convenient way for clients to check if any filters are currently applied without needing to directly inspect the CurrentFilter property.
     /// </summary>
-    protected void DeferOrExecute() => _filtersChangedDeferrer.DeferOrExecute();
+    public bool HasActiveFilters => CurrentFilter is not null;
 
     /// <summary>
-    /// Creates a composite filter view model instance that wraps a filter with UI state.
-    /// Override this method to create custom composite filter view models.
+    /// Gets or sets a value indicating whether the filters should be automatically applied when they change. If set to true, the filters will be applied automatically whenever a change occurs in the filter configuration. If set to false, the filters will need to be applied manually by calling the Apply method.
     /// </summary>
-    /// <param name="filter">The filter to wrap.</param>
-    /// <param name="logicalOperator">The logical operator for combining with other filters. Default is AND.</param>
-    /// <returns>A new composite filter view model instance.</returns>
-    protected virtual ICompositeFilterViewModel CreateCompositeFilter(IFilterViewModel filter, LogicalOperator logicalOperator = LogicalOperator.And)
-        => new CompositeFilterViewModel(filter, logicalOperator);
+    public bool AutoApply { get; set; } = true;
 
     /// <summary>
-    /// Adds a new filter to the collection.
-    /// Override this method to implement custom filter creation logic.
+    /// Gets a value indicating whether the filter configuration has been modified since the last application. This property returns true if there are unsaved changes in the filter configuration, allowing clients to determine if the filters need to be reapplied.
     /// </summary>
-    /// <exception cref="NotImplementedException">The base implementation must be overridden.</exception>
-    public virtual void Add() => throw new NotImplementedException();
+    public bool IsDirty { get; private set; }
 
     /// <summary>
-    /// Adds a filter to the collection with a specified logical operator.
+    /// Occurs when the filter configuration changes and a new filter is produced. This event is raised whenever the filters are applied, either automatically or manually, and provides subscribers with the new filter that has been generated based on the current configuration of the filter tree. The FiltersChanged event allows clients to react to changes in the filter configuration, such as updating the displayed data or performing other actions based on the new filter criteria.
     /// </summary>
-    /// <param name="filter">The filter to add.</param>
-    /// <param name="logicalOperator">The logical operator for combining with other filters. Default is AND.</param>
-    public virtual void Add(IFilterViewModel filter, LogicalOperator logicalOperator = LogicalOperator.And)
-        => CompositeFilters.Add(CreateCompositeFilter(filter, logicalOperator));
+    public event EventHandler<FiltersChangedEventArgs<T>>? FiltersChanged;
 
     /// <summary>
-    /// Adds multiple filters to the collection.
+    /// Observes collection changes on the specified source collection and returns an observable sequence of collection changed event arguments. This method uses Reactive Extensions to create an observable that listens for changes to the collection and emits the corresponding event arguments whenever a change occurs. The ObserveCollectionChanges method provides a way to react to changes in the collection, allowing subscribers to update their state or perform actions based on the specific changes that occur in the collection, while still maintaining encapsulation and integrity of the data.
     /// </summary>
-    /// <param name="filters">The filters to add.</param>
-    public virtual void AddRange(IEnumerable<IFilterViewModel> filters)
-        => CompositeFilters.AddRange(filters);
+    /// <param name="source">The source collection to observe for changes.</param>
+    /// <returns>An observable sequence of collection changed event arguments.</returns>
+    private static IObservable<NotifyCollectionChangedEventArgs> ObserveCollectionChanges(
+        INotifyCollectionChanged source) =>
+        System.Reactive.Linq.Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                h => source.CollectionChanged += h,
+                h => source.CollectionChanged -= h)
+            .Select(x => x.EventArgs);
 
     /// <summary>
-    /// Clears all filters from the collection.
-    /// If <see cref="AutoFilter"/> is false, manually applies the cleared state.
+    /// Applies the current filter configuration and raises the FiltersChanged event. This method computes the current filter based on the active conditions defined in the filter tree, updates the CurrentFilter property, and sets the IsDirty flag to false. After applying the filters, it raises the FiltersChanged event to notify subscribers of the new filter that has been generated. The Apply method allows clients to manually trigger the application of filters when AutoApply is set to false or when they want to ensure that changes are applied immediately.
     /// </summary>
-    public virtual void Clear()
+    public void Apply()
     {
-        CompositeFilters.Clear();
+        CurrentFilter = ComputeCurrentFilter();
+        IsDirty = false;
 
-        if (!AutoFilter)
+        FiltersChanged?.Invoke(this, new(CurrentFilter));
+    }
+
+    /// <summary>
+    /// Clears all filters by setting them to their empty state. This method traverses the filter tree and resets each filter condition to its default state, effectively clearing any criteria defined in the filters. After clearing the filters, it raises the necessary events to indicate that the filter configuration has changed. The Clear method allows clients to quickly remove all filter criteria and return to an unfiltered state without needing to manually reset each individual filter condition.
+    /// </summary>
+    public void Clear()
+    {
+        using (_deferrer.Defer())
+            Root.Clear();
+    }
+
+    /// <summary>
+    /// Resets the filters to their default state. This method traverses the filter tree and resets each filter condition to its default state, similar to the Clear method. However, while Clear typically sets filters to an empty state, Reset may restore filters to their initial configuration or default values as defined by the implementation of each filter condition. After resetting the filters, it raises the necessary events to indicate that the filter configuration has changed. The Reset method allows clients to return the filters to a predefined default state, which may be different from simply clearing all criteria.
+    /// </summary>
+    public void Reset()
+    {
+        using (_deferrer.Defer())
+            Root.Reset();
+    }
+
+    /// <summary>
+    /// Handles changes to the filter configuration by marking the state as dirty and applying the filters if AutoApply is enabled. This method is called whenever a change occurs in the filter tree, such as when a filter condition is modified, added, or removed. It sets the IsDirty flag to true to indicate that there are unsaved changes in the filter configuration. If AutoApply is set to true, it then calls the Apply method to immediately apply the new filter configuration and raise the FiltersChanged event. The OnFiltersChanged method ensures that changes to the filter configuration are properly tracked and applied based on the user's preferences for automatic application of filters.
+    /// </summary>
+    private void HandleFiltersChanged()
+    {
+        IsDirty = true;
+
+        if (AutoApply)
             Apply();
     }
 
     /// <summary>
-    /// Clears dirty filters from the collection.
-    /// Override this method to implement custom dirty filter detection logic.
+    /// Computes the current filter based on the active conditions defined in the filter tree. This method calls the BuildExpression method on the root filter group to construct a composite expression that represents the combined filter criteria from all active filters in the tree. If the resulting expression is not null, it creates and returns a new instance of <see cref="ExpressionFilter{T}"/> using the computed expression. If there are no active filters or if the filter tree is empty, it returns null, indicating that there are no filters to apply. The ComputeCurrentFilter method encapsulates the logic for generating the effective filter based on the current configuration of filters in the UI.
     /// </summary>
-    public virtual void ClearDirtyFilters() => CompositeFilters.Clear();
+    /// <returns>The current filter based on the active conditions, or null if there are no active filters.</returns>
+    private ExpressionFilter<T>? ComputeCurrentFilter() => Root.BuildExpression() is { } expr ? new ExpressionFilter<T>(expr) : null;
 
     /// <summary>
-    /// Refreshes the filters to the last applied state.
-    /// Restores filters from the cached <see cref="_currentFilters"/> collection.
+    /// Subscribes to property changes and collection changes in the filter tree starting from the specified node. This method recursively traverses the filter tree, subscribing to property change notifications for each filter node that implements INotifyPropertyChanged, as well as collection change notifications for any filter groups that contain child nodes. The subscriptions are managed using a CompositeDisposable, which allows for easy cleanup of all subscriptions when the FiltersViewModel is disposed. By subscribing to these changes, the FiltersViewModel can react to modifications in the filter configuration and trigger the necessary updates to the current filter and raise events accordingly.
     /// </summary>
-    public virtual void Refresh() => CompositeFilters.Set(_currentFilters);
-
-    /// <summary>
-    /// Replaces all filters with the specified collection.
-    /// Creates composite filters for each provided filter.
-    /// </summary>
-    /// <param name="filters">The new collection of filters.</param>
-    public virtual void Set(IEnumerable<IFilterViewModel> filters)
+    /// <param name="node">The filter node to start subscribing from.</param>
+    /// <returns>A CompositeDisposable containing all subscriptions for the specified node and its children.</returns>
+    private CompositeDisposable Subscribe(IFilterNodeViewModel<T> node)
     {
-        using (_filtersChangedDeferrer.Defer())
-            CompositeFilters.Set(filters.Select(x => CreateCompositeFilter(x)));
+        var disposable = new CompositeDisposable();
+        if (node is INotifyPropertyChanged npc)
+        {
+            disposable.Add(System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                    h => npc.PropertyChanged += h,
+                    h => npc.PropertyChanged -= h)
+                .Select(x => x.EventArgs)
+                .Subscribe(_ => _deferrer.DeferOrExecute()));
+        }
+
+        if (node is IFilterGroupViewModel<T> group)
+        {
+            disposable.Add(ObserveCollectionChanges(group.Children).Subscribe(_ => _deferrer.DeferOrExecute()));
+
+            foreach (var child in group.Children)
+                disposable.Add(Subscribe(child));
+        }
+
+        return disposable;
     }
-
-    /// <summary>
-    /// Resets all filters to their default state.
-    /// Calls <see cref="ICompositeFilterViewModel.Reset"/> on each composite filter.
-    /// </summary>
-    public virtual void Reset()
-    {
-        using (_filtersChangedDeferrer.Defer())
-            CompositeFilters.ForEach(x => x.Reset());
-    }
-
-    /// <summary>
-    /// Manually applies the current filter configuration.
-    /// Triggers the <see cref="FiltersChanged"/> event.
-    /// </summary>
-    private void Apply() => ApplyFilters(CompositeFilters);
-
-    /// <summary>
-    /// Applies the specified filters and raises the <see cref="FiltersChanged"/> event.
-    /// Caches the current filter state for <see cref="Refresh"/> operation.
-    /// </summary>
-    /// <param name="compositeFilters">The composite filters to apply.</param>
-    protected virtual void ApplyFilters(IEnumerable<ICompositeFilterViewModel> compositeFilters)
-    {
-        // Cache current state for refresh
-        var list = compositeFilters.ToList();
-        _currentFilters = [.. list];
-
-        // Raise changed event
-        FiltersChanged?.Invoke(this, new FiltersChangedEventArgs(list));
-    }
-
-    #endregion
-
-    #region Event Handlers
-
-    /// <summary>
-    /// Called when the filter configuration has changed.
-    /// Updates dependent properties and applies filters if <see cref="AutoFilter"/> is true.
-    /// </summary>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnFiltersChanged()
-    {
-        OnPropertyChanged(nameof(ActiveCount));
-        OnPropertyChanged(nameof(Count));
-
-        if (AutoFilter)
-            Apply();
-    }
-
-    #endregion
-
-    #region ICollection Implementation
-
-    /// <summary>
-    /// Gets the total number of composite filters in the collection (enabled and disabled).
-    /// </summary>
-    public int Count => CompositeFilters.Count;
-
-    /// <summary>
-    /// Gets a value indicating whether the collection is read-only.
-    /// Returns false by default, can be overridden in derived classes.
-    /// </summary>
-    public virtual bool IsReadOnly => false;
-
-    /// <summary>
-    /// Adds a composite filter to the collection.
-    /// </summary>
-    /// <param name="item">The composite filter to add.</param>
-    public virtual void Add(ICompositeFilterViewModel item)
-  => IsReadOnly.IfFalse(() => CompositeFilters.Add(item));
-
-    /// <summary>
-    /// Removes a composite filter from the collection.
-    /// </summary>
-    /// <param name="item">The composite filter to remove.</param>
-    /// <returns>True if the item was removed; otherwise, false.</returns>
-    public virtual bool Remove(ICompositeFilterViewModel item)
-  => !IsReadOnly && CompositeFilters.Remove(item);
-
-    /// <summary>
-    /// Determines whether the collection contains a specific composite filter.
-    /// </summary>
-    /// <param name="item">The composite filter to locate.</param>
-    /// <returns>True if the item is found; otherwise, false.</returns>
-    public bool Contains(ICompositeFilterViewModel item) => CompositeFilters.Contains(item);
-
-    /// <summary>
-    /// Copies the elements of the collection to an array, starting at a particular array index.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-    public void CopyTo(ICompositeFilterViewModel[] array, int arrayIndex)
-   => CompositeFilters.CopyTo(array, arrayIndex);
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    public IEnumerator<ICompositeFilterViewModel> GetEnumerator() => CompositeFilters.GetEnumerator();
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    IEnumerator IEnumerable.GetEnumerator() => CompositeFilters.GetEnumerator();
-
-    #endregion
-
-    #region INotifyCollectionChanged Implementation
-
-    /// <summary>
-    /// Occurs when the collection changes.
-    /// </summary>
-    event NotifyCollectionChangedEventHandler? INotifyCollectionChanged.CollectionChanged
-    {
-        add => CollectionChanged += value;
-        remove => CollectionChanged -= value;
-    }
-
-    /// <summary>
-    /// Occurs when the collection changes.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1159:Use EventHandler<T>", Justification = "INotifyCollectionChanged implementation")]
-    protected event NotifyCollectionChangedEventHandler? CollectionChanged;
-
-    /// <summary>
-    /// Raises the <see cref="CollectionChanged"/> event.
-    /// </summary>
-    /// <param name="args">The event arguments.</param>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
-        => CollectionChanged?.Invoke(this, args);
-
-    /// <summary>
-    /// Handles collection change events from the underlying composite filters collection.
-    /// </summary>
-    private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-      => OnCollectionChanged(e);
-
-    #endregion
-
-    #region Cleanup
-
-    /// <summary>
-    /// Releases resources and performs cleanup operations.
-    /// </summary>
-    protected override void Cleanup()
-    {
-        CompositeFilters.CollectionChanged -= HandleCollectionChanged;
-        base.Cleanup();
-    }
-
-    #endregion
 }

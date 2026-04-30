@@ -6,36 +6,35 @@
 
 using System;
 using System.ComponentModel;
+using MyNet.Observable.Collections.Grouping;
+using MyNet.UI.ViewModels.Common;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
 
 /// <summary>
-/// Represents a view model for a single grouping property that can be used to configure how a collection is grouped.
+/// Represents a view model for a grouping property that can be used to configure how a collection is grouped.
 /// </summary>
-public interface IGroupingPropertyViewModel : INotifyPropertyChanged, ICloneable
+public interface IGroupingPropertyViewModel<T> : INotifyPropertyChanged, IActivable
 {
     /// <summary>
-    /// Gets the name of the property to group by.
-    /// This should correspond to a property name on the items being grouped.
+    /// Gets unique identifier for the grouping property.
     /// </summary>
-    string PropertyName { get; }
+    string Key { get; }
 
     /// <summary>
-    /// Gets the name of the property used for sorting groups.
-    /// If different from <see cref="PropertyName"/>, allows sorting groups by a different property.
+    /// Gets the date and time when this grouping property was activated (enabled). This property is null if the grouping property is not currently active. When the grouping property is enabled, this property is set to the current date and time, indicating when it became active. This information can be used to determine the order in which grouping properties were activated, which can be relevant when multiple grouping properties are applied to a collection, as it may affect the overall grouping behavior.
     /// </summary>
-    string SortingPropertyName { get; }
+    DateTime? ActivatedAt { get; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this grouping property is currently enabled/active.
-    /// When false, this property is available but not applied to the collection.
+    /// Determines if the given grouping property is currently part of the active grouping configuration.
     /// </summary>
-    bool IsEnabled { get; set; }
+    /// <param name="property">The grouping property to check.</param>
+    bool Matches(IGroupingProperty<T> property);
 
     /// <summary>
-    /// Gets or sets the grouping order when multiple grouping properties are enabled.
-    /// Lower values are applied first (primary group), higher values are applied later (sub-groups).
-    /// Use -1 to indicate no specific order or disabled state.
+    /// Builds the core grouping property.
+    /// Returns null if not active.
     /// </summary>
-    int Order { get; set; }
+    IGroupingProperty<T> Build();
 }

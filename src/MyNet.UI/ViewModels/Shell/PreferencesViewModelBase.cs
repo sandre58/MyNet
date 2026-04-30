@@ -4,29 +4,19 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using MyNet.UI.Resources;
 using MyNet.UI.Services;
 using MyNet.UI.ViewModels.Edition;
 
 namespace MyNet.UI.ViewModels.Shell;
 
-public class PreferencesViewModelBase : EditionViewModel
+public class PreferencesViewModelBase(IPersistentPreferencesService preferencesService) : EditionViewModel
 {
-    private readonly IPersistentPreferencesService _preferencesService;
-
-    public PreferencesViewModelBase(IPersistentPreferencesService preferencesService, IEnumerable<INavigableWorkspaceViewModel> subWorkspaces)
-    {
-        _preferencesService = preferencesService;
-
-        AddSubWorkspaces(subWorkspaces);
-    }
-
     protected override string CreateTitle() => UiResources.Preferences;
 
-    protected override void ResetCore() => _preferencesService.Reset();
+    protected override void ResetCore() => preferencesService.Reset();
 
-    protected override void RefreshCore() => _preferencesService.Reload();
+    protected override void RefreshCore() => preferencesService.Reload();
 
-    protected override void SaveCore() => _preferencesService.Save();
+    protected override void SaveCore() => preferencesService.Save();
 }

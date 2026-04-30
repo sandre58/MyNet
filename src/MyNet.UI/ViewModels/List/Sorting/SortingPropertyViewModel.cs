@@ -4,60 +4,40 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using MyNet.Observable;
+using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Translatables;
+using MyNet.Utilities.Comparers;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
 /// <summary>
-/// Represents a view model for a single sorting property with display name, direction, and order information.
-/// Extends <see cref="DisplayWrapper{T}"/> to provide localization support for the display name.
+/// Represents a view model for a sorting property that can be used to configure how a collection is sorted.
 /// </summary>
+/// <param name="expression">The expression used to access the property to sort by.</param>
+/// <param name="key">The unique identifier for the sorting property.</param>
 /// <param name="displayName">The provider for the localized display name.</param>
-/// <param name="propertyName">The name of the property to sort by.</param>
 /// <param name="direction">The initial sort direction. Default is ascending.</param>
-/// <param name="order">The initial sort order. Use -1 for no specific order. Default is -1.</param>
-public class SortingPropertyViewModel(
+/// <typeparam name="T">The type of the items being sorted.</typeparam>
+public class SortingPropertyViewModel<T>(
+    Expression<Func<T, object?>> expression,
+    string key,
     IProvideValue<string> displayName,
-    string propertyName,
-    ListSortDirection direction = ListSortDirection.Ascending,
-    int order = -1)
-    : DisplayWrapper<string>(propertyName, displayName), ISortingPropertyViewModel
+    ListSortDirection direction = ListSortDirection.Ascending)
+    : DisplayWrapper<string>(key, displayName), ISortingPropertyViewModel<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SortingPropertyViewModel"/> class
-    /// with the property name used as both the property name and display name.
+    /// Gets the unique identifier for the sorting property. This key is used to identify the sorting property within the collection of sorting properties. It should be unique among all sorting properties to avoid conflicts when applying sorting to a collection. The key can be used by consumers to reference this specific sorting property when configuring sorting behavior or when building the collection of active sorting properties.
     /// </summary>
-    /// <param name="propertyName">The name of the property to sort by (also used as display name).</param>
-    /// <param name="direction">The initial sort direction. Default is ascending.</param>
-    /// <param name="order">The initial sort order. Use -1 for no specific order. Default is -1.</param>
-    public SortingPropertyViewModel(
-        string propertyName,
-        ListSortDirection direction = ListSortDirection.Ascending,
-        int order = -1)
-        : this(propertyName, propertyName, direction, order) { }
+    string ISortingPropertyViewModel<T>.Key { get; } = key;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SortingPropertyViewModel"/> class
-    /// with a translatable resource key for the display name.
+    /// Gets the expression that defines the sorting property. This expression is used to determine the value of the property by which the items will be sorted. The expression should return a value that can be compared for sorting purposes, such as a property or a computed value based on the properties of T.
     /// </summary>
-    /// <param name="resourceKey">The resource key for localization of the display name.</param>
-    /// <param name="propertyName">The name of the property to sort by.</param>
-    /// <param name="direction">The initial sort direction. Default is ascending.</param>
-    /// <param name="order">The initial sort order. Use -1 for no specific order. Default is -1.</param>
-    public SortingPropertyViewModel(
-        string resourceKey,
-        string propertyName,
-        ListSortDirection direction = ListSortDirection.Ascending,
-        int order = -1)
-        : this(new StringTranslatable(resourceKey), propertyName, direction, order) { }
-
-    /// <summary>
-    /// Gets the name of the property to sort by.
-    /// This corresponds to a property name on the items being sorted.
-    /// </summary>
-    public string PropertyName => Item;
+    public Expression<Func<T, object?>> Expression { get; } = expression;
 
     /// <summary>
     /// Gets or sets the sort direction (ascending or descending).
@@ -72,21 +52,25 @@ public class SortingPropertyViewModel(
     public bool IsEnabled { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the sort order when multiple sorting properties are enabled.
-    /// Lower values are applied first (primary sort), higher values are applied later.
-    /// Use -1 to indicate no specific order or disabled state.
+    /// Gets the date and time when this sorting property was activated (enabled). This property is null if the sorting property is not currently active. When the sorting property is enabled, this property is set to the current date and time, indicating when it became active. This information can be used to determine the order in which sorting properties were activated, which can be relevant when multiple sorting properties are applied to a collection, as it may affect the overall sorting behavior.
     /// </summary>
-    public int Order { get; set; } = order;
+    public DateTime? ActivatedAt { get; private set; }
 
     /// <summary>
-    /// Creates a clone of this sorting property view model.
+    /// Builds the core sorting property based on the current state of the view model. If the sorting property is active (enabled), this method returns an instance of <see cref="ISortingProperty{T}"/> that encapsulates the expression and direction defined in the view model. If the sorting property is not active, this method returns null, indicating that it should not be applied to the collection's sorting configuration.
     /// </summary>
-    /// <param name="item">The property name for the cloned instance.</param>
-    /// <returns>A new instance with the same configuration as this instance.</returns>
-    protected override DisplayWrapper<string> CreateCloneInstance(string item)
-        => new SortingPropertyViewModel(DisplayName, item, Direction)
-        {
-            IsEnabled = IsEnabled,
-            Order = Order
-        };
+    /// <returns>An instance of <see cref="ISortingProperty{T}"/> if the sorting property is active; otherwise, null.</returns>
+    public ISortingProperty<T> Build() => new ExpressionSortingProperty<T>(Expression, Direction);
+
+    /// <summary>
+    /// Determines whether the provided sorting property matches the expression of this view model. This method compares the expression of this view model with the expression provided by the given sorting property using an expression equality comparer. If the expressions are considered equal, it returns true, indicating that the sorting property corresponds to this view model; otherwise, it returns false. This can be useful for identifying which sorting properties in a collection correspond to which view models when applying sorting configurations.
+    /// </summary>
+    /// <param name="property">The sorting property to compare with this view model.</param>
+    /// <returns>True if the expressions match; otherwise, false.</returns>
+    public bool Matches(ISortingProperty<T> property) => ExpressionEqualityComparer.Equals(Expression, property.ProvideExpression());
+
+    /// <summary>
+    /// Handles changes to the IsEnabled property. When the IsEnabled property changes, this method updates the ActivatedAt property to reflect the current date and time if the sorting property is enabled, or sets it to null if it is disabled. This allows consumers to track when each sorting property was activated, which can be important for determining the order of sorting when multiple properties are active.
+    /// </summary>
+    protected virtual void OnIsEnabledChanged() => ActivatedAt = IsEnabled ? DateTime.UtcNow : null;
 }

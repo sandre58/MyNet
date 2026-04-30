@@ -20,7 +20,7 @@ public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging,
 {
     protected CompositeDisposable Disposables { get; } = [];
 
-    protected virtual ISuspender PropertyChangedSuspender => Suspenders.PropertyChangedSuspender.Default;
+    protected ISuspender PropertyChangedSuspender { get; } = Suspenders.PropertyChangedSuspender.Default;
 
     public virtual bool IsDisposed => _disposedValue;
 

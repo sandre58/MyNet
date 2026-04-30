@@ -1,15 +1,15 @@
 // -----------------------------------------------------------------------
-// <copyright file="IDialogService.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="IDialogService.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.FileDialogs;
 using MyNet.UI.Dialogs.MessageBox;
+using MyNet.UI.ViewModels;
 
 namespace MyNet.UI.Dialogs;
 
@@ -31,78 +31,47 @@ public interface IDialogService
     #region Show
 
     /// <summary>
-    /// Displays a modal dialog.
+    /// Displays a message dialog.
+    /// </summary>
+    Task ShowAsync<T>(T viewModel, Action<T>? closeAction = null)
+        where T : IDialogViewModel;
+
+    /// <summary>
+    /// Displays a non-modal dialog by resolving its view model type.
     /// </summary>
     Task ShowAsync<T>(Action<T>? closeAction = null)
         where T : class, IDialogViewModel;
 
     /// <summary>
-    /// Displays a modal dialog.
+    /// Displays a non-modal dialog by runtime type.
     /// </summary>
     Task ShowAsync(Type typeViewModel, Action<IDialogViewModel>? closeAction = null);
-
-    /// <summary>
-    /// Displays a message dialog.
-    /// </summary>
-    Task ShowAsync<T>(T viewModel, Action<T>? closeAction = null)
-        where T : IDialogViewModel;
 
     #endregion Show
 
     #region ShowDialog
 
     /// <summary>
-    /// Displays a modal dialog.
-    /// </summary>
-    Task<bool?> ShowDialogAsync<TViewModel>()
-        where TViewModel : class, IDialogViewModel;
-
-    /// <summary>
-    /// Displays a modal dialog.
-    /// </summary>
-    /// <param name="typeViewModel">The view to include in workspace dialog.</param>
-    Task<bool?> ShowDialogAsync(Type typeViewModel);
-
-    /// <summary>
     /// Displays a message dialog.
     /// </summary>
     /// <param name="viewModel">The view to include in workspace dialog.</param>
-    Task<bool?> ShowDialogAsync<T>(T viewModel)
+    Task<bool?> ShowModalAsync<T>(T viewModel)
         where T : IDialogViewModel;
+
+    /// <summary>
+    /// Displays a modal dialog by resolving its view model type.
+    /// </summary>
+    Task<bool?> ShowModalAsync<T>()
+        where T : class, IDialogViewModel;
+
+    /// <summary>
+    /// Displays a modal dialog by runtime type.
+    /// </summary>
+    Task<bool?> ShowModalAsync(Type typeViewModel);
 
     #endregion ShowDialog
 
     #region MessageBox
-
-    /// <summary>
-    /// Displays a success message dialog.
-    /// </summary>
-    Task<MessageBoxResult> ShowSuccessAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
-
-    /// <summary>
-    /// Displays an information message dialog.
-    /// </summary>
-    Task<MessageBoxResult> ShowInformationAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
-
-    /// <summary>
-    /// Displays an error message dialog.
-    /// </summary>
-    Task<MessageBoxResult> ShowErrorAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
-
-    /// <summary>
-    /// Displays a warning message dialog.
-    /// </summary>
-    Task<MessageBoxResult> ShowWarningAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
-
-    /// <summary>
-    /// Displays a question message dialog.
-    /// </summary>
-    Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null);
-
-    /// <summary>
-    /// Displays a question message dialog with cancel option.
-    /// </summary>
-    Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null);
 
     /// <summary>
     /// Displays a message box that has a message, title bar caption, button, and icon; and
@@ -147,6 +116,18 @@ public interface IDialogService
     /// clicked by the user.
     /// </returns>
     Task<MessageBoxResult> ShowMessageBoxAsync(IMessageBox viewModel);
+
+    Task<MessageBoxResult> ShowSuccessAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+
+    Task<MessageBoxResult> ShowInformationAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+
+    Task<MessageBoxResult> ShowErrorAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+
+    Task<MessageBoxResult> ShowWarningAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+
+    Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null);
+
+    Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null);
 
     #endregion MessageBox
 

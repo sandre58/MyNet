@@ -5,8 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using MyNet.UI.ViewModels;
 
 namespace MyNet.UI.Dialogs.ContentDialogs;
 
@@ -16,33 +17,30 @@ namespace MyNet.UI.Dialogs.ContentDialogs;
 public interface IContentDialogService
 {
     /// <summary>
-    /// Occurs when a dialog is opened.
-    /// </summary>
-    event EventHandler<ContentDialogEventArgs> DialogOpened;
-
-    /// <summary>
-    /// Occurs when a dialog is closed.
-    /// </summary>
-    event EventHandler<ContentDialogEventArgs> DialogClosed;
-
-    /// <summary>
     /// Gets the collection of currently opened dialogs.
     /// </summary>
-    ObservableCollection<IDialogViewModel> OpenedDialogs { get; }
+    IList<IDialogViewModel> OpenedDialogs { get; }
 
     /// <summary>
     /// Displays a non-modal custom dialog of specified type.
     /// </summary>
-    /// <param name="view">The type of the custom dialog to show.</param>
     /// <param name="viewModel">The view model of the new custom dialog.</param>
-    Task ShowAsync(object view, IDialogViewModel viewModel);
+    /// <param name="options">The options for the new custom dialog.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean value indicating whether the dialog was accepted (true), canceled (false), or closed without a result (null).</returns>
+    Task<bool?> ShowAsync<T>(T viewModel, DialogOptions? options = null)
+        where T : IDialogViewModel;
 
     /// <summary>
-    /// Displays a modal custom dialog of specified type.
+    /// Displays a non-modal custom dialog and executes a callback when closed.
     /// </summary>
-    /// <param name="view">The type of the custom dialog to show.</param>
-    /// <param name="viewModel">The view model of the new custom dialog.</param>
-    Task<bool?> ShowModalAsync(object view, IDialogViewModel viewModel);
+    Task<bool?> ShowAsync<T>(T viewModel, Action<T>? closeAction)
+        where T : IDialogViewModel;
+
+    /// <summary>
+    /// Displays a modal custom dialog.
+    /// </summary>
+    Task<bool?> ShowModalAsync<T>(T viewModel)
+        where T : IDialogViewModel;
 
     /// <summary>
     /// Closes the specified dialog.

@@ -5,403 +5,209 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using DynamicData.Binding;
 using MyNet.Observable;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Extensions;
-using MyNet.UI.Commands;
+using MyNet.Observable.Collections.Sorting;
 using MyNet.Utilities;
 using MyNet.Utilities.Deferring;
-using PropertyChanged;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
 /// <summary>
-/// View model for managing sorting configuration of a collection.
-/// Provides commands to add, remove, toggle, and reset sorting properties.
-/// Supports multiple sorting levels (primary, secondary, tertiary, etc.) with configurable order.
+/// Represents a view model for managing sorting configuration of a collection.
 /// </summary>
-/// <remarks>
-/// This class implements <see cref="ICollection{T}"/> and <see cref="INotifyCollectionChanged"/>
-/// to allow direct manipulation of sorting properties while providing change notifications.
-/// Changes are deferred and batched for optimal performance.
-/// </remarks>
-[CanBeValidated(false)]
-[CanSetIsModified(false)]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix", Justification = "It's a viewModel")]
-public class SortingViewModel : EditableObject, ISortingViewModel, ICollection<ISortingPropertyViewModel>, INotifyCollectionChanged
+/// <typeparam name="T">The type of items in the collection.</typeparam>
+public class SortingViewModel<T> : EditableObject, ISortingViewModel<T>
 {
-    private readonly IReadOnlyDictionary<string, ListSortDirection> _defaultSortingProperties;
-    private readonly Deferrer _sortingChangedDeferrer;
+    private readonly Deferrer _deferrer;
 
     /// <summary>
-    /// Gets the collection of sorting properties managed by this view model.
+    /// Creates a fluent builder used to configure and instantiate a <see cref="SortingViewModel{T}"/>.
     /// </summary>
-    protected SortingPropertiesCollection SortingProperties { get; } = [];
-
-    #region Properties
+    public static SortingViewModelBuilder<T> CreateBuilder() => new();
 
     /// <summary>
-    /// Gets the currently active (enabled) sorting property with the lowest order number.
-    /// This represents the primary sort if multiple sorts are enabled.
-    /// Returns null if no sorting properties are active.
+    /// Initializes a new instance of the <see cref="SortingViewModel{T}"/> class with the specified sorting properties and optional default sorting configuration. The provided properties are wrapped in a read-only observable collection for UI binding, and the default sorting is stored for resetting purposes. The constructor also sets up event handlers to react to changes in the properties and trigger sorting updates accordingly.
     /// </summary>
-    public ISortingPropertyViewModel? ActiveSortingProperty
-   => SortingProperties.OrderBy(x => x.Order).FirstOrDefault(x => x.IsEnabled);
-
-    /// <summary>
-    /// Gets the count of currently active (enabled) sorting properties.
-    /// </summary>
-    public int ActiveCount => SortingProperties.Count(x => x.IsEnabled);
-
-    #endregion
-
-    #region Commands
-
-    /// <summary>
-    /// Gets the command to add a sorting property by name.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand AddCommand { get; }
-
-    /// <summary>
-    /// Gets the command to switch (toggle) the sort direction of a property.
-    /// If the property is disabled, it will be enabled first.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand SwitchCommand { get; }
-
-    /// <summary>
-    /// Gets the command to toggle a property as the sole active sort.
-    /// Clears all other sorts, adds the specified property, and switches direction if already ascending.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand ToggleCommand { get; }
-
-    /// <summary>
-    /// Gets the command to remove a sorting property by name.
-    /// Parameter: string (property name).
-    /// </summary>
-    public ICommand RemoveCommand { get; }
-
-    /// <summary>
-    /// Gets the command to reset sorting to the default configuration.
-    /// </summary>
-    public ICommand ResetCommand { get; }
-
-    /// <summary>
-    /// Gets the command to clear all active sorting properties.
-    /// </summary>
-    public ICommand ClearCommand { get; }
-
-    /// <summary>
-    /// Gets the command to apply a specific sorting configuration.
-    /// </summary>
-    public ICommand ApplyCommand { get; }
-
-    #endregion
-
-    #region Events
-
-    /// <summary>
-    /// Occurs when the sorting configuration has changed.
-    /// Fired after all pending changes are applied (deferred execution).
-    /// </summary>
-    public event EventHandler<SortingChangedEventArgs>? SortingChanged;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SortingViewModel"/> class with no default sorting.
-    /// </summary>
-    public SortingViewModel()
-      : this([]) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SortingViewModel"/> class with a single default sorting property.
-    /// </summary>
-    /// <param name="defaultProperty">The property name to sort by default.</param>
-    /// <param name="listSortDirection">The default sort direction. Default is ascending.</param>
-    public SortingViewModel(string defaultProperty, ListSortDirection listSortDirection = ListSortDirection.Ascending)
-       : this(new Dictionary<string, ListSortDirection> { { defaultProperty, listSortDirection } }) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SortingViewModel"/> class with multiple default sorting properties (ascending).
-    /// </summary>
-    /// <param name="defaultProperties">The list of property names to sort by default (all ascending).</param>
-    public SortingViewModel(IList<string> defaultProperties)
-        : this(defaultProperties.ToDictionary(x => x, _ => ListSortDirection.Ascending)) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SortingViewModel"/> class with multiple default sorting properties and directions.
-    /// </summary>
-    /// <param name="defaultProperties">A dictionary mapping property names to their default sort directions.</param>
-    public SortingViewModel(IDictionary<string, ListSortDirection> defaultProperties)
+    /// <param name="properties">The sorting properties for the collection.</param>
+    /// <param name="defaultSorting">The optional default sorting configuration.</param>
+    public SortingViewModel(IEnumerable<ISortingPropertyViewModel<T>> properties, IEnumerable<ISortingProperty<T>>? defaultSorting = null)
     {
-        _sortingChangedDeferrer = new Deferrer(OnSortChanged);
-        _defaultSortingProperties = defaultProperties.AsReadOnly();
+        Properties = new(new(properties));
+        DefaultSorting = defaultSorting?.ToList() ?? [];
 
-        // Initialize commands
-        ClearCommand = CommandsManager.Create(Clear);
-        AddCommand = CommandsManager.CreateNotNull<string>(x => Add(x));
-        ToggleCommand = CommandsManager.CreateNotNull<string>(Toggle);
-        SwitchCommand = CommandsManager.CreateNotNull<string>(Switch);
-        ApplyCommand = CommandsManager.CreateNotNull<List<(string, ListSortDirection)>>(
-  x => Set(x.Select((y, index) => CreateSortingProperty(y.Item1, y.Item2, index + 1))));
-        RemoveCommand = CommandsManager.CreateNotNull<string>(Remove);
-        ResetCommand = CommandsManager.Create(Reset);
+        _deferrer = new(RaiseSortingChanged);
 
-        // Apply default sorting
         Reset();
 
-        // Subscribe to property changes with deferred execution
-        Disposables.Add(SortingProperties
-   .ToObservableChangeSet(x => x.PropertyName)
-  .SubscribeAll(() => _sortingChangedDeferrer.DeferOrExecute()));
-
-        SortingProperties.CollectionChanged += HandleCollectionChanged;
+        foreach (var property in Properties)
+            property.PropertyChanged += HandlePropertyChanged;
     }
 
-    #endregion
-
-    #region Sorting Operations
+    /// <summary>
+    /// Gets the collection of sorting property view models that can be configured for sorting. This collection is read-only and observable, allowing UI components to bind to it and react to changes in the properties. Each property view model represents a specific sorting option that can be enabled or disabled, and may include additional information such as display names and sort directions.
+    /// </summary>
+    public ReadOnlyObservableCollection<ISortingPropertyViewModel<T>> Properties { get; }
 
     /// <summary>
-    /// Creates a deferral scope for batch changes.
-    /// Changes made within the scope are applied and notified only when the scope is disposed.
+    /// Gets the current sorting configuration built from the UI. This collection is read-only and represents the active sorting properties based on the user's configuration. It is computed from the enabled properties in the Properties collection and ordered by their activation time to reflect the order in which sorting options were applied. Subscribers can use this collection to apply the sorting configuration to their collections when the SortingChanged event is raised.
     /// </summary>
-    /// <returns>A disposable deferral scope.</returns>
-    protected IDisposable DeferChanged() => _sortingChangedDeferrer.Defer();
+    public IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; private set; } = [];
 
     /// <summary>
-    /// Creates a sorting property view model instance.
-    /// Override this method to create custom sorting property view models.
+    /// Gets the default sorting configuration for the collection. This collection is read-only and represents the initial sorting properties that are applied when the view model is first created or when the Reset method is called.
     /// </summary>
-    /// <param name="propertyName">The name of the property to sort by.</param>
-    /// <param name="listSortDirection">The sort direction. Default is ascending.</param>
-    /// <param name="order">The sort order. If null, uses the next available order (ActiveCount + 1).</param>
-    /// <returns>A new sorting property view model instance.</returns>
-    protected virtual ISortingPropertyViewModel CreateSortingProperty(
-        string propertyName,
-        ListSortDirection listSortDirection = ListSortDirection.Ascending,
-        int? order = null)
-        => new SortingPropertyViewModel(propertyName, listSortDirection, order ?? ActiveCount + 1);
+    public IReadOnlyList<ISortingProperty<T>> DefaultSorting { get; }
 
     /// <summary>
-    /// Adds a sorting property to the collection.
-    /// If a property with the same name exists, it replaces it.
+    /// Gets a value indicating whether there are any active sorting properties in the current configuration. This property returns true if there is at least one sorting property that is enabled and contributing to the sorting configuration, and false if there are no active sorting properties. This can be used by UI components to determine whether to display sorting indicators or to enable/disable sorting-related actions based on the presence of active sorting properties.
     /// </summary>
-    /// <param name="propertyName">The name of the property to sort by.</param>
-    /// <param name="listSortDirection">The sort direction. Default is ascending.</param>
-    /// <param name="order">The sort order. If null, assigns the next available order.</param>
-    public virtual void Add(
-        string propertyName,
-        ListSortDirection listSortDirection = ListSortDirection.Ascending,
-        int? order = null)
-    => SortingProperties.TryAdd(CreateSortingProperty(propertyName, listSortDirection, order));
+    public bool HasActiveSorting => CurrentSorting.Any();
 
     /// <summary>
-    /// Removes a sorting property from the collection by name.
+    /// Occurs when the sorting configuration has changed. Subscribers can react to this event to apply the new sorting configuration to their collections. The event provides data in the form of <see cref="SortingChangedEventArgs{T}"/>, which contains the current sorting properties that define the active sorting configuration based on the user's selections in the UI.
     /// </summary>
-    /// <param name="propertyName">The name of the property to remove.</param>
-    public virtual void Remove(string propertyName) => SortingProperties.Remove(propertyName);
+    public event EventHandler<SortingChangedEventArgs<T>>? SortingChanged;
 
     /// <summary>
-    /// Switches (toggles) the sort direction of a property.
-    /// If the property is not enabled, it is enabled first with the next available order.
-    /// If enabled, the direction is reversed (Ascending ↔ Descending).
+    /// Applies the current sorting configuration. This method triggers the sorting update process by invoking the deferrer, which will call the OnSortingChanged method to compute the current sorting configuration and raise the SortingChanged event. Consumers can call this method after making changes to the sorting properties to ensure that the new configuration is applied to their collections.
     /// </summary>
-    /// <param name="propertyName">The name of the property to switch.</param>
-    public virtual void Switch(string propertyName)
+    public void Apply() => _deferrer.DeferOrExecute();
+
+    /// <summary>
+    /// Clears all active sorting by disabling all sorting properties. This method iterates through the Properties collection and sets the IsEnabled property of each sorting property view model to false, effectively removing all sorting criteria from the current configuration. After clearing the sorting properties, it triggers the sorting update process to reflect the changes in the UI and notify subscribers of the new (empty) sorting configuration.
+    /// </summary>
+    public void Clear()
     {
-        if (SortingProperties[propertyName] is not { } property)
-            return;
-
-        using (_sortingChangedDeferrer.Defer())
-        {
-            if (!property.IsEnabled)
-                property.Order = ActiveCount + 1;
-
-            property.IsEnabled = true;
-            property.Direction = property.Direction == ListSortDirection.Ascending
-         ? ListSortDirection.Descending
-       : ListSortDirection.Ascending;
-        }
+        using (_deferrer.Defer())
+            Properties.ForEach(p => p.IsEnabled = false);
     }
 
     /// <summary>
-    /// Toggles a property as the sole active sort.
-    /// Clears all existing sorts, adds the specified property, and switches direction if it was already ascending.
-    /// </summary>
-    /// <param name="propertyName">The name of the property to toggle.</param>
-    /// <remarks>
-    /// This is commonly used for single-column sorting in data grids:
-    /// - First click: Sort ascending
-    /// - Second click: Sort descending
-    /// - Third click: Back to ascending.
-    /// </remarks>
-    public void Toggle(string propertyName)
-    {
-        using (_sortingChangedDeferrer.Defer())
-        {
-            var switchDirection = SortingProperties[propertyName] is { IsEnabled: true, Direction: ListSortDirection.Ascending };
-            Clear();
-            Add(propertyName);
-
-            if (switchDirection)
-                Switch(propertyName);
-        }
-    }
-
-    /// <summary>
-    /// Replaces all sorting properties with the specified collection.
-    /// </summary>
-    /// <param name="properties">The new collection of sorting properties.</param>
-    public virtual void Set(IEnumerable<ISortingPropertyViewModel> properties)
-    {
-        using (_sortingChangedDeferrer.Defer())
-            SortingProperties.Set(properties);
-    }
-
-    /// <summary>
-    /// Clears all sorting properties from the collection.
-    /// </summary>
-    public virtual void Clear() => SortingProperties.Clear();
-
-    /// <summary>
-    /// Resets the sorting configuration to its default state.
-    /// The default state is defined by the properties passed to the constructor.
+    /// Resets the sorting configuration to its default state. This method first clears all active sorting properties and then iterates through the DefaultSorting collection to find matching sorting properties in the Properties collection. For each matching property, it enables it and sets its direction according to the default configuration. After resetting the sorting properties, it triggers the sorting update process to reflect the changes in the UI and notify subscribers of the new sorting configuration based on the default settings.
     /// </summary>
     public void Reset()
-    => Set(_defaultSortingProperties.Select((x, index) => CreateSortingProperty(x.Key, x.Value, index + 1)));
-
-    #endregion
-
-    #region Event Handlers
-
-    /// <summary>
-    /// Called when the sorting configuration has changed.
-    /// Raises the <see cref="SortingChanged"/> event and updates dependent properties.
-    /// </summary>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnSortChanged()
     {
-        OnPropertyChanged(nameof(Count));
-        OnPropertyChanged(nameof(ActiveCount));
-        OnPropertyChanged(nameof(ActiveSortingProperty));
-        SortingChanged?.Invoke(this, new SortingChangedEventArgs(SortingProperties));
-    }
+        using (_deferrer.Defer())
+        {
+            Clear();
 
-    #endregion
+            foreach (var def in DefaultSorting)
+            {
+                var vm = FindMatching(def);
 
-    #region ICollection Implementation
-
-    /// <summary>
-    /// Gets the total number of sorting properties in the collection (enabled and disabled).
-    /// </summary>
-    public int Count => SortingProperties.Count;
-
-    /// <summary>
-    /// Gets a value indicating whether the collection is read-only.
-    /// Returns false by default, can be overridden in derived classes.
-    /// </summary>
-    public virtual bool IsReadOnly => false;
-
-    /// <summary>
-    /// Adds a sorting property view model to the collection.
-    /// </summary>
-    /// <param name="item">The sorting property view model to add.</param>
-    public virtual void Add(ISortingPropertyViewModel item)
-        => IsReadOnly.IfFalse(() => SortingProperties.Add(item));
-
-    /// <summary>
-    /// Removes a sorting property view model from the collection.
-    /// </summary>
-    /// <param name="item">The sorting property view model to remove.</param>
-    /// <returns>True if the item was removed; otherwise, false.</returns>
-    public virtual bool Remove(ISortingPropertyViewModel item)
-        => !IsReadOnly && SortingProperties.Remove(item);
-
-    /// <summary>
-    /// Determines whether the collection contains a specific sorting property view model.
-    /// </summary>
-    /// <param name="item">The sorting property view model to locate.</param>
-    /// <returns>True if the item is found; otherwise, false.</returns>
-    public bool Contains(ISortingPropertyViewModel item) => SortingProperties.Contains(item);
-
-    /// <summary>
-    /// Copies the elements of the collection to an array, starting at a particular array index.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-    public void CopyTo(ISortingPropertyViewModel[] array, int arrayIndex)
-        => SortingProperties.CopyTo(array, arrayIndex);
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    public IEnumerator<ISortingPropertyViewModel> GetEnumerator() => SortingProperties.GetEnumerator();
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator for the collection.</returns>
-    IEnumerator IEnumerable.GetEnumerator() => SortingProperties.GetEnumerator();
-
-    #endregion
-
-    #region INotifyCollectionChanged Implementation
-
-    /// <summary>
-    /// Occurs when the collection changes.
-    /// </summary>
-    event NotifyCollectionChangedEventHandler? INotifyCollectionChanged.CollectionChanged
-    {
-        add => CollectionChanged += value;
-        remove => CollectionChanged -= value;
+                if (vm != null)
+                {
+                    vm.IsEnabled = true;
+                    vm.Direction = def.Direction;
+                }
+            }
+        }
     }
 
     /// <summary>
-    /// Occurs when the collection changes.
+    /// Sets the active state of a sorting property identified by the specified key. This method finds the sorting property view model with the given key in the Properties collection and updates its IsEnabled property based on the provided isActive parameter. If the property is found, it triggers the sorting update process to reflect the changes in the UI and notify subscribers of the new sorting configuration. If no property with the specified key is found, the method does nothing.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1159:Use EventHandler<T>", Justification = "INotifyCollectionChanged implementation")]
-    protected event NotifyCollectionChangedEventHandler? CollectionChanged;
-
-    /// <summary>
-    /// Raises the <see cref="CollectionChanged"/> event.
-    /// </summary>
-    /// <param name="args">The event arguments.</param>
-    [SuppressPropertyChangedWarnings]
-    protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
-  => CollectionChanged?.Invoke(this, args);
-
-    /// <summary>
-    /// Handles collection change events from the underlying sorting properties collection.
-    /// </summary>
-    private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        => OnCollectionChanged(e);
-
-    #endregion
-
-    #region Cleanup
-
-    /// <summary>
-    /// Releases resources and performs cleanup operations.
-    /// </summary>
-    protected override void Cleanup()
+    /// <param name="key">The key of the sorting property to update.</param>
+    /// <param name="isActive">A value indicating whether the sorting property should be active.</param>
+    public void SetActive(string key, bool isActive)
     {
-        SortingProperties.CollectionChanged -= HandleCollectionChanged;
-        base.Cleanup();
+        var property = Find(key);
+
+        if (property is null) return;
+
+        using (_deferrer.Defer())
+            property.IsEnabled = isActive;
     }
 
-    #endregion
+    /// <summary>
+    /// Toggles the sort direction of a sorting property identified by the specified key. If the sorting property is currently disabled, this method enables it and sets its direction to ascending. If the sorting property is already enabled, this method toggles its direction between ascending and descending. After updating the sorting property, it triggers the sorting update process to reflect the changes in the UI and notify subscribers of the new sorting configuration. If no property with the specified key is found, the method does nothing.
+    /// </summary>
+    /// <param name="key">The key of the sorting property to toggle.</param>
+    public void Toggle(string key)
+    {
+        var property = Find(key);
+
+        if (property is null) return;
+
+        using (_deferrer.Defer())
+        {
+            if (!property.IsEnabled)
+            {
+                property.IsEnabled = true;
+                property.Direction = ListSortDirection.Ascending;
+            }
+            else
+            {
+                property.Direction = property.Direction == ListSortDirection.Ascending
+                    ? ListSortDirection.Descending
+                    : ListSortDirection.Ascending;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets the sort direction of a sorting property identified by the specified key. This method finds the sorting property view model with the given key in the Properties collection and updates its Direction property based on the provided direction parameter. If the property is found, it also ensures that the property is enabled (active) before setting the direction. After updating the sorting property, it triggers the sorting update process to reflect the changes in the UI and notify subscribers of the new sorting configuration. If no property with the specified key is found, the method does nothing.
+    /// </summary>
+    /// <param name="key">The key of the sorting property to update.</param>
+    /// <param name="direction">The direction to set for the sorting property.</param>
+    public void SetDirection(string key, ListSortDirection direction)
+    {
+        var property = Find(key);
+
+        if (property is null) return;
+
+        using (_deferrer.Defer())
+        {
+            property.IsEnabled = true;
+            property.Direction = direction;
+        }
+    }
+
+    /// <summary>
+    /// Computes the current sorting configuration based on the enabled sorting properties in the Properties collection. This method filters the Properties collection to include only those properties that are currently enabled (IsEnabled is true), orders them by their activation time (ActivatedAt) to maintain the order in which they were activated, and then builds the corresponding <see cref="ISortingProperty{T}"/> instances for each active property. The resulting list represents the current sorting configuration that should be applied to the collection based on the user's selections in the UI.
+    /// </summary>
+    /// <returns>A read-only list of the current sorting properties.</returns>
+    private IReadOnlyList<ISortingProperty<T>> ComputeCurrentSorting() =>
+    [
+        .. Properties
+            .Where(p => p.IsEnabled)
+            .OrderBy(p => p.ActivatedAt)
+            .Select(p => p.Build())
+    ];
+
+    /// <summary>
+    /// Handles the PropertyChanged event for the sorting property view models. When any property of a sorting property view model changes (such as IsEnabled or Direction), this method is called to trigger the sorting update process. It uses the deferrer to ensure that multiple changes are batched together and that the sorting update is performed efficiently after all changes have been processed. This allows the UI to react to changes in the sorting properties and update the sorting configuration accordingly.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e) => _deferrer.DeferOrExecute();
+
+    /// <summary>
+    /// Handles the logic for when the sorting configuration has changed. This method computes the current sorting configuration by calling ComputeCurrentSorting, updates the CurrentSorting property, and raises the SortingChanged event to notify subscribers of the new sorting configuration. This method is called by the deferrer after changes to the sorting properties have been processed, ensuring that the sorting update is performed efficiently and that subscribers receive the latest sorting configuration based on the user's selections in the UI.
+    /// </summary>
+    private void RaiseSortingChanged()
+    {
+        CurrentSorting = ComputeCurrentSorting();
+        SortingChanged?.Invoke(this, new(CurrentSorting));
+    }
+
+    /// <summary>
+    /// Finds a sorting property view model in the Properties collection by its unique key. This method searches through the Properties collection to find the first sorting property view model that has a Key property matching the specified key parameter. If a matching property is found, it is returned; otherwise, the method returns null. This method is used by other methods in the class to locate specific sorting properties for updating their active state or sort direction based on user interactions in the UI.
+    /// </summary>
+    /// <param name="key">The unique key of the sorting property to find.</param>
+    /// <returns>The sorting property view model with the specified key, or null if not found.</returns>
+    private ISortingPropertyViewModel<T>? Find(string key)
+        => Properties.FirstOrDefault(p => p.Key == key);
+
+    /// <summary>
+    /// Finds a sorting property view model in the Properties collection that matches the specified sorting property. This method searches through the Properties collection to find the first sorting property view model whose built sorting property (obtained by calling Build()) has an expression that is equal to the expression of the provided sortingProperty parameter. If a matching property is found, it is returned; otherwise, the method returns null. This method is used by the Reset method to locate the corresponding view models for the default sorting properties and update their active state and direction accordingly.
+    /// </summary>
+    /// <param name="property">The sorting property to match.</param>
+    /// <returns>The sorting property view model that matches the specified sorting property, or null if not found.</returns>
+    private ISortingPropertyViewModel<T>? FindMatching(ISortingProperty<T> property)
+        => Properties.FirstOrDefault(p => p.Matches(property));
 }

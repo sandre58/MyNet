@@ -13,6 +13,7 @@ using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Messages;
 using MyNet.UI.Services;
+using MyNet.UI.ViewModels.Workspace;
 using MyNet.Utilities;
 using MyNet.Utilities.Messaging;
 

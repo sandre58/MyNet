@@ -5,7 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Windows.Input;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using MyNet.Observable.Collections.Sorting;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
@@ -13,13 +15,22 @@ namespace MyNet.UI.ViewModels.List.Sorting;
 /// Represents a view model for managing sorting configuration of a collection.
 /// Provides commands and events to configure, apply, and reset sorting properties.
 /// </summary>
-public interface ISortingViewModel
+public interface ISortingViewModel<T>
 {
     /// <summary>
-    /// Gets the command to apply a specific sorting configuration.
-    /// Typically accepts a collection of (propertyName, direction) tuples.
+    /// Gets the collection of sorting property view models that can be configured for sorting.
     /// </summary>
-    ICommand ApplyCommand { get; }
+    ReadOnlyObservableCollection<ISortingPropertyViewModel<T>> Properties { get; }
+
+    /// <summary>
+    /// Gets the current sorting configuration built from the UI.
+    /// </summary>
+    IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; }
+
+    /// <summary>
+    /// Applies the current sorting configuration.
+    /// </summary>
+    void Apply();
 
     /// <summary>
     /// Resets the sorting configuration to its default state.
@@ -28,8 +39,13 @@ public interface ISortingViewModel
     void Reset();
 
     /// <summary>
+    /// Clears all active sorting.
+    /// </summary>
+    void Clear();
+
+    /// <summary>
     /// Occurs when the sorting configuration has changed.
     /// Subscribers can react to apply the new sorting to their collections.
     /// </summary>
-    event EventHandler<SortingChangedEventArgs>? SortingChanged;
+    event EventHandler<SortingChangedEventArgs<T>>? SortingChanged;
 }

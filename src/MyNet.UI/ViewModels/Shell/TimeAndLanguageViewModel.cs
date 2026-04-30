@@ -16,7 +16,7 @@ using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.Shell;
 
-public class TimeAndLanguageViewModel : NavigableWorkspaceViewModel
+public class TimeAndLanguageViewModel : WorkspaceViewModel
 {
     private readonly IObservableGlobalization _globalization;
 

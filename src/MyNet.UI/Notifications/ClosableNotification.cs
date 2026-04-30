@@ -7,6 +7,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using MyNet.UI.ViewModels.Common;
 
 namespace MyNet.UI.Notifications;
 
@@ -33,6 +34,11 @@ public class ClosableNotification(string message, string title, NotificationSeve
     public event EventHandler<CancelEventArgs>? CloseRequest;
 
     /// <summary>
+    /// Occurs when a close request compatible with IClosable is raised.
+    /// </summary>
+    public event EventHandler<CloseRequestedEventArgs>? CloseRequested;
+
+    /// <summary>
     /// Determines asynchronously whether the notification can be closed.
     /// </summary>
     /// <returns>A task that returns true if the notification can be closed; otherwise, false.</returns>
@@ -41,5 +47,9 @@ public class ClosableNotification(string message, string title, NotificationSeve
     /// <summary>
     /// Closes the notification and raises the <see cref="CloseRequest"/> event.
     /// </summary>
-    public void Close() => CloseRequest?.Invoke(this, new CancelEventArgs());
+    public void Close()
+    {
+        CloseRequest?.Invoke(this, new CancelEventArgs());
+        CloseRequested?.Invoke(this, new() { Force = false });
+    }
 }

@@ -6,18 +6,19 @@
 
 using System;
 using System.Collections.Generic;
+using MyNet.Observable.Collections.Grouping;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
 
 /// <summary>
-/// Provides data for the GroupingChanged event, containing the grouping property view models that define the current configuration.
+/// Provides data for the GroupingChanged event, containing the grouping property view models that define the current grouping configuration.
 /// </summary>
-/// <param name="groupProperties">The collection of grouping property view models representing the current grouping configuration.</param>
-public class GroupingChangedEventArgs(IEnumerable<IGroupingPropertyViewModel> groupProperties) : EventArgs
+/// <param name="properties">The collection of grouping property view models representing the current configuration.</param>
+public class GroupingChangedEventArgs<T>(IReadOnlyList<IGroupingProperty<T>> properties) : EventArgs
 {
     /// <summary>
     /// Gets the collection of grouping property view models that define the current grouping configuration.
-    /// These view models contain UI-related information such as display names, enabled state, order, and sorting properties.
+    /// These view models contain UI-related information such as display names, enabled state, and order.
     /// </summary>
-    public IEnumerable<IGroupingPropertyViewModel> GroupProperties { get; } = groupProperties;
+    public IReadOnlyList<IGroupingProperty<T>> Grouping { get; } = properties;
 }

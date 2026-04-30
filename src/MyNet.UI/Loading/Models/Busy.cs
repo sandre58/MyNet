@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
+using System.Threading;
 using System.Windows.Input;
 using MyNet.Observable;
 using MyNet.UI.Commands;
@@ -16,20 +16,27 @@ namespace MyNet.UI.Loading.Models;
 /// </summary>
 public class Busy : ObservableObject, IBusy
 {
+    private CancellationTokenSource? _cts;
+
     /// <summary>
-    /// Gets or sets the action to execute when cancellation is requested.
+    /// Initializes a new instance of the <see cref="Busy"/> class.
     /// </summary>
-    public Action? CancelAction { get; set; }
+    public Busy() => CancelCommand = CommandsManager.Create(Cancel, () => IsCancellable && CanCancel && !IsCancelling);
+
+    /// <summary>
+    /// Gets the cancellation token associated with this busy operation.
+    /// </summary>
+    public CancellationToken CancellationToken => _cts?.Token ?? CancellationToken.None;
+
+    /// <summary>
+    /// Gets a value indicating whether cancellation is possible.
+    /// </summary>
+    public bool IsCancellable => _cts?.IsCancellationRequested == false;
 
     /// <summary>
     /// Gets the command used to trigger cancellation.
     /// </summary>
     public ICommand CancelCommand { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether cancellation is possible (i.e., <see cref="CancelAction"/> is not null).
-    /// </summary>
-    public bool IsCancellable => CancelAction is not null;
 
     /// <summary>
     /// Gets a value indicating whether cancellation is in progress.
@@ -42,16 +49,25 @@ public class Busy : ObservableObject, IBusy
     public bool CanCancel { get; set; } = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Busy"/> class.
+    /// Internal: attach a CTS from BusyService.
     /// </summary>
-    public Busy() => CancelCommand = CommandsManager.Create(Cancel, () => IsCancellable && CanCancel && !IsCancelling);
+    internal void Attach(CancellationTokenSource cts)
+    {
+        _cts = cts;
+        OnPropertyChanged(nameof(IsCancellable));
+    }
 
     /// <summary>
     /// Requests cancellation of the busy operation. Sets <see cref="IsCancelling"/> to true and invokes <see cref="CancelAction"/> if set.
     /// </summary>
     public void Cancel()
     {
+        if (!IsCancellable)
+            return;
+
         IsCancelling = true;
-        CancelAction?.Invoke();
+        OnPropertyChanged(nameof(IsCancelling));
+
+        _cts?.Cancel();
     }
 }

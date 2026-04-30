@@ -25,7 +25,5 @@ public class AboutViewModel : WorkspaceViewModel
 
     public string? Description { get; } = ApplicationHelper.GetDescription();
 
-    public AboutViewModel() => UpdateTitle();
-
     protected override string CreateTitle() => UiResources.AboutX.FormatWith(Product ?? string.Empty);
 }

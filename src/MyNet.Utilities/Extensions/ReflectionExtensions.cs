@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,68 +17,78 @@ using System.Runtime.CompilerServices;
 namespace MyNet.Utilities;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
+[SuppressMessage("Naming", "CA1708:Identifiers should differ by more than case", Justification = "Extensions methods for reflection are more readable when they are called on the type or property they operate on, rather than on a separate class.")]
 public static class ReflectionExtensions
 {
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertiesCache = new();
     private static readonly ConcurrentDictionary<(Type, Type), PropertyInfo[]> AttributeCache = new();
 
-    public static IList<PropertyInfo> GetPublicProperties(this Type type)
-        => PropertiesCache.GetOrAdd(type, t => [.. t.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead || x.CanWrite)]);
-
-    public static IList<PropertyInfo> GetPublicPropertiesWithAttribute<TAttribute>(this Type type)
-        where TAttribute : Attribute
-        => AttributeCache.GetOrAdd((type, typeof(TAttribute)), _ => [.. type.GetPublicProperties().Where(p => p.IsDefined(typeof(TAttribute), true))]);
-
-    public static bool HasAttribute<T>(this PropertyInfo property)
-        where T : Attribute
-        => property.IsDefined(typeof(T), true);
-
-    public static bool HasPublicSetterOrGetter(this PropertyInfo property)
+    extension(Type type)
     {
-        var setMethod = property.GetSetMethod();
-        var getMethod = property.GetGetMethod();
-        return (setMethod?.IsPublic == true) || (getMethod?.IsPublic == true);
+        public IList<PropertyInfo> GetPublicProperties()
+            => PropertiesCache.GetOrAdd(type, t => [.. t.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead || x.CanWrite)]);
+
+        public IList<PropertyInfo> GetPublicPropertiesWithAttribute<TAttribute>()
+            where TAttribute : Attribute
+            => AttributeCache.GetOrAdd((type, typeof(TAttribute)), _ => [.. type.GetPublicProperties().Where(p => p.IsDefined(typeof(TAttribute), true))]);
+
+        public object? GetDefault()
+        {
+            var f = GetDefault<object?>;
+            return f.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, null);
+        }
+    }
+
+    extension(PropertyInfo property)
+    {
+        public bool HasAttribute<T>()
+            where T : Attribute
+            => property.IsDefined(typeof(T), true);
+
+        public bool HasPublicSetterOrGetter()
+        {
+            var setMethod = property.GetSetMethod();
+            var getMethod = property.GetGetMethod();
+            return (setMethod?.IsPublic == true) || (getMethod?.IsPublic == true);
+        }
     }
 
     public static IEnumerable<T?> GetValuesOfType<T>(this IEnumerable<PropertyInfo> properties, object obj)
         => properties.Where(x => typeof(T).IsAssignableFrom(x.PropertyType)).Select(x => (T?)x.GetValue(obj)).Where(x => x is not null);
 
-    public static object? GetDefault(this Type t)
-    {
-        var f = GetDefault<object?>;
-        return f.Method.GetGenericMethodDefinition().MakeGenericMethod(t).Invoke(null, null);
-    }
-
     public static T? GetAttribute<T>(this Enum value)
         where T : Attribute
         => value.GetType().GetField(value.ToString())?.GetCustomAttributes<T>().FirstOrDefault();
 
-    public static object? GetDeepPropertyValue(this object rootObject, string path) => GetDeepPropertyValue(rootObject, path.Split(["."], StringSplitOptions.RemoveEmptyEntries));
-
-    public static object? GetDeepPropertyValue(this object rootObject, IList<string> propertyNames)
+    extension(object rootObject)
     {
-        var result = rootObject;
+        public object? GetDeepPropertyValue(string path) => rootObject.GetDeepPropertyValue(path.Split(["."], StringSplitOptions.RemoveEmptyEntries));
 
-        if (!propertyNames.Any()) return result;
-        foreach (var propertyName in propertyNames)
+        public object? GetDeepPropertyValue(IList<string> propertyNames)
         {
-            var properties = result?.GetType().GetPublicProperties();
+            var result = rootObject;
 
-            var propertyInfo = properties?.FirstOrDefault(x => x.Name == propertyName);
-            if (propertyInfo == null)
+            if (!propertyNames.Any()) return result;
+            foreach (var propertyName in propertyNames)
             {
-                return null;
+                var properties = result?.GetType().GetPublicProperties();
+
+                var propertyInfo = properties?.FirstOrDefault(x => x.Name == propertyName);
+                if (propertyInfo == null)
+                {
+                    return null;
+                }
+
+                result = propertyInfo.GetValue(result, null);
             }
 
-            result = propertyInfo.GetValue(result, null);
+            return result;
         }
 
-        return result;
+        public T? GetDeepPropertyValue<T>(string path) => (T?)rootObject.GetDeepPropertyValue(path);
+
+        public T? GetDeepPropertyValue<T>(IList<string> propertyNames) => (T?)rootObject.GetDeepPropertyValue(propertyNames);
     }
-
-    public static T? GetDeepPropertyValue<T>(this object obj, string path) => (T?)GetDeepPropertyValue(obj, path);
-
-    public static T? GetDeepPropertyValue<T>(this object obj, IList<string> propertyNames) => (T?)GetDeepPropertyValue(obj, propertyNames);
 
     /// <summary>
     /// Gets the member inheritance chain as a stack.

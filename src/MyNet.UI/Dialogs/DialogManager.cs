@@ -1,15 +1,15 @@
 // -----------------------------------------------------------------------
-// <copyright file="DialogManager.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="DialogManager.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.FileDialogs;
 using MyNet.UI.Dialogs.MessageBox;
+using MyNet.UI.ViewModels;
 
 namespace MyNet.UI.Dialogs;
 
@@ -77,14 +77,14 @@ public static class DialogManager
     /// </summary>
     public static async Task<bool?> ShowDialogAsync<TViewModel>()
         where TViewModel : class, IDialogViewModel
-        => await Default.ShowDialogAsync<TViewModel>().ConfigureAwait(false);
+        => await Default.ShowModalAsync<TViewModel>().ConfigureAwait(false);
 
     /// <summary>
     /// Displays a modal dialog.
     /// </summary>
     /// <param name="typeViewModel">The view to include in workspace dialog.</param>
     public static async Task<bool?> ShowDialogAsync(Type typeViewModel)
-        => await Default.ShowDialogAsync(typeViewModel).ConfigureAwait(false);
+        => await Default.ShowModalAsync(typeViewModel).ConfigureAwait(false);
 
     /// <summary>
     /// Displays a message dialog.
@@ -92,7 +92,7 @@ public static class DialogManager
     /// <param name="viewModel">The view to include in workspace dialog.</param>
     public static async Task<bool?> ShowDialogAsync<T>(T viewModel)
         where T : IDialogViewModel
-        => await Default.ShowDialogAsync(viewModel).ConfigureAwait(false);
+        => await Default.ShowModalAsync(viewModel).ConfigureAwait(false);
 
     #endregion ShowDialog
 

@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading;
+
 namespace MyNet.UI.Loading.Models;
 
 /// <summary>
@@ -12,7 +14,7 @@ namespace MyNet.UI.Loading.Models;
 public interface IBusy
 {
     /// <summary>
-    /// Gets a value indicating whether the busy operation can be cancelled.
+    /// Gets a value indicating whether the busy operation can be canceled.
     /// </summary>
     bool IsCancellable { get; }
 
@@ -27,7 +29,12 @@ public interface IBusy
     bool CanCancel { get; set; }
 
     /// <summary>
-    /// Requests cancellation of the busy operation.
+    /// Gets the cancellation token associated with the current operation.
+    /// </summary>
+    CancellationToken CancellationToken { get; }
+
+    /// <summary>
+    /// Requests cancellation of the current operation.
     /// </summary>
     void Cancel();
 }

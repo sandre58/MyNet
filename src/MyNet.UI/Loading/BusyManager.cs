@@ -49,7 +49,7 @@ public static class BusyManager
     /// <param name="action">The action to execute with an <see cref="IndeterminateBusy"/> indicator.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task WaitIndeterminateAsync(Action<IndeterminateBusy> action)
-        => await Default.WaitAsync(action).ConfigureAwait(false);
+        => await Default.RunAsync(action).ConfigureAwait(false);
 
     /// <summary>
     /// Executes an indeterminate busy operation using the default busy service and the specified action.
@@ -57,7 +57,7 @@ public static class BusyManager
     /// <param name="action">The action to execute while busy.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task WaitIndeterminateAsync(Action action)
-        => await Default.WaitAsync<IndeterminateBusy>(_ => action()).ConfigureAwait(false);
+        => await Default.RunAsync<IndeterminateBusy>(_ => action()).ConfigureAwait(false);
 
     /// <summary>
     /// Executes a determinate busy operation using the default busy service and the specified action.
@@ -65,5 +65,5 @@ public static class BusyManager
     /// <param name="action">The action to execute with a <see cref="DeterminateBusy"/> indicator.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task WaitDeterminateAsync(Action<DeterminateBusy> action)
-        => await Default.WaitAsync(action).ConfigureAwait(false);
+        => await Default.RunAsync(action).ConfigureAwait(false);
 }

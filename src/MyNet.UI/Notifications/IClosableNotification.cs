@@ -4,6 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.ComponentModel;
+using MyNet.UI.ViewModels.Common;
+
 namespace MyNet.UI.Notifications;
 
 /// <summary>
@@ -12,7 +16,17 @@ namespace MyNet.UI.Notifications;
 public interface IClosableNotification : INotification, IClosable
 {
     /// <summary>
+    /// Occurs when a close request is raised by legacy notification consumers.
+    /// </summary>
+    event EventHandler<CancelEventArgs>? CloseRequest;
+
+    /// <summary>
     /// Gets a value indicating whether the notification can be closed.
     /// </summary>
     bool IsClosable { get; }
+
+    /// <summary>
+    /// Requests notification closure.
+    /// </summary>
+    void Close();
 }

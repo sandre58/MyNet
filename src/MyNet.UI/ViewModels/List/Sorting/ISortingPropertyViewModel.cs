@@ -6,19 +6,20 @@
 
 using System;
 using System.ComponentModel;
+using MyNet.Observable.Collections.Sorting;
+using MyNet.UI.ViewModels.Common;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
 /// <summary>
 /// Represents a view model for a sorting property that can be used to configure how a collection is sorted.
 /// </summary>
-public interface ISortingPropertyViewModel : INotifyPropertyChanged, ICloneable
+public interface ISortingPropertyViewModel<T> : INotifyPropertyChanged, IActivable
 {
     /// <summary>
-    /// Gets the name of the property to sort by.
-    /// This should correspond to a property name on the items being sorted.
+    /// Gets unique identifier for the sorting property.
     /// </summary>
-    string PropertyName { get; }
+    string Key { get; }
 
     /// <summary>
     /// Gets or sets the sort direction (ascending or descending).
@@ -26,15 +27,20 @@ public interface ISortingPropertyViewModel : INotifyPropertyChanged, ICloneable
     ListSortDirection Direction { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this sorting property is currently enabled/active.
-    /// When false, this property is available but not applied to the collection.
+    /// Gets the date and time when this sorting property was activated (enabled). This property is null if the sorting property is not currently active. When the sorting property is enabled, this property is set to the current date and time, indicating when it became active. This information can be used to determine the order in which sorting properties were activated, which can be relevant when multiple sorting properties are applied to a collection, as it may affect the overall sorting behavior.
     /// </summary>
-    bool IsEnabled { get; set; }
+    DateTime? ActivatedAt { get; }
 
     /// <summary>
-    /// Gets or sets the sort order when multiple sorting properties are enabled.
-    /// Lower values are applied first (primary sort), higher values are applied later (secondary, tertiary, etc.).
-    /// Use -1 to indicate no specific order or disabled state.
+    /// Determines if the given sorting property is currently part of the active sorting configuration.
     /// </summary>
-    int Order { get; set; }
+    /// <param name="property">The sorting property to check.</param>
+    /// <returns>True if the sorting property is part of the active sorting configuration; otherwise, false.</returns>
+    bool Matches(ISortingProperty<T> property);
+
+    /// <summary>
+    /// Builds the core sorting property.
+    /// Returns null if not active.
+    /// </summary>
+    ISortingProperty<T> Build();
 }

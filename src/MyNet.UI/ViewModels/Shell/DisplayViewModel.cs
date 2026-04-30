@@ -12,7 +12,7 @@ using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.Shell;
 
-public class DisplayViewModel : NavigableWorkspaceViewModel
+public class DisplayViewModel : WorkspaceViewModel
 {
     protected override string CreateTitle() => UiResources.Display;
 

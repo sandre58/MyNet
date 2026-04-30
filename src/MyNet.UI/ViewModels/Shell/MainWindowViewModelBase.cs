@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Input;
 using DynamicData.Binding;
@@ -21,7 +22,6 @@ using MyNet.UI.Notifications;
 using MyNet.UI.Services;
 using MyNet.UI.Theming;
 using MyNet.Utilities;
-using MyNet.Utilities.Localization;
 using MyNet.Utilities.Messaging;
 using PropertyChanged;
 
@@ -117,7 +117,7 @@ public class MainWindowViewModelBase : LocalizableObject
     }
 
     [SuppressPropertyChangedWarnings]
-    private void OnProgressBusyPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void OnProgressBusyPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         var progressionBusy = (ProgressionBusy?)sender;
 
@@ -166,7 +166,7 @@ public class MainWindowViewModelBase : LocalizableObject
 
     #region Theme management
 
-    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base?.IsDark ?? false;
+    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base.IsDark;
 
     protected void OnIsDarkChanged() => ThemeManager.ApplyBase(IsDark ? ThemeManager.Dark! : ThemeManager.Light!);
 

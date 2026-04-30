@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using MyNet.UI.ViewModels;
 
 namespace MyNet.UI.Dialogs.ContentDialogs;
 

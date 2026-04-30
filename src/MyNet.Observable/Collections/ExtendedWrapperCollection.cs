@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ExtendedWrapperCollection.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -7,160 +7,133 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Concurrency;
-using System.Threading;
 using DynamicData;
 using DynamicData.Binding;
 using MyNet.Observable.Collections.Providers;
+using MyNet.Observable.Collections.Sources;
 using MyNet.Observable.Extensions;
 using MyNet.Utilities;
 using MyNet.Utilities.Providers;
 
 namespace MyNet.Observable.Collections;
 
+/// <summary>
+/// Represents an extended collection exposing wrapper instances for each source item.
+/// </summary>
+/// <typeparam name="T">The source item type.</typeparam>
+/// <typeparam name="TWrapper">The wrapper type.</typeparam>
 public class ExtendedWrapperCollection<T, TWrapper> : ExtendedCollection<T>
-    where TWrapper : IWrapper<T>
     where T : notnull
+    where TWrapper : class, IWrapper<T>
 {
-    // Optimize: Cache compiled expression tree for better performance
-    private static readonly Lock FactoryLock = new();
-    private static Func<T, TWrapper>? _cachedWrapperFactory;
-
     private readonly Func<T, TWrapper> _createWrapper;
-    private readonly ReadOnlyObservableCollection<TWrapper> _wrappersSource;
-    private readonly ReadOnlyObservableCollection<TWrapper> _wrappers;
-    private readonly IObservable<IChangeSet<TWrapper>> _observableWrapperSource;
-    private readonly IObservable<IChangeSet<TWrapper>> _observableWrappers;
-    private readonly Dictionary<T, TWrapper> _cache;
-    private readonly Lock _cacheLock = new();
+    private readonly Dictionary<T, TWrapper> _cache = new();
+    private readonly ObservableCollection<TWrapper> _wrappers = [];
+    private readonly ObservableCollection<TWrapper> _wrappersSource = [];
 
-    public ReadOnlyObservableCollection<TWrapper> Wrappers => _wrappers;
+    private readonly IObservable<IChangeSet<TWrapper>> _wrappersObservable;
+    private readonly IObservable<IChangeSet<TWrapper>> _wrappersSourceObservable;
 
-    public ReadOnlyObservableCollection<TWrapper> WrappersSource => _wrappersSource;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class with an empty mutable source.
+    /// </summary>
+    public ExtendedWrapperCollection(IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(SourceEngine<T>.Empty(), scheduler, createWrapper) { }
 
-    public ExtendedWrapperCollection(ICollection<T> source, IScheduler? scheduler = null, Func<T, TWrapper>? createWrapper = null)
-        : this(new SourceList<T>(), source.IsReadOnly, scheduler, createWrapper) => AddRange(source);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class from a static list.
+    /// </summary>
+    public ExtendedWrapperCollection(ICollection<T> source, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(SourceEngine<T>.From(source, readOnly: false), scheduler, createWrapper) { }
 
-    public ExtendedWrapperCollection(IItemsProvider<T> source, bool loadItems = true, IScheduler? scheduler = null, Func<T, TWrapper>? createWrapper = null)
-        : this(new ItemsSourceProvider<T>(source, loadItems), scheduler, createWrapper) { }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class from an items provider.
+    /// </summary>
+    public ExtendedWrapperCollection(IItemsProvider<T> source, bool loadItems, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(SourceEngine<T>.From(loadItems ? source.ProvideItems() : [], readOnly: false), scheduler, createWrapper) { }
 
-    public ExtendedWrapperCollection(ISourceProvider<T> source, IScheduler? scheduler = null, Func<T, TWrapper>? createWrapper = null)
-        : this(source.Connect(), scheduler, createWrapper) { }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class from an observable source provider.
+    /// </summary>
+    public ExtendedWrapperCollection(ISourceProvider<T> source, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(SourceEngine<T>.FromObservable(source.Connect()), scheduler, createWrapper) { }
 
-    public ExtendedWrapperCollection(IObservable<IChangeSet<T>> source, IScheduler? scheduler = null, Func<T, TWrapper>? createWrapper = null)
-   : this(new SourceList<T>(source), true, scheduler, createWrapper) { }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class from an observable change stream.
+    /// </summary>
+    public ExtendedWrapperCollection(IObservable<IChangeSet<T>> source, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(SourceEngine<T>.FromObservable(source), scheduler, createWrapper) { }
 
-    public ExtendedWrapperCollection(IScheduler? scheduler = null, Func<T, TWrapper>? createWrapper = null)
-          : this(new SourceList<T>(), false, scheduler, createWrapper) { }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class from an external source list.
+    /// </summary>
+    public ExtendedWrapperCollection(SourceList<T> sourceList, bool isReadOnly, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : this(isReadOnly
+            ? SourceEngine<T>.From(sourceList.Items, readOnly: true)
+            : SourceEngine<T>.FromObservable(sourceList.Connect()),
+            scheduler,
+            createWrapper) { }
 
-    protected ExtendedWrapperCollection(
-        SourceList<T> sourceList,
-        bool isReadOnly,
-        IScheduler? scheduler = null,
-        Func<T, TWrapper>? createWrapper = null)
-        : base(sourceList, isReadOnly, scheduler)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtendedWrapperCollection{T, TWrapper}"/> class.
+    /// </summary>
+    protected ExtendedWrapperCollection(SourceEngine<T> sourceEngine, IScheduler? scheduler, Func<T, TWrapper> createWrapper)
+        : base(sourceEngine, scheduler)
     {
-        // Optimize: Pre-allocate cache with reasonable initial capacity
-        _cache = new Dictionary<T, TWrapper>(capacity: 16);
-        _createWrapper = createWrapper ?? CreateWrapperFactory();
+        _createWrapper = createWrapper ?? throw new ArgumentNullException(nameof(createWrapper));
 
-        var observable = ConnectSortedSource();
+        Wrappers = new(_wrappers);
+        WrappersSource = new(_wrappersSource);
 
-        // Optimize: Use single Transform call with proper disposal
-        var transformedObservable = observable.Transform(GetOrCreate)
-           .ObserveOnOptional(scheduler)
-          .DisposeMany();
+        _wrappersObservable = Wrappers.ToObservableChangeSet();
+        _wrappersSourceObservable = WrappersSource.ToObservableChangeSet();
 
-        Disposables.AddRange(
-   [
-            transformedObservable.Bind(out _wrappersSource)
-   .Subscribe(),
-            observable.OnItemRemoved(RemoveFromCache).Subscribe(),
-            ConnectSortedAndFilteredSource().Transform(GetOrCreate)
-    .ObserveOnOptional(scheduler)
-       .Bind(out _wrappers)
-                  .Subscribe()
+        RebuildWrappers();
+
+        Disposables.AddRange([
+            Connect().Subscribe(_ => RebuildWrappers()),
+            ConnectSource().Subscribe(_ => RebuildSourceWrappers())
         ]);
-
-        _observableWrappers = _wrappers.ToObservableChangeSet();
-        _observableWrapperSource = _wrappersSource.ToObservableChangeSet();
-
-        Refresh();
     }
 
-    // Optimize: Thread-safe cache access with lock-free read path for better concurrency
-    protected TWrapper GetOrCreate(T item)
+    /// <summary>
+    /// Gets wrappers corresponding to filtered/sorted items.
+    /// </summary>
+    public ReadOnlyObservableCollection<TWrapper> Wrappers { get; }
+
+    /// <summary>
+    /// Gets wrappers corresponding to source items.
+    /// </summary>
+    public ReadOnlyObservableCollection<TWrapper> WrappersSource { get; }
+
+    /// <summary>
+    /// Returns an observable stream of wrapper changes for current items.
+    /// </summary>
+    public IObservable<IChangeSet<TWrapper>> ConnectWrappers() => _wrappersObservable;
+
+    /// <summary>
+    /// Returns an observable stream of wrapper changes for source items.
+    /// </summary>
+    public IObservable<IChangeSet<TWrapper>> ConnectWrappersSource() => _wrappersSourceObservable;
+
+    /// <summary>
+    /// Gets the wrapper for an item, creating it if necessary.
+    /// </summary>
+    /// <param name="item">The source item.</param>
+    /// <returns>The wrapper associated with the specified item.</returns>
+    public TWrapper GetOrCreate(T item)
     {
-        // Fast path: try to get without lock first
         if (_cache.TryGetValue(item, out var wrapper))
             return wrapper;
 
-        // Slow path: create new wrapper with lock
-        lock (_cacheLock)
-        {
-            // Double-check pattern to avoid race conditions
-            if (_cache.TryGetValue(item, out wrapper))
-                return wrapper;
-
-            wrapper = _createWrapper(item);
-            _cache[item] = wrapper;
-
-            return wrapper;
-        }
+        wrapper = _createWrapper(item);
+        _cache[item] = wrapper;
+        return wrapper;
     }
 
-    // Optimize: Extract cache removal to separate method for clarity and reusability
-    private void RemoveFromCache(T item)
-    {
-        lock (_cacheLock)
-        {
-            _cache.Remove(item);
-        }
-    }
+    private void RebuildWrappers() => _wrappers.Set(Items.Select(GetOrCreate));
 
-    public IObservable<IChangeSet<TWrapper>> ConnectWrappers() => _observableWrappers;
-
-    public IObservable<IChangeSet<TWrapper>> ConnectWrappersSource() => _observableWrapperSource;
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Double-check pattern")]
-    private static Func<T, TWrapper> CreateWrapperFactory()
-    {
-        // Check if we already have a cached factory
-        if (_cachedWrapperFactory is not null)
-            return _cachedWrapperFactory;
-
-        lock (FactoryLock)
-        {
-            // Double-check pattern
-            if (_cachedWrapperFactory is not null)
-                return _cachedWrapperFactory;
-
-            var ctor = typeof(TWrapper).GetConstructor([typeof(T)])
-             ?? throw new InvalidOperationException($"Type {typeof(TWrapper).Name} must have a constructor with a single parameter of type {typeof(T).Name}.");
-
-            var param = System.Linq.Expressions.Expression.Parameter(typeof(T), "x");
-            var body = System.Linq.Expressions.Expression.New(ctor, param);
-            var lambda = System.Linq.Expressions.Expression.Lambda<Func<T, TWrapper>>(body, param);
-
-            _cachedWrapperFactory = lambda.Compile();
-            return _cachedWrapperFactory;
-        }
-    }
-
-    protected override void Cleanup()
-    {
-        lock (_cacheLock)
-        {
-            // Optimize: Dispose wrappers that implement IDisposable
-            foreach (var wrapper in _cache.Values)
-            {
-                if (wrapper is IDisposable disposable)
-                    disposable.Dispose();
-            }
-
-            _cache.Clear();
-        }
-
-        base.Cleanup();
-    }
+    private void RebuildSourceWrappers() => _wrappersSource.Set(Source.Select(GetOrCreate));
 }
