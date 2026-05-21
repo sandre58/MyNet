@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using MyNet.UI.Notifications.Models;
 
 namespace MyNet.UI.Notifications;
 
@@ -16,25 +17,16 @@ public interface INotificationsManager
     /// <summary>
     /// Gets the collection of notifications managed by this manager.
     /// </summary>
-    ReadOnlyObservableCollection<IClosableNotification> Notifications { get; }
+    ReadOnlyObservableCollection<INotification> Notifications { get; }
+
+    /// <summary>
+    /// Removes a specific notification from the manager.
+    /// </summary>
+    /// <param name="notification">The notification to remove.</param>
+    void Remove(INotification notification);
 
     /// <summary>
     /// Clears all notifications.
     /// </summary>
     void Clear();
-
-    /// <summary>
-    /// Adds a notification handler to the manager.
-    /// </summary>
-    /// <param name="handler">The notification handler to add.</param>
-    /// <returns>The notifications manager instance for chaining.</returns>
-    INotificationsManager AddHandler(INotificationHandler handler);
-
-    /// <summary>
-    /// Adds a notification handler of the specified type to the manager.
-    /// </summary>
-    /// <typeparam name="T">The type of notification handler to add.</typeparam>
-    /// <returns>The notifications manager instance for chaining.</returns>
-    INotificationsManager AddHandler<T>()
-        where T : INotificationHandler, new();
 }

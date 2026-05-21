@@ -5,121 +5,167 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using MyNet.Utilities.Helpers;
+using Microsoft.Extensions.Logging;
 using MyNet.Utilities.Logging;
 
 namespace MyNet.Utilities.IO;
 
-public class DirectoryService : IDirectoryService
+/// <summary>
+/// Manages a directory root and provides helpers to create uniquely named files and sub-directories.
+/// The root path is created on demand, supports environment-variable expansion, and falls back to
+/// the system temporary directory when no path is provided.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="DirectoryService"/> class.
+/// Initializes a new instance of <see cref="DirectoryService"/>.
+/// </remarks>
+/// <param name="root">
+/// The root directory path. Environment variables (e.g. <c>%TEMP%</c>) are expanded automatically.
+/// Pass an empty string or <c>null</c> to use the system temporary directory.
+/// </param>
+/// <param name="logger">Optional logger. Defaults to the application-wide logger for this class.</param>
+[SuppressMessage("Performance", "CA1823:Avoid unused private fields", Justification = "Used by LoggerMessage source generator")]
+public partial class DirectoryService(string root, ILogger<DirectoryService>? logger = null) : IDirectoryService
 {
-    private readonly List<string> _listOfDirectories = [];
+    private readonly ILogger<DirectoryService> _logger = logger ?? Log.Create<DirectoryService>();
 
-    public DirectoryService(string root) => RootDirectory = root;
+    /// <summary>
+    /// Gets the absolute root path managed by this instance. The directory is created on demand if it does not exist.
+    /// </summary>
+    public string RootDirectory { get; } = ResolveRoot(root);
 
-    public string RootDirectory
+    /// <summary>
+    /// Resolves the root directory from the supplied raw path. Falls back to the system temporary directory when <paramref name="root"/> is empty.
+    /// </summary>
+    /// <param name="root">The raw root path.</param>
+    /// <returns>The resolved absolute root path.</returns>
+    private static string ResolveRoot(string? root)
     {
-        get;
-        set
-        {
-            var newRoot = GetOrMakeRootDirectory(value);
+        var path = string.IsNullOrWhiteSpace(root)
+            ? Path.GetTempPath()
+            : Environment.ExpandEnvironmentVariables(root);
 
-            field = newRoot;
-        }
+        FileHelper.EnsureDirectoryExists(path);
+
+        return path;
     }
 
-        = null!;
-
+    /// <inheritdoc/>
     public string CreateSubDirectory(string name)
     {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Subdirectory name cannot be empty.", nameof(name));
+
         var fullPath = Path.Combine(RootDirectory, name);
-        _ = Directory.CreateDirectory(fullPath);
+        Directory.CreateDirectory(fullPath);
+
         return fullPath;
     }
 
+    /// <inheritdoc/>
     public string CreateFile(string? fileExtension = null, string? preferredFileName = null)
     {
-        string fileName;
-        var attempt = 0;
         const int maxAttempts = 10;
-        var defaultFileName = preferredFileName;
-        while (true)
+
+        for (var i = 0; i < maxAttempts; i++)
         {
-            fileName = GetFileName(fileExtension, defaultFileName);
+            var path = GetFileName(fileExtension, preferredFileName);
 
-            try
-            {
-                using (new FileStream(fileName, FileMode.CreateNew))
-                {
-                    // Empty block is intended: we only want to create an empty file
-                }
+            if (FileHelper.TryCreateFile(path))
+                return path;
 
-                break;
-            }
-            catch (IOException ex)
-            {
-                defaultFileName = string.Empty;
-                if (++attempt == maxAttempts)
-                    throw new IOException("No unique temporary file name is available.", ex);
-            }
+            preferredFileName = null;
         }
 
-        return fileName;
+        throw new IOException("Unable to create a unique file after multiple attempts.");
     }
 
+    /// <inheritdoc/>
     public string GetFileName(string? fileExtension = null, string? preferredFileName = null)
     {
-        var extension = fileExtension;
-        if (string.IsNullOrEmpty(extension))
-        {
-            extension = string.IsNullOrEmpty(preferredFileName) ? ".tmp" : Path.GetExtension(preferredFileName);
-        }
+        var extension = NormalizeExtension(fileExtension);
+
+        var baseName = string.IsNullOrWhiteSpace(preferredFileName) ? Path.GetRandomFileName() : Path.GetFileNameWithoutExtension(preferredFileName);
+
+        return Path.Combine(RootDirectory, Path.ChangeExtension(baseName, extension));
+    }
+
+    /// <summary>
+    /// Normalizes a raw file-extension token into a canonical form with a leading dot (e.g. <c>.csv</c>).
+    /// Falls back to <c>.tmp</c> when both parameters are empty.
+    /// </summary>
+    private static string NormalizeExtension(string? extension)
+    {
+        if (string.IsNullOrWhiteSpace(extension))
+            return ".tmp";
+
+        extension = extension.Trim();
 
         if (extension.StartsWith('*'))
             extension = extension[1..];
 
-        var fileName = string.IsNullOrEmpty(preferredFileName) ? Path.GetRandomFileName() : preferredFileName;
+        if (!extension.StartsWith('.'))
+            extension = "." + extension;
 
-        fileName = Path.ChangeExtension(fileName, extension);
-        fileName = Path.Combine(RootDirectory, fileName);
-
-        return fileName;
+        return extension;
     }
 
-    public void Delete() => TryDelete(new DirectoryInfo(RootDirectory));
+    /// <inheritdoc/>
+    public void Delete()
+    {
+        try
+        {
+            Directory.Delete(RootDirectory, true);
+        }
+        catch (Exception ex)
+        {
+            LogFailedToDeleteRoot(ex);
+        }
+    }
 
+    /// <inheritdoc/>
     public void Clean()
     {
         try
         {
-            var baseInfo = new DirectoryInfo(RootDirectory);
-            foreach (var fileInfo in baseInfo.GetFiles())
-                TryDelete(fileInfo);
-            foreach (var directoryInfo in baseInfo.GetDirectories())
-            {
-                TryDelete(directoryInfo);
-            }
+            var dir = new DirectoryInfo(RootDirectory);
+
+            foreach (var file in dir.GetFiles())
+                TryDelete(file);
+
+            foreach (var subDir in dir.GetDirectories())
+                TryDelete(subDir);
         }
         catch (Exception ex)
         {
-            LogManager.Warning($"an error occurred while attempting to clean temporary data directories: {ex.Message}");
+            LogFailedToClean(ex);
         }
     }
 
-    protected static void TryDelete(DirectoryInfo info)
+    /// <summary>
+    /// Attempts to delete a directory recursively, logging a warning on failure.
+    /// </summary>
+    /// <param name="info">The directory to delete.</param>
+    private void TryDelete(FileSystemInfo info)
     {
         try
         {
-            info.Delete(true);
+            if (info is DirectoryInfo dir)
+                dir.Delete(true);
+            else
+                info.Delete();
         }
         catch (Exception ex)
         {
-            LogManager.Warning($"An error occurred while attempting to delete a directory: {ex.Message}");
+            LogFailedToDeleteItem(ex);
         }
     }
 
-    private static void TryDelete(FileInfo info)
+    /// <summary>
+    /// Attempts to delete a single file, logging a warning on failure.
+    /// </summary>
+    private void TryDelete(FileInfo info)
     {
         try
         {
@@ -127,21 +173,19 @@ public class DirectoryService : IDirectoryService
         }
         catch (Exception ex)
         {
-            LogManager.Warning($"An error occurred while attempting to delete a file: {ex.Message}");
+            LogFailedToDeleteAFile(ex);
         }
     }
 
-    private string GetOrMakeRootDirectory(string? root)
-    {
-        var tempPath = string.IsNullOrEmpty(root)
-            ? Path.GetTempPath()
-            : Environment.ExpandEnvironmentVariables(root);
+    [LoggerMessage(LogLevel.Warning, "Failed to clean directory.")]
+    private partial void LogFailedToClean(Exception exception);
 
-        FileHelper.EnsureDirectoryExists(tempPath);
+    [LoggerMessage(LogLevel.Warning, "Failed to delete root directory.")]
+    private partial void LogFailedToDeleteRoot(Exception exception);
 
-        if (!_listOfDirectories.Contains(tempPath))
-            _listOfDirectories.Add(tempPath);
+    [LoggerMessage(LogLevel.Warning, "Failed to delete file system item.")]
+    private partial void LogFailedToDeleteItem(Exception exception);
 
-        return tempPath;
-    }
+    [LoggerMessage(LogLevel.Warning, "Failed to delete a file.")]
+    private partial void LogFailedToDeleteAFile(Exception exception);
 }

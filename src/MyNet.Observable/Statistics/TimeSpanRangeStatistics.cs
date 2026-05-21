@@ -31,10 +31,10 @@ public class TimeSpanRangeStatistics<T> : ObservableObject
     public void Update(IEnumerable<T> list, Func<T, bool> filterPredicate, Func<T, TimeSpan> valuePredicate)
     {
         var items = list.Where(filterPredicate).ToList();
-        Average = items.Count != 0 ? new TimeSpan((long)items.Average(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
-        Sum = items.Count != 0 ? new TimeSpan(items.Sum(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
-        Min = items.Count != 0 ? new TimeSpan(items.Min(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
-        Max = items.Count != 0 ? new TimeSpan(items.Max(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
+        Average = items.Count != 0 ? new((long)items.Average(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
+        Sum = items.Count != 0 ? new(items.Sum(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
+        Min = items.Count != 0 ? new(items.Min(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
+        Max = items.Count != 0 ? new(items.Max(x => valuePredicate.Invoke(x).Ticks)) : TimeSpan.Zero;
     }
 
     public TimeSpan Average { get; private set; }

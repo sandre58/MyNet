@@ -1,0 +1,73 @@
+﻿// -----------------------------------------------------------------------
+// <copyright file="NotificationsViewModel.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using System.Windows.Input;
+using DynamicData.Binding;
+using MyNet.Observable;
+using MyNet.Observable.Collections;
+using MyNet.Observable.Collections.Extensions;
+using MyNet.UI.Commands;
+using MyNet.UI.Legacy.Dialogs;
+using MyNet.UI.Legacy.Notifications;
+using MyNet.UI.Legacy.Threading;
+using MyNet.UI.Messages;
+using MyNet.Utilities;
+using MyNet.Utilities.Messaging;
+
+namespace MyNet.UI.Legacy.ViewModels.Shell;
+
+public class NotificationsViewModel : ObservableObject
+{
+    public bool IsVisible { get; set; }
+
+    public ExtendedCollection<IClosableNotification> Notifications { get; }
+
+    public NotificationSeverity? MaxSeverity { get; private set; }
+
+    public ICommand ExecuteActionCommand { get; }
+
+    public ICommand CloseCommand { get; }
+
+    public ICommand ClearCommand { get; }
+
+    public NotificationsViewModel(INotificationsManager notificationsManager)
+    {
+        Notifications = ExtendedCollection.FromObservable(notificationsManager.Notifications.ToObservableChangeSet(), Scheduler.Ui);
+
+        ExecuteActionCommand = RelayCommandFactory.Default.CreateRequired<ActionNotification>(ExecuteAction, x => x.Action is not null);
+        CloseCommand = RelayCommandFactory.Default.CreateRequired<IClosableNotification>(x => x.Close());
+        ClearCommand = RelayCommandFactory.Default.Create(() => Notifications.Where(x => x.IsClosable).ToList().ForEach(x => x.Close()), () => Notifications.Any(x => x.IsClosable));
+
+        Disposables.AddRange(
+        [
+            Notifications.ToObservableChangeSet().Subscribe(_ =>
+            {
+                MaxSeverity = Notifications.Count != 0 ? Notifications.OfType<MessageNotification>().Max(x => x.Severity) : null;
+
+                if (Notifications.Count == 0)
+                    UpdateVisibility(VisibilityAction.Hide);
+            })
+        ]);
+
+        Messenger.Default?.Register<UpdateNotificationsVisibilityRequestedMessage>(this, x => UpdateVisibility(x.VisibilityAction));
+        Messenger.Default?.Register<OpenDialogMessage>(this, OnOpenDialog);
+    }
+
+    private static void ExecuteAction(ActionNotification notification) => notification.Action?.Invoke(notification);
+
+    private void UpdateVisibility(VisibilityAction visibilityAction)
+        => IsVisible = visibilityAction == VisibilityAction.Toggle ? !IsVisible : visibilityAction != VisibilityAction.Hide;
+
+    private void OnOpenDialog(OpenDialogMessage message)
+    {
+        if (message.Type != DialogType.FileDialog)
+        {
+            UpdateVisibility(VisibilityAction.Hide);
+        }
+    }
+}

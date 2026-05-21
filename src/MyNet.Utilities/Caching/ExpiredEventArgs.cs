@@ -25,7 +25,7 @@ public class ExpiredEventArgs<TKey, TValue>(TKey key, TValue value, bool dispose
     /// Gets or sets a value indicating whether the expired value should be disposed after removal from cache.
     /// </summary>
     /// <value><c>true</c> if item should be disposed; otherwise, <c>false</c>.</value>
-    /// <remarks>Default value of this property is equal to <see cref="ICacheStorage{TKey, TValue}.DisposeValuesOnRemoval"/> value.</remarks>
+    /// <remarks>Current value of this property is equal to <see cref="ICacheStorage{TKey, TValue}.DisposeValuesOnRemoval"/> value.</remarks>
     public bool Dispose { get; set; } = dispose;
 
     /// <summary>

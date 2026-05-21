@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Utilities - Fakers</Product>
+        <PackageIcon>MyNetUtilities.png</PackageIcon>
+        <Description>A robust and flexible .NET library for generating random data, designed to simplify testing, prototyping, and data population in your applications. MyNet.Utilities.Fakers provides easy-to-use extensions for creating random addresses, names, internet information, and more.</Description>
+        <PackageTags>My;Utilities;Fakers</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
+        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Localization\NamesResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>NamesResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\PatternsResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>PatternsResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\DomainsResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DomainsResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+        <EmbeddedResource Update="Localization\AddressResources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>AddressResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Localization\PatternsResources.en.resx">
+            <DependentUpon>PatternsResources.resx</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Localization\NamesResources.en.resx">
+            <DependentUpon>NamesResources.resx</DependentUpon>
+        </EmbeddedResource>
+         <EmbeddedResource Update="Localization\DomainsResources.en.resx">
+            <DependentUpon>DomainsResources.resx</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Localization\AddressResources.en.resx">
+            <DependentUpon>AddressResources.resx</DependentUpon>
+        </EmbeddedResource>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Update="Localization\NamesResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>NamesResources.resx</DependentUpon>
+        </Compile>
+      <Compile Update="Localization\PatternsResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PatternsResources.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Localization\DomainsResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DomainsResources.resx</DependentUpon>
+      </Compile>
+        <Compile Update="Localization\AddressResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>AddressResources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+</Project>

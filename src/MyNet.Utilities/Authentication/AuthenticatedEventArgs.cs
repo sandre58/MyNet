@@ -11,11 +11,11 @@ namespace MyNet.Utilities.Authentication;
 /// <summary>
 /// Provides data for authentication state change events.
 /// </summary>
-/// <param name="success">Indicates whether the authentication succeeded.</param>
-public class AuthenticatedEventArgs(bool success) : EventArgs
+/// <param name="isAuthenticated">Indicates whether the new state is authenticated.</param>
+public sealed class AuthenticatedEventArgs(bool isAuthenticated) : EventArgs
 {
     /// <summary>
-    /// Gets a value indicating whether authentication was successful.
+    /// Gets a value indicating whether the new authentication state is authenticated.
     /// </summary>
-    public bool Success { get; } = success;
+    public bool IsAuthenticated { get; } = isAuthenticated;
 }

@@ -1,93 +1,38 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ViewLocator.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Concurrent;
-using MyNet.UI.Extensions;
 
 namespace MyNet.UI.Locators;
 
 /// <summary>
-/// Default implementation of <see cref="IViewLocator"/> that manages view instance registration and retrieval.
-/// Provides caching for singleton views to improve performance.
+/// Implements the IViewLocator interface to provide a mechanism for locating and instantiating views based on their types. This implementation uses an IServiceProvider to resolve view instances, allowing for dependency injection and flexible view creation. If the service provider cannot resolve the view type, it falls back to using Activator.CreateInstance to create an instance of the view. This allows for both registered services and direct instantiation of views, making it versatile for various application architectures.
 /// </summary>
-public class ViewLocator : IViewLocator
+/// <param name="provider">The service provider used to resolve view instances.</param>
+public sealed class ViewLocator(IServiceProvider provider) : IViewLocator
 {
-    // Thread-safe dictionary for singleton views (marked with [IsSingleton])
-    private readonly ConcurrentDictionary<Type, Lazy<object>> _singletonInstances = new();
-
-    // Optional: Cache for views without attributes (weak references to allow GC)
-    private readonly ConcurrentDictionary<Type, WeakReference<object>> _sessionCache = new();
-
-    /// <inheritdoc/>
-    public void Register(Type type, Func<object> createInstance)
-    {
-        // Only register if marked as singleton
-        if (type.IsRegisteredAsSingleton())
-        {
-            // Use GetOrAdd to handle race conditions
-            _singletonInstances.GetOrAdd(type, _ => new Lazy<object>(createInstance));
-        }
-    }
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Retrieves a view instance based on the specified view type. The locator first attempts to resolve the view type using the provided IServiceProvider. If the service provider cannot resolve the view type, it falls back to using Activator.CreateInstance to create an instance of the view. This allows for both registered services and direct instantiation of views, making it versatile for various application architectures.
+    /// </summary>
+    /// <param name="viewType">The type of the view to retrieve.</param>
+    /// <returns>The view instance.</returns>
     public object Get(Type viewType)
     {
-        // 1. Check if it's a singleton view
-        if (viewType.IsRegisteredAsSingleton())
-        {
-            return _singletonInstances.GetOrAdd(
-            viewType,
-            _ => new Lazy<object>(() => CreateViewInstance(viewType))).Value;
-        }
+        ArgumentNullException.ThrowIfNull(viewType);
 
-        // 2. Check if it's explicitly transient
-        if (viewType.IsRegisteredAsTransient())
-        {
-            // Always create a new instance
-            return CreateViewInstance(viewType);
-        }
-
-        // 3. Default behavior: Use session cache with weak references
-        // This allows reuse while not preventing garbage collection
-        if (_sessionCache.TryGetValue(viewType, out var weakRef) && weakRef.TryGetTarget(out var cachedView))
-        {
-            return cachedView;
-        }
-
-        // Create new instance
-        var newInstance = CreateViewInstance(viewType);
-
-        // Cache with weak reference (can be GC'd if memory is needed)
-        _sessionCache.AddOrUpdate(
-            viewType,
-            new WeakReference<object>(newInstance),
-            (_, _) => new WeakReference<object>(newInstance));
-
-        return newInstance;
+        return provider.GetService(viewType)
+               ?? Activator.CreateInstance(viewType)!
+               ?? throw new InvalidOperationException($"Cannot create instance of {viewType}");
     }
 
     /// <summary>
-    /// Creates a view instance using Activator.
+    /// Retrieves a view instance of the specified generic type. This method provides a type-safe way to retrieve views without needing to specify the type explicitly at runtime. It internally calls the non-generic Get method, passing the type of the generic parameter T, and casts the result to T. If the view cannot be resolved or created, it will throw an exception as defined in the non-generic Get method.
     /// </summary>
-    private static object CreateViewInstance(Type viewType) => Activator.CreateInstance(viewType)!;
-
-    /// <summary>
-    /// Clears the session cache. Singleton cache is preserved.
-    /// Useful after major UI state changes or memory pressure.
-    /// </summary>
-    public void ClearSessionCache() => _sessionCache.Clear();
-
-    /// <summary>
-    /// Gets the number of cached singleton view instances.
-    /// </summary>
-    public int SingletonCacheSize => _singletonInstances.Count;
-
-    /// <summary>
-    /// Gets the number of active session cache entries.
-    /// </summary>
-    public int SessionCacheSize => _sessionCache.Count;
+    /// <typeparam name="T">The type of the view to retrieve.</typeparam>
+    /// <returns>The view instance of type T.</returns>
+    public T Get<T>()
+        where T : class => (T)Get(typeof(T));
 }

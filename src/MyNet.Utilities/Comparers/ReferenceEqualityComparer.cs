@@ -27,6 +27,9 @@ public static class ReferenceEqualityComparer
 /// <typeparam name="T">The type of objects to compare.</typeparam>
 public class ReferenceEqualityComparer<T> : IEqualityComparer, IEqualityComparer<T>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReferenceEqualityComparer{T}"/> class.
+    /// </summary>
     internal ReferenceEqualityComparer() { }
 
     /// <summary>
@@ -34,9 +37,26 @@ public class ReferenceEqualityComparer<T> : IEqualityComparer, IEqualityComparer
     /// </summary>
     public int GetHashCode(object obj) => RuntimeHelpers.GetHashCode(obj);
 
+    /// <summary>
+    /// Determines whether the specified objects are the same instance (reference equality).
+    /// </summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns><c>true</c> if the specified objects are the same instance; otherwise, <c>false</c>.</returns>
     bool IEqualityComparer.Equals(object? x, object? y) => ReferenceEquals(x, y);
 
+    /// <summary>
+    /// Determines whether the specified objects of type <typeparamref name="T"/> are the same instance (reference equality).
+    /// </summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns><c>true</c> if the specified objects are the same instance; otherwise, <c>false</c>.</returns>
     bool IEqualityComparer<T>.Equals(T? x, T? y) => ReferenceEquals(x, y);
 
+    /// <summary>
+    /// Returns a hash code for the specified object of type <typeparamref name="T"/> based on its reference.
+    /// </summary>
+    /// <param name="obj">The object for which to get the hash code.</param>
+    /// <returns>A hash code for the specified object.</returns>
     int IEqualityComparer<T>.GetHashCode(T? obj) => RuntimeHelpers.GetHashCode(obj);
 }

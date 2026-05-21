@@ -49,20 +49,20 @@ public sealed class ObservableGlobalization : ObservableObject, IObservableGloba
     [SuppressPropertyChangedWarnings]
     private void OnCultureChanged(object? sender, EventArgs e)
     {
-        OnPropertyChanged(nameof(Culture));
-        OnPropertyChanged(nameof(UICulture));
+        ProcessPropertyChanged(nameof(Culture));
+        ProcessPropertyChanged(nameof(UICulture));
     }
 
     [SuppressPropertyChangedWarnings]
     private void OnTimeZoneChanged(object? sender, EventArgs e)
     {
-        OnPropertyChanged(nameof(TimeZone));
-        OnPropertyChanged(nameof(Now));
+        ProcessPropertyChanged(nameof(TimeZone));
+        ProcessPropertyChanged(nameof(Now));
     }
 
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
-        base.Cleanup();
+        base.DisposeManagedResources();
         _service.CultureChanged -= OnCultureChanged;
         _service.TimeZoneChanged -= OnTimeZoneChanged;
     }

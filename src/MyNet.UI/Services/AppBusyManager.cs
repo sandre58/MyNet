@@ -6,8 +6,8 @@
 
 using System;
 using System.Threading.Tasks;
-using MyNet.UI.Loading;
-using MyNet.UI.Loading.Models;
+using MyNet.UI.Legacy.Loading;
+using MyNet.UI.Legacy.Loading.Models;
 
 namespace MyNet.UI.Services;
 
@@ -18,8 +18,6 @@ namespace MyNet.UI.Services;
 public static class AppBusyManager
 {
     private static IBusyServiceFactory? _busyServiceFactory;
-    private static IBusyService? _mainBusyService;
-    private static IBusyService? _backgroundBusyService;
 
     /// <summary>
     /// Initializes the busy service factory used to create busy services.
@@ -30,12 +28,12 @@ public static class AppBusyManager
     /// <summary>
     /// Gets the main busy service, creating it if necessary.
     /// </summary>
-    public static IBusyService MainBusyService => GetOrCreate(ref _mainBusyService);
+    public static IBusyService MainBusyService => GetOrCreate(ref field);
 
     /// <summary>
     /// Gets the background busy service, creating it if necessary.
     /// </summary>
-    public static IBusyService BackgroundBusyService => GetOrCreate(ref _backgroundBusyService);
+    public static IBusyService BackgroundBusyService => GetOrCreate(ref field);
 
     /// <summary>
     /// Gets or creates a busy service using the factory.

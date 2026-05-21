@@ -5,7 +5,17 @@
         <PackageIcon>MyNetUI.png</PackageIcon>
         <Description>This library is a comprehensive class library designed to simplify the implementation of common GUI functionalities in .NET applications.</Description>
         <PackageTags>My;UI;Notifications;Theming;Dialog;ViewModels;Toasting;Presentation;Navigation;Locators</PackageTags>
+        <ExcludeLegacy Condition="'$(ExcludeLegacy)' == ''">true</ExcludeLegacy>
     </PropertyGroup>
+
+        <ItemGroup Condition="'$(ExcludeLegacy)' == 'true'">
+<!--            <Compile Remove="Legacy\**\*.cs" />-->
+            <Compile Remove="Services\AppBusyManager.cs" />
+            <Compile Remove="Services\RecentFilesManager.cs" />
+            <Compile Remove="Services\Handlers\**\*.cs" />
+            <Compile Remove="Services\Providers\**\*.cs" />
+            <Compile Remove="Layout\ColumnLayoutCollection.cs" />
+        </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Fody">
@@ -15,6 +25,7 @@
         <PackageReference Include="PropertyChanged.Fody">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     </ItemGroup>
 
     <ItemGroup>

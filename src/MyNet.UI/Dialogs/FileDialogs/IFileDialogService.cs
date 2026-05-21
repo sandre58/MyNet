@@ -21,7 +21,7 @@ public interface IFileDialogService
     /// If the user clicks the OK button of the dialog that is displayed, true is returned;
     /// otherwise false.
     /// </returns>
-    Task<bool?> ShowOpenFileDialogAsync(OpenFileDialogSettings settings);
+    Task<FileDialogResult> ShowOpenFileDialogAsync(OpenFileDialogSettings settings);
 
     /// <summary>
     /// Displays the SaveFileDialog.
@@ -31,15 +31,15 @@ public interface IFileDialogService
     /// If the user clicks the OK button of the dialog that is displayed, true is returned;
     /// otherwise false.
     /// </returns>
-    Task<bool?> ShowSaveFileDialogAsync(SaveFileDialogSettings settings);
+    Task<FileDialogResult> ShowSaveFileDialogAsync(SaveFileDialogSettings settings);
 
     /// <summary>
-    /// Displays the FolderBrowserDialog.
+    /// Displays the OpenFolderDialog.
     /// </summary>
     /// <param name="settings">The settings for the folder browser dialog.</param>
     /// <returns>
     /// If the user clicks the OK button of the dialog that is displayed, true is returned;
     /// otherwise false.
     /// </returns>
-    Task<bool?> ShowFolderDialogAsync(OpenFolderDialogSettings settings);
+    Task<FileDialogResult> ShowFolderDialogAsync(OpenFolderDialogSettings settings);
 }

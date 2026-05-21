@@ -1,8 +1,11 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="BooleanFilterViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+
+using System;
+using System.Linq.Expressions;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -10,73 +13,54 @@ namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 /// Filter view model for boolean properties.
 /// Supports nullable boolean values with optional null value filtering.
 /// </summary>
-/// <param name="propertyName">The name of the boolean property to filter on.</param>
-/// <remarks>
-/// <para><strong>Usage:</strong></para>
-/// <code>
-/// // Filter for active items
-/// var filter = new BooleanFilterViewModel("IsActive")
-/// {
-///   Value = true
-/// };
-/// // Allow null values in filter
-/// var filterWithNull = new BooleanFilterViewModel("IsDeleted")
-/// {
-///     AllowNullValue = true,
-///     Value = null // Matches items where IsDeleted is null
-/// };
-/// </code>
-/// </remarks>
-public class BooleanFilterViewModel(string propertyName) : FilterViewModel(propertyName)
+/// <typeparam name="T">The type of the items being filtered.</typeparam>
+/// <param name="propertyName">The key that identifies this filter condition.</param>
+/// <param name="property">The expression representing the boolean property to filter on.</param>
+/// <param name="allowNullValue">Whether null values are allowed. When true, Reset sets Value to null instead of false.</param>
+public class BooleanFilterViewModel<T>(
+    string propertyName,
+    Expression<Func<T, bool?>> property,
+    bool allowNullValue = false)
+    : FilterConditionViewModel<T>(propertyName)
 {
     /// <summary>
+    /// Gets the expression representing the boolean property to filter on.
+    /// </summary>
+    public Expression<Func<T, bool?>> Property { get; } = property;
+
+    /// <summary>
     /// Gets or sets the boolean value to filter by.
-    /// When null, the filter behavior depends on <see cref="AllowNullValue"/>.
+    /// When null, the filter is considered empty (unless AllowNullValue is true).
     /// </summary>
     public bool? Value { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether null values are allowed in the filter.
     /// When true, <see cref="Reset"/> sets Value to null instead of false.
-    /// Default is false.
     /// </summary>
-    public bool AllowNullValue { get; set; }
+    public bool AllowNullValue { get; set; } = allowNullValue;
 
     /// <summary>
-    /// Determines whether the specified boolean value matches the filter criteria.
-    /// </summary>
-    /// <param name="toCompare">The boolean value to compare.</param>
-    /// <returns>True if the value matches <see cref="Value"/>; otherwise, false.</returns>
-    protected override bool IsMatchProperty(object? toCompare) => (bool?)toCompare == Value;
-
-    /// <summary>
-    /// Determines whether this filter is in an empty state.
+    /// Gets a value indicating whether this filter is in an empty state.
     /// A boolean filter is empty when <see cref="Value"/> is null.
     /// </summary>
-    /// <returns>True if Value is null; otherwise, false.</returns>
-    public override bool IsEmpty() => Value is null;
+    public override bool IsEmpty => Value is null;
 
-    /// <summary>
-    /// Resets the filter to its default state.
-    /// If <see cref="AllowNullValue"/> is true, sets Value to null; otherwise, sets it to false.
-    /// </summary>
-    public override void Reset() => Value = AllowNullValue ? null : false;
-
-    /// <summary>
-    /// Sets the filter criteria from another boolean filter instance.
-    /// </summary>
-    /// <param name="from">The filter to copy criteria from. Must be a <see cref="BooleanFilterViewModel"/>.</param>
-    public override void SetFrom(object? from)
+    /// <inheritdoc />
+    protected override Expression<Func<T, bool>> BuildExpressionCore()
     {
-        if (from is not BooleanFilterViewModel other)
-            return;
-        AllowNullValue = other.AllowNullValue;
-        Value = other.Value;
+        var parameter = Property.Parameters[0];
+        var propertyBody = Property.Body;
+        var value = Expression.Constant(Value, typeof(bool?));
+
+        var body = Expression.Equal(propertyBody, value);
+
+        return Expression.Lambda<Func<T, bool>>(body, parameter);
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="BooleanFilterViewModel"/> for cloning.
+    /// Resets the filter to its default state.
+    /// If <see cref="AllowNullValue"/> is true, sets Value to null; otherwise, sets it to null (empty filter).
     /// </summary>
-    /// <returns>A new boolean filter instance with the same AllowNullValue setting.</returns>
-    protected override FilterViewModel CreateCloneInstance() => new BooleanFilterViewModel(PropertyName) { AllowNullValue = AllowNullValue };
+    public override void Reset() => Value = null;
 }

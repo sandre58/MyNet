@@ -34,12 +34,12 @@ public class AbsoluteExpirationPolicy : ExpirationPolicy
     /// The can reset.
     /// </param>
     protected AbsoluteExpirationPolicy(DateTime absoluteExpirationDateTime, bool canReset)
-        : base(canReset) => AbsoluteExpirationDateTime = absoluteExpirationDateTime;
+        : base(canReset) => AbsoluteExpirationDateTime = absoluteExpirationDateTime.ToUniversalTime();
 
     /// <summary>
     /// Gets a value indicating whether is expired.
     /// </summary>
-    public override bool IsExpired => DateTime.Now > AbsoluteExpirationDateTime;
+    public override bool IsExpired => DateTime.UtcNow > AbsoluteExpirationDateTime;
 
     /// <summary>
     /// Gets or sets the expiration date time.

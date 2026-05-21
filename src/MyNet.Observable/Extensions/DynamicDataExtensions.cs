@@ -91,13 +91,12 @@ public static class DynamicDataExtensions
         }
     }
 
-    public static IEnumerable<T> GetAddedItems<T>(this IChangeSet<T> changes)
+    extension<T>(IChangeSet<T> changes)
         where T : notnull
-        => changes.Where(y => y.Reason == ListChangeReason.Add).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.AddRange).SelectMany(z => z.Range));
-
-    public static IEnumerable<T> GetRemovedItems<T>(this IChangeSet<T> changes)
-        where T : notnull
-        => changes.Where(y => y.Reason == ListChangeReason.Remove).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.RemoveRange).SelectMany(z => z.Range));
+    {
+        public IEnumerable<T> GetAddedItems() => changes.Where(y => y.Reason == ListChangeReason.Add).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.AddRange).SelectMany(z => z.Range));
+        public IEnumerable<T> GetRemovedItems() => changes.Where(y => y.Reason == ListChangeReason.Remove).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.RemoveRange).SelectMany(z => z.Range));
+    }
 
     public static IDisposable SubscribeAll<T>(this IObservable<IChangeSet<T>> source, Action action)
         where T : INotifyPropertyChanged

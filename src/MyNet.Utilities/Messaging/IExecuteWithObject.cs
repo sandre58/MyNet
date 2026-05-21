@@ -16,10 +16,17 @@ public interface IExecuteWithObject
     /// <summary>
     /// Gets the target of the WeakAction.
     /// </summary>
-    object? Target
-    {
-        get;
-    }
+    object? Target { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the target is still alive.
+    /// </summary>
+    bool IsAlive { get; }
+
+    /// <summary>
+    /// Gets the name of the method that this weak action represents.
+    /// </summary>
+    string? MethodName { get; }
 
     /// <summary>
     /// Executes an action.

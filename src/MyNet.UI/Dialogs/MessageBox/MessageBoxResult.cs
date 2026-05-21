@@ -13,21 +13,21 @@ public enum MessageBoxResult
 {
     // Summary:
     //     The message box returns no result.
-    None = 0,
+    None,
 
     // Summary:
     //     The result value of the message box is OK.
-    Ok = 1,
+    Ok,
 
     // Summary:
     //     The result value of the message box is Cancel.
-    Cancel = 2,
+    Cancel,
 
     // Summary:
     //     The result value of the message box is Yes.
-    Yes = 6,
+    Yes,
 
     // Summary:
     //     The result value of the message box is No.
-    No = 7
+    No
 }

@@ -1,12 +1,13 @@
 // -----------------------------------------------------------------------
-// <copyright file="SortableObservableCollectionTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="SortableObservableCollectionTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MyNet.Utilities.Collections;
 using Xunit;
@@ -16,223 +17,40 @@ namespace MyNet.Utilities.Tests.Collections;
 public class SortableObservableCollectionTests
 {
     [Fact]
-    public void Sort_ShouldSortAllItems()
+    public void SortBy_ShouldSortAscending()
     {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
+        var collection = new ObservableRangeCollection<int>();
         collection.AddRange([5, 3, 8, 1, 9, 2]);
 
-        // Act
-        collection.Sort();
+        collection.SortBy(x => x);
 
-        // Assert
         Assert.Equal(new[] { 1, 2, 3, 5, 8, 9 }, collection);
     }
 
     [Fact]
-    public void Sort_Descending_ShouldSortCorrectly()
+    public void SortBy_ShouldSortDescending()
     {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(
-     x => x,
-     ListSortDirection.Descending);
+        var collection = new ObservableRangeCollection<int>();
         collection.AddRange([5, 3, 8, 1, 9, 2]);
 
-        // Act
-        collection.Sort();
+        collection.SortBy(x => x, ListSortDirection.Descending);
 
-        // Assert
         Assert.Equal(new[] { 9, 8, 5, 3, 2, 1 }, collection);
     }
 
     [Fact]
-    public void Add_WithAutoSort_ShouldInsertAtCorrectPosition()
+    public void SortBy_ShouldSortComplexObjects()
     {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x)
+        var collection = new ObservableRangeCollection<Product>
         {
-            // Act
-            5,
-            2,
-            8,
-            1
-        };
-
-        // Assert
-        Assert.Equal(new[] { 1, 2, 5, 8 }, collection);
-    }
-
-    [Fact]
-    public void Add_WithAutoSortDisabled_ShouldNotSort()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x)
-        {
-            AutoSort = false
-        };
-
-        // Act
-        collection.Add(5);
-        collection.Add(2);
-        collection.Add(8);
-
-        // Assert
-        Assert.Equal(new[] { 5, 2, 8 }, collection); // Not sorted
-    }
-
-    [Fact]
-    public void AddRange_ShouldSortOnceAtEnd()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        var sortCalls = 0;
-
-        // Count notifications (Reset = sort happened)
-        collection.CollectionChanged += (s, e) =>
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
-                sortCalls++;
-        };
-
-        // Act
-        collection.AddRange([5, 3, 8, 1, 9, 2]);
-
-        // Assert
-        Assert.Equal(new[] { 1, 2, 3, 5, 8, 9 }, collection);
-        Assert.Equal(1, sortCalls); // Only one sort at the end
-    }
-
-    [Fact]
-    public void Load_ShouldSortAfterLoad()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        collection.AddRange([1, 2, 3]);
-
-        // Act
-        collection.Load([9, 5, 3, 7, 1]);
-
-        // Assert
-        Assert.Equal(new[] { 1, 3, 5, 7, 9 }, collection);
-    }
-
-    [Fact]
-    public void ChangeSortSelector_ShouldUpdateComparer()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<string>(x => x.Length);
-        collection.AddRange(["aaa", "b", "cc"]);
-        collection.Sort();
-        Assert.Equal(new[] { "b", "cc", "aaa" }, collection); // Sorted by length
-
-        // Act - Change selector
-        collection.SortSelector = x => x;
-        collection.Sort();
-
-        // Assert
-        Assert.Equal(new[] { "aaa", "b", "cc" }, collection); // Sorted alphabetically
-    }
-
-    [Fact]
-    public void ChangeSortDirection_ShouldUpdateComparer()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        collection.AddRange([5, 3, 8, 1]);
-        collection.Sort();
-        Assert.Equal(new[] { 1, 3, 5, 8 }, collection);
-
-        // Act - Change direction
-        collection.SortDirection = ListSortDirection.Descending;
-        collection.Sort();
-
-        // Assert
-        Assert.Equal(new[] { 8, 5, 3, 1 }, collection);
-    }
-
-    [Fact]
-    public void Sort_WithNoSelector_ShouldNotThrow()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>();
-        collection.AddRange([5, 3, 8]);
-
-        // Act & Assert
-        collection.Sort(); // Should not throw Without selector, no sorting occurs
-    }
-
-    [Fact]
-    public void Sort_WithLessThanTwoItems_ShouldNotSort()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x)
-        {
-            5
-        };
-
-        // Act
-        collection.Sort();
-
-        // Assert
-        Assert.Single(collection);
-        Assert.Equal(5, collection[0]);
-    }
-
-    [Fact]
-    public void Sort_Reentrancy_ShouldBeProtected()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        collection.AddRange([5, 3, 8, 1]);
-
-        var sortCount = 0;
-        collection.CollectionChanged += (s, e) =>
-           {
-               if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
-               {
-                   sortCount++;
-
-                   // Try to sort again during notification
-                   if (sortCount == 1)
-                       collection.Sort(); // Should be ignored
-               }
-           };
-
-        // Act
-        collection.Sort();
-
-        // Assert
-        Assert.Equal(1, sortCount); // Only one sort, reentrancy protected
-    }
-
-    [Fact]
-    public void BinarySearch_ShouldFindCorrectIndex()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        collection.AddRange([1, 3, 5, 7, 9]);
-
-        // Act - Insert 6
-        collection.Add(6);
-
-        // Assert
-        Assert.Equal(new[] { 1, 3, 5, 6, 7, 9 }, collection);
-    }
-
-    [Fact]
-    public void ComplexObjectSort_ShouldWork()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<Product>(p => p.Price)
-        {
-            // Act
             new() { Name = "A", Price = 50 },
             new() { Name = "B", Price = 20 },
             new() { Name = "C", Price = 80 },
             new() { Name = "D", Price = 10 }
         };
 
-        // Assert
+        collection.SortBy(p => p.Price);
+
         Assert.Equal(10, collection[0].Price);
         Assert.Equal(20, collection[1].Price);
         Assert.Equal(50, collection[2].Price);
@@ -240,78 +58,42 @@ public class SortableObservableCollectionTests
     }
 
     [Fact]
-    public void ManualSort_WithAutoSortOff_ShouldWork()
+    public void DefaultSorter_FindInsertIndex_ShouldReturnExpectedPosition()
     {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x)
-        {
-            AutoSort = false
-        };
-        collection.AddRange([5, 3, 8, 1, 9, 2]);
+        var sorter = DefaultCollectionSorter<int>.Default;
+        IReadOnlyList<int> sorted = [1, 3, 5, 7, 9];
 
-        // Act
-        collection.Sort();
-        collection.AutoSort = true;
+        var index = sorter.FindInsertIndex(sorted, 6, x => x);
 
-        // Assert
-        Assert.Equal(new[] { 1, 2, 3, 5, 8, 9 }, collection);
+        Assert.Equal(3, index);
     }
 
     [Fact]
-    public void AddRange_WithAutoSortOff_ThenOn_ShouldSortOnce()
+    public void SortBy_WithCustomSorter_ShouldUseProvidedStrategy()
     {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-        var notifications = 0;
+        var collection = new ObservableRangeCollection<int>();
+        collection.AddRange([1, 2, 3]);
+        var sorter = new ReverseCollectionSorter<int>();
 
-        collection.CollectionChanged += (s, e) => notifications++;
+        collection.SortBy(x => x, sorter: sorter);
 
-        // Act
-        collection.AutoSort = false;
-        collection.AddRange([5, 3, 8, 1]);
-        collection.AutoSort = true;
-        collection.Sort();
-
-        // Assert
-        Assert.Equal(new[] { 1, 3, 5, 8 }, collection);
-
-        // 1 notification from AddRange (Reset)
-        // 1 notification from Sort (Reset)
-        Assert.Equal(2, notifications);
-    }
-
-    [Fact]
-    public void Constructor_WithCapacity_ShouldWork()
-    {
-        // Arrange & Act
-        var collection = new SortableObservableCollection<int>(100);
-
-        // Assert - Verify collection works with capacity
-        Assert.Empty(collection);
-
-        // Verify can add items without exception
-        collection.AddRange(Enumerable.Range(0, 100));
-        Assert.Equal(100, collection.Count);
-    }
-
-    [Fact]
-    public void ThreadSafety_ShouldInheritFromBase()
-    {
-        // Arrange
-        var collection = new SortableObservableCollection<int>(x => x);
-
-        // Act - Concurrent adds
-        System.Threading.Tasks.Parallel.For(0, 100, i => collection.Add(i));
-
-        // Assert
-        Assert.Equal(100, collection.Count);
-        Assert.Equal(Enumerable.Range(0, 100).Order(), collection);
+        Assert.Equal(new[] { 3, 2, 1 }, collection);
     }
 
     private sealed class Product
     {
-        public string Name { get; set; } = string.Empty;
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local", Justification = "Used for sorting tests")]
+        public string Name { get; init; } = string.Empty;
 
-        public decimal Price { get; set; }
+        public decimal Price { get; init; }
+    }
+
+    private sealed class ReverseCollectionSorter<T> : ICollectionSorter<T>
+    {
+        public IReadOnlyList<T> Sort(IEnumerable<T> source, Func<T, object> selector, ListSortDirection direction = ListSortDirection.Ascending)
+            => [.. source.Reverse()];
+
+        public int FindInsertIndex(IReadOnlyList<T> source, T item, Func<T, object> selector, ListSortDirection direction = ListSortDirection.Ascending)
+            => 0;
     }
 }

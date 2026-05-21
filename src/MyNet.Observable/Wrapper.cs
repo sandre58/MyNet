@@ -10,7 +10,7 @@ using MyNet.Utilities;
 
 namespace MyNet.Observable;
 
-public class Wrapper<T>(T item) : LocalizableObject, ICloneable, ISettable, IIdentifiable<Guid>, IWrapper<T>
+public class Wrapper<T>(T item) : ObservableObject, ICloneable, ISettable, IIdentifiable<Guid>, IWrapper<T>
 {
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -37,7 +37,7 @@ public class Wrapper<T>(T item) : LocalizableObject, ICloneable, ISettable, IIde
         }
     }
 
-    private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
+    private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e) => ProcessPropertyChanged(e.PropertyName);
 
     public virtual object Clone()
     {
@@ -79,13 +79,13 @@ public class Wrapper<T>(T item) : LocalizableObject, ICloneable, ISettable, IIde
 
     public override int GetHashCode() => Item?.GetHashCode() ?? 0;
 
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
         if (Item is INotifyPropertyChanged notifyPropertyChanged)
         {
             notifyPropertyChanged.PropertyChanged -= Item_PropertyChanged;
         }
 
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

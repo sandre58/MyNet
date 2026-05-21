@@ -7,24 +7,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#if NET9_0_OR_GREATER
 using System.Threading;
-#endif
 
 namespace MyNet.Utilities.Messaging;
 
 /// <summary>
 /// The Messenger is a class allowing objects to exchange messages.
 /// </summary>
-public class Messenger : IMessenger
+public class Messenger : IMessenger, IDisposable
 {
     private static readonly Lock CreationLock = new();
-    private readonly Lock _recipientsOfSubclassesActionLock = new();
-    private readonly Lock _recipientsStrictActionLock = new();
-    private readonly Lock _registerLock = new();
+    private readonly ReaderWriterLockSlim _recipientsOfSubclassesActionLock = new();
+    private readonly ReaderWriterLockSlim _recipientsStrictActionLock = new();
+    private readonly ReaderWriterLockSlim _registerLock = new();
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;
+    private bool _disposed;
 
     /// <summary>
     /// Gets the Messenger's default instance, allowing
@@ -47,10 +45,10 @@ public class Messenger : IMessenger
     }
 
     /// <summary>
-    /// Provides a way to override the Messenger.Default instance with
+    /// Provides a way to override the Messenger.Current instance with
     /// a custom instance, for example for unit testing purposes.
     /// </summary>
-    /// <param name="newMessenger">The instance that will be used as Messenger.Default.</param>
+    /// <param name="newMessenger">The instance that will be used as Messenger.Current.</param>
     public static void OverrideDefault(IMessenger newMessenger) => Default = newMessenger;
 
     /// <summary>
@@ -154,7 +152,8 @@ public class Messenger : IMessenger
         Action<TMessage> action,
         bool keepTargetAlive = false)
     {
-        lock (_registerLock)
+        _registerLock.EnterWriteLock();
+        try
         {
             var messageType = typeof(TMessage);
 
@@ -191,14 +190,14 @@ public class Messenger : IMessenger
                 var weakAction = new WeakAction<TMessage>(recipient, action, keepTargetAlive);
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
-                var item = new WeakActionAndToken
-                {
-                    Action = weakAction,
-                    Token = token
-                };
+                var item = new WeakActionAndToken { Action = weakAction, Token = token };
 
                 list.Add(item);
             }
+        }
+        finally
+        {
+            _registerLock.ExitWriteLock();
         }
 
         Cleanup();
@@ -409,13 +408,11 @@ public class Messenger : IMessenger
 
         // Clone to protect from people registering in a "receive message" method
         // Correction Messaging BL0004.007
-        var list = weakActionsAndTokens.ToList();
-        var listClone = list.Take(list.Count).ToList();
+        var listClone = new List<WeakActionAndToken>(weakActionsAndTokens);
 
         foreach (var item in listClone)
         {
-            if (item.Action is IExecuteWithObject executeAction
-                && item.Action is { IsAlive: true, Target: not null }
+            if (item.Action is { IsAlive: true, Target: not null } executeAction
                 && (messageTargetType == null
                     || item.Action.Target.GetType() == messageTargetType
                     || messageTargetType.IsInstanceOfType(item.Action.Target))
@@ -437,7 +434,7 @@ public class Messenger : IMessenger
 
         lock (lists)
         {
-            foreach (var weakAction in lists.Keys.SelectMany(messageType => lists[messageType].Select(item => (IExecuteWithObject?)item.Action).OfType<IExecuteWithObject>().Where(weakAction => recipient == weakAction.Target)))
+            foreach (var weakAction in lists.Keys.SelectMany(messageType => lists[messageType].Select(item => item.Action).OfType<IExecuteWithObject>().Where(weakAction => recipient == weakAction.Target)))
             {
                 weakAction.MarkForDeletion();
             }
@@ -483,24 +480,34 @@ public class Messenger : IMessenger
         {
             // Clone to protect from people registering in a "receive message" method
             // Correction Messaging BL0008.002
-            var listClone =
-                _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count).ToList();
-
-            foreach (var type in listClone)
+            _recipientsOfSubclassesActionLock.EnterReadLock();
+            try
             {
-                List<WeakActionAndToken>? list = null;
+                var listClone = new List<Type>(_recipientsOfSubclassesAction.Keys);
 
-                if (messageType == type
-                    || messageType.IsSubclassOf(type)
-                    || type.IsAssignableFrom(messageType))
+                foreach (var type in listClone)
                 {
-                    lock (_recipientsOfSubclassesActionLock)
-                    {
-                        list = [.. _recipientsOfSubclassesAction[type].Take(_recipientsOfSubclassesAction[type].Count)];
-                    }
-                }
+                    List<WeakActionAndToken>? list = null;
 
-                SendToList(message, list, messageTargetType, token);
+                    if (messageType == type
+                        || messageType.IsSubclassOf(type)
+                        || type.IsAssignableFrom(messageType))
+                    {
+                        lock (_recipientsOfSubclassesAction)
+                        {
+                            if (_recipientsOfSubclassesAction.TryGetValue(type, out var value))
+                            {
+                                list = [.. value];
+                            }
+                        }
+                    }
+
+                    SendToList(message, list, messageTargetType, token);
+                }
+            }
+            finally
+            {
+                _recipientsOfSubclassesActionLock.ExitReadLock();
             }
         }
 
@@ -508,12 +515,17 @@ public class Messenger : IMessenger
         {
             List<WeakActionAndToken>? list = null;
 
-            lock (_recipientsStrictActionLock)
+            _recipientsStrictActionLock.EnterReadLock();
+            try
             {
                 if (_recipientsStrictAction.TryGetValue(messageType, out var value))
                 {
-                    list = [.. value.Take(value.Count)];
+                    list = [.. value];
                 }
+            }
+            finally
+            {
+                _recipientsStrictActionLock.ExitReadLock();
             }
 
             if (list != null)
@@ -529,10 +541,53 @@ public class Messenger : IMessenger
 
     private readonly record struct WeakActionAndToken
     {
-        public WeakAction? Action { get; init; }
+#pragma warning disable CA1859 // Use concrete types instead of base types when possible for better performance
+        /// <summary>
+        /// Gets stores a WeakAction implementation. Using interface for polymorphism while CA1859 is disabled
+        /// because the actual type depends on the message type stored in the dictionary key.
+        /// </summary>
+        public IExecuteWithObject? Action { get; init; }
+#pragma warning restore CA1859
 
+        /// <summary>
+        /// Gets stores the token associated with the action. This token is used to filter messages when sending, ensuring that only recipients with matching tokens receive the message.
+        /// </summary>
         public object? Token { get; init; }
     }
 
     #endregion
+
+    /// <summary>
+    /// Releases all resources used by the Messenger.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases the unmanaged resources used by the Messenger and optionally releases managed resources.
+    /// </summary>
+    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            _registerLock.Dispose();
+            _recipientsOfSubclassesActionLock.Dispose();
+            _recipientsStrictActionLock.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Finalizes an instance of the <see cref="Messenger"/> class.
+    /// Finalizer ensures cleanup if Dispose is not called.
+    /// </summary>
+    ~Messenger() => Dispose(false);
 }

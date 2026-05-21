@@ -18,12 +18,12 @@ namespace MyNet.Observable.Deferrers;
 public class RefreshDeferrer : IDisposable
 {
     private readonly Subject<bool> _refreshSubject = new();
-    private readonly Deferrer _deferrer;
+    private readonly DeferredAction _deferredAction;
     private readonly Suspender _suspender = new();
     private readonly Dictionary<object, CompositeDisposable> _disposables = [];
     private bool _disposedValue;
 
-    public RefreshDeferrer() => _deferrer = new(() =>
+    public RefreshDeferrer() => _deferredAction = new(() =>
     {
         if (_suspender.IsSuspended) return;
 
@@ -54,13 +54,13 @@ public class RefreshDeferrer : IDisposable
         _ = _disposables.Remove(obj);
     }
 
-    public virtual IDisposable Defer() => _deferrer.Defer();
+    public virtual IDisposable Defer() => _deferredAction.Defer();
 
     public virtual IDisposable Suspend() => _suspender.Suspend();
 
-    public virtual void AskRefresh() => _deferrer.DeferOrExecute();
+    public virtual void AskRefresh() => _deferredAction.Request();
 
-    public virtual bool IsDeferred() => _deferrer.IsDeferred;
+    public virtual bool IsDeferred() => _deferredAction.IsDeferred;
 
     public virtual bool IsSuspended() => _suspender.IsSuspended;
 

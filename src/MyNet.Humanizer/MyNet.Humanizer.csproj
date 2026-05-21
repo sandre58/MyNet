@@ -8,33 +8,43 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Resources\DateHumanizeResources.Designer.cs">
+        <Compile Update="Resources\DateTimeResources.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>DateHumanizeResources.resx</DependentUpon>
         </Compile>
-        <Compile Update="Resources\EnumHumanizeResources.Designer.cs">
+        <Compile Update="Resources\EnumResources.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>EnumHumanizeResources.resx</DependentUpon>
         </Compile>
+        <Compile Update="Resources\ListResources.Designer.cs">
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>ListResources.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Update="Resources\DateHumanizeResources.en.resx">
+        <EmbeddedResource Update="Resources\DateTimeResources.en.resx">
             <Generator></Generator>
         </EmbeddedResource>
-        <EmbeddedResource Update="Resources\DateHumanizeResources.resx">
+        <EmbeddedResource Update="Resources\DateTimeResources.resx">
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>DateHumanizeResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Update="Resources\EnumHumanizeResources.resx">
+        <EmbeddedResource Update="Resources\EnumResources.resx">
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>EnumHumanizeResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\ListResources.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>ListResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
 

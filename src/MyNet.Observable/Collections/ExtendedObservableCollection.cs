@@ -12,7 +12,11 @@ using MyNet.Utilities.Collections;
 
 namespace MyNet.Observable.Collections;
 
-public class ExtendedObservableCollection<T> : OptimizedObservableCollection<T>, IObservableCollection<T>, IExtendedList<T>
+/// <summary>
+/// Represents an extended observable collection that provides additional functionalities and optimizations for managing a collection of items. This class extends the capabilities of a standard ObservableCollection by implementing the IObservableCollection and IExtendedList interfaces, allowing for more efficient data manipulation and change tracking.
+/// </summary>
+/// <typeparam name="T">The type of elements in the collection.</typeparam>
+public class ExtendedObservableCollection<T> : ObservableRangeCollection<T>, IObservableCollection<T>, IExtendedList<T>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtendedObservableCollection{T}"/> class.

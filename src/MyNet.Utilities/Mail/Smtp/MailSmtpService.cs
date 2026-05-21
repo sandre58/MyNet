@@ -5,30 +5,45 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MyNet.Utilities.Mail.Models;
+using Attachment = System.Net.Mail.Attachment;
 
 namespace MyNet.Utilities.Mail.Smtp;
 
 public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisposable
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Dispose in class Dispose()")]
+    [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Dispose in class Dispose()")]
     public MailSmtpService(SmtpClientOptions options)
-        : this(new SmtpClient(options.Server, options.Port)
+        : this(CreateSmtpClient(options))
+    {
+    }
+
+    private static SmtpClient CreateSmtpClient(SmtpClientOptions options)
+    {
+        var client = new SmtpClient(options.Server, options.Port)
         {
-            Credentials = new NetworkCredential(options.User, options.Password),
             EnableSsl = options.UseSsl,
             PickupDirectoryLocation = options.MailPickupDirectory,
-            UseDefaultCredentials = options.RequiresAuthentication,
             DeliveryMethod = options.UsePickupDirectory
-            ? SmtpDeliveryMethod.SpecifiedPickupDirectory
-            : SmtpDeliveryMethod.Network
-        })
-    {
+                ? SmtpDeliveryMethod.SpecifiedPickupDirectory
+                : SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = !options.RequiresAuthentication
+        };
+
+        if (options.RequiresAuthentication)
+        {
+            client.Credentials = new NetworkCredential(options.User, options.Password);
+        }
+
+        return client;
     }
 
     public static MailMessage CreateMailMessage(IEmail email)
@@ -39,28 +54,30 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
         // Smtp seems to require the HTML version as the alternative.
         if (!string.IsNullOrEmpty(data.PlaintextAlternativeBody))
         {
-            message = new MailMessage
+            message = new()
             {
                 Subject = data.Subject,
                 Body = data.PlaintextAlternativeBody,
                 IsBodyHtml = false,
-                From = new MailAddress(data.From.Address, data.From.Name)
+                BodyEncoding = Encoding.UTF8,
+                SubjectEncoding = Encoding.UTF8,
+                From = new(data.From.Address, data.From.Name)
             };
 
-            var mimeType = new System.Net.Mime.ContentType("text/html; charset=UTF-8");
+            var mimeType = new ContentType("text/html; charset=UTF-8");
             var alternate = AlternateView.CreateAlternateViewFromString(data.Body, mimeType);
             message.AlternateViews.Add(alternate);
         }
         else
         {
-            message = new MailMessage
+            message = new()
             {
                 Subject = data.Subject,
                 Body = data.Body,
                 IsBodyHtml = data.IsHtml,
                 BodyEncoding = Encoding.UTF8,
                 SubjectEncoding = Encoding.UTF8,
-                From = new MailAddress(data.From.Address, data.From.Name)
+                From = new(data.From.Address, data.From.Name)
             };
         }
 
@@ -85,7 +102,7 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
         data.Attachments.ForEach(x =>
         {
             if (x.Data == null) return;
-            var a = new System.Net.Mail.Attachment(x.Data, x.Filename, x.ContentType) { ContentId = x.ContentId };
+            var a = new Attachment(x.Data, x.Filename, x.ContentType) { ContentId = x.ContentId };
 
             message.Attachments.Add(a);
         });
@@ -94,41 +111,40 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
     }
 
     public SendResponse Send(IEmail email, CancellationToken? token = null) =>
-        Task.Run(() => SendAsync(email, token)).Result;
+        SendAsync(email, token).ConfigureAwait(false).GetAwaiter().GetResult();
 
+    [SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Intended to be called from synchronous code")]
     public async Task<SendResponse> SendAsync(IEmail email, CancellationToken? token = null)
     {
         var response = new SendResponse();
 
-        if (token?.IsCancellationRequested ?? false) return response;
-        await Task.Run(async () =>
+        if (token?.IsCancellationRequested ?? false)
+        {
+            response.ErrorMessages.Add("Send canceled.");
+            return response;
+        }
+
+        try
         {
             token?.ThrowIfCancellationRequested();
 
             using var message = CreateMailMessage(email);
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             smtpClient.SendCompleted += handler;
             try
             {
                 smtpClient.SendAsync(message, tcs);
-                await using (token?.Register(smtpClient.SendAsyncCancel, useSynchronizationContext: false))
-                {
-                    _ = await tcs.Task.ConfigureAwait(false);
-                }
+                await using var registration = token?.Register(static state => ((SmtpClient)state!).SendAsyncCancel(), smtpClient);
+                _ = await tcs.Task.ConfigureAwait(false);
             }
             finally
             {
                 smtpClient.SendCompleted -= handler;
             }
 
-            async void handler(object s, System.ComponentModel.AsyncCompletedEventArgs e)
+            void handler(object? s, AsyncCompletedEventArgs e)
             {
-                smtpClient.SendCompleted -= handler;
-
-                // a hack to complete the handler asynchronously
-                await Task.Yield();
-
                 _ = e.UserState != tcs
                     ? tcs.TrySetException(new InvalidOperationException("Unexpected UserState"))
                     : e.Cancelled
@@ -137,7 +153,15 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
                             ? tcs.TrySetException(e.Error)
                             : tcs.TrySetResult(true);
             }
-        }).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            response.ErrorMessages.Add("Send canceled.");
+        }
+        catch (Exception ex)
+        {
+            response.ErrorMessages.Add(ex.Message);
+        }
 
         return response;
     }

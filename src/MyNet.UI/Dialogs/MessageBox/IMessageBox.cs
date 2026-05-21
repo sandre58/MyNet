@@ -4,21 +4,27 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.UI.Dialogs.ContentDialogs;
+
 namespace MyNet.UI.Dialogs.MessageBox;
 
-public interface IMessageBox
+/// <summary>
+/// Interface representing a message box dialog.
+/// Extends <see cref="IDialog{TResult}"/> of <see cref="MessageBoxResult"/> so that
+/// the platform strategy can show and retrieve the result uniformly through
+/// <see cref="ContentDialogs.IContentDialogService"/>.
+/// </summary>
+public interface IMessageBox : IDialog<MessageBoxResult>
 {
-    string? Title { get; set; }
+    /// <summary>Gets the message displayed in the message box.</summary>
+    string Message { get; }
 
-    /// <summary>
-    /// Gets or sets the <see cref="MessageBoxResultOption"/> value that specifies which button or
-    /// buttons to display. Default value is <see cref="MessageBoxResultOption.Ok"/>.
-    /// </summary>
-    MessageBoxResultOption Buttons { get; set; }
+    /// <summary>Gets the severity of the message (Info, Warning, Error, etc.).</summary>
+    MessageSeverity Severity { get; }
 
-    /// <summary>
-    /// Gets or sets the <see cref="MessageBoxResult"/> value that specifies the default result
-    /// of the message box. Default value is <see cref="MessageBoxResult.Ok"/>.
-    /// </summary>
-    MessageBoxResult DefaultResult { get; set; }
+    /// <summary>Gets the buttons displayed in the message box.</summary>
+    MessageBoxResultOption Buttons { get; }
+
+    /// <summary>Gets the default selected result.</summary>
+    MessageBoxResult DefaultResult { get; }
 }

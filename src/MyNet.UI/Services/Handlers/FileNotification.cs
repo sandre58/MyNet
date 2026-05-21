@@ -7,7 +7,7 @@
 using System;
 using System.Windows.Input;
 using MyNet.UI.Commands;
-using MyNet.UI.Notifications;
+using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Resources;
 
 namespace MyNet.UI.Services.Handlers;
@@ -36,11 +36,13 @@ public class FileNotification : ClosableNotification
     /// <param name="message">The notification message. If null, a default message is used.</param>
     /// <param name="title">The notification title. If null, a default title is used.</param>
     /// <param name="severity">The severity of the notification. Default is Success.</param>
-    public FileNotification(string filePath, Action<string> openAction, string? message = null, string? title = null, NotificationSeverity severity = NotificationSeverity.Success)
+    /// <param name="commandFactory">Optional command factory used to create the open-file command.</param>
+    public FileNotification(string filePath, Action<string> openAction, string? message = null, string? title = null, NotificationSeverity severity = NotificationSeverity.Success, ICommandFactory? commandFactory = null)
         : base(message ?? MessageResources.DownloadFileSuccess, title ?? UiResources.DownloadFile, severity)
     {
+        var commands = commandFactory ?? RelayCommandFactory.Default;
         FilePath = filePath;
-        OpenFileCommand = CommandsManager.Create(() => openAction(FilePath));
+        OpenFileCommand = commands.Create(() => openAction(FilePath));
     }
 
     /// <inheritdoc/>

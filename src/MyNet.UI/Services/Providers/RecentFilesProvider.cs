@@ -9,8 +9,8 @@ using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using DynamicData;
 using DynamicData.Binding;
+using MyNet.UI.Legacy.ViewModels.FileHistory;
 using MyNet.UI.Messages;
-using MyNet.UI.ViewModels.FileHistory;
 using MyNet.Utilities;
 using MyNet.Utilities.Collections;
 using MyNet.Utilities.IO.FileHistory;
@@ -66,7 +66,7 @@ public sealed class RecentFilesProvider : IDisposable
         var recentFiles = _recentFilesService.GetAll();
 
         _source.UpdateFrom(recentFiles,
-            x => _source.Add(new RecentFileViewModel(x, _recentFilesManager, _recentFileCommandsService)),
+            x => _source.Add(new(x, _recentFilesManager, _recentFileCommandsService)),
             x => _source.Remove(x),
             (destination, source) => destination.Update(source),
             (x, y) => x.Path == y.Path);

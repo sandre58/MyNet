@@ -26,38 +26,35 @@
     <!-- Code coverage configuration -->
     <DataCollectionRunSettings>
         <DataCollectors>
-            <!-- Using XPlat Code Coverage (Coverlet) -->
-            <DataCollector friendlyName="XPlat Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0">
+            <!-- Using XPlat Code Coverage (Coverlet NuGet package) -->
+            <!-- NOTE: Do NOT set the uri attribute here - it belongs to VS built-in coverage, not Coverlet.
+                 Matching is done by friendlyName only. -->
+            <DataCollector friendlyName="XPlat Code Coverage">
                 <Configuration>
 
-                    <!-- Output formats: lcov (GitHub Actions), opencover (ReportGenerator), cobertura (SonarQube) -->
+                    <!-- Output formats: lcov (GitHub Actions), opencover (ReportGenerator), cobertura (SonarQube/Azure) -->
                     <Format>cobertura</Format>
 
-                    <!-- Exclude unwanted assemblies -->
-                    <Exclude>[*.Tests]*</Exclude>
-                    <Exclude>[*.Demos]*</Exclude>
-                    <Exclude>[xunit.*]*</Exclude>
-                    <Exclude>[Microsoft.*]*</Exclude>
-                    <Exclude>[System.*]*</Exclude>
+                    <!-- Exclude unwanted assemblies (comma-separated, Coverlet syntax) -->
+                    <Exclude>[*.Tests]*,[*.UnitTests]*,[*.Demos]*,[xunit.*]*,[Microsoft.*]*,[System.*]*</Exclude>
 
-                    <!-- Exclude specific file paths -->
-                    <ExcludeByFile>**/Migrations/*,**/obj/*,**/bin/*</ExcludeByFile>
+                    <!-- Exclude specific file paths (comma-separated) -->
+                    <ExcludeByFile>**/Migrations/**,**/obj/**,**/bin/**</ExcludeByFile>
 
-                    <!-- Exclude classes/methods marked with these attributes -->
-                    <ExcludeByAttribute>
-                        Obsolete
-                        GeneratedCodeAttribute
-                        CompilerGeneratedAttribute
-                    </ExcludeByAttribute>
+                    <!-- Exclude classes/methods marked with these attributes (comma-separated) -->
+                    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
 
-                    <!-- Optional: skip auto-implemented properties getters/setters -->
+                    <!-- Skip auto-implemented properties getters/setters -->
                     <SkipAutoProps>true</SkipAutoProps>
 
-                    <!-- Optional: include test assembly references -->
+                    <!-- Use SourceLink for source mapping -->
                     <UseSourceLink>true</UseSourceLink>
 
-                    <!-- Count multiple hits per line (false = measure all hits) -->
+                    <!-- Count multiple hits per line (false = measure all hits, true = faster) -->
                     <SingleHit>false</SingleHit>
+
+                    <!-- Include test assemblies in coverage (false = exclude them) -->
+                    <IncludeTestAssembly>false</IncludeTestAssembly>
 
                 </Configuration>
             </DataCollector>

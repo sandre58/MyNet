@@ -43,15 +43,15 @@ public sealed class WebApiService : IDisposable
             InnerHandler = new HttpClientHandler { AutomaticDecompression = System.Net.DecompressionMethods.GZip }
         };
 
-        _client = new HttpClient(handler)
+        _client = new(handler)
         {
             BaseAddress = serverUrl,
             Timeout = _timeout
         };
         _client.DefaultRequestHeaders.Accept.Clear();
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/problem+json"));
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+        _client.DefaultRequestHeaders.Accept.Add(new("application/json"));
+        _client.DefaultRequestHeaders.Accept.Add(new("application/problem+json"));
+        _client.DefaultRequestHeaders.Accept.Add(new("text/plain"));
         _client.DefaultRequestHeaders.AcceptEncoding.Add(StringWithQualityHeaderValue.Parse("gzip"));
 
         headers?.ForEach(x => _client.DefaultRequestHeaders.Add(x.Key, x.Value));
@@ -197,7 +197,7 @@ public sealed class WebApiService : IDisposable
 
         using var request = new HttpRequestMessage(method, uri);
         request.Content = content;
-        request.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(CultureInfo.CurrentCulture.Name));
+        request.Headers.AcceptLanguage.Add(new(CultureInfo.CurrentCulture.Name));
         using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseContentRead, linkedCancellationToken.Token).ConfigureAwait(false);
 
         if (response.IsSuccessStatusCode) return;
@@ -222,7 +222,7 @@ public sealed class WebApiService : IDisposable
         using var request = new HttpRequestMessage(method, uri);
         request.Content = content;
 
-        request.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(CultureInfo.CurrentCulture.Name));
+        request.Headers.AcceptLanguage.Add(new(CultureInfo.CurrentCulture.Name));
         using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseContentRead, linkedCancellationToken.Token).ConfigureAwait(false);
         return response.IsSuccessStatusCode
             ? await response.Content.ReadAsAsync<T>(linkedCancellationToken.Token).ConfigureAwait(false)
@@ -259,8 +259,8 @@ internal sealed class JsonProblemMediaTypeFormatter : JsonMediaTypeFormatter
 {
     public JsonProblemMediaTypeFormatter()
     {
-        SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/problem+json"));
-        SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+        SupportedMediaTypes.Add(new("application/problem+json"));
+        SupportedMediaTypes.Add(new("text/html"));
     }
 }
 

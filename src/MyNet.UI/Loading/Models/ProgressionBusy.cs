@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MyNet.UI.Loading.Models;
 
@@ -20,12 +21,26 @@ public class ProgressionBusy : Busy
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the collection of messages displayed during the busy operation.
-    /// </summary>
-    public IEnumerable<string>? Messages { get; set; }
-
-    /// <summary>
     /// Gets or sets the progress value of the busy operation.
     /// </summary>
     public double Value { get; set; }
+
+    /// <summary>
+    /// Gets the collection of messages history.
+    /// </summary>
+    public ObservableCollection<string> Messages { get; } = [];
+
+    /// <summary>
+    /// Reports progress with optional message.
+    /// </summary>
+    public void Report(double value, string? message = null)
+    {
+        Value = value;
+
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            Title = message;
+            Messages.Add(message);
+        }
+    }
 }

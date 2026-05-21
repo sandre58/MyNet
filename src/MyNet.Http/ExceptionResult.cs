@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
-using MyNet.Utilities.Helpers;
+using MyNet.Utilities.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace MyNet.Http;
@@ -66,7 +66,7 @@ public sealed class ExceptionResult : ISerializable
                         _ => item.Value.ToString()
                     };
 
-                    errors.Add(new HttpError(str ?? string.Empty));
+                    errors.Add(new(str ?? string.Empty));
                 }
 
                 Exception = new MultipleHttpException(title?.Value?.ToString() ?? string.Empty, errors);

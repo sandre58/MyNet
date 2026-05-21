@@ -129,13 +129,6 @@ public interface IEmail
     IEmail PlaintextAlternativeBody(string body);
 
     /// <summary>
-    /// Adds tag to the Email. This is currently only supported by the Mailgun provider. <see href="https://documentation.mailgun.com/en/latest/user_manual.html#tagging"/>.
-    /// </summary>
-    /// <param name="tag">Tag name, max 128 characters, ASCII only.</param>
-    /// <returns>Instance of the Email class.</returns>
-    IEmail Tag(string tag);
-
-    /// <summary>
     /// Adds header to the Email.
     /// </summary>
     /// <param name="header">Header name, only printable ASCII allowed.</param>

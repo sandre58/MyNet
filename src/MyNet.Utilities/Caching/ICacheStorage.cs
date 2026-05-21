@@ -97,7 +97,7 @@ public interface ICacheStorage<TKey, TValue>
     /// <param name="override">Indicates if the key exists the value will be overridden.</param>
     /// <returns>The instance initialized by the <paramref name="code" />.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="key" /> is <c>null</c>.</exception>
-    TValue GetFromCacheOrFetch(TKey key, Func<TValue> code, ExpirationPolicy expirationPolicy, bool @override = false);
+    TValue GetFromCacheOrFetch(TKey key, Func<TValue> code, ExpirationPolicy? expirationPolicy, bool @override = false);
 
     /// <summary>
     /// Removes an item from the cache.
@@ -125,7 +125,7 @@ public interface ICacheStorage<TKey, TValue>
     /// <param name="expirationPolicy">The expiration policy.</param>
     /// <param name="override">Indicates if the key exists the value will be overridden.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="key" /> is <c>null</c>.</exception>
-    void Add(TKey key, TValue value, ExpirationPolicy expirationPolicy, bool @override = false);
+    void Add(TKey key, TValue value, ExpirationPolicy? expirationPolicy, bool @override = false);
 
     /// <summary>
     /// Clears all the items currently in the cache.

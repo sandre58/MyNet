@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using MyNet.Utilities.Caching.Policies;
 
@@ -23,7 +23,7 @@ namespace MyNet.Utilities.Caching;
 /// <param name="defaultExpirationPolicyInitCode">The default expiration policy initialization code.</param>
 /// <param name="storeNullValues">Allow store null values on the cache.</param>
 /// <param name="equalityComparer">The equality comparer.</param>
-public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpirationPolicyInitCode = null, bool storeNullValues = false,
+public sealed class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpirationPolicyInitCode = null, bool storeNullValues = false,
     IEqualityComparer<TKey>? equalityComparer = null) : ICacheStorage<TKey, TValue>
     where TKey : notnull
 {
@@ -37,17 +37,12 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <summary>
     /// The dictionary.
     /// </summary>
-    private readonly ConcurrentDictionary<TKey, CacheStorageValueInfo<TValue>> _dictionary = new(equalityComparer ?? EqualityComparer<TKey>.Default);
+    private readonly Dictionary<TKey, CacheStorageValueInfo<TValue>> _dictionary = new(equalityComparer ?? EqualityComparer<TKey>.Default);
 
     /// <summary>
     /// The synchronization object.
     /// </summary>
     private readonly Lock _syncObj = new();
-
-    /// <summary>
-    /// The async locks.
-    /// </summary>
-    private readonly Dictionary<TKey, object> _locksByKey = [];
 
     /// <summary>
     /// The timer that is being executed to invalidate the cache.
@@ -83,16 +78,7 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// Gets the keys so it is possible to enumerate the cache.
     /// </summary>
     /// <value>The keys.</value>
-    public IEnumerable<TKey> Keys
-    {
-        get
-        {
-            lock (_syncObj)
-            {
-                return _dictionary.Keys;
-            }
-        }
-    }
+    public IEnumerable<TKey> Keys => GetKeysSnapshot();
 
     /// <summary>
     /// Gets or sets the expiration timer interval.
@@ -102,15 +88,33 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <value>The expiration timer interval.</value>
     public TimeSpan ExpirationTimerInterval
     {
-        get;
+        get
+        {
+            lock (_syncObj)
+            {
+                return _expirationTimerInterval;
+            }
+        }
+
         set
         {
-            field = value;
-            UpdateTimer();
+            if (value <= TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Expiration timer interval must be greater than zero.");
+            }
+
+            lock (_syncObj)
+            {
+                _expirationTimerInterval = value;
+                if (_checkForExpiredItems)
+                {
+                    UpdateTimerUnsafe();
+                }
+            }
         }
     }
 
-= TimeSpan.FromSeconds(1);
+    private TimeSpan _expirationTimerInterval = TimeSpan.FromSeconds(1);
 
     /// <summary>
     /// Gets the value associated with the specified key.
@@ -127,12 +131,14 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <returns>The value associated with the specified key, or default value for the type of the value if the key do not exist.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="key" /> is <c>null</c>.</exception>
     public TValue? Get(TKey key)
-        => ExecuteInLock(key, () =>
-        {
-            _ = _dictionary.TryGetValue(key, out var valueInfo);
+    {
+        ArgumentNullException.ThrowIfNull(key);
 
-            return valueInfo is not null ? valueInfo.Value : default;
-        });
+        lock (_syncObj)
+        {
+            return !TryGetValueInfoUnsafe(key, out var valueInfo) ? default : valueInfo.Value;
+        }
+    }
 
     /// <summary>
     /// Determines whether the cache contains a value associated with the specified key.
@@ -141,7 +147,14 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <returns><c>true</c> if the cache contains an element with the specified key; otherwise, <c>false</c>.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="key" /> is <c>null</c>.</exception>
     public bool Contains(TKey key)
-        => ExecuteInLock(key, () => _dictionary.ContainsKey(key));
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        lock (_syncObj)
+        {
+            return TryGetValueInfoUnsafe(key, out _);
+        }
+    }
 
     /// <summary>
     /// Adds a value to the cache associated with to a key.
@@ -154,38 +167,31 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <exception cref="ArgumentNullException">If <paramref name="key" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentNullException">If <paramref name="code" /> is <c>null</c>.</exception>
     public TValue GetFromCacheOrFetch(TKey key, Func<TValue> code, ExpirationPolicy? expirationPolicy, bool @override = false)
-        => ExecuteInLock(key, () =>
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(code);
+
+        lock (_syncObj)
         {
-            if (!@override && _dictionary.TryGetValue(key, out var cacheStorageValueInfo))
+            if (!@override && TryGetValueInfoUnsafe(key, out var cacheStorageValueInfo))
             {
                 return cacheStorageValueInfo.Value;
             }
 
             var value = code();
-            if (value is null && !_storeNullValues) return value;
-            if (expirationPolicy is null && defaultExpirationPolicyInitCode is not null)
+            if (value is null && !_storeNullValues)
             {
-                expirationPolicy = defaultExpirationPolicyInitCode();
+                return value;
             }
 
-            var valueInfo = new CacheStorageValueInfo<TValue>(value, expirationPolicy);
-            lock (_syncObj)
-            {
-                _dictionary[key] = valueInfo;
-            }
+            expirationPolicy ??= defaultExpirationPolicyInitCode?.Invoke();
 
-            if (valueInfo.CanExpire)
-            {
-                _checkForExpiredItems = true;
-            }
-
-            if (expirationPolicy is not null && _expirationTimer is null)
-            {
-                UpdateTimer();
-            }
+            _dictionary[key] = new(value, expirationPolicy);
+            UpdateExpirationStateUnsafe();
 
             return value;
-        });
+        }
+    }
 
     /// <summary>
     /// Adds a value to the cache associated with to a key.
@@ -226,48 +232,37 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <param name="action">The action that need to be executed in synchronization with the item cache removal.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="key" /> is <c>null</c>.</exception>
     public void Remove(TKey key, Action? action = null)
-        => ExecuteInLock(key, () => RemoveItem(key, false, action));
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        lock (_syncObj)
+        {
+            _ = RemoveItemUnsafe(key, false, action);
+        }
+    }
 
     /// <summary>
     /// Clears all the items currently in the cache.
     /// </summary>
     public void Clear()
     {
-        var keysToRemove = new List<TKey>();
-
         lock (_syncObj)
         {
-            keysToRemove.AddRange(_dictionary.Keys);
-
+            var keysToRemove = _dictionary.Keys.ToList();
             foreach (var keyToRemove in keysToRemove)
             {
-                _ = ExecuteInLock(keyToRemove, () => RemoveItem(keyToRemove, false));
+                _ = RemoveItemUnsafe(keyToRemove, false);
             }
 
-            _checkForExpiredItems = false;
-
-            UpdateTimer();
+            UpdateExpirationStateUnsafe();
         }
     }
 
-    private void UpdateTimer()
+    private TKey[] GetKeysSnapshot()
     {
         lock (_syncObj)
         {
-            if (!_checkForExpiredItems)
-            {
-                if (_expirationTimer is null) return;
-                _expirationTimer.Dispose();
-                _expirationTimer = null;
-            }
-            else
-            {
-                var timeSpan = ExpirationTimerInterval;
-
-                _expirationTimer ??= new Timer(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
-
-                _ = _expirationTimer.Change(timeSpan, timeSpan);
-            }
+            return [.. _dictionary.Keys];
         }
     }
 
@@ -276,92 +271,28 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// </summary>
     private void RemoveExpiredItems()
     {
-        var containsItemsThatCanExpire = false;
-
-        var keysToRemove = new List<TKey>();
-
         lock (_syncObj)
         {
+            if (!_checkForExpiredItems)
+            {
+                return;
+            }
+
+            var keysToRemove = new List<TKey>();
             foreach (var (key, valueInfo) in _dictionary)
             {
                 if (valueInfo.IsExpired)
                 {
                     keysToRemove.Add(key);
                 }
-                else
-                {
-                    if (!containsItemsThatCanExpire && valueInfo.CanExpire)
-                    {
-                        containsItemsThatCanExpire = true;
-                    }
-                }
-            }
-        }
-
-        foreach (var keyToRemove in keysToRemove)
-        {
-            ExecuteInLock(keyToRemove, () =>
-            {
-                var removed = RemoveItem(keyToRemove, true);
-
-                if (!removed && !containsItemsThatCanExpire && _dictionary[keyToRemove].CanExpire)
-                {
-                    containsItemsThatCanExpire = true;
-                }
-            });
-        }
-
-        lock (_syncObj)
-        {
-            if (_checkForExpiredItems == containsItemsThatCanExpire) return;
-            _checkForExpiredItems = containsItemsThatCanExpire;
-            UpdateTimer();
-        }
-    }
-
-    private void ExecuteInLock(TKey key, Action action)
-        => ExecuteInLock(key, () =>
-        {
-            action();
-            return true;
-        });
-
-    private T ExecuteInLock<T>(TKey key, Func<T> action)
-    {
-        // Note: check comments below, this lock is required like this
-        var asyncLock = GetLockByKey(key);
-        lock (asyncLock)
-        {
-            IDisposable? unlockDisposable = null;
-
-            try
-            {
-                return action();
-            }
-            finally
-            {
-                unlockDisposable?.Dispose();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets the lock by key.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <returns>The lock object.</returns>
-    private object GetLockByKey(TKey key)
-    {
-        // Note: we never clear items from the key locks, but this is so they can be re-used in the future without the cost
-        // of garbage collection
-        lock (_syncObj)
-        {
-            if (!_locksByKey.TryGetValue(key, out var asyncLock))
-            {
-                _locksByKey[key] = asyncLock = new object();
             }
 
-            return asyncLock;
+            foreach (var keyToRemove in keysToRemove)
+            {
+                _ = RemoveItemUnsafe(keyToRemove, true);
+            }
+
+            UpdateExpirationStateUnsafe();
         }
     }
 
@@ -369,14 +300,27 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// Called when the timer to clean up the cache elapsed.
     /// </summary>
     /// <param name="state">The timer state.</param>
-    private void OnTimerElapsed(object? state)
+    private void OnTimerElapsed(object? state) => RemoveExpiredItems();
+
+    private bool TryGetValueInfoUnsafe(TKey key, out CacheStorageValueInfo<TValue> valueInfo)
     {
-        if (!_checkForExpiredItems)
+        if (!_dictionary.TryGetValue(key, out var cacheStorageValueInfo))
         {
-            return;
+            valueInfo = null!;
+            return false;
         }
 
-        RemoveExpiredItems();
+        valueInfo = cacheStorageValueInfo;
+
+        if (!valueInfo.IsExpired)
+        {
+            return true;
+        }
+
+        _ = RemoveItemUnsafe(key, true);
+
+        valueInfo = null!;
+        return false;
     }
 
     /// <summary>
@@ -386,7 +330,7 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
     /// <param name="raiseEvents">Indicates whether events should be raised.</param>
     /// <param name="action">The action that need to be executed in synchronization with the item cache removal.</param>
     /// <returns>The value indicating whether the item was removed.</returns>
-    private bool RemoveItem(TKey key, bool raiseEvents, Action? action = null)
+    private bool RemoveItemUnsafe(TKey key, bool raiseEvents, Action? action = null)
     {
         // Try to get item, if there is no item by that key then return true to indicate that item was removed.
         if (!_dictionary.TryGetValue(key, out var item))
@@ -409,17 +353,15 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
 
         if (cancel)
         {
-            if (expirationPolicy is null && defaultExpirationPolicyInitCode is not null)
-            {
-                expirationPolicy = defaultExpirationPolicyInitCode.Invoke();
-            }
+            expirationPolicy ??= defaultExpirationPolicyInitCode?.Invoke();
 
-            _dictionary[key] = new CacheStorageValueInfo<TValue>(item.Value, expirationPolicy);
+            _dictionary[key] = new(item.Value, expirationPolicy);
+            UpdateExpirationStateUnsafe();
 
             return false;
         }
 
-        _ = _dictionary.TryRemove(key, out _);
+        _ = _dictionary.Remove(key);
 
         var dispose = DisposeValuesOnRemoval;
         if (raiseEvents)
@@ -435,7 +377,35 @@ public class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultExpiratio
             item.DisposeValue();
         }
 
+        UpdateExpirationStateUnsafe();
+
         return true;
+    }
+
+    private void UpdateExpirationStateUnsafe()
+    {
+        var containsItemsThatCanExpire = _dictionary.Values.Any(x => x.CanExpire);
+        if (_checkForExpiredItems == containsItemsThatCanExpire)
+        {
+            return;
+        }
+
+        _checkForExpiredItems = containsItemsThatCanExpire;
+        UpdateTimerUnsafe();
+    }
+
+    private void UpdateTimerUnsafe()
+    {
+        if (!_checkForExpiredItems)
+        {
+            _expirationTimer?.Dispose();
+            _expirationTimer = null;
+            return;
+        }
+
+        var timeSpan = _expirationTimerInterval;
+        _expirationTimer ??= new(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
+        _ = _expirationTimer.Change(timeSpan, timeSpan);
     }
     #endregion
 }

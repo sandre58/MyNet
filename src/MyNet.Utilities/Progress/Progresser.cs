@@ -7,98 +7,151 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MyNet.Utilities.Progress;
 
-public class Progresser : Progresser<ProgressMessage>, IProgresser
-{
-    public IProgressStep<ProgressMessage> New(string message, params object[] parameters)
-        => New(new ProgressMessage(message, parameters));
+/// <summary>
+/// Concrete implementation of <see cref="IProgresser"/> that works with <see cref="ProgressMessage"/>.
+/// String-based convenience overloads are available via <see cref="ProgresserExtensions"/>.
+/// </summary>
+public class Progresser : Progresser<ProgressMessage>, IProgresser;
 
-    public IProgressStep<ProgressMessage> New(IEnumerable<double> subStepDefinitions, string message, params object[] parameters)
-        => New(subStepDefinitions, new ProgressMessage(message, parameters));
-
-    public IProgressStep<ProgressMessage> New(int numberOfSteps, string message, params object[] parameters)
-        => New(numberOfSteps, new ProgressMessage(message, parameters));
-
-    public IProgressStep<ProgressMessage> New(Action cancelAction, string message, params object[] parameters)
-        => New(new ProgressMessage(message, parameters), cancelAction);
-
-    public IProgressStep<ProgressMessage> New(Action cancelAction, IEnumerable<double> subStepDefinitions, string message, params object[] parameters)
-        => New(subStepDefinitions, new ProgressMessage(message, parameters), cancelAction);
-
-    public IProgressStep<ProgressMessage> New(Action cancelAction, int numberOfSteps, string message, params object[] parameters)
-        => New(numberOfSteps, new ProgressMessage(message, parameters), cancelAction);
-
-    public IProgressStep<ProgressMessage> Start(string message, params object[] parameters)
-        => Start(new ProgressMessage(message, parameters), false);
-
-    public IProgressStep<ProgressMessage> Start(IEnumerable<double> subStepDefinitions, string message, params object[] parameters)
-        => Start(subStepDefinitions, new ProgressMessage(message, parameters), false);
-
-    public IProgressStep<ProgressMessage> Start(int numberOfSteps, string message, params object[] parameters)
-        => Start(numberOfSteps, new ProgressMessage(message, parameters), false);
-
-    public IProgressStep<ProgressMessage> StartCancellable(string message, params object[] parameters)
-        => Start(new ProgressMessage(message, parameters));
-
-    public IProgressStep<ProgressMessage> StartCancellable(IEnumerable<double> subStepDefinitions, string message, params object[] parameters)
-        => Start(subStepDefinitions, new ProgressMessage(message, parameters));
-
-    public IProgressStep<ProgressMessage> StartCancellable(int numberOfSteps, string message, params object[] parameters)
-        => Start(numberOfSteps, new ProgressMessage(message, parameters));
-}
-
+/// <summary>
+/// Generic implementation of <see cref="IProgresser{T}"/>.
+/// Manages a stack of active <see cref="ProgressStep{T}"/> instances and
+/// notifies registered <see cref="IProgress{T}"/> subscribers on every state change.
+/// </summary>
+/// <typeparam name="T">The type of messages associated with progress steps.</typeparam>
 public class Progresser<T> : IProgresser<T>
 {
-    private readonly HashSet<IProgress<(double Progress, IEnumerable<T> Messages, Action? CancelAction, bool CanCancel)>> _progressSubscribers = [];
-    private readonly ConcurrentStack<IProgressStep<T>> _steps = new();
+    // ── Fields ───────────────────────────────────────────────────────────────
 
-    public IProgressStep<T> New(T message, Action? cancelAction = null)
+    /// <summary>Thread-safe set of progress subscribers (value is unused; the key is the subscriber).</summary>
+    private readonly ConcurrentDictionary<IProgress<ProgressReport<T>>, byte> _subscribers = new();
+
+    /// <summary>LIFO stack of active steps, from root (bottom) to innermost (top).</summary>
+    private readonly ConcurrentStack<ProgressStep<T>> _steps = new();
+
+    /// <summary>
+    /// The root step of the current session. Stored separately so that
+    /// <see cref="Report"/> can access it in O(1) without iterating the stack.
+    /// Volatile to avoid stale reads across threads.
+    /// </summary>
+    private volatile ProgressStep<T>? _rootStep;
+
+    // ── IProgresser<T> — Begin ───────────────────────────────────────────────
+
+    /// <inheritdoc/>
+    public IProgressStep<T> Begin(T message, Action? cancelAction = null)
     {
-        _steps.Clear();
-        return new ProgressStep<T>(this, null, message, [], cancelAction, true);
+        DiscardCurrentSession();
+        return CreateRootStep([], message, cancelAction);
     }
 
-    public IProgressStep<T> New(IEnumerable<double> subStepDefinitions, T message, Action? cancelAction = null)
+    /// <inheritdoc/>
+    public IProgressStep<T> Begin(int numberOfSteps, T message, Action? cancelAction = null)
     {
-        _steps.Clear();
-        return new ProgressStep<T>(this, null, message, subStepDefinitions, cancelAction, true);
+        DiscardCurrentSession();
+        return CreateRootStep(EqualWeights(numberOfSteps), message, cancelAction);
     }
 
-    public IProgressStep<T> New(int numberOfSteps, T message, Action? cancelAction = null)
+    /// <inheritdoc/>
+    public IProgressStep<T> Begin(IEnumerable<double> subStepWeightings, T message, Action? cancelAction = null)
     {
-        _steps.Clear();
-        return new ProgressStep<T>(this, null, message, [.. Enumerable.Range(1, numberOfSteps).Select(_ => 1.0D / numberOfSteps)], cancelAction, true);
+        DiscardCurrentSession();
+        return CreateRootStep(subStepWeightings, message, cancelAction);
     }
 
-    public IProgressStep<T> Start(T message, bool canCancel = true)
-        => new ProgressStep<T>(this, GetCurrent(), message, [], null, canCancel);
+    // ── IProgresser<T> — StartStep ───────────────────────────────────────────
 
-    public IProgressStep<T> Start(IEnumerable<double> subStepDefinitions, T message, bool canCancel = true)
-        => new ProgressStep<T>(this, GetCurrent(), message, subStepDefinitions, null, canCancel);
+    /// <inheritdoc/>
+    public IProgressStep<T> StartStep(T message, bool canCancel = true)
+    {
+        var parent = GetCurrentStep();
+        return new ProgressStep<T>(this, parent, parent.AllocateChildSlot(), message, [], null, canCancel);
+    }
 
-    public IProgressStep<T> Start(int numberOfSteps, T message, bool canCancel = true)
-        => new ProgressStep<T>(this, GetCurrent(), message, [.. Enumerable.Range(1, numberOfSteps).Select(_ => 1.0D / numberOfSteps)], null, canCancel);
+    /// <inheritdoc/>
+    public IProgressStep<T> StartStep(int numberOfSteps, T message, bool canCancel = true)
+    {
+        var parent = GetCurrentStep();
+        return new ProgressStep<T>(this, parent, parent.AllocateChildSlot(), message, EqualWeights(numberOfSteps), null, canCancel);
+    }
 
-    public void Subscribe(IProgress<(double Progress, IEnumerable<T> Messages, Action? CancelAction, bool CanCancel)> progress) => _progressSubscribers.Add(progress);
+    /// <inheritdoc/>
+    public IProgressStep<T> StartStep(IEnumerable<double> subStepWeightings, T message, bool canCancel = true)
+    {
+        var parent = GetCurrentStep();
+        return new ProgressStep<T>(this, parent, parent.AllocateChildSlot(), message, subStepWeightings, null, canCancel);
+    }
 
-    public void Unsubscribe(IProgress<(double Progress, IEnumerable<T> Messages, Action? CancelAction, bool CanCancel)> progress) => _progressSubscribers.Remove(progress);
+    // ── IProgresser<T> — Subscription ────────────────────────────────────────
 
-    internal void Pop() => _steps.TryPop(out _);
+    /// <inheritdoc/>
+    public void Subscribe(IProgress<ProgressReport<T>> progress) => _subscribers.TryAdd(progress, 0);
 
-    internal void Push(IProgressStep<T> progressStep) => _steps.Push(progressStep);
+    /// <inheritdoc/>
+    public void Unsubscribe(IProgress<ProgressReport<T>> progress) => _subscribers.TryRemove(progress, out _);
+
+    // ── Internal API (called by ProgressStep<T>) ─────────────────────────────
+    [SuppressMessage("ReSharper", "NonAtomicCompoundOperator", Justification = "ConcurrentStack is thread-safe for Push/Pop, and rootStep is only used for reporting which can tolerate some staleness.")]
+    internal void Push(ProgressStep<T> step)
+    {
+        _steps.Push(step);
+
+        // The first step pushed after DiscardCurrentSession() becomes the root.
+        _rootStep ??= step;
+    }
+
+    internal void Pop()
+    {
+        _steps.TryPop(out _);
+        if (_steps.IsEmpty)
+            _rootStep = null;
+    }
 
     internal void Report()
     {
-        var messages = _steps.Where(x => x.Message is not null).Reverse().Select(x => x.Message!).ToList();
-        var value = _steps.Last().Progress;
-        var cancelAction = _steps.LastOrDefault()?.CancelAction;
-        var canCancel = _steps.All(x => x.CanCancel);
+        var root = _rootStep;
+        if (root is null) return;
 
-        _progressSubscribers.ToList().ForEach(x => x.Report((value, messages, cancelAction, canCancel)));
+        // Snapshot the stack to avoid races during enumeration.
+        // ConcurrentStack enumerates top → bottom (LIFO), so Reverse() gives root → leaf.
+        var snapshot = _steps.ToArray();
+        var messages = snapshot
+            .Reverse()
+            .Where(s => s.Message is not null)
+            .Select(s => s.Message!)
+            .ToList();
+
+        var canCancel = snapshot.All(s => s.CanCancel);
+        var report = new ProgressReport<T>(root.Progress, messages, root.CancelAction, canCancel);
+
+        foreach (var subscriber in _subscribers.Keys)
+            subscriber.Report(report);
     }
 
-    private IProgressStep GetCurrent() => _steps.TryPeek(out var result) ? result : throw new InvalidOperationException("Impossible to start a progress step before to create a root step with New()");
+    // ── Private helpers ───────────────────────────────────────────────────────
+    private static IEnumerable<double> EqualWeights(int count)
+        => count <= 0
+            ? []
+            : Enumerable.Repeat(1.0 / count, count);
+
+    /// <summary>Clears any ongoing session without triggering dispose logic on individual steps.</summary>
+    private void DiscardCurrentSession()
+    {
+        _steps.Clear();
+        _rootStep = null;
+    }
+
+    private ProgressStep<T> CreateRootStep(IEnumerable<double> weightings, T message, Action? cancelAction) =>
+        new(this, parent: null, parentSlotIndex: -1, message, weightings, cancelAction, canCancel: true);
+
+    private ProgressStep<T> GetCurrentStep()
+        => _steps.TryPeek(out var top)
+            ? top
+            : throw new InvalidOperationException(
+                "No active progress session. Call Begin() before StartStep().");
 }

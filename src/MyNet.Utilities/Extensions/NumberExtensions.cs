@@ -4,250 +4,149 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using MyNet.Utilities.Units;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Utilities;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
-/// <summary>
-/// Number to Number extensions.
-/// </summary>
 public static class NumberExtensions
 {
-    private static readonly Dictionary<Type, Func<object, Enum, Enum, double>> ConvertMethods = new()
+    public const int Ten = 10;
+    public const int Hundred = 100;
+    public const int Thousand = 1000;
+    public const int Million = 1_000_000;
+    public const int Billion = 1_000_000_000;
+
+    extension(int value)
     {
-        {
-            typeof(FileSizeUnit), (value, fromUnit, toUnit) =>
-            {
-                var pow = (int)(object)toUnit - (int)(object)fromUnit;
+        /// <summary>
+        /// 5.Tens == 50.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int Tens() => value * Ten;
 
-                return pow switch
-                {
-                    < 0 => (double)value * Math.Pow(1024, Math.Abs(pow)),
-                    > 0 => (double)value / Math.Pow(1024, pow),
-                    _ => (double)value
-                };
-            }
-        },
-        {
-            typeof(MetricUnit),
-            (value, fromUnit, toUnit) =>
-                (double)value * Math.Pow(10, (int)(object)toUnit - (int)(object)fromUnit)
-        },
-        {
-            typeof(LengthUnit),
-            (value, fromUnit, toUnit) =>
-                (double)value * Math.Pow(10, (int)(object)toUnit - (int)(object)fromUnit)
-        },
-        {
-            typeof(MassUnit),
-            (value, fromUnit, toUnit) =>
-                (double)value * Math.Pow(10, (int)(object)toUnit - (int)(object)fromUnit)
-        }
-    };
+        /// <summary>
+        /// 4.Hundreds() == 400.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int Hundreds() => value * Hundred;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double To<T, TUnit>(this T value, TUnit fromUnit, TUnit toUnit)
-        where T : struct, IComparable<T>
-        where TUnit : Enum
-        => To(value, fromUnit.GetType(), fromUnit, toUnit);
+        /// <summary>
+        /// 3.Thousands() == 3000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int Thousands() => value * Thousand;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double To<T, TUnit>(this T value, TUnit toUnit)
-        where T : struct, IComparable<T>
-        where TUnit : Enum
-        => To(value, default!, toUnit);
+        /// <summary>
+        /// 2.Millions() == 2000000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int Millions() => value * Million;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double To<T>(this T value, Type type, Enum fromUnit, Enum toUnit)
-        where T : struct, IComparable<T>
-        => ConvertMethods.TryGetValue(type, out var convertMethod)
-            ? convertMethod.Invoke(value, fromUnit, toUnit)
-            : throw new ArgumentException(null, nameof(type));
-
-    public static (double NewValue, TUnit NewUnit) Simplify<T, TUnit>(this T value, TUnit unit, TUnit? minUnit = default, TUnit? maxUnit = default)
-        where T : struct, IComparable<T>
-        where TUnit : Enum
-    {
-        var (newValue, newUnit) = Simplify(value, typeof(T), unit, minUnit, maxUnit);
-
-        return (newValue, (TUnit)newUnit);
+        /// <summary>
+        /// 1.Billions() == 1000000000 (short scale).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int Billions() => value * Billion;
     }
 
-    public static (double NewValue, Enum NewUnit) Simplify<T>(this T value, Type type, Enum unit, Enum? minUnit = null, Enum? maxUnit = null)
-        where T : struct, IComparable<T>
+    extension(long value)
     {
-        var newUnit = unit;
-        double? newValue = null;
-        var results = Enum.GetValues(type).OfType<object>()
-            .Where(enumValue => (minUnit is null || (int)enumValue >= (int)(object)minUnit) &&
-                                (maxUnit is null || (int)enumValue <= (int)(object)maxUnit))
-            .ToDictionary(enumValue => (Enum)enumValue, enumValue => value.To(type, unit, (Enum)enumValue));
+        /// <summary>
+        /// 5.Tens == 50.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long Tens() => value * Ten;
 
-        if (results.All(x => x.Value.NearlyEqual(0))) return (newValue ?? (double)(object)value, newUnit);
+        /// <summary>
+        /// 4.Hundreds() == 400.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long Hundreds() => value * Hundred;
 
-        var orderedResults = results.OrderBy(x => x.Value).ToList();
-        var item = orderedResults.Any(x => x.Value >= 1)
-            ? orderedResults.Find(x => x.Value >= 1)
-            : orderedResults.LastOrDefault();
-        newValue = item.Value;
-        newUnit = item.Key;
+        /// <summary>
+        /// 3.Thousands() == 3000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long Thousands() => value * Thousand;
 
-        return (newValue.Value, newUnit);
+        /// <summary>
+        /// 2.Millions() == 2000000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long Millions() => value * Million;
+
+        /// <summary>
+        /// 1.Billions() == 1000000000 (short scale).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long Billions() => value * Billion;
     }
 
-    /// <summary>
-    /// 5.Tens == 50.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Tens(this int input) => input * 10;
+    extension(decimal value)
+    {
+        /// <summary>
+        /// 5.Tens == 50.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public decimal Tens() => value * Ten;
 
-    /// <summary>
-    /// 5.Tens == 50.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint Tens(this uint input) => input * 10;
+        /// <summary>
+        /// 4.Hundreds() == 400.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public decimal Hundreds() => value * Hundred;
 
-    /// <summary>
-    /// 5.Tens == 50.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long Tens(this long input) => input * 10;
+        /// <summary>
+        /// 3.Thousands() == 3000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public decimal Thousands() => value * Thousand;
 
-    /// <summary>
-    /// 5.Tens == 50.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Tens(this ulong input) => input * 10;
+        /// <summary>
+        /// 2.Millions() == 2000000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public decimal Millions() => value * Million;
 
-    /// <summary>
-    /// 5.Tens == 50.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Tens(this double input) => input * 10;
+        /// <summary>
+        /// 1.Billions() == 1000000000 (short scale).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public decimal Billions() => value * Billion;
+    }
 
-    /// <summary>
-    /// 4.Hundreds() == 400.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Hundreds(this int input) => input * 100;
+    extension(double value)
+    {
+        /// <summary>
+        /// 5.Tens == 50.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Tens() => value * Ten;
 
-    /// <summary>
-    /// 4.Hundreds() == 400.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint Hundreds(this uint input) => input * 100;
+        /// <summary>
+        /// 4.Hundreds() == 400.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Hundreds() => value * Hundred;
 
-    /// <summary>
-    /// 4.Hundreds() == 400.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long Hundreds(this long input) => input * 100;
+        /// <summary>
+        /// 3.Thousands() == 3000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Thousands() => value * Thousand;
 
-    /// <summary>
-    /// 4.Hundreds() == 400.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Hundreds(this ulong input) => input * 100;
+        /// <summary>
+        /// 2.Millions() == 2000000.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Millions() => value * Million;
 
-    /// <summary>
-    /// 4.Hundreds() == 400.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Hundreds(this double input) => input * 100;
-
-    /// <summary>
-    /// 3.Thousands() == 3000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Thousands(this int input) => input * 1000;
-
-    /// <summary>
-    /// 3.Thousands() == 3000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint Thousands(this uint input) => input * 1000;
-
-    /// <summary>
-    /// 3.Thousands() == 3000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long Thousands(this long input) => input * 1000;
-
-    /// <summary>
-    /// 3.Thousands() == 3000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Thousands(this ulong input) => input * 1000;
-
-    /// <summary>
-    /// 3.Thousands() == 3000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Thousands(this double input) => input * 1000;
-
-    /// <summary>
-    /// 2.Millions() == 2000000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Millions(this int input) => input * 1000000;
-
-    /// <summary>
-    /// 2.Millions() == 2000000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint Millions(this uint input) => input * 1000000;
-
-    /// <summary>
-    /// 2.Millions() == 2000000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long Millions(this long input) => input * 1000000;
-
-    /// <summary>
-    /// 2.Millions() == 2000000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Millions(this ulong input) => input * 1000000;
-
-    /// <summary>
-    /// 2.Millions() == 2000000.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Millions(this double input) => input * 1000000;
-
-    /// <summary>
-    /// 1.Billions() == 1000000000 (short scale).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Billions(this int input) => input * 1000000000;
-
-    /// <summary>
-    /// 1.Billions() == 1000000000 (short scale).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint Billions(this uint input) => input * 1000000000;
-
-    /// <summary>
-    /// 1.Billions() == 1000000000 (short scale).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long Billions(this long input) => input * 1000000000;
-
-    /// <summary>
-    /// 1.Billions() == 1000000000 (short scale).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Billions(this ulong input) => input * 1000000000;
-
-    /// <summary>
-    /// 1.Billions() == 1000000000 (short scale).
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Billions(this double input) => input * 1000000000;
+        /// <summary>
+        /// 1.Billions() == 1000000000 (short scale).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Billions() => value * Billion;
+    }
 }

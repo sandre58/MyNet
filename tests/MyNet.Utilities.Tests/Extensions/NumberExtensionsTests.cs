@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Units;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Extensions;
@@ -12,27 +11,27 @@ namespace MyNet.Utilities.Tests.Extensions;
 public class NumberExtensionsTests
 {
     [Theory]
-    [InlineData(1024, FileSizeUnit.Byte, 1, FileSizeUnit.Kilobyte)]
-    [InlineData(1048576, FileSizeUnit.Byte, 1, FileSizeUnit.Megabyte)]
-    [InlineData(1073741824, FileSizeUnit.Byte, 1, FileSizeUnit.Gigabyte)]
-    [InlineData(1099511627776, FileSizeUnit.Byte, 1, FileSizeUnit.Terabyte)]
-    [InlineData(244587587, FileSizeUnit.Byte, 238855.0654296875, FileSizeUnit.Kilobyte)]
-    [InlineData(244587587, FileSizeUnit.Byte, 233.2568998336792, FileSizeUnit.Megabyte)]
-    [InlineData(244587587, FileSizeUnit.Byte, 0.22778994124382734, FileSizeUnit.Gigabyte)]
-    [InlineData(244587587, FileSizeUnit.Byte, 0.00022245111449592514, FileSizeUnit.Terabyte)]
-    [InlineData(21454545, FileSizeUnit.Kilobyte, 21969454080, FileSizeUnit.Byte)]
-    [InlineData(21454545, FileSizeUnit.Kilobyte, 20951.7041015625, FileSizeUnit.Megabyte)]
-    [InlineData(21454545, FileSizeUnit.Kilobyte, 20.46064853668213, FileSizeUnit.Gigabyte)]
-    [InlineData(21454545, FileSizeUnit.Kilobyte, 0.01998110208660364, FileSizeUnit.Terabyte)]
-    [InlineData(124124, FileSizeUnit.Megabyte, 130153447424, FileSizeUnit.Byte)]
-    [InlineData(124124, FileSizeUnit.Megabyte, 127102976, FileSizeUnit.Kilobyte)]
-    [InlineData(124124, FileSizeUnit.Megabyte, 121.21484375, FileSizeUnit.Gigabyte)]
-    [InlineData(124124, FileSizeUnit.Megabyte, 0.11837387084960938, FileSizeUnit.Terabyte)]
-    [InlineData(14212, FileSizeUnit.Gigabyte, 15260018802688, FileSizeUnit.Byte)]
-    [InlineData(14212, FileSizeUnit.Gigabyte, 14902362112, FileSizeUnit.Kilobyte)]
-    [InlineData(14212, FileSizeUnit.Gigabyte, 14553088, FileSizeUnit.Megabyte)]
-    [InlineData(14212, FileSizeUnit.Gigabyte, 13.87890625, FileSizeUnit.Terabyte)]
-    public void DoubleToFileSize(double from, FileSizeUnit fromUnit, double result, FileSizeUnit toUnit) => Assert.Equal(result, from.To(fromUnit, toUnit));
+    [InlineData(1024, DataSizeUnit.Byte, 1, DataSizeUnit.Kilobyte)]
+    [InlineData(1048576, DataSizeUnit.Byte, 1, DataSizeUnit.Megabyte)]
+    [InlineData(1073741824, DataSizeUnit.Byte, 1, DataSizeUnit.Gigabyte)]
+    [InlineData(1099511627776, DataSizeUnit.Byte, 1, DataSizeUnit.Terabyte)]
+    [InlineData(244587587, DataSizeUnit.Byte, 238855.0654296875, DataSizeUnit.Kilobyte)]
+    [InlineData(244587587, DataSizeUnit.Byte, 233.2568998336792, DataSizeUnit.Megabyte)]
+    [InlineData(244587587, DataSizeUnit.Byte, 0.22778994124382734, DataSizeUnit.Gigabyte)]
+    [InlineData(244587587, DataSizeUnit.Byte, 0.00022245111449592514, DataSizeUnit.Terabyte)]
+    [InlineData(21454545, DataSizeUnit.Kilobyte, 21969454080, DataSizeUnit.Byte)]
+    [InlineData(21454545, DataSizeUnit.Kilobyte, 20951.7041015625, DataSizeUnit.Megabyte)]
+    [InlineData(21454545, DataSizeUnit.Kilobyte, 20.46064853668213, DataSizeUnit.Gigabyte)]
+    [InlineData(21454545, DataSizeUnit.Kilobyte, 0.01998110208660364, DataSizeUnit.Terabyte)]
+    [InlineData(124124, DataSizeUnit.Megabyte, 130153447424, DataSizeUnit.Byte)]
+    [InlineData(124124, DataSizeUnit.Megabyte, 127102976, DataSizeUnit.Kilobyte)]
+    [InlineData(124124, DataSizeUnit.Megabyte, 121.21484375, DataSizeUnit.Gigabyte)]
+    [InlineData(124124, DataSizeUnit.Megabyte, 0.11837387084960938, DataSizeUnit.Terabyte)]
+    [InlineData(14212, DataSizeUnit.Gigabyte, 15260018802688, DataSizeUnit.Byte)]
+    [InlineData(14212, DataSizeUnit.Gigabyte, 14902362112, DataSizeUnit.Kilobyte)]
+    [InlineData(14212, DataSizeUnit.Gigabyte, 14553088, DataSizeUnit.Megabyte)]
+    [InlineData(14212, DataSizeUnit.Gigabyte, 13.87890625, DataSizeUnit.Terabyte)]
+    public void DoubleToFileSize(double from, DataSizeUnit fromUnit, double result, DataSizeUnit toUnit) => Assert.Equal(result, from.To(fromUnit, toUnit));
 
     [Fact]
     public void IntToTens()
@@ -42,24 +41,10 @@ public class NumberExtensionsTests
     }
 
     [Fact]
-    public void UintToTens()
-    {
-        const uint number = 1;
-        Assert.Equal(10U, number.Tens());
-    }
-
-    [Fact]
     public void LongToTens()
     {
         const long number = 1;
         Assert.Equal(10L, number.Tens());
-    }
-
-    [Fact]
-    public void UlongToTens()
-    {
-        const ulong number = 1;
-        Assert.Equal(10UL, number.Tens());
     }
 
     [Fact]
@@ -77,24 +62,10 @@ public class NumberExtensionsTests
     }
 
     [Fact]
-    public void UintToHundreds()
-    {
-        const uint number = 2;
-        Assert.Equal(200U, number.Hundreds());
-    }
-
-    [Fact]
     public void LongToHundreds()
     {
         const long number = 2;
         Assert.Equal(200L, number.Hundreds());
-    }
-
-    [Fact]
-    public void UlongToHundreds()
-    {
-        const ulong number = 2;
-        Assert.Equal(200UL, number.Hundreds());
     }
 
     [Fact]
@@ -112,24 +83,10 @@ public class NumberExtensionsTests
     }
 
     [Fact]
-    public void UintToThousands()
-    {
-        const uint number = 3;
-        Assert.Equal(3000U, number.Thousands());
-    }
-
-    [Fact]
     public void LongToThousands()
     {
         const long number = 3;
         Assert.Equal(3000L, number.Thousands());
-    }
-
-    [Fact]
-    public void UlongToThousands()
-    {
-        const ulong number = 3;
-        Assert.Equal(3000UL, number.Thousands());
     }
 
     [Fact]
@@ -147,24 +104,10 @@ public class NumberExtensionsTests
     }
 
     [Fact]
-    public void UintToMillions()
-    {
-        const uint number = 4;
-        Assert.Equal(4000000U, number.Millions());
-    }
-
-    [Fact]
     public void LongToMillions()
     {
         const long number = 4;
         Assert.Equal(4000000L, number.Millions());
-    }
-
-    [Fact]
-    public void UlongToMillions()
-    {
-        const ulong number = 4;
-        Assert.Equal(4000000UL, number.Millions());
     }
 
     [Fact]
@@ -182,24 +125,10 @@ public class NumberExtensionsTests
     }
 
     [Fact]
-    public void UintToBillions()
-    {
-        const uint number = 1;
-        Assert.Equal(1000000000U, number.Billions());
-    }
-
-    [Fact]
     public void LongToBillions()
     {
         const long number = 1;
         Assert.Equal(1000000000L, number.Billions());
-    }
-
-    [Fact]
-    public void UlongToBillions()
-    {
-        const ulong number = 1;
-        Assert.Equal(1000000000UL, number.Billions());
     }
 
     [Fact]

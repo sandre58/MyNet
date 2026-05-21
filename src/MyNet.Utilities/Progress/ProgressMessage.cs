@@ -4,13 +4,24 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace MyNet.Utilities.Progress;
 
-public class ProgressMessage
+/// <summary>
+/// Represents a localizable progress message with optional format parameters.
+/// </summary>
+/// <param name="Message">The message string. May contain format placeholders (e.g. <c>{0}</c>) resolved by <paramref name="Parameters"/>.</param>
+/// <param name="Parameters">Optional format parameters passed to <see cref="string.Format(string, object[])"/> when <see cref="ToString"/> is called.</param>
+public sealed record ProgressMessage(string Message, params object[] Parameters)
 {
-    public ProgressMessage(string message, params object[] parameters) => (Message, Parameters) = (message, parameters);
-
-    public string Message { get; }
-
-    public object[] Parameters { get; }
+    /// <summary>
+    /// Returns the formatted message string.
+    /// When <see cref="Parameters"/> is non-empty the message is treated as a composite-format string;
+    /// otherwise the raw <see cref="Message"/> value is returned.
+    /// </summary>
+    public override string ToString()
+        => Parameters.Length > 0
+            ? string.Format(CultureInfo.CurrentCulture, Message, Parameters)
+            : Message;
 }

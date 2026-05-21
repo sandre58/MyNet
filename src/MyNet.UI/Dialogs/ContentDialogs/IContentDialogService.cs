@@ -4,49 +4,56 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyNet.UI.Dialogs.ContentDialogs;
 
 /// <summary>
-/// Service for opening and managing custom dialogs.
+/// Service for opening and managing custom content dialogs.
 /// </summary>
 public interface IContentDialogService
 {
     /// <summary>
-    /// Occurs when a dialog is opened.
-    /// </summary>
-    event EventHandler<ContentDialogEventArgs> DialogOpened;
-
-    /// <summary>
-    /// Occurs when a dialog is closed.
-    /// </summary>
-    event EventHandler<ContentDialogEventArgs> DialogClosed;
-
-    /// <summary>
     /// Gets the collection of currently opened dialogs.
     /// </summary>
-    ObservableCollection<IDialogViewModel> OpenedDialogs { get; }
+    IReadOnlyList<IDialog> OpenedDialogs { get; }
 
     /// <summary>
-    /// Displays a non-modal custom dialog of specified type.
+    /// Gets a value indicating whether at least one dialog is currently open.
     /// </summary>
-    /// <param name="view">The type of the custom dialog to show.</param>
-    /// <param name="viewModel">The view model of the new custom dialog.</param>
-    Task ShowAsync(object view, IDialogViewModel viewModel);
+    bool HasOpenedDialogs { get; }
 
     /// <summary>
-    /// Displays a modal custom dialog of specified type.
+    /// Displays a dialog and returns a simple boolean outcome (confirmed / cancelled / dismissed).
     /// </summary>
-    /// <param name="view">The type of the custom dialog to show.</param>
-    /// <param name="viewModel">The view model of the new custom dialog.</param>
-    Task<bool?> ShowModalAsync(object view, IDialogViewModel viewModel);
+    /// <param name="dialog">The dialog view model.</param>
+    /// <param name="options">Optional configuration overrides (modality, title, owner …).</param>
+    /// <param name="cancellationToken">A token to observe for cancellation requests.</param>
+    Task<DialogResult<bool>> ShowAsync(IDialog dialog, DialogOptions? options = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Closes the specified dialog.
+    /// Displays a typed dialog and returns a strongly-typed <see cref="DialogResult{TResult}"/>.
     /// </summary>
-    /// <param name="dialog">The dialog to close.</param>
-    Task<bool?> CloseAsync(IDialogViewModel dialog);
+    /// <typeparam name="TResult">The type of the value returned by the dialog.</typeparam>
+    /// <param name="dialog">The typed dialog view model.</param>
+    /// <param name="options">Optional configuration overrides.</param>
+    /// <param name="cancellationToken">A token to observe for cancellation requests.</param>
+    Task<DialogResult<TResult>> ShowAsync<TResult>(IDialog<TResult> dialog, DialogOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a fluent <see cref="IDialogBuilder"/> to configure and display the given dialog.
+    /// </summary>
+    IDialogBuilder Create(IDialog dialog);
+
+    /// <summary>
+    /// Creates a fluent <see cref="IDialogBuilder{TResult}"/> to configure and display the given typed dialog.
+    /// </summary>
+    IDialogBuilder<TResult> Create<TResult>(IDialog<TResult> dialog);
+
+    /// <summary>
+    /// Programmatically closes the specified open dialog.
+    /// </summary>
+    Task CloseAsync(IDialog dialog);
 }

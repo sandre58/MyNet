@@ -30,8 +30,6 @@ public class EmailData(EmailAddress from)
 
     public Priority Priority { get; set; }
 
-    public IList<string> Tags { get; } = [];
-
     public bool IsHtml { get; set; }
 
     public Dictionary<string, string> Headers { get; } = [];

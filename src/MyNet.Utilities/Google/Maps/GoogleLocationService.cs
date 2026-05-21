@@ -25,7 +25,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
         : this(string.Empty, useHttps) { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GoogleLocationService"/> class. Default calling the API over regular
+    /// Initializes a new instance of the <see cref="GoogleLocationService"/> class. Current calling the API over regular
     /// HTTP (not HTTPS).
     /// </summary>
     public GoogleLocationService()
@@ -109,8 +109,8 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
             }
         }
 
-        _ = Country.TryFromName(addressCountry.OrEmpty(), out var country);
-        return new Address(string.Join(" ", new[] { addressStreetNumber, addressRoute, addressSubLocality }.NotNull()), addressPostalCode, addressLocality, country, latitude, longitude);
+        _ = Country.TryFromValue(addressCountry.OrEmpty(), out var country);
+        return new(string.Join(" ", new[] { addressStreetNumber, addressRoute, addressSubLocality }.NotNull()), addressPostalCode, addressLocality, country, new(latitude, longitude));
     }
 
     /// <summary>

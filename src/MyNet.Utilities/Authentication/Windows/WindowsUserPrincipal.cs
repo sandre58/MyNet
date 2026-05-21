@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Security.Principal;
 
 namespace MyNet.Utilities.Authentication.Windows;
@@ -16,7 +17,8 @@ namespace MyNet.Utilities.Authentication.Windows;
 /// </remarks>
 /// <param name="identity">The identity associated with the principal.</param>
 /// <param name="roles">The roles for the principal.</param>
-public class WindowsUserPrincipal(IIdentity identity, string[] roles) : GenericPrincipal(identity, roles)
+public class WindowsUserPrincipal(IIdentity identity, string[] roles)
+    : GenericPrincipal(identity ?? throw new ArgumentNullException(nameof(identity)), roles ?? throw new ArgumentNullException(nameof(roles)))
 {
     /// <summary>
     /// Gets the user name extracted from the identity.

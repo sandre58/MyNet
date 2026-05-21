@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using MyNet.Observable.Attributes;
 using MyNet.Observable.Resources;
 using MyNet.Utilities;
@@ -66,10 +67,10 @@ public class AcceptableValue<T> : EditableObject, IAcceptableValue<T>
 
         ValidationRules.Add<IAcceptableValue<T>, T?>(_ => Value,
             () => Min.HasValue && Max.HasValue
-            ? ValidationResources.FieldXMustBeBetweenYAndZError.FormatWith(nameof(Value).Translate(), Min.Value, Max.Value)
+            ? ValidationResources.FieldXMustBeBetweenYAndZError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value, Max.Value)
             : Min.HasValue
-                ? ValidationResources.FieldXMustBeUpperOrEqualsThanYError.FormatWith(nameof(Value).Translate(), Min.Value)
-                : Max.HasValue ? ValidationResources.FieldXMustBeLowerOrEqualsThanYError.FormatWith(nameof(Value).Translate(), Max.Value) : string.Empty,
+                ? ValidationResources.FieldXMustBeUpperOrEqualsThanYError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value)
+                : Max.HasValue ? ValidationResources.FieldXMustBeLowerOrEqualsThanYError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Max.Value) : string.Empty,
             _acceptableRange.IsValid);
         DefaultValue = defaultValue;
     }

@@ -6,7 +6,10 @@
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace MyNet.Utilities.Mail.Smtp;
 
@@ -14,27 +17,36 @@ public static class SmtpHelper
 {
     public static bool TestSmtpConnection(string? server, int port)
     {
-        if (server == null)
+        if (string.IsNullOrWhiteSpace(server) || port is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
         {
             return false;
         }
 
         try
         {
-            var hostEntry = System.Net.Dns.GetHostEntry(server);
-            var endPoint = new System.Net.IPEndPoint(hostEntry.AddressList[0], port);
-            using var tcpSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-            // try to connect and test the response for code 220 = success
-            tcpSocket.Connect(endPoint);
-            if (!CheckResponse(tcpSocket, 220))
+            using var client = new TcpClient();
+            var connectTask = client.ConnectAsync(server, port);
+            if (!connectTask.Wait(TimeSpan.FromSeconds(5)))
             {
                 return false;
             }
 
-            // send HELLO and test the response for code 250 = proper response
-            SendData(tcpSocket, string.Format(CultureInfo.InvariantCulture, "HELLO {0}\r\n", System.Net.Dns.GetHostName()));
-            return CheckResponse(tcpSocket, 250);
+            client.SendTimeout = 5000;
+            client.ReceiveTimeout = 5000;
+
+            using var stream = client.GetStream();
+            using var reader = new StreamReader(stream, Encoding.ASCII, detectEncodingFromByteOrderMarks: false, bufferSize: 1024, leaveOpen: true);
+            using var writer = new StreamWriter(stream, Encoding.ASCII, bufferSize: 1024, leaveOpen: true);
+            writer.NewLine = "\r\n";
+            writer.AutoFlush = true;
+
+            if (!CheckResponse(reader, 220))
+            {
+                return false;
+            }
+
+            writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "EHLO {0}", Dns.GetHostName()));
+            return CheckResponse(reader, 250);
 
             // if we got here it's that we can connect to the smtp server
         }
@@ -44,23 +56,31 @@ public static class SmtpHelper
         }
     }
 
-    private static void SendData(Socket socket, string data)
+    private static bool CheckResponse(TextReader reader, int expectedCode)
     {
-        var dataArray = System.Text.Encoding.ASCII.GetBytes(data);
-        _ = socket.Send(dataArray, 0, dataArray.Length, SocketFlags.None);
-    }
-
-    private static bool CheckResponse(Socket socket, int expectedCode)
-    {
-        while (socket.Available == 0)
+        while (true)
         {
-            System.Threading.Thread.Sleep(100);
-        }
+            var responseLine = reader.ReadLine();
+            if (string.IsNullOrWhiteSpace(responseLine) || responseLine.Length < 3)
+            {
+                return false;
+            }
 
-        var responseArray = new byte[1024];
-        _ = socket.Receive(responseArray, 0, socket.Available, SocketFlags.None);
-        var responseData = System.Text.Encoding.ASCII.GetString(responseArray);
-        var responseCode = Convert.ToInt32(responseData[..3], CultureInfo.InvariantCulture);
-        return responseCode == expectedCode;
+            if (!int.TryParse(responseLine.AsSpan(0, 3), NumberStyles.None, CultureInfo.InvariantCulture, out var responseCode))
+            {
+                return false;
+            }
+
+            if (responseCode != expectedCode)
+            {
+                return false;
+            }
+
+            // SMTP multiline responses use "250-..." and end with "250 ...".
+            if (responseLine.Length < 4 || responseLine[3] != '-')
+            {
+                return true;
+            }
+        }
     }
 }

@@ -15,9 +15,8 @@ namespace MyNet.Utilities.Geography;
 /// <param name="PostalCode">The postal code.</param>
 /// <param name="City">The city.</param>
 /// <param name="Country">The country.</param>
-/// <param name="Latitude">The latitude coordinate.</param>
-/// <param name="Longitude">The longitude coordinate.</param>
-public record Address(string? Street = null, string? PostalCode = null, string? City = null, Country? Country = null, double? Latitude = null, double? Longitude = null)
+/// <param name="Coordinates">The geographic coordinates.</param>
+public record Address(string? Street = null, string? PostalCode = null, string? City = null, Country? Country = null, Coordinates? Coordinates = null)
 {
     /// <summary>
     /// Returns a string that represents the address, formatted as a space-separated list of the street, postal code,

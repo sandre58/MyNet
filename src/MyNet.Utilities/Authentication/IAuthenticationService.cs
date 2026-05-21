@@ -18,6 +18,7 @@ public interface IAuthenticationService<out TPrincipal>
 {
     /// <summary>
     /// Occurs when the authentication state changes.
+    /// This event is raised only when the value of <see cref="IsAuthenticated"/> changes.
     /// </summary>
     event EventHandler<AuthenticatedEventArgs>? Authenticated;
 

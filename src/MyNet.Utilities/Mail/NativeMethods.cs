@@ -26,20 +26,27 @@ public static partial class NativeMethods
 
     public static bool SendMail(string addr, string title, string body, string fileName)
     {
+        var recipientPointer = IntPtr.Zero;
+        var attachmentPointer = IntPtr.Zero;
+
         try
         {
+            recipientPointer = GetRecipient(addr);
             var msg = new MapiMessage
             {
-                recips = GetRecipient(addr),
+                recips = recipientPointer,
                 recipCount = 1,
                 subject = title,
                 noteText = body,
-                fileCount = 1
+                fileCount = 0,
+                files = IntPtr.Zero
             };
 
             if (!string.IsNullOrEmpty(fileName))
             {
-                msg.files = GetAttachment(fileName);
+                attachmentPointer = GetAttachment(fileName);
+                msg.files = attachmentPointer;
+                msg.fileCount = 1;
             }
 
             var result = MAPISendMail(IntPtr.Zero, IntPtr.Zero, msg, 0x1 | 0x8, 0);
@@ -48,6 +55,18 @@ public static partial class NativeMethods
         catch
         {
             return false;
+        }
+        finally
+        {
+            if (recipientPointer != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(recipientPointer);
+            }
+
+            if (attachmentPointer != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(attachmentPointer);
+            }
         }
     }
 

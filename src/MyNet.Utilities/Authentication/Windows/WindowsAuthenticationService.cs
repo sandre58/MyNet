@@ -17,10 +17,15 @@ namespace MyNet.Utilities.Authentication.Windows;
 [SupportedOSPlatform("windows")]
 public class WindowsAuthenticationService : WindowsAuthenticationService<WindowsUserPrincipal>
 {
+    /// <summary>
+    /// Shared anonymous principal used when no authenticated principal is available.
+    /// </summary>
     public static readonly WindowsUserPrincipal Anonymous = new(new GenericIdentity(string.Empty), []);
 
+    /// <inheritdoc />
     protected override WindowsUserPrincipal CreatePrincipal(IIdentity identity) => new(identity, []);
 
+    /// <inheritdoc />
     protected override WindowsUserPrincipal GetAnonymous() => Anonymous;
 }
 
@@ -39,7 +44,7 @@ public abstract class WindowsAuthenticationService<TPrincipal> : IAuthentication
     public bool IsAuthenticated => Thread.CurrentPrincipal?.Identity?.IsAuthenticated ?? false;
 
     /// <inheritdoc />
-    public TPrincipal CurrentPrincipal => (TPrincipal?)Thread.CurrentPrincipal ?? GetAnonymous();
+    public TPrincipal CurrentPrincipal => Thread.CurrentPrincipal is TPrincipal principal ? principal : GetAnonymous();
 
     /// <summary>
     /// Authenticates using the current Windows identity and sets the principal.
@@ -57,10 +62,16 @@ public abstract class WindowsAuthenticationService<TPrincipal> : IAuthentication
     /// <param name="principal">The principal to set for the current thread.</param>
     protected virtual void Authenticate(TPrincipal principal)
     {
-        Thread.CurrentPrincipal = principal;
-        AppDomain.CurrentDomain.SetThreadPrincipal(Thread.CurrentPrincipal);
+        ArgumentNullException.ThrowIfNull(principal);
 
-        Authenticated?.Invoke(this, new AuthenticatedEventArgs(IsAuthenticated));
+        var wasAuthenticated = IsAuthenticated;
+
+        Thread.CurrentPrincipal = principal;
+
+        var isAuthenticated = IsAuthenticated;
+
+        if (wasAuthenticated != isAuthenticated)
+            Authenticated?.Invoke(this, new(isAuthenticated));
     }
 
     /// <summary>

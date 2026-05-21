@@ -17,30 +17,30 @@ namespace MyNet.Observable;
 
 public class EditableDateTime : EditableObject
 {
-    private readonly Deferrer _dateTimeChangedDeferrer;
+    private readonly DeferredAction _dateTimeChangedDeferrer;
     private TimeZoneInfo _currentTimeZone = GlobalizationService.Current.TimeZone;
 
     public EditableDateTime(bool isRequired = true)
     {
-        _dateTimeChangedDeferrer = new Deferrer(() => OnPropertyChanged(nameof(DateTime)));
+        _dateTimeChangedDeferrer = new(() => OnPropertyChanged(nameof(DateTime)));
 
         if (!isRequired)
             return;
 
-        ValidationRules.Add<EditableDateTime, DateOnly?>(x => x.Date, () => ValidationResources.FieldXIsRequiredError.FormatWith(nameof(Date).Translate()), x => x is not null);
-        ValidationRules.Add<EditableDateTime, TimeOnly?>(x => x.Time, () => ValidationResources.FieldXIsRequiredError.FormatWith(nameof(Time).Translate()), x => x is not null);
+        ValidationRules.Add<EditableDateTime, DateOnly?>(x => x.Date, () => ValidationResources.FieldXIsRequiredError.FormatWith(CultureInfo.CurrentCulture, nameof(Date).Translate()), x => x is not null);
+        ValidationRules.Add<EditableDateTime, TimeOnly?>(x => x.Time, () => ValidationResources.FieldXIsRequiredError.FormatWith(CultureInfo.CurrentCulture, nameof(Time).Translate()), x => x is not null);
     }
 
     public DateOnly? Date { get; set; }
 
     public TimeOnly? Time { get; set; }
 
-    [CanSetIsModified(false)]
+    [IgnoreModificationTracking(false)]
     [CanBeValidated(false)]
     [AlsoNotifyFor(nameof(Date), nameof(Time))]
     public bool HasValue => Date.HasValue && Time.HasValue;
 
-    [CanSetIsModified(false)]
+    [IgnoreModificationTracking(false)]
     [CanBeValidated(false)]
     public DateTime? DateTime => Date.HasValue && Time.HasValue ? Date.Value.At(Time.Value) : null;
 

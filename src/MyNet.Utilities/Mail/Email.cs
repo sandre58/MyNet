@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MyNet.Utilities.Mail;
 
 public class Email(string fromAddress, string displayNameFrom = "") : IEmail
 {
-    public EmailData Data { get; } = new(new EmailAddress(fromAddress, displayNameFrom));
+    public EmailData Data { get; } = new(new(fromAddress, displayNameFrom));
 
     /// <summary>
     /// Creates a new Email instance and sets the from property.
@@ -31,7 +32,7 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
     /// <returns>Instance of the Email class.</returns>
     public IEmail SetFrom(string emailAddress, string name = "")
     {
-        Data.From = new EmailAddress(emailAddress, name);
+        Data.From = new(emailAddress, name);
         return this;
     }
 
@@ -175,32 +176,23 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
 
     public IEmail AttachFromFilename(string filename, string contentType = "", string attachmentName = "")
     {
+        if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("Filename must be provided.", nameof(filename));
+
         var stream = File.OpenRead(filename);
         _ = Attach(new Attachment
         {
             Data = stream,
-            Filename = !string.IsNullOrEmpty(attachmentName) ? attachmentName : filename,
+            Filename = !string.IsNullOrWhiteSpace(attachmentName) ? attachmentName : Path.GetFileName(filename),
             ContentType = contentType
         });
 
         return this;
     }
 
-    /// <summary>
-    /// Adds tag to the Email. This is currently only supported by the Mailgun provider. <see href="https://documentation.mailgun.com/en/latest/user_manual.html#tagging"/>.
-    /// </summary>
-    /// <param name="tag">Tag name, max 128 characters, ASCII only.</param>
-    /// <returns>Instance of the Email class.</returns>
-    public IEmail Tag(string tag)
-    {
-        Data.Tags.Add(tag);
-
-        return this;
-    }
-
     public IEmail Header(string header, string body)
     {
-        Data.Headers.Add(header, body);
+        if (!string.IsNullOrWhiteSpace(header))
+            Data.Headers[header] = body;
 
         return this;
     }
@@ -213,23 +205,26 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
     /// <returns>Instance of the Email class.</returns>
     private Email AddAddresses(IList<EmailAddress> destination, string emailAddress, string name)
     {
-        if (emailAddress.Contains(';', System.StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(emailAddress)) return this;
+
+        if (emailAddress.Contains(';', StringComparison.OrdinalIgnoreCase))
         {
             // email address has semicolon, try split
-            var nameSplit = name.Split(';');
-            var addressSplit = emailAddress.Split(';');
+            var nameSplit = name.Split(';', StringSplitOptions.TrimEntries);
+            var addressSplit = emailAddress.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             for (var i = 0; i < addressSplit.Length; i++)
             {
                 var currentName = string.Empty;
                 if (nameSplit.Length - 1 >= i)
                     currentName = nameSplit[i];
 
-                destination.Add(new EmailAddress(addressSplit[i].Trim(), currentName.Trim()));
+                if (!string.IsNullOrWhiteSpace(addressSplit[i]))
+                    destination.Add(new(addressSplit[i], currentName.Trim()));
             }
         }
         else
         {
-            destination.Add(new EmailAddress(emailAddress.Trim(), name.Trim()));
+            destination.Add(new(emailAddress.Trim(), name.Trim()));
         }
 
         return this;
@@ -241,7 +236,7 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
     /// <returns>Instance of the Email class.</returns>
     private Email AddAddresses(IList<EmailAddress> addresses, IList<EmailAddress> mailAddresses)
     {
-        addresses.AddRange(mailAddresses);
+        addresses.AddRange(mailAddresses.Where(x => !string.IsNullOrWhiteSpace(x.Address)));
 
         return this;
     }

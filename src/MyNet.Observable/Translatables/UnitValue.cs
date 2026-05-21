@@ -7,8 +7,12 @@
 using System;
 using MyNet.Humanizer;
 using MyNet.Utilities;
+using MyNet.Utilities.Conversion;
+using MyNet.Utilities.Conversion.DataSize;
+using MyNet.Utilities.Conversion.Length;
+using MyNet.Utilities.Conversion.Mass;
+using MyNet.Utilities.Conversion.Temperature;
 using MyNet.Utilities.Sequences;
-using MyNet.Utilities.Units;
 
 namespace MyNet.Observable.Translatables;
 
@@ -45,7 +49,7 @@ where TUnit : Enum
     public override string? ToString() => ToString(true);
 }
 
-public class FileSize<T>(FileSizeUnit unit = FileSizeUnit.Byte) : UnitValue<T, FileSizeUnit>(unit)
+public class FileSize<T>(DataSizeUnit unit = DataSizeUnit.Byte) : UnitValue<T, DataSizeUnit>(unit)
     where T : struct, IComparable<T>, IComparable, IConvertible, IEquatable<T>;
 
 public class Metric<T> : UnitValue<T, MetricUnit>
@@ -84,5 +88,18 @@ public class Mass<T> : UnitValue<T, MassUnit>
         : base(unit, min, max) { }
 
     public Mass(AcceptableValueRange<T> acceptableValueRange, MassUnit unit = MassUnit.Gram)
+        : base(unit, acceptableValueRange) { }
+}
+
+public class Temperature<T> : UnitValue<T, TemperatureUnit>
+    where T : struct, IComparable<T>, IComparable, IConvertible, IEquatable<T>
+{
+    public Temperature(TemperatureUnit unit = TemperatureUnit.Celsius)
+        : base(unit) { }
+
+    public Temperature(T? min, T? max, TemperatureUnit unit = TemperatureUnit.Celsius)
+        : base(unit, min, max) { }
+
+    public Temperature(AcceptableValueRange<T> acceptableValueRange, TemperatureUnit unit = TemperatureUnit.Celsius)
         : base(unit, acceptableValueRange) { }
 }

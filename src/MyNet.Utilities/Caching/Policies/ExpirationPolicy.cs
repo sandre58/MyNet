@@ -45,7 +45,7 @@ public abstract class ExpirationPolicy(bool canReset = false)
     /// <returns>The <see cref="AbsoluteExpirationPolicy" /> or <c>null</c> if <paramref name="absoluteExpirationDateTime" /> is in the pass.</returns>
     /// <remarks>The cache item will expire on the absolute expiration date time.</remarks>
     public static ExpirationPolicy? Absolute(DateTime absoluteExpirationDateTime, bool force = false)
-        => force || DateTime.Now < absoluteExpirationDateTime ? new AbsoluteExpirationPolicy(absoluteExpirationDateTime) : null;
+        => force || DateTime.UtcNow < absoluteExpirationDateTime.ToUniversalTime() ? new AbsoluteExpirationPolicy(absoluteExpirationDateTime) : null;
 
     /// <summary>
     /// Creates a <see cref="DurationExpirationPolicy" /> instance.
@@ -55,7 +55,7 @@ public abstract class ExpirationPolicy(bool canReset = false)
     /// <returns>The <see cref="DurationExpirationPolicy" /> or <c>null</c> if <paramref name="durationTimeSpan" /> is less than 0 ticks.</returns>
     /// <remarks>The cache item will expire using the duration to calculate the absolute expiration from now.</remarks>
     public static ExpirationPolicy? Duration(TimeSpan durationTimeSpan, bool force = false)
-        => force || durationTimeSpan.Ticks > 0 ? new DurationExpirationPolicy(durationTimeSpan) : null;
+        => force || durationTimeSpan > TimeSpan.Zero ? new DurationExpirationPolicy(durationTimeSpan) : null;
 
     /// <summary>
     /// Creates a <see cref="SlidingExpirationPolicy" /> instance.
@@ -65,7 +65,7 @@ public abstract class ExpirationPolicy(bool canReset = false)
     /// <returns>The <see cref="SlidingExpirationPolicy" /> or <c>null</c> if <paramref name="durationTimeSpan" /> is less than 0 ticks.</returns>
     /// <remarks>The cache item will expire using the duration property as the sliding expiration.</remarks>
     public static ExpirationPolicy? Sliding(TimeSpan durationTimeSpan, bool force = false)
-        => force || durationTimeSpan.Ticks > 0 ? new SlidingExpirationPolicy(durationTimeSpan) : null;
+        => force || durationTimeSpan > TimeSpan.Zero ? new SlidingExpirationPolicy(durationTimeSpan) : null;
 
     /// <summary>
     /// Creates a <see cref="CustomExpirationPolicy" /> instance.
@@ -76,7 +76,11 @@ public abstract class ExpirationPolicy(bool canReset = false)
     /// <returns>The <see cref="CustomExpirationPolicy" />.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="isExpiredFunc" /> is <c>null</c>.</exception>
     public static ExpirationPolicy? Custom(Func<bool> isExpiredFunc, Action? resetAction = null, bool force = false)
-        => force || !isExpiredFunc.Invoke() ? new CustomExpirationPolicy(isExpiredFunc, resetAction) : null;
+    {
+        ArgumentNullException.ThrowIfNull(isExpiredFunc);
+
+        return force || !isExpiredFunc.Invoke() ? new CustomExpirationPolicy(isExpiredFunc, resetAction) : null;
+    }
 
     /// <summary>
     /// Resets the expiration policy.

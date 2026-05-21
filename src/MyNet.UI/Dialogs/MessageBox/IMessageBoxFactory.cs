@@ -12,13 +12,9 @@ namespace MyNet.UI.Dialogs.MessageBox;
 public interface IMessageBoxFactory
 {
     /// <summary>
-    /// Creates a message box view model with the specified parameters.
+    /// Creates a new instance of the <see cref="IMessageBox"/> interface based on the specified options.
     /// </summary>
-    /// <param name="message">The message to display.</param>
-    /// <param name="title">The title of the message box.</param>
-    /// <param name="severity">The severity of the message.</param>
-    /// <param name="buttons">The buttons to display.</param>
-    /// <param name="defaultResut">The default result for the message box.</param>
+    /// <param name="options">The options to configure the message box.</param>
     /// <returns>A new <see cref="IMessageBox"/> instance.</returns>
-    IMessageBox Create(string message, string? title, MessageSeverity severity, MessageBoxResultOption buttons, MessageBoxResult defaultResut);
+    IMessageBox Create(MessageBoxOptions options);
 }

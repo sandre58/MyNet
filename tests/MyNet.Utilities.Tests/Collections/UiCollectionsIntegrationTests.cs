@@ -1,14 +1,16 @@
 // -----------------------------------------------------------------------
-// <copyright file="UiCollectionsIntegrationTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="UiCollectionsIntegrationTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using MyNet.Utilities.Collections;
 using Xunit;
 
@@ -16,20 +18,19 @@ namespace MyNet.Utilities.Tests.Collections;
 
 /// <summary>
 /// Integration tests for UI collections (ScheduleObservableCollection, UiObservableCollection).
-/// These are tested via ThreadSafeObservableCollection since they inherit from it.
+/// Scheduling is tested independently from threading concerns.
 /// </summary>
 public class UiCollectionsIntegrationTests
 {
     [Fact]
-    public void ScheduleObservableCollection_WithAsyncNotifications_ShouldNotBlock()
+    [SuppressMessage("ReSharper", "CollectionNeverQueried.Local", Justification = "Testing scheduling, not collection behavior")]
+    public void ScheduleObservableCollection_ShouldScheduleNotifications()
     {
         // Arrange
         var scheduler = new TestScheduler();
-        var collection = new TestScheduleObservableCollection<int>(
-            scheduler: () => scheduler,
-            useAsyncNotifications: true);
+        var collection = new TestScheduleObservableCollection<int>(scheduler: scheduler);
 
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
 
         // Act - Add 10 items with slow scheduler
         for (var i = 0; i < 10; i++)
@@ -39,24 +40,24 @@ public class UiCollectionsIntegrationTests
 
         sw.Stop();
 
-        // Assert - Should be fast (async)
-        Assert.True(sw.ElapsedMilliseconds < 100,
-        $"Expected <100ms with async, got {sw.ElapsedMilliseconds}ms");
+        // Assert
+        Assert.True(sw.ElapsedMilliseconds < 250, $"Expected <250ms, got {sw.ElapsedMilliseconds}ms");
+        Assert.Equal(10, scheduler.ScheduledCount);
     }
 
     [Fact]
-    public void ScheduleObservableCollection_ConcurrentOperations_ShouldBeThreadSafe()
+    public void ScheduleObservableCollection_BulkOperations_ShouldComplete()
     {
         // Arrange
         var scheduler = new TestScheduler();
         var collection = new TestScheduleObservableCollection<int>(
             capacity: 1000,
-            scheduler: () => scheduler);
+            scheduler: scheduler);
 
         // Act
-        Parallel.For(0, 10, i => collection.AddRange(Enumerable.Range(i * 100, 100)));
+        for (var i = 0; i < 10; i++)
+            collection.AddRange(Enumerable.Range(i * 100, 100));
 
-        // Assert
         Assert.Equal(1000, collection.Count);
     }
 
@@ -66,7 +67,7 @@ public class UiCollectionsIntegrationTests
         // Arrange
         var scheduler = new TestScheduler();
         var collection = new TestScheduleObservableCollection<int>(
-    scheduler: () => scheduler);
+    scheduler: scheduler);
         collection.AddRange([1, 2, 3]);
 
         // Act
@@ -82,7 +83,7 @@ public class UiCollectionsIntegrationTests
         // Arrange
         var scheduler = new TestScheduler();
         var collection = new TestScheduleObservableCollection<int>(
-              scheduler: () => scheduler);
+              scheduler: scheduler);
         collection.AddRange(Enumerable.Range(0, 100));
 
         // Act
@@ -103,7 +104,7 @@ public class UiCollectionsIntegrationTests
         // Act
         var collection = new TestScheduleObservableCollection<int>(
                list,
-               scheduler: () => scheduler);
+               scheduler: scheduler);
 
         // Assert
         Assert.Equal(list, collection);
@@ -119,7 +120,7 @@ public class UiCollectionsIntegrationTests
         // Act
         var collection = new TestScheduleObservableCollection<int>(
         items,
-        scheduler: () => scheduler);
+        scheduler: scheduler);
 
         // Assert
         Assert.Equal(100, collection.Count);
@@ -131,7 +132,7 @@ public class UiCollectionsIntegrationTests
         // Arrange
         var scheduler = new TestScheduler();
         var collection = new TestScheduleObservableCollection<int>(
-            scheduler: () => scheduler);
+            scheduler: scheduler);
 
         // Act
         collection.SetCapacity(500);
@@ -155,18 +156,23 @@ public class UiCollectionsIntegrationTests
         }
     }
 
-    private sealed class TestScheduleObservableCollection<T> : ThreadSafeObservableCollection<T>
+    private sealed class TestScheduleObservableCollection<T> : ObservableRangeCollection<T>
     {
-        public TestScheduleObservableCollection(Func<TestScheduler> scheduler, bool useAsyncNotifications = true)
-            : base(x => scheduler().Schedule(x), useAsyncNotifications) { }
+        private readonly TestScheduler _scheduler;
 
-        public TestScheduleObservableCollection(int capacity, Func<TestScheduler> scheduler, bool useAsyncNotifications = true)
-            : base(capacity, x => scheduler().Schedule(x), useAsyncNotifications) { }
+        public TestScheduleObservableCollection(TestScheduler scheduler)
+            => _scheduler = scheduler;
 
-        public TestScheduleObservableCollection(IList<T> list, Func<TestScheduler> scheduler, bool useAsyncNotifications = true)
-        : base(list, x => scheduler().Schedule(x), useAsyncNotifications) { }
+        public TestScheduleObservableCollection(int capacity, TestScheduler scheduler)
+            : base(capacity) => _scheduler = scheduler;
 
-        public TestScheduleObservableCollection(IEnumerable<T> collection, Func<TestScheduler> scheduler, bool useAsyncNotifications = true)
-        : base(collection, x => scheduler().Schedule(x), useAsyncNotifications) { }
+        public TestScheduleObservableCollection(IList<T> list, TestScheduler scheduler)
+            : base(list) => _scheduler = scheduler;
+
+        public TestScheduleObservableCollection(IEnumerable<T> collection, TestScheduler scheduler)
+            : base(collection) => _scheduler = scheduler;
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+            => _scheduler.Schedule(() => base.OnCollectionChanged(e));
     }
 }

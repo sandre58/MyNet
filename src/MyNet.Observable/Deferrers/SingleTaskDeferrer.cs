@@ -19,7 +19,7 @@ public class SingleTaskDeferrer : IDisposable
 
     public SingleTaskDeferrer(Action<CancellationToken> action, Action<bool>? onRunningChanged = null, Action? onCancelled = null, int throttle = 0)
     {
-        _task = new SingleTaskRunner(action,
+        _task = new(action,
             x =>
             {
                 onRunningChanged?.Invoke(x);

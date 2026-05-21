@@ -1,12 +1,10 @@
 // -----------------------------------------------------------------------
-// <copyright file="ObservableKeyedCollectionTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="ObservableKeyedCollectionTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using MyNet.Utilities.Collections;
 using Xunit;
 
@@ -31,6 +29,7 @@ public class ObservableKeyedCollectionTests
     }
 
     [Fact]
+    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local", Justification = "Testing non-existing key access")]
     public void Indexer_WithNonExistingKey_ShouldReturnNull()
     {
         // Arrange
@@ -47,10 +46,7 @@ public class ObservableKeyedCollectionTests
     public void Contains_WithExistingKey_ShouldReturnTrue()
     {
         // Arrange
-        var collection = new TestKeyedCollection
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection { new() { Key = "key1", Value = "value1" } };
 
         // Act
         var result = collection.Contains("key1");
@@ -91,13 +87,10 @@ public class ObservableKeyedCollectionTests
     public void TryAdd_WithExistingKey_ShouldReturnFalse()
     {
         // Arrange
-        var collection = new TestKeyedCollection
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection { new() { Key = "key1", Value = "value1" } };
 
         // Act
-        var result = collection.TryAdd(new KeyedItem { Key = "key1", Value = "value2" });
+        var result = collection.TryAdd(new() { Key = "key1", Value = "value2" });
 
         // Assert
         Assert.False(result);
@@ -108,10 +101,7 @@ public class ObservableKeyedCollectionTests
     public void Remove_ByKey_WithExistingKey_ShouldRemoveAndReturnTrue()
     {
         // Arrange
-        var collection = new TestKeyedCollection
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection { new() { Key = "key1", Value = "value1" } };
 
         // Act
         var result = collection.Remove("key1");
@@ -174,14 +164,14 @@ public class ObservableKeyedCollectionTests
         // Act - Add 4 items (below threshold)
         for (var i = 0; i < 5; i++)
         {
-            collection.Add(new KeyedItem { Key = $"key{i}", Value = $"value{i}" });
+            collection.Add(new() { Key = $"key{i}", Value = $"value{i}" });
         }
 
         // Assert - Dictionary not created yet
         Assert.False(collection.IsDictionaryCreatedPublic);
 
         // Act - Add 5th item (at threshold)
-        collection.Add(new KeyedItem { Key = "key4", Value = "value4" });
+        collection.Add(new() { Key = "key4", Value = "value4" });
 
         // Assert - Dictionary should be created now
         Assert.True(collection.IsDictionaryCreatedPublic);
@@ -191,10 +181,7 @@ public class ObservableKeyedCollectionTests
     public void CreateDictionaryNow_ShouldForceCreation()
     {
         // Arrange
-        var collection = new TestKeyedCollection(threshold: 100)
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection(threshold: 100) { new() { Key = "key1", Value = "value1" } };
 
         // Act
         collection.CreateDictionaryNowPublic();
@@ -240,13 +227,10 @@ public class ObservableKeyedCollectionTests
     public void SetItem_ShouldUpdateDictionary()
     {
         // Arrange
-        var collection = new TestKeyedCollection(threshold: 0)
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection(threshold: 0) { new() { Key = "key1", Value = "value1" } };
 
         // Act
-        collection[0] = new KeyedItem { Key = "key2", Value = "value2" };
+        collection[0] = new() { Key = "key2", Value = "value2" };
 
         // Assert
         Assert.False(collection.Contains("key1"));
@@ -260,10 +244,10 @@ public class ObservableKeyedCollectionTests
         // Arrange
         var collection = new TestKeyedCollection(threshold: 0);
         collection.AddRange(
-  [
-new KeyedItem { Key = "key1", Value = "value1" },
-            new KeyedItem { Key = "key2", Value = "value2" }
-  ]);
+        [
+            new() { Key = "key1", Value = "value1" },
+            new() { Key = "key2", Value = "value2" }
+        ]);
 
         // Act
         collection.Clear();
@@ -281,10 +265,10 @@ new KeyedItem { Key = "key1", Value = "value1" },
         var collection = new TestKeyedCollection(threshold: 0);
         collection.AddRange(
         [
-           new KeyedItem { Key = "key1", Value = "value1" },
-           new KeyedItem { Key = "key2", Value = "value2" },
-           new KeyedItem { Key = "key3", Value = "value3" }
-         ]);
+            new() { Key = "key1", Value = "value1" },
+            new() { Key = "key2", Value = "value2" },
+            new() { Key = "key3", Value = "value3" }
+        ]);
 
         // Act
         var (created, count, capacity) = collection.GetDictionaryStatsPublic();
@@ -296,17 +280,17 @@ new KeyedItem { Key = "key1", Value = "value1" },
     }
 
     [Fact]
-    public void ThreadSafety_ConcurrentAccess_ShouldWork()
+    public void SequentialAccess_ShouldKeepDictionaryConsistent()
     {
         // Arrange
         var collection = new TestKeyedCollection(threshold: 0);
 
         // Act
-        System.Threading.Tasks.Parallel.For(0, 100, i =>
-   {
-       var item = new KeyedItem { Key = $"key{i}", Value = $"value{i}" };
-       collection.Add(item);
-   });
+        for (var i = 0; i < 100; i++)
+        {
+            var item = new KeyedItem { Key = $"key{i}", Value = $"value{i}" };
+            collection.Add(item);
+        }
 
         // Assert
         Assert.Equal(100, collection.Count);
@@ -317,13 +301,10 @@ new KeyedItem { Key = "key1", Value = "value1" },
     public void DuplicateKeys_ShouldHandleGracefully()
     {
         // Arrange
-        var collection = new TestKeyedCollection(threshold: 0)
-        {
-            new KeyedItem { Key = "key1", Value = "value1" }
-        };
+        var collection = new TestKeyedCollection(threshold: 0) { new() { Key = "key1", Value = "value1" } };
 
         // Act & Assert - TryAdd should handle duplicate
-        var result = collection.TryAdd(new KeyedItem { Key = "key1", Value = "value2" });
+        var result = collection.TryAdd(new() { Key = "key1", Value = "value2" });
         Assert.False(result);
         Assert.Single(collection);
     }
@@ -368,16 +349,16 @@ new KeyedItem { Key = "key1", Value = "value1" },
     public void Sort_WithKeys_ShouldMaintainDictionary()
     {
         // Arrange
-        var collection = new TestKeyedCollection(x => x.Value, threshold: 0);
+        var collection = new TestKeyedCollection(threshold: 0);
         collection.AddRange(
-  [
-    new KeyedItem { Key = "key3", Value = "C" },
-       new KeyedItem { Key = "key1", Value = "A" },
-            new KeyedItem { Key = "key2", Value = "B" }
-  ]);
+        [
+            new() { Key = "key3", Value = "C" },
+            new() { Key = "key1", Value = "A" },
+            new() { Key = "key2", Value = "B" }
+        ]);
 
         // Act
-        collection.Sort();
+        collection.SortBy(x => x.Value);
 
         // Assert
         Assert.Equal("A", collection[0].Value);
@@ -393,23 +374,14 @@ new KeyedItem { Key = "key1", Value = "value1" },
     // Test helper classes
     private sealed class KeyedItem
     {
-        public string? Key { get; set; }
+        public string? Key { get; init; }
 
-        public string Value { get; set; } = string.Empty;
+        public string Value { get; init; } = string.Empty;
     }
 
-    private sealed class TestKeyedCollection : ObservableKeyedCollection<string, KeyedItem>
+    private sealed class TestKeyedCollection(int threshold = 0) : ObservableKeyedCollection<string, KeyedItem>(comparer: null!, dictionaryCreationThreshold: threshold)
     {
-        public TestKeyedCollection(int threshold = 0)
-              : base(comparer: null!, dictionaryCreationThreshold: threshold) { }
-
-        public TestKeyedCollection(Func<KeyedItem, object> sortSelector, int threshold = 0)
-             : base(sortSelector, dictionaryCreationThreshold: threshold) { }
-
         protected override string? GetKeyForItem(KeyedItem item) => item.Key;
-
-        public void ChangeItemKeyPublic(KeyedItem item, string? newKey)
-            => ChangeItemKey(item, newKey);
 
         public void ChangeItemKeyPublic(KeyedItem item, string? newKey, string? oldKey)
             => ChangeItemKey(item, newKey, oldKey);

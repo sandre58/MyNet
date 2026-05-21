@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\MyNet.UI\MyNet.UI.csproj" />
+        <ProjectReference Include="..\..\src\MyNet.Observable\MyNet.Observable.csproj" />
+    </ItemGroup>
+
+    <!-- System.Reactive and DynamicData are not included globally by dependencies.props -->
+    <ItemGroup>
+        <PackageReference Include="System.Reactive" />
+        <PackageReference Include="DynamicData" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+</Project>

@@ -36,7 +36,7 @@ public class DurationExpirationPolicy : AbsoluteExpirationPolicy
     /// The can reset.
     /// </param>
     protected DurationExpirationPolicy(TimeSpan durationTimeSpan, bool canReset)
-        : base(DateTime.Now.Add(durationTimeSpan), canReset) => DurationTimeSpan = durationTimeSpan;
+        : base(DateTime.UtcNow.Add(durationTimeSpan), canReset) => DurationTimeSpan = durationTimeSpan;
 
     #endregion
 

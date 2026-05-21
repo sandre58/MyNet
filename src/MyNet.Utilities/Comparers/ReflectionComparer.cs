@@ -51,15 +51,4 @@ public class ReflectionComparer<T>(IList<ReflectionSortDescription> sortDescript
 /// <summary>
 /// Describes a property path and direction to use when comparing via <see cref="ReflectionComparer{T}"/>.
 /// </summary>
-public class ReflectionSortDescription(string path, ListSortDirection direction = ListSortDirection.Ascending)
-{
-    /// <summary>
-    /// Gets the property path used to locate the value on the object graph.
-    /// </summary>
-    public string Path { get; } = path;
-
-    /// <summary>
-    /// Gets the sort direction for this description.
-    /// </summary>
-    public ListSortDirection Direction { get; } = direction;
-}
+public record ReflectionSortDescription(string Path, ListSortDirection Direction = ListSortDirection.Ascending);

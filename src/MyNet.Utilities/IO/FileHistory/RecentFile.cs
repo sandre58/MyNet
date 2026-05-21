@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="RecentFile.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -8,23 +8,38 @@ using System;
 
 namespace MyNet.Utilities.IO.FileHistory;
 
-public class RecentFile(string name, string path, DateTime? lastAccessDate, DateTime? modificationDate, bool isPinned, bool isRecoveredFile = false)
+/// <summary>
+/// Represents a recently accessed file, including its name, path, access and modification timestamps, and status flags for pinning and recovery.
+/// </summary>
+public sealed record RecentFile
 {
-    public string Name { get; } = name.IsRequiredOrThrow();
+    /// <summary>
+    /// Gets the name of the recently accessed file, which is typically the file name without the path. This property is required and must be provided when creating an instance of <see cref="RecentFile"/>.
+    /// </summary>
+    public required string Name { get; init; }
 
-    public string Path { get; } = path.IsRequiredOrThrow();
+    /// <summary>
+    /// Gets the full path of the recently accessed file, which includes the directory and file name. This property is required and must be provided when creating an instance of <see cref="RecentFile"/>.
+    /// </summary>
+    public required string Path { get; init; }
 
-    public DateTime? LastAccessDate { get; } = lastAccessDate;
+    /// <summary>
+    /// Gets the timestamp of the last access to the file. This property is optional and may be <c>null</c> if the access time is not available.
+    /// </summary>
+    public DateTimeOffset? LastAccessedAt { get; init; }
 
-    public DateTime? ModificationDate { get; } = modificationDate;
+    /// <summary>
+    /// Gets the timestamp of the last modification to the file. This property is optional and may be <c>null</c> if the modification time is not available.
+    /// </summary>
+    public DateTimeOffset? LastModifiedAt { get; init; }
 
-    public bool IsPinned { get; set; } = isPinned;
+    /// <summary>
+    /// Gets a value indicating whether the file is pinned. Pinned files are typically given special treatment, such as being displayed at the top of a list.
+    /// </summary>
+    public bool IsPinned { get; init; }
 
-    public bool IsRecoveredFile { get; } = isRecoveredFile;
-
-    public override string ToString() => Path;
-
-    public override bool Equals(object? obj) => obj is RecentFile recentFile && Path == recentFile.Path;
-
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
+    /// <summary>
+    /// Gets a value indicating whether the file is a recovered document. Recovered files are typically those that were restored after an unexpected shutdown or crash.
+    /// </summary>
+    public bool IsRecovered { get; init; }
 }

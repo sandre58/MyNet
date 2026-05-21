@@ -8,5 +8,8 @@ using System;
 
 namespace MyNet.UI.Attributes;
 
+/// <summary>
+/// Indicates that a class should be registered as transient in the dependency injection container.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class IsTransientAttribute : Attribute;

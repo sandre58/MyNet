@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MyNet.Utilities.Helpers;
+using MyNet.Utilities.IO;
 
 namespace MyNet.Utilities.Google.Maps;
 
@@ -19,16 +19,16 @@ public static class GoogleMapsHelper
     public static string GetGoogleMapsUrl(GoogleMapsSettings settings)
     {
         var url = Url;
-        var parameters = settings.ToDictionnary();
+        var parameters = settings.ToDictionary();
         if (parameters.Count != 0)
         {
-            url += $"?{string.Join("&", settings.ToDictionnary().Select(x => $"{x.Key}={x.Value}"))}";
+            url += $"?{string.Join("&", settings.ToDictionary().Select(x => $"{x.Key}={x.Value}"))}";
         }
 
         return url;
     }
 
-    private static Dictionary<string, string> ToDictionnary(this GoogleMapsSettings settings)
+    private static Dictionary<string, string> ToDictionary(this GoogleMapsSettings settings)
     {
         var result = new Dictionary<string, string>();
 

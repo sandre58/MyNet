@@ -1,0 +1,106 @@
+// -----------------------------------------------------------------------
+// <copyright file="PeriodExtensionsTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using MyNet.Utilities.Intervals;
+using Xunit;
+
+namespace MyNet.Utilities.Tests.Temporal;
+
+public class PeriodExtensionsTests
+{
+    private static Period MakePeriod(DateTime start, DateTime end) => new(start, end);
+
+    #region Shift
+
+    [Fact]
+    public void Shift_MovesPeriodByOffset()
+    {
+        var period = MakePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
+        var shifted = period.Shift(TimeSpan.FromHours(2));
+
+        Assert.Equal(new(2024, 1, 1, 10, 0, 0), shifted.Start!.Value.Value);
+        Assert.Equal(new(2024, 1, 1, 12, 0, 0), shifted.End!.Value.Value);
+    }
+
+    [Fact]
+    public void Shift_WithNegativeOffset_MovesPeriodBack()
+    {
+        var period = MakePeriod(new(2024, 1, 1, 10, 0, 0), new(2024, 1, 1, 12, 0, 0));
+        var shifted = period.Shift(TimeSpan.FromHours(-2));
+
+        Assert.Equal(new(2024, 1, 1, 8, 0, 0), shifted.Start!.Value.Value);
+        Assert.Equal(new(2024, 1, 1, 10, 0, 0), shifted.End!.Value.Value);
+    }
+
+    #endregion
+
+    #region Extend
+
+    [Fact]
+    public void Extend_LengthensPeriodAtEnd()
+    {
+        var period = MakePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
+        var extended = period.Extend(TimeSpan.FromHours(3));
+
+        Assert.Equal(new(2024, 1, 1, 8, 0, 0), extended.Start!.Value.Value);
+        Assert.Equal(new(2024, 1, 1, 13, 0, 0), extended.End!.Value.Value);
+    }
+
+    #endregion
+
+    #region EnumerateHours
+
+    [Fact]
+    public void EnumerateHours_ReturnsOneEntryPerHour()
+    {
+        var start = new DateTime(2024, 1, 1, 8, 0, 0);
+        var end = new DateTime(2024, 1, 1, 11, 0, 0);
+        var period = MakePeriod(start, end);
+
+        var hours = period.EnumerateHours().ToList();
+
+        Assert.Equal(3, hours.Count);
+        Assert.Equal(start, hours[0]);
+        Assert.Equal(start.AddHours(1), hours[1]);
+        Assert.Equal(start.AddHours(2), hours[2]);
+    }
+
+    [Fact]
+    public void EnumerateHours_SubHourPeriod_YieldsOnlyStartHour()
+    {
+        // A period [8:00, 8:30) yields just {8:00} because start < end and second step (9:00) exceeds end
+        var start = new DateTime(2024, 1, 1, 8, 0, 0);
+        var end = new DateTime(2024, 1, 1, 8, 30, 0);
+        var period = MakePeriod(start, end);
+        var hours = period.EnumerateHours().ToList();
+        Assert.Single(hours);
+        Assert.Equal(start, hours[0]);
+    }
+
+    #endregion
+
+    #region EnumerateDays
+
+    [Fact]
+    public void EnumerateDays_ReturnsOneEntryPerDay()
+    {
+        var start = new DateTime(2024, 1, 1);
+        var end = new DateTime(2024, 1, 4);
+        var period = MakePeriod(start, end);
+
+        var days = period.EnumerateDays().ToList();
+
+        Assert.Equal(3, days.Count);
+        Assert.Equal(start.Date, days[0]);
+        Assert.Equal(start.Date.AddDays(1), days[1]);
+        Assert.Equal(start.Date.AddDays(2), days[2]);
+    }
+
+    #endregion
+
+}

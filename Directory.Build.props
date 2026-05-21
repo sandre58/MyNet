@@ -55,9 +55,8 @@
         <!-- Path to the .runsettings file -->
         <RunSettingsFile>$(MSBuildThisFileDirectory).runsettings</RunSettingsFile>
 
-        <!-- Force VSTest to use our runsettings -->
+        <!-- Force VSTest to use our runsettings (used by Microsoft.TestPlatform.Build MSBuild tasks) -->
         <VSTestSetting>$(RunSettingsFile)</VSTestSetting>
-        <VSTestCLIRunSettings>$(RunSettingsFile)</VSTestCLIRunSettings>
     </PropertyGroup>
 
     <!-- Include runsettings file in test projects -->

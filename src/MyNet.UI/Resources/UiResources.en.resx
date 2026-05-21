@@ -220,13 +220,13 @@
     <value>Case Sensitive</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>ClearRules</value>
   </data>
   <data name="ClearFilters" xml:space="preserve">
-    <value>Clear filters</value>
+    <value>ClearRules filters</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>ClearRules selection</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
@@ -682,7 +682,7 @@
     <value>Sélectionner</value>
   </data>
   <data name="ClearAll" xml:space="preserve">
-    <value>Clear all</value>
+    <value>ClearRules all</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
@@ -757,7 +757,7 @@
     <value>Primary color</value>
   </data>
   <data name="ClearNotifications" xml:space="preserve">
-    <value>Clear notifications</value>
+    <value>ClearRules notifications</value>
   </data>
   <data name="OpenFolderLocation" xml:space="preserve">
     <value>Open file location</value>

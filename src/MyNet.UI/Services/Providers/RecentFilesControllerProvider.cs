@@ -8,11 +8,11 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 using MyNet.Observable;
-using MyNet.UI.ViewModels.FileHistory;
-using MyNet.UI.ViewModels.List;
-using MyNet.UI.ViewModels.List.Filtering;
-using MyNet.UI.ViewModels.List.Filtering.Filters;
-using MyNet.UI.ViewModels.List.Sorting;
+using MyNet.UI.Legacy.ViewModels.FileHistory;
+using MyNet.UI.Legacy.ViewModels.List;
+using MyNet.UI.Legacy.ViewModels.List.Filtering;
+using MyNet.UI.Legacy.ViewModels.List.Filtering.Filters;
+using MyNet.UI.Legacy.ViewModels.List.Sorting;
 using MyNet.Utilities.Comparison;
 
 namespace MyNet.UI.Services.Providers;

@@ -10,15 +10,13 @@ namespace MyNet.Utilities.Google.Maps;
 
 public class Directions
 {
-    public Directions() => Steps = [];
-
     public enum Status
     {
         Ok,
         Failed
     }
 
-    public IList<Step> Steps { get; }
+    public IList<Step> Steps { get; } = [];
 
     public string? Duration { get; set; }
 

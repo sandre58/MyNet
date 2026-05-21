@@ -20,14 +20,14 @@ namespace MyNet.Utilities.Caching.Policies;
 /// <param name="resetAction">
 /// The action that will be executed if the item is read before expiration.
 /// </param>
-public sealed class CustomExpirationPolicy(Func<bool>? isExpiredFunc = null, Action? resetAction = null) : ExpirationPolicy(resetAction is not null)
+public sealed class CustomExpirationPolicy(Func<bool> isExpiredFunc, Action? resetAction = null) : ExpirationPolicy(resetAction is not null)
 {
     #region Fields
 
     /// <summary>
     /// The function to check if the policy is expired.
     /// </summary>
-    private readonly Func<bool>? _isExpiredFunc = isExpiredFunc;
+    private readonly Func<bool> _isExpiredFunc = isExpiredFunc ?? throw new ArgumentNullException(nameof(isExpiredFunc));
 
     /// <summary>
     ///  The action that will be executed if the item is read before expiration.
@@ -41,7 +41,7 @@ public sealed class CustomExpirationPolicy(Func<bool>? isExpiredFunc = null, Act
     /// <summary>
     /// Gets a value indicating whether is expired.
     /// </summary>
-    public override bool IsExpired => _isExpiredFunc?.Invoke() != false;
+    public override bool IsExpired => _isExpiredFunc.Invoke();
     #endregion
 
     #region Methods

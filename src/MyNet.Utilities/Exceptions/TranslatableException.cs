@@ -5,7 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace MyNet.Utilities.Exceptions;
 
@@ -15,69 +16,77 @@ namespace MyNet.Utilities.Exceptions;
 /// <remarks>
 /// The message passed to base <see cref="Exception"/> is formatted using the current culture and the provided parameters.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisible(true)]
-public class TranslatableException(string? message, Exception? innerException, string resourceKey, params object?[] stringFormatParameters) : Exception(string.Format(CultureInfo.CurrentCulture, message.OrEmpty(), stringFormatParameters), innerException)
+[ComVisible(true)]
+public class TranslatableException : Exception
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with no message.
+    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a specified resource key and format parameters. The message passed to base <see cref="Exception"/> is formatted using the current culture and the provided parameters.
     /// </summary>
-    public TranslatableException()
-        : this(string.Empty) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a message and an inner exception.
-    /// </summary>
-    /// <param name="message">The exception message.</param>
-    /// <param name="innerException">The inner exception that caused this exception.</param>
-    public TranslatableException(string message, Exception innerException)
-        : this(message, innerException, string.Empty) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a message.
-    /// </summary>
-    /// <param name="message">The exception message.</param>
-    public TranslatableException(string message)
-        : this(message, null, string.Empty) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with an inner exception and a resource key plus optional formatting parameters.
-    /// </summary>
-    /// <param name="innerException">The inner exception.</param>
-    /// <param name="resourceKey">The resource key used to lookup a localized message.</param>
-    /// <param name="stringFormatParameters">Parameters used to format the localized message.</param>
-    public TranslatableException(Exception? innerException, string resourceKey, params object?[] stringFormatParameters)
-        : this(null, innerException, resourceKey, stringFormatParameters)
+    /// <param name="resourceKey">The resource key that identifies the localized message associated with this exception.</param>
+    /// <param name="parameters">The parameters to be used for formatting the resource string associated with the ResourceKey.</param>
+    public TranslatableException(string resourceKey, params object?[] parameters)
     {
+        ResourceKey = resourceKey;
+        Parameters = parameters;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a message, resource key and optional formatting parameters.
+    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a specified resource key, inner exception, and format parameters. The message passed to base <see cref="Exception"/> is formatted using the current culture and the provided parameters.
     /// </summary>
-    /// <param name="message">The message to format.</param>
-    /// <param name="resourceKey">The resource key used to lookup a localized message.</param>
-    /// <param name="stringFormatParameters">Parameters used to format the localized message.</param>
-    public TranslatableException(string? message, string resourceKey, params object?[] stringFormatParameters)
-        : this(message, null, resourceKey, stringFormatParameters)
+    /// <param name="resourceKey">The resource key that identifies the localized message associated with this exception.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception.</param>
+    /// <param name="parameters">The parameters to be used for formatting the resource string associated with the ResourceKey.</param>
+    public TranslatableException(string resourceKey, Exception? innerException, params object?[] parameters)
+        : base(null, innerException)
     {
+        ResourceKey = resourceKey;
+        Parameters = parameters;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a resource key and optional formatting parameters.
+    /// Initializes a new instance of the <see cref="TranslatableException"/> class with default values for ResourceKey and Parameters. This constructor is intended for use when the exception will be initialized with specific values for ResourceKey and Parameters after construction.
     /// </summary>
-    /// <param name="resourceKey">The resource key used to lookup a localized message.</param>
-    /// <param name="stringFormatParameters">Parameters used to format the localized message.</param>
-    public TranslatableException(string resourceKey, params object?[] stringFormatParameters)
-        : this(null, null, resourceKey, stringFormatParameters)
+    internal TranslatableException()
     {
+        ResourceKey = string.Empty;
+        Parameters = [];
     }
 
     /// <summary>
-    /// Gets the resource key referencing the localized message for this exception.
+    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a specified error message.
     /// </summary>
-    public string ResourceKey { get; } = resourceKey;
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    internal TranslatableException(string message)
+        : base(message)
+    {
+        ResourceKey = string.Empty;
+        Parameters = [];
+    }
 
     /// <summary>
-    /// Gets the parameters used to format the localized message.
+    /// Initializes a new instance of the <see cref="TranslatableException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
     /// </summary>
-    public object?[]? Parameters { get; } = stringFormatParameters;
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception.</param>
+    internal TranslatableException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+        ResourceKey = string.Empty;
+        Parameters = [];
+    }
+
+    /// <summary>
+    /// Gets the resource key that identifies the localized message associated with this exception. This key will be used by the localization system to retrieve the appropriate message template based on the current culture.
+    /// </summary>
+    public string ResourceKey { get; }
+
+    /// <summary>
+    /// Gets the parameters to be used for formatting the resource string associated with the ResourceKey. These parameters will be passed to the localization system to generate the final message based on the current culture.
+    /// </summary>
+    public IReadOnlyList<object?> Parameters { get; }
+
+    /// <summary>
+    /// Gets the localized message by formatting the resource string associated with the ResourceKey using the provided Parameters.
+    /// </summary>
+    public override string Message => ResourceKey;
 }

@@ -7,25 +7,6 @@
 namespace MyNet.UI.Navigation.Models;
 
 /// <summary>
-/// Defines the contract for a navigation page that can participate in navigation events.
+/// Defines the contract for a page that can participate in navigation operations, including handling navigation events such as navigating to, navigating from, and navigating back to the page.
 /// </summary>
-public interface INavigationPage
-{
-    /// <summary>
-    /// Called when the page has been navigated to.
-    /// </summary>
-    /// <param name="navigationContext">The navigation context.</param>
-    void OnNavigated(NavigationContext navigationContext);
-
-    /// <summary>
-    /// Called when the page is about to be navigated from.
-    /// </summary>
-    /// <param name="navigatingContext">The navigating context.</param>
-    void OnNavigatingFrom(NavigatingContext navigatingContext);
-
-    /// <summary>
-    /// Called when the page is about to be navigated to.
-    /// </summary>
-    /// <param name="navigatingContext">The navigating context.</param>
-    void OnNavigatingTo(NavigatingContext navigatingContext);
-}
+public interface INavigationPage : INavigationLifecycle;

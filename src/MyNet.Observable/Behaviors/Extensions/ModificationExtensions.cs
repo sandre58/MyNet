@@ -1,0 +1,21 @@
+// -----------------------------------------------------------------------
+// <copyright file="ModificationExtensions.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
+
+public static class ModificationExtensions
+{
+    extension(ObservableObject owner)
+    {
+        /// <summary>
+        /// Determines whether the observable object has been modified since it was last marked as clean. This method checks if the object implements the IModificationAware interface and returns its IsModified property. If the object does not implement IModificationAware, it returns false, indicating that the object is not considered modified.
+        /// </summary>
+        /// <returns>True if the object has been modified; otherwise, false.</returns>
+        public bool IsModified() => owner is IModificationAware { IsModified: true } || (owner.TryGetBehavior<IModificationAware>(out var behavior) && behavior.IsModified);
+    }
+}

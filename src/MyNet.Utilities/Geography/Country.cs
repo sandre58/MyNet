@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace MyNet.Utilities.Geography;
 
 /// <summary>
@@ -13,7 +15,7 @@ namespace MyNet.Utilities.Geography;
 /// numeric, alpha-2, and alpha-3 codes, as well as the continent to which each country belongs. This enables consistent
 /// handling of country data across applications, particularly when interoperating with external systems or data formats
 /// that require standardized country identifiers.</remarks>
-public sealed class Country : EnumClass<Country>
+public sealed class Country : SmartEnum<Country, string>
 {
     public static readonly Country Afghanistan = new(4, nameof(Afghanistan), "af", "afg", Continent.Asia);
     public static readonly Country Albania = new(8, nameof(Albania), "al", "alb", Continent.Europe);
@@ -43,6 +45,7 @@ public sealed class Country : EnumClass<Country>
     public static readonly Country Belize = new(84, nameof(Belize), "bz", "blz", Continent.NorthAmerica);
     public static readonly Country BritishIndianOceanTerritory = new(86, nameof(BritishIndianOceanTerritory), "io", "iot", Continent.Asia);
     public static readonly Country SolomonIslands = new(90, nameof(SolomonIslands), "sb", "slb", Continent.Oceania);
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Country name contains 'UK' as per ISO 3166 standard")]
     public static readonly Country VirginIslandsUK = new(92, nameof(VirginIslandsUK), "vg", "vgb", Continent.NorthAmerica);
     public static readonly Country BruneiDarussalam = new(96, nameof(BruneiDarussalam), "bn", "brn", Continent.Asia);
     public static readonly Country Bulgaria = new(100, nameof(Bulgaria), "bg", "bgr", Continent.Europe);
@@ -255,6 +258,7 @@ public sealed class Country : EnumClass<Country>
     public static readonly Country IsleOfMan = new(833, nameof(IsleOfMan), "im", "imn", Continent.Europe);
     public static readonly Country Tanzania = new(834, nameof(Tanzania), "tz", "tza", Continent.Africa);
     public static readonly Country UnitedStatesOfAmerica = new(840, nameof(UnitedStatesOfAmerica), "us", "usa", Continent.NorthAmerica);
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Country name contains 'UK' as per ISO 3166 standard")]
     public static readonly Country VirginIslandsUS = new(850, nameof(VirginIslandsUS), "vi", "vir", Continent.NorthAmerica);
     public static readonly Country BurkinaFaso = new(854, nameof(BurkinaFaso), "bf", "bfa", Continent.Africa);
     public static readonly Country Uruguay = new(855, nameof(Uruguay), "uy", "ury", Continent.SouthAmerica);
@@ -274,7 +278,7 @@ public sealed class Country : EnumClass<Country>
     /// <param name="alpha3">The alpha-3 code of the country.</param>
     /// <param name="continent">The continent of the country.</param>
     private Country(int iso, string name, string alpha2, string alpha3, Continent continent)
-        : base(name, iso)
+        : base(name)
         => (Iso, Alpha2, Alpha3, Continent) = (iso, alpha2, alpha3, continent);
 
     /// <summary>

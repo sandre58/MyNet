@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Loading.Models;
 
@@ -20,15 +21,16 @@ namespace MyNet.UI.Loading;
 public interface IBusyService : INotifyPropertyChanged
 {
     /// <summary>
-    /// Executes an action while the UI is marked as busy, using a busy indicator of type <typeparamref name="TBusy"/>.
+    /// Executes an asynchronous action while the UI is marked as busy, using a busy indicator of type <typeparamref name="TBusy"/>.
     /// <para>
     /// The <typeparamref name="TBusy"/> instance can be used to report progress and handle cancellation if it supports these features.
     /// </para>
     /// </summary>
     /// <typeparam name="TBusy">The type of busy indicator to use. Can be <c>IndeterminateBusy</c>, <c>ProgressionBusy</c>, etc.</typeparam>
-    /// <param name="action">The action to execute while busy. Use the <typeparamref name="TBusy"/> parameter to manage progress and cancellation.</param>
+    /// <param name="action">The asynchronous action to execute while busy. Use the <typeparamref name="TBusy"/> parameter to manage progress and cancellation.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task WaitAsync<TBusy>(Action<TBusy> action)
+    Task RunAsync<TBusy>(Func<TBusy, CancellationToken, Task> action, CancellationToken cancellationToken = default)
         where TBusy : class, IBusy, new();
 
     /// <summary>
@@ -38,10 +40,12 @@ public interface IBusyService : INotifyPropertyChanged
     /// </para>
     /// </summary>
     /// <typeparam name="TBusy">The type of busy indicator to use. Can be <c>IndeterminateBusy</c>, <c>ProgressionBusy</c>, etc.</typeparam>
+    /// <typeparam name="TResult">The type of the result returned by the asynchronous action.</typeparam>
     /// <param name="action">The asynchronous action to execute while busy. Use the <typeparamref name="TBusy"/> parameter to manage progress and cancellation.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task WaitAsync<TBusy>(Func<TBusy, Task> action)
-        where TBusy : class, IBusy, new();
+    Task<TResult> RunAsync<TBusy, TResult>(Func<TBusy, CancellationToken, Task<TResult>> action, CancellationToken cancellationToken = default)
+        where TBusy : Busy, new();
 
     /// <summary>
     /// Instantiates and returns a busy indicator of type <typeparamref name="TBusy"/> and marks the UI as busy.
@@ -50,14 +54,10 @@ public interface IBusyService : INotifyPropertyChanged
     /// </para>
     /// </summary>
     /// <typeparam name="TBusy">The type of busy indicator to create. Can be <c>IndeterminateBusy</c>, <c>ProgressionBusy</c>, etc.</typeparam>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>The created busy indicator.</returns>
-    TBusy Wait<TBusy>()
-        where TBusy : class, IBusy, new();
-
-    /// <summary>
-    /// Signals that the busy state should end and resumes normal UI operation.
-    /// </summary>
-    void Resume();
+    IBusyScope Begin<TBusy>(CancellationToken cancellationToken = default)
+        where TBusy : Busy, new();
 
     /// <summary>
     /// Gets the current busy indicator of type <typeparamref name="TBusy"/>, if any.

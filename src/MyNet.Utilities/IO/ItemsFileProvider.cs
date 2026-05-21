@@ -4,37 +4,73 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using MyNet.Utilities.Providers;
 
 namespace MyNet.Utilities.IO;
 
-public abstract class ItemsFileProvider<T> : IItemsProvider<T>
+/// <summary>
+/// Base class for items providers that read items from a file.
+/// </summary>
+/// <param name="filename">The file path.</param>
+/// <typeparam name="T">The type of items.</typeparam>
+public abstract class ItemsFileProvider<T>(string? filename = null) : IValidatedItemsProvider<T>
 {
-    protected ItemsFileProvider(string? filename = null) => SetFilename(filename.OrEmpty());
+    /// <summary>
+    /// Gets the source file path.
+    /// </summary>
+    public string? Filename { get; private set; } = filename;
 
-    public string? Filename { get; private set; }
+    /// <summary>
+    /// Sets the source file path.
+    /// </summary>
+    /// <param name="filename">The file path.</param>
+    public void SetFilename(string? filename) => Filename = filename;
 
-    public IEnumerable<Exception> Exceptions { get; private set; } = [];
-
-    public void SetFilename(string filename) => Filename = filename;
-
-    public void Clear() => Exceptions = [];
-
-    public IEnumerable<T> ProvideItems()
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<T> GetItemsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(Filename)) return [];
+        cancellationToken.ThrowIfCancellationRequested();
 
-        if (!File.Exists(Filename))
-            throw new FileNotFoundException(string.Empty, Filename);
+        var filename = FileHelper.EnsureFileExists(Filename.OrEmpty());
 
-        var (items, exceptions) = LoadItems(Filename);
-        Exceptions = exceptions;
+        await foreach (var item in GetItemsCoreAsync(filename, cancellationToken).ConfigureAwait(false))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-        return items;
+            yield return item;
+        }
     }
 
-    protected abstract (IEnumerable<T> Items, IEnumerable<Exception> Exceptions) LoadItems(string filename);
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<ItemLoadError>> ValidateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var filename = FileHelper.EnsureFileExists(Filename.OrEmpty());
+
+        var errors = await ValidateCoreAsync(filename, cancellationToken).ConfigureAwait(false);
+
+        return errors.AsReadOnly();
+    }
+
+    /// <summary>
+    /// When implemented in a derived class, retrieves items from the specified file path.
+    /// </summary>
+    /// <param name="filename">The file path.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>An asynchronous stream of items.</returns>
+    protected abstract IAsyncEnumerable<T> GetItemsCoreAsync(string filename, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Validates the specified file and returns discovered errors.
+    /// </summary>
+    /// <param name="filename">The source filename.</param>
+    /// <param name="cancellationToken">
+    /// A token used to cancel the operation.
+    /// </param>
+    protected virtual Task<List<ItemLoadError>> ValidateCoreAsync(string filename, CancellationToken cancellationToken) => Task.FromResult<List<ItemLoadError>>([]);
 }

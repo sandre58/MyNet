@@ -8,79 +8,129 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DynamicData;
-using DynamicData.Binding;
-using MyNet.Utilities.Collections;
+using System.Reactive.Linq;
+using MyNet.UI.Notifications.Models;
+using MyNet.UI.Threading;
 
 namespace MyNet.UI.Notifications;
 
 /// <summary>
-/// Manages the lifecycle and display of notifications in the application.
+/// Implements the <see cref="INotificationsManager"/> interface, managing a collection of notifications received from a notification service, allowing for their lifecycle management including addition, removal, and clearing, while ensuring thread safety by observing on the UI scheduler and preventing duplicates when necessary.
 /// </summary>
 public sealed class NotificationsManager : INotificationsManager, IDisposable
 {
-    private readonly OptimizedObservableCollection<IClosableNotification> _notifications = [];
-    private readonly List<INotificationHandler> _handlers = [];
+    private readonly ObservableCollection<INotification> _items = [];
+    private readonly Dictionary<Guid, EventHandler<CloseRequestedEventArgs>> _closeHandlers = [];
+    private readonly IDisposable _subscription;
+    private bool _isDisposed;
 
     /// <summary>
-    /// Gets the collection of notifications managed by this manager.
+    /// Initializes a new instance of the <see cref="NotificationsManager"/> class, subscribing to the notification stream and observing updates on the UI scheduler.
     /// </summary>
-    public ReadOnlyObservableCollection<IClosableNotification> Notifications { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NotificationsManager"/> class.
-    /// </summary>
-    public NotificationsManager()
+    /// <param name="service">The notification service to subscribe to for receiving notifications.</param>
+    /// <param name="schedulerProvider">The scheduler provider to ensure UI thread safety.</param>
+    public NotificationsManager(
+        INotificationService service,
+        ISchedulerProvider schedulerProvider)
     {
-        Notifications = new(_notifications);
+        Notifications = new(_items);
 
-        _ = _notifications.ToObservableChangeSet(x => x.Id)
-            .DisposeMany()
-            .OnItemAdded(x => x.CloseRequest += Notification_CloseRequest)
-            .OnItemRemoved(x => x.CloseRequest -= Notification_CloseRequest)
-            .Subscribe();
+        _subscription = service.Notifications
+            .ObserveOn(schedulerProvider.Ui)
+            .Subscribe(OnNotificationReceived);
     }
 
-    private void Notification_CloseRequest(object? sender, System.ComponentModel.CancelEventArgs e) => _notifications.Remove((IClosableNotification)sender!);
+    /// <inheritdoc />
+    public ReadOnlyObservableCollection<INotification> Notifications { get; }
 
     /// <summary>
-    /// Adds a notification handler to the manager.
+    /// Handles incoming notifications, checks for duplicates, then tracks lifecycle hooks for closable notifications.
     /// </summary>
-    /// <param name="handler">The notification handler to add.</param>
-    /// <returns>The notifications manager instance for chaining.</returns>
-    public INotificationsManager AddHandler(INotificationHandler handler)
+    /// <param name="notification">The notification received from the service.</param>
+    private void OnNotificationReceived(INotification notification)
     {
-        _handlers.Add(handler);
-        handler.Subscribe(AddNotification);
-        handler.Unsubscribe(RemoveNotifications);
+        if (IsDuplicate(notification))
+            return;
 
-        return this;
-    }
+        _items.Add(notification);
 
-    /// <summary>
-    /// Adds a notification handler of the specified type to the manager.
-    /// </summary>
-    /// <typeparam name="T">The type of notification handler to add.</typeparam>
-    /// <returns>The notifications manager instance for chaining.</returns>
-    public INotificationsManager AddHandler<T>()
-        where T : INotificationHandler, new()
-        => AddHandler(new T());
-
-    private void RemoveNotifications(Func<IClosableNotification, bool> predicate) => _notifications.RemoveMany([.. _notifications.Where(predicate)]);
-
-    private void AddNotification(IClosableNotification notification)
-    {
-        if (!_notifications.Contains(notification))
-            _notifications.Add(notification);
+        HookLifecycle(notification);
     }
 
     /// <summary>
-    /// Clears all notifications.
+    /// Determines whether the given notification is a duplicate of any existing notification in the collection, based on the logic defined in the <see cref="IDeduplicableNotification"/> interface if implemented, allowing for prevention of duplicate notifications from being added to the collection.
     /// </summary>
-    public void Clear() => _notifications.Clear();
+    /// <param name="notification">The notification to check for duplication.</param>
+    /// <returns>True if the notification is a duplicate; otherwise, false.</returns>
+    private bool IsDuplicate(INotification notification) =>
+        notification is IDeduplicableNotification dedup && _items.Any(x =>
+            x is IDeduplicableNotification existing &&
+            dedup.IsDuplicateOf(existing));
 
     /// <summary>
-    /// Disposes the notification handlers managed by this manager.
+    /// Hooks into the lifecycle of a closable notification by subscribing to its CloseRequested event, allowing for automatic removal of the notification from the collection when it is requested to be closed by the user or programmatically, ensuring proper cleanup and management of notifications in the UI.
     /// </summary>
-    public void Dispose() => _handlers.ForEach(x => x.Dispose());
+    /// <param name="notification">The closable notification to hook into.</param>
+    private void HookLifecycle(INotification notification)
+    {
+        if (notification is not IClosableNotification closableNotification)
+            return;
+
+        EventHandler<CloseRequestedEventArgs> handler = (_, _) => Remove(notification);
+        _closeHandlers[notification.Id] = handler;
+        closableNotification.CloseRequested += handler;
+    }
+
+    private void UnhookLifecycle(INotification notification)
+    {
+        if (notification is not IClosableNotification closableNotification)
+            return;
+
+        if (!_closeHandlers.TryGetValue(notification.Id, out var handler))
+            return;
+
+        closableNotification.CloseRequested -= handler;
+        _closeHandlers.Remove(notification.Id);
+    }
+
+    /// <inheritdoc />
+    public void Remove(INotification notification)
+    {
+        if (_isDisposed)
+            return;
+
+        var item = _items.FirstOrDefault(x => x.Id == notification.Id);
+        if (item is null)
+            return;
+
+        UnhookLifecycle(item);
+        _items.Remove(item);
+    }
+
+    /// <inheritdoc />
+    public void Clear()
+    {
+        if (_isDisposed)
+            return;
+
+        foreach (var item in _items.ToList())
+            UnhookLifecycle(item);
+
+        _items.Clear();
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        _subscription.Dispose();
+
+        foreach (var item in _items.ToList())
+            UnhookLifecycle(item);
+
+        _items.Clear();
+    }
 }

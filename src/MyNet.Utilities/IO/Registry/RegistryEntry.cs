@@ -1,33 +1,24 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="RegistryEntry.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Linq;
-
 namespace MyNet.Utilities.IO.Registry;
 
-public class RegistryEntry<T> : IRegistry
+/// <summary>
+/// Represents an entry in the registry, associating a registry path with a specific item of type T.
+/// </summary>
+/// <typeparam name="T">The type of the item stored in the registry entry.</typeparam>
+public sealed class RegistryEntry<T>(RegistryPath path, T item)
 {
-    public RegistryEntry(string path, T item)
-    {
-        var split = path.Split('\\');
-        Key = split.LastOrDefault() ?? string.Empty;
-        Parent = string.Join('\\', split.Take(split.Length - 1));
-        Item = item;
-    }
+    /// <summary>
+    /// Gets the registry path associated with this entry. The registry path represents the location in the registry where the item is stored. This property is read-only and is initialized through the constructor.
+    /// </summary>
+    public RegistryPath Path { get; } = path;
 
-    public RegistryEntry(string key, string parent, T item)
-    {
-        Key = key;
-        Parent = parent;
-        Item = item;
-    }
-
-    public string Key { get; }
-
-    public string Parent { get; }
-
-    public T Item { get; }
+    /// <summary>
+    /// Gets the item stored in this registry entry. This property is read-only and is initialized through the constructor.
+    /// </summary>
+    public T Item { get; } = item;
 }

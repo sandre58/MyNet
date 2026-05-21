@@ -33,7 +33,7 @@ public sealed class SlidingExpirationPolicy : DurationExpirationPolicy
     /// <summary>
     /// The reset.
     /// </summary>
-    protected override void OnReset() => AbsoluteExpirationDateTime = DateTime.Now.Add(DurationTimeSpan);
+    protected override void OnReset() => AbsoluteExpirationDateTime = DateTime.UtcNow.Add(DurationTimeSpan);
 
     #endregion
 }

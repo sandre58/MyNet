@@ -5,36 +5,26 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MyNet.UI.Navigation.Models;
-using MyNet.Utilities.Suspending;
 
 namespace MyNet.UI.Navigation;
 
 /// <summary>
-/// Defines the contract for a navigation service that manages navigation between pages and history.
+/// Defines a service for managing navigation between pages in the application, including navigation history and events for navigation operations.
 /// </summary>
 public interface INavigationService
 {
     /// <summary>
-    /// Occurs before navigation is performed.
+    /// Gets a value indicating whether the navigation service can navigate back.
     /// </summary>
-    event EventHandler<NavigatingEventArgs>? Navigating;
+    bool CanGoBack { get; }
 
     /// <summary>
-    /// Occurs after navigation is performed.
+    /// Gets a value indicating whether the navigation service can navigate forward.
     /// </summary>
-    event EventHandler<NavigationEventArgs>? Navigated;
-
-    /// <summary>
-    /// Occurs when the navigation history is cleared.
-    /// </summary>
-    event EventHandler? HistoryCleared;
-
-    /// <summary>
-    /// Occurs when the navigation service is cleared.
-    /// </summary>
-    event EventHandler? Cleared;
+    bool CanGoForward { get; }
 
     /// <summary>
     /// Gets the current navigation context.
@@ -42,54 +32,31 @@ public interface INavigationService
     NavigationContext? CurrentContext { get; }
 
     /// <summary>
-    /// Gets the suspender for the navigation journal.
-    /// </summary>
-    Suspender JournalSuspender { get; }
-
-    /// <summary>
-    /// Gets the back navigation journal.
-    /// </summary>
-    IEnumerable<NavigationContext> GetBackJournal();
-
-    /// <summary>
-    /// Gets the forward navigation journal.
-    /// </summary>
-    IEnumerable<NavigationContext> GetForwardJournal();
-
-    /// <summary>
-    /// Navigates back in history.
-    /// </summary>
-    bool GoBack();
-
-    /// <summary>
-    /// Determines whether navigation back is possible.
-    /// </summary>
-    bool CanGoBack();
-
-    /// <summary>
-    /// Navigates forward in history.
-    /// </summary>
-    bool GoForward();
-
-    /// <summary>
-    /// Determines whether navigation forward is possible.
-    /// </summary>
-    bool CanGoForward();
-
-    /// <summary>
-    /// Clears the navigation journal.
-    /// </summary>
-    void ClearJournal();
-
-    /// <summary>
-    /// Clears the navigation service.
-    /// </summary>
-    void Clear();
-
-    /// <summary>
-    /// Navigates to the specified page with optional parameters.
+    /// Navigates to the specified page asynchronously.
     /// </summary>
     /// <param name="page">The page to navigate to.</param>
-    /// <param name="navigationParameters">Optional navigation parameters.</param>
-    bool NavigateTo(INavigationPage page, NavigationParameters? navigationParameters = null);
+    /// <param name="parameters">Optional navigation parameters.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous navigation operation. The task result contains the navigation result.</returns>
+    Task<NavigationResult> NavigateToAsync(INavigationPage page, INavigationParameters? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Navigates back to the previous page asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous navigation operation. The task result contains the navigation result.</returns>
+    Task<NavigationResult> GoBackAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Navigates forward to the next page asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous navigation operation. The task result contains the navigation result.</returns>
+    Task<NavigationResult> GoForwardAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Resets the navigation history asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous reset operation.</returns>
+    Task ResetAsync();
 }

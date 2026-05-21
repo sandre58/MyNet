@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+
 namespace MyNet.UI.Toasting.Settings;
 
 /// <summary>
@@ -25,4 +27,9 @@ public class ToastSettings
     /// Gets or sets a value indicating whether the toast notification should freeze when the mouse enters it.
     /// </summary>
     public bool FreezeOnMouseEnter { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the duration for which the toast notification should be displayed before it is automatically closed.
+    /// </summary>
+    public TimeSpan? Duration { get; set; }
 }

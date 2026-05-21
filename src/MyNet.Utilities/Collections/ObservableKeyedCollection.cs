@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace MyNet.Utilities.Collections;
@@ -17,7 +16,7 @@ namespace MyNet.Utilities.Collections;
 /// </summary>
 /// <typeparam name="TKey">The type of the key for items in the collection.</typeparam>
 /// <typeparam name="T">The type of the items in the collection.</typeparam>
-public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCollection<T>
+public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollection<T>
     where TKey : notnull
 {
     private readonly int _dictionaryCreationThreshold;
@@ -26,32 +25,19 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableKeyedCollection{TKey, T}"/> class.
     /// </summary>
-    protected ObservableKeyedCollection(Action<Action>? notifyOnUi = null, bool useAsyncNotifications = true)
-        : this([], null, 0, notifyOnUi, useAsyncNotifications) { }
+    protected ObservableKeyedCollection()
+        : this([])
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableKeyedCollection{TKey, T}"/> class with the specified comparer.
     /// </summary>
     /// <param name="comparer">The equality comparer used to compare keys.</param>
     /// <param name="dictionaryCreationThreshold">Minimum items before creating dictionary. 0 = always create.</param>
-    /// <param name="notifyOnUi">Optional action used to marshal notifications on the UI thread.</param>
-    /// <param name="useAsyncNotifications">If true, notifications are sent asynchronously to avoid blocking.</param>
-    protected ObservableKeyedCollection(IEqualityComparer<TKey> comparer, int dictionaryCreationThreshold = 0, Action<Action>? notifyOnUi = null, bool useAsyncNotifications = true)
-        : this([], comparer, dictionaryCreationThreshold, notifyOnUi, useAsyncNotifications) { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ObservableKeyedCollection{TKey, T}"/> class with sorting options.
-    /// </summary>
-    /// <param name="sortSelector">A selector used to order items.</param>
-    /// <param name="direction">The sort direction.</param>
-    /// <param name="dictionaryCreationThreshold">Minimum items before creating dictionary. 0 = always create.</param>
-    /// <param name="notifyOnUi">Optional action used to marshal notifications on the UI thread.</param>
-    /// <param name="useAsyncNotifications">If true, notifications are sent asynchronously to avoid blocking.</param>
-    protected ObservableKeyedCollection(Func<T, object> sortSelector, ListSortDirection direction = ListSortDirection.Ascending, int dictionaryCreationThreshold = 0, Action<Action>? notifyOnUi = null, bool useAsyncNotifications = true)
-     : base(sortSelector, direction, notifyOnUi, useAsyncNotifications)
+    protected ObservableKeyedCollection(IEqualityComparer<TKey> comparer, int dictionaryCreationThreshold = 0)
+        : this([], comparer, dictionaryCreationThreshold)
     {
-        Comparer = EqualityComparer<TKey>.Default;
-        _dictionaryCreationThreshold = dictionaryCreationThreshold;
     }
 
     /// <summary>
@@ -60,10 +46,8 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     /// <param name="list">The list whose elements are copied to the new collection.</param>
     /// <param name="comparer">The optional comparer used to compare keys.</param>
     /// <param name="dictionaryCreationThreshold">Minimum items before creating dictionary. 0 = always create.</param>
-    /// <param name="notifyOnUi">Optional action used to marshal notifications on the UI thread.</param>
-    /// <param name="useAsyncNotifications">If true, notifications are sent asynchronously to avoid blocking.</param>
-    protected ObservableKeyedCollection(IEnumerable<T> list, IEqualityComparer<TKey>? comparer = null, int dictionaryCreationThreshold = 0, Action<Action>? notifyOnUi = null, bool useAsyncNotifications = true)
-   : base(list, notifyOnUi, useAsyncNotifications)
+    protected ObservableKeyedCollection(IEnumerable<T> list, IEqualityComparer<TKey>? comparer = null, int dictionaryCreationThreshold = 0)
+        : base(list)
     {
         Comparer = comparer ?? EqualityComparer<TKey>.Default;
         _dictionaryCreationThreshold = dictionaryCreationThreshold;
@@ -104,7 +88,7 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
             // Fast path: Use dictionary if available
             if (_dict is not null)
             {
-                return _dict.TryGetValue(key, out var value) ? value : default;
+                return _dict.GetValueOrDefault(key);
             }
 
             // Slow path: Linear search
@@ -224,18 +208,15 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
         if (Comparer.Equals(oldKey, newKey))
             return;
 
-        ExecuteWriteLocked(() =>
+        if (newKey is not null)
         {
-            if (newKey is not null)
-            {
-                AddKeyInternal(newKey, item);
-            }
+            AddKeyInternal(newKey, item);
+        }
 
-            if (oldKey is not null)
-            {
-                RemoveKeyInternal(oldKey);
-            }
-        });
+        if (oldKey is not null)
+        {
+            RemoveKeyInternal(oldKey);
+        }
     }
 
     /// <inheritdoc />
@@ -256,31 +237,28 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     {
         var key = GetKeyForItem(item);
 
-        ExecuteWriteLocked(() =>
-        {
-            // Add to base collection first
-            base.InsertItem(index, item);
+        // Add to base collection first
+        base.InsertItem(index, item);
 
-            // Then handle dictionary
-            if (key is not null)
+        // Then handle dictionary
+        if (key is not null)
+        {
+            // Check threshold AFTER item is added
+            // Special case: if threshold is 0, always use dictionary
+            if (_dict is not null ||
+                (_dictionaryCreationThreshold == 0 && Count > 0) ||
+                Count > _dictionaryCreationThreshold)
             {
-                // Check threshold AFTER item is added
-                // Special case: if threshold is 0, always use dictionary
-                if (_dict is not null ||
-                    (_dictionaryCreationThreshold == 0 && Count > 0) ||
-                    Count > _dictionaryCreationThreshold)
+                if (_dict is null)
                 {
-                    if (_dict is null)
-                    {
-                        CreateDictionary();
-                    }
-                    else
-                    {
-                        _dict.Add(key, item);
-                    }
+                    CreateDictionary();
+                }
+                else
+                {
+                    _dict.Add(key, item);
                 }
             }
-        });
+        }
     }
 
     /// <summary>
@@ -295,43 +273,40 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     /// Adds the elements of the specified collection to the end of the collection.
     /// Overridden to ensure dictionary is updated.
     /// </summary>
-    /// <param name="collection">The collection whose elements should be added.</param>
-    public new void AddRange(IEnumerable<T> collection)
+    /// <param name="items">The collection whose elements should be added.</param>
+    public override void AddRange(IEnumerable<T> items)
     {
-        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(items);
 
-        ExecuteWriteLocked(() =>
+        var initialCount = Count;
+
+        // Call parent AddRange which adds to Items directly
+        base.AddRange(items);
+
+        // Now update dictionary with all new items
+        if (Count > initialCount)
         {
-            var initialCount = Count;
-
-            // Call parent AddRange which adds to Items directly
-            base.AddRange(collection);
-
-            // Now update dictionary with all new items
-            if (Count > initialCount)
+            // Check if we should create dictionary
+            if (_dict is null && (_dictionaryCreationThreshold == 0 || Count > _dictionaryCreationThreshold))
             {
-                // Check if we should create dictionary
-                if (_dict is null && (_dictionaryCreationThreshold == 0 || Count > _dictionaryCreationThreshold))
+                // Create dictionary and it will include all items
+                CreateDictionary();
+            }
+            else if (_dict is not null)
+            {
+                // Dictionary exists, add only the new items
+                // Items were added from initialCount to Count-1
+                for (var i = initialCount; i < Count; i++)
                 {
-                    // Create dictionary and it will include all items
-                    CreateDictionary();
-                }
-                else if (_dict is not null)
-                {
-                    // Dictionary exists, add only the new items
-                    // Items were added from initialCount to Count-1
-                    for (var i = initialCount; i < Count; i++)
+                    var item = Items[i];
+                    var key = GetKeyForItem(item);
+                    if (key is not null)
                     {
-                        var item = Items[i];
-                        var key = GetKeyForItem(item);
-                        if (key is not null)
-                        {
-                            _dict.TryAdd(key, item); // Use TryAdd to avoid exceptions on duplicates
-                        }
+                        _dict.TryAdd(key, item); // Use TryAdd to avoid exceptions on duplicates
                     }
                 }
             }
-        });
+        }
     }
 
     /// <summary>
@@ -347,77 +322,66 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
 
         var removedCount = 0;
 
-        ExecuteWriteLocked(() =>
+        // First, remove from dictionary
+        if (_dict is not null)
         {
-            // First, remove from dictionary
-            if (_dict is not null)
-            {
-                foreach (var key in set)
-                {
-                    if (_dict.Remove(key))
-                    {
-                        removedCount++;
-                    }
-                }
-            }
+            removedCount += set.Count(key => _dict.Remove(key));
+        }
 
-            // Then, remove from base items collection
-            for (var i = Items.Count - 1; i >= 0; i--)
+        // Then, remove from base items collection
+        for (var i = Items.Count - 1; i >= 0; i--)
+        {
+            var key = GetKeyForItem(Items[i]);
+            if (key is not null && set.Contains(key))
             {
-                var key = GetKeyForItem(Items[i]);
-                if (key is not null && set.Contains(key))
-                {
-                    RemoveItem(i);
-                    removedCount++;
-                }
+                RemoveItem(i);
+                removedCount++;
             }
-        });
+        }
 
         return removedCount;
     }
 
     protected override void RemoveItem(int index)
-        => ExecuteWriteLocked(() =>
+    {
+        var key = GetKeyForItem(Items[index]);
+
+        base.RemoveItem(index);
+
+        if (key is not null)
         {
-            var key = GetKeyForItem(Items[index]);
-
-            base.RemoveItem(index);
-
-            if (key is not null)
-            {
-                RemoveKeyInternal(key);
-            }
-        });
+            RemoveKeyInternal(key);
+        }
+    }
 
     protected override void SetItem(int index, T item)
-        => ExecuteWriteLocked(() =>
+    {
+        var newKey = GetKeyForItem(item);
+        var oldKey = GetKeyForItem(Items[index]);
+
+        if (Comparer.Equals(oldKey, newKey))
         {
-            var newKey = GetKeyForItem(item);
-            var oldKey = GetKeyForItem(Items[index]);
-
-            if (Comparer.Equals(oldKey, newKey))
+            if (newKey is not null && _dict is not null)
             {
-                if (newKey is not null && _dict is not null)
-                {
-                    _dict[newKey] = item;
-                }
+                _dict[newKey] = item;
             }
-            else
+        }
+        else
+        {
+            if (newKey is not null)
             {
-                if (newKey is not null)
-                {
-                    EnsureDictionaryIfNeeded();
-                    AddKeyInternal(newKey, item);
-                }
-
-                if (oldKey is not null)
-                {
-                    RemoveKeyInternal(oldKey);
-                }
+                EnsureDictionaryIfNeeded();
+                AddKeyInternal(newKey, item);
             }
 
-            base.SetItem(index, item);
-        });
+            if (oldKey is not null)
+            {
+                RemoveKeyInternal(oldKey);
+            }
+        }
+
+        base.SetItem(index, item);
+    }
 
     /// <summary>
     /// Ensures the dictionary is created if the collection size warrants it.
@@ -472,7 +436,7 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     {
         // Pre-allocate with current count + some headroom
         var capacity = Math.Max(Count, 16);
-        _dict = new Dictionary<TKey, T>(capacity, Comparer);
+        _dict = new(capacity, Comparer);
 
         foreach (var item in Items)
         {
@@ -488,11 +452,5 @@ public abstract class ObservableKeyedCollection<TKey, T> : SortableObservableCol
     /// <summary>
     /// Gets statistics about the dictionary usage.
     /// </summary>
-    protected (bool Created, int Count, int Capacity) GetDictionaryStats()
-    {
-        if (_dict is null)
-            return (false, 0, 0);
-
-        return (true, _dict.Count, _dict.EnsureCapacity(0));
-    }
+    protected (bool Created, int Count, int Capacity) GetDictionaryStats() => _dict is null ? (false, 0, 0) : (true, _dict.Count, _dict.EnsureCapacity(0));
 }

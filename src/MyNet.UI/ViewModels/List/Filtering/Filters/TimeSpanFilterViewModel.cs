@@ -1,32 +1,25 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="TimeSpanFilterViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities;
+using System.Linq.Expressions;
 using MyNet.Utilities.Comparison;
-using MyNet.Utilities.Units;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
-public class TimeSpanFilterViewModel : IntegerFilterViewModel
-{
-    public TimeSpanFilterViewModel(string propertyName)
-        : base(propertyName) { }
-
-    public TimeSpanFilterViewModel(string propertyName, ComplexComparableOperator comparison, int? from, int? to, TimeUnit unit)
-        : base(propertyName, comparison, from, to)
-    {
-        Unit = unit;
-        Minimum = 1;
-        Maximum = int.MaxValue;
-    }
-
-    public TimeUnit Unit { get; set; }
-
-    protected override FilterViewModel CreateCloneInstance() => new TimeSpanFilterViewModel(PropertyName, Operator, From, To, Unit) { Minimum = Minimum, Maximum = Maximum };
-
-    protected override bool IsMatchProperty(object? toCompare) => toCompare is TimeSpan toComparable && toComparable.Compare(From?.ToTimeSpan(Unit), To?.ToTimeSpan(Unit), Operator);
-}
+/// <summary>
+/// Filter view model for TimeSpan properties.
+/// Supports range filtering (from/to) and various comparison operators.
+/// </summary>
+/// <typeparam name="T">The type of the items being filtered.</typeparam>
+/// <param name="propertyName">The key that identifies this filter condition.</param>
+/// <param name="property">The expression representing the TimeSpan property to filter on.</param>
+/// <param name="comparableOperator">The comparison operator to use (default: IsBetween).</param>
+public class TimeSpanFilterViewModel<T>(
+    string propertyName,
+    Expression<Func<T, TimeSpan>> property,
+    ComplexComparableOperator comparableOperator = ComplexComparableOperator.IsBetween)
+    : ComparableFilterViewModel<T, TimeSpan>(propertyName, property, comparableOperator);

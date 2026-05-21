@@ -6,6 +6,7 @@
 
 using MyNet.Humanizer;
 using MyNet.Utilities;
+using MyNet.Utilities.Text.TextCasing;
 
 namespace MyNet.Observable.Translatables;
 

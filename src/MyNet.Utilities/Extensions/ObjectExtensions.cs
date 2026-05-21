@@ -5,8 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Utilities;
@@ -14,117 +13,87 @@ namespace MyNet.Utilities;
 
 public static class ObjectExtensions
 {
-    /// <summary>
-    /// The Clone Method that will be recursively used for the deep clone.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Assumed")]
-    private static readonly MethodInfo? CloneMethod = typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
-
-    public static string ToStringOrEmpty(object? obj) => obj?.ToString() ?? string.Empty;
-
-    public static T CastIn<T>(this object obj) => (T)obj;
-
-    public static T Clone<T>(this T obj)
-        where T : ICloneable
-        => (T)obj.Clone();
-
-    public static TResult? To<TIn, TResult>(this TIn? value, Func<TIn, TResult> func) => value is null ? default : func.Invoke(value);
-
-    /// <summary>
-    /// Returns TRUE if the type is a primitive one, FALSE otherwise.
-    /// </summary>
-    public static bool IsPrimitive(this Type type) => type == typeof(string) || type is { IsValueType: true, IsPrimitive: true };
-
-    /// <summary>
-    /// Returns a Deep Clone / Deep Copy of an object using a recursive call to the CloneMethod specified above.
-    /// </summary>
-    public static object? DeepCopy(this object obj) => DeepCloneInternal(obj, new Dictionary<object, object?>(Comparers.ReferenceEqualityComparer.Instance));
-
-    /// <summary>
-    /// Returns a Deep Clone / Deep Copy of an object of type T using a recursive call to the CloneMethod specified above.
-    /// </summary>
-    public static T? DeepCopy<T>(this T obj) => (T?)((object?)obj)?.DeepCopy();
-
-    public static void DeepSet(this object toObject, object? obj)
+    extension<T>(object value)
     {
-        if (obj?.GetType().IsPrimitive() != false)
-            return;
+        /// <summary>
+        /// Casts the value to type T. If the value is not of type T, an <see cref="InvalidCastException"/> will be thrown.
+        /// </summary>
+        /// <returns>The value cast to type T.</returns>
+        public T CastIn() => (T)value;
+    }
 
-        var typeToReflect = obj.GetType();
-
-        if (typeof(Delegate).IsAssignableFrom(typeToReflect))
-            return;
-
-        if (typeToReflect.IsArray)
+    extension(object? value)
+    {
+        /// <summary>
+        /// Executes the specified action if the value is null.
+        /// </summary>
+        /// <param name="ifNull">The action to execute if the value is null.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="ifNull"/> action is null.</exception>
+        public void IfNull(Action ifNull)
         {
-            var arrayType = typeToReflect.GetElementType();
-            if (arrayType?.IsPrimitive() == false)
-            {
-                var clonedArray = (Array)toObject;
-                clonedArray.ForEach((array, indices) => array.SetValue(DeepCloneInternal(clonedArray.GetValue(indices), new Dictionary<object, object?>(Comparers.ReferenceEqualityComparer.Instance)), indices));
-            }
+            ArgumentNullException.ThrowIfNull(ifNull);
+
+            if (value is null)
+                ifNull();
+        }
+    }
+
+    extension<T>(object? value)
+    {
+        /// <summary>
+        /// Executes the specified action if the value is of type T, passing the value cast to T as a parameter to the action. If the value is not of type T, the method does nothing.
+        /// </summary>
+        /// <param name="action">The action to execute if the value is of type T.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is null.</exception>
+        public void IfIs(Action<T> action)
+        {
+            ArgumentNullException.ThrowIfNull(action);
+
+            if (value is T typed)
+                action(typed);
+        }
+    }
+
+    extension<T>(T? value)
+    {
+        /// <summary>
+        /// Returns the value if it is not null; otherwise, throws an <see cref="ArgumentNullException"/> with the specified parameter name.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that is null.</param>
+        /// <param name="message">The message to include in the exception.</param>
+        /// <returns>The value if it is not null.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the value is null.</exception>
+        public T OrThrow(string? paramName = null, string? message = null) => value ?? throw new ArgumentNullException(paramName, message);
+
+        /// <summary>
+        /// Returns the value if it is not null; otherwise, returns the specified fallback value.
+        /// </summary>
+        /// <param name="fallback">The fallback value to return if the value is null.</param>
+        /// <returns>The value if it is not null; otherwise, the specified fallback value.</returns>
+        public T Or(T fallback) => value ?? fallback;
+
+        /// <summary>
+        /// Executes the specified action if the value is not null, passing the non-null value as a parameter to the action.
+        /// </summary>
+        /// <param name="ifNotNull">The action to execute if the value is not null.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="ifNotNull"/> action is null.</exception>
+        public void IfNotNull(Action<T> ifNotNull)
+        {
+            ArgumentNullException.ThrowIfNull(ifNotNull);
+
+            if (value is not null)
+                ifNotNull(value);
         }
 
-        CopyFields(obj, new Dictionary<object, object?>(Comparers.ReferenceEqualityComparer.Instance), toObject, typeToReflect);
-        RecursiveCopyBaseTypePrivateFields(obj, new Dictionary<object, object?>(Comparers.ReferenceEqualityComparer.Instance), toObject, typeToReflect);
-    }
-
-    public static void DeepSet<T>(this T toObject, T obj) => ((object?)toObject)?.DeepSet(obj);
-
-    private static object? DeepCloneInternal(object? obj, IDictionary<object, object?> visited)
-    {
-        if (obj == null)
-            return null;
-
-        var typeToReflect = obj.GetType();
-        if (typeToReflect.IsPrimitive())
-            return obj;
-
-        if (visited.TryGetValue(obj, out var value))
-            return value;
-
-        if (typeof(Delegate).IsAssignableFrom(typeToReflect))
-            return obj;
-
-        var cloneObject = CloneMethod?.Invoke(obj, null);
-        if (typeToReflect.IsArray)
+        /// <summary>
+        /// Converts the value using the provided selector.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TResult? ConvertTo<TResult>(Func<T, TResult> selector)
         {
-            var arrayType = typeToReflect.GetElementType();
-            if (arrayType?.IsPrimitive() == false)
-            {
-                var clonedArray = (Array?)cloneObject;
-                clonedArray?.ForEach((array, indices) => array.SetValue(DeepCloneInternal(clonedArray.GetValue(indices), visited), indices));
-            }
-        }
+            ArgumentNullException.ThrowIfNull(selector);
 
-        visited.Add(obj, cloneObject);
-        CopyFields(obj, visited, cloneObject, typeToReflect);
-        RecursiveCopyBaseTypePrivateFields(obj, visited, cloneObject, typeToReflect);
-        return cloneObject;
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Assumed")]
-    private static void RecursiveCopyBaseTypePrivateFields(object originalObject, IDictionary<object, object?> visited, object? cloneObject, Type typeToReflect)
-    {
-        if (typeToReflect.BaseType == null) return;
-        RecursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect.BaseType);
-        CopyFields(originalObject, visited, cloneObject, typeToReflect.BaseType, BindingFlags.Instance | BindingFlags.NonPublic, info => info.IsPrivate);
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Assumed")]
-    private static void CopyFields(object originalObject, IDictionary<object, object?> visited, object? cloneObject, Type typeToReflect, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy, Func<FieldInfo, bool>? filter = null)
-    {
-        foreach (var fieldInfo in typeToReflect.GetFields(bindingFlags))
-        {
-            if (filter != null && !filter(fieldInfo))
-                continue;
-
-            if (typeof(Delegate).IsAssignableFrom(fieldInfo.FieldType))
-                continue;
-
-            var originalFieldValue = fieldInfo.GetValue(originalObject);
-            var clonedFieldValue = DeepCloneInternal(originalFieldValue, visited);
-            fieldInfo.SetValue(cloneObject, clonedFieldValue);
+            return value is null ? default : selector(value);
         }
     }
 }

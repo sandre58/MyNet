@@ -16,6 +16,10 @@ namespace MyNet.Utilities.Messaging;
 public class WeakAction
 {
     private Action? _staticAction;
+    private WeakReference? _targetReference;
+    private WeakReference? _actionTargetReference;
+    private object? _liveReference;
+    private MethodInfo? _method;
 
     public WeakAction(Action action, bool keepTargetAlive = false)
         : this(action.Target, action, keepTargetAlive)
@@ -27,22 +31,15 @@ public class WeakAction
         if (action.Method.IsStatic)
         {
             _staticAction = action;
-
             if (target != null)
-                Reference = new WeakReference(target);
-
+                _targetReference = new(target);
             return;
         }
 
-        Method = action.Method;
-        ActionReference = new WeakReference(action.Target);
-
-        LiveReference = keepTargetAlive ? action.Target : null;
-        Reference = new WeakReference(target);
-    }
-
-    protected WeakAction()
-    {
+        _method = action.Method;
+        _actionTargetReference = new(action.Target);
+        _liveReference = keepTargetAlive ? action.Target : null;
+        _targetReference = new(target);
     }
 
     /// <summary>
@@ -53,7 +50,7 @@ public class WeakAction
     /// <summary>
     /// Gets the name of the method that this WeakAction represents.
     /// </summary>
-    public virtual string? MethodName => _staticAction != null ? _staticAction.Method.Name : Method?.Name;
+    public virtual string? MethodName => _staticAction?.Method.Name ?? _method?.Name;
 
     /// <summary>
     /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
@@ -63,81 +60,32 @@ public class WeakAction
     {
         get
         {
-            if (_staticAction == null && Reference == null && LiveReference == null)
+            if (_staticAction == null && _targetReference == null && _liveReference == null)
                 return false;
 
             if (_staticAction != null)
-            {
-                return Reference?.IsAlive != false;
-            }
+                return _targetReference?.IsAlive != false;
 
             // Non static action
-            return LiveReference != null || Reference is { IsAlive: true };
+            return _liveReference != null || _targetReference is { IsAlive: true };
         }
     }
 
     /// <summary>
-    /// Gets the Action's owner. This object is stored as a
-    /// <see cref="WeakReference" />.
+    /// Gets the Action's owner. This object is stored as a WeakReference.
     /// </summary>
-    public object? Target => Reference?.Target;
+    public object? Target => _targetReference?.Target;
+
+    protected object? ActionTarget => _liveReference ?? _actionTargetReference?.Target;
 
     /// <summary>
-    /// Gets or sets the <see cref="MethodInfo" /> corresponding to this WeakAction's
-    /// method passed in the constructor.
-    /// </summary>
-    protected MethodInfo? Method
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets or sets a WeakReference to this WeakAction's action's target.
-    /// This is not necessarily the same as
-    /// <see cref="Reference" />, for example if the
-    /// method is anonymous.
-    /// </summary>
-    protected WeakReference? ActionReference
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets or sets saves the <see cref="ActionReference"/> as a hard reference. This is
-    /// used in relation with this instance's constructor and only if
-    /// the constructor's keepTargetAlive parameter is true.
-    /// </summary>
-    protected object? LiveReference
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets or sets a WeakReference to the target passed when constructing
-    /// the WeakAction. This is not necessarily the same as
-    /// <see cref="ActionReference" />, for example if the
-    /// method is anonymous.
-    /// </summary>
-    protected WeakReference? Reference
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets the target of the weak reference.
-    /// </summary>
-    protected object? ActionTarget => LiveReference ?? ActionReference?.Target;
-
-    /// <summary>
-    /// Executes the action. This only happens if the action's owner
-    /// is still alive.
+    /// Executes the action. This only happens if the action's owner is still alive.
     /// </summary>
     public void Execute()
     {
+        if (!IsAlive)
+            return;
+
         if (_staticAction != null)
         {
             _staticAction();
@@ -145,36 +93,47 @@ public class WeakAction
         }
 
         var actionTarget = ActionTarget;
-
-        if (IsAlive && Method != null && (LiveReference != null || ActionReference != null) && actionTarget != null)
-            _ = Method.Invoke(actionTarget, null);
+        if (_method != null && actionTarget != null)
+        {
+            try
+            {
+                _ = _method.Invoke(actionTarget, null);
+            }
+            catch
+            {
+                // Silently ignore invocation errors
+            }
+        }
     }
 
     /// <summary>
-    /// Sets the reference that this instance stores to null.
+    /// Sets all references to null, marking this WeakAction for deletion.
     /// </summary>
     public void MarkForDeletion()
     {
-        Reference = null;
-        ActionReference = null;
-        LiveReference = null;
-        Method = null;
         _staticAction = null;
+        _targetReference = null;
+        _actionTargetReference = null;
+        _liveReference = null;
+        _method = null;
     }
 }
 
 /// <summary>
-/// Stores an Action without causing a hard reference
+/// Stores a generic Action&lt;T&gt; without causing a hard reference
 /// to be created to the Action's owner. The owner can be garbage collected at any time.
 /// </summary>
 /// <typeparam name="T">The type of the Action's parameter.</typeparam>
-////[ClassInfo(typeof(WeakAction))]
-public class WeakAction<T> : WeakAction, IExecuteWithObject
+public class WeakAction<T> : IExecuteWithObject
 {
     private Action<T?>? _staticAction;
+    private WeakReference? _targetReference;
+    private WeakReference? _actionTargetReference;
+    private object? _liveReference;
+    private MethodInfo? _method;
 
     public WeakAction(Action<T?> action, bool keepTargetAlive = false)
-    : this(action.Target, action, keepTargetAlive)
+        : this(action.Target, action, keepTargetAlive)
     {
     }
 
@@ -183,65 +142,75 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
         if (action.Method.IsStatic)
         {
             _staticAction = action;
-
-            // Keep a reference to the target to control the WeakAction's lifetime.
             if (target != null)
-                Reference = new WeakReference(target);
-
+                _targetReference = new(target);
             return;
         }
 
-        Method = action.Method;
-        ActionReference = new WeakReference(action.Target);
-
-        LiveReference = keepTargetAlive ? action.Target : null;
-        Reference = new WeakReference(target);
+        _method = action.Method;
+        _actionTargetReference = new(action.Target);
+        _liveReference = keepTargetAlive ? action.Target : null;
+        _targetReference = new(target);
     }
 
     /// <summary>
     /// Gets the name of the method that this WeakAction represents.
     /// </summary>
-    public override string? MethodName => _staticAction != null ? _staticAction.Method.Name : Method?.Name;
+    public string? MethodName => _staticAction?.Method.Name ?? _method?.Name;
 
     /// <summary>
-    /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
-    /// by the Garbage Collector already.
+    /// Gets a value indicating whether the Action's owner is still alive.
     /// </summary>
-    public override bool IsAlive => (_staticAction != null
-                                     || Reference != null)
-                                    && (_staticAction != null ? Reference?.IsAlive != false : Reference?.IsAlive ?? false);
+    public bool IsAlive =>
+        (_staticAction != null || _targetReference != null || _liveReference != null) && (_staticAction != null ? _targetReference?.IsAlive != false : _liveReference != null || _targetReference is { IsAlive: true });
 
     /// <summary>
-    /// Executes the action. This only happens if the action's owner
-    /// is still alive. The action's parameter is set to default(T).
+    /// Gets the Action's owner. This object is stored as a WeakReference.
     /// </summary>
-    public new void Execute() => Execute(default);
+    public object? Target => _targetReference?.Target;
+
+    protected object? ActionTarget => _liveReference ?? _actionTargetReference?.Target;
 
     /// <summary>
-    /// Executes the action. This only happens if the action's owner
-    /// is still alive.
+    /// Executes the action. This only happens if the action's owner is still alive.
+    /// The action's parameter is set to default(T).
+    /// </summary>
+    public void Execute() => Execute(default);
+
+    /// <summary>
+    /// Executes the action. This only happens if the action's owner is still alive.
     /// </summary>
     /// <param name="parameter">A parameter to be passed to the action.</param>
     public void Execute(T? parameter)
     {
+        if (!IsAlive)
+            return;
+
         if (_staticAction != null)
         {
-            _staticAction(parameter);
+            try
+            {
+                _staticAction(parameter);
+            }
+            catch
+            {
+                // Silently ignore invocation errors
+            }
+
             return;
         }
 
         var actionTarget = ActionTarget;
-
-        if (IsAlive && Method != null
-                    && (LiveReference != null
-                        || ActionReference != null)
-                    && actionTarget != null)
+        if (_method != null && actionTarget != null)
         {
-            _ = Method.Invoke(
-                actionTarget,
-                [
-                    parameter
-                ]);
+            try
+            {
+                _ = _method.Invoke(actionTarget, [parameter]);
+            }
+            catch
+            {
+                // Silently ignore invocation errors
+            }
         }
     }
 
@@ -251,8 +220,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// and can be useful if you store multiple WeakAction{T} instances but don't know in advance
     /// what type T represents.
     /// </summary>
-    /// <param name="parameter">The parameter that will be passed to the action after
-    /// being casted to T.</param>
+    /// <param name="parameter">The parameter that will be passed to the action after being casted to T.</param>
     public void ExecuteWithObject(object? parameter)
     {
         var parameterCasted = (T?)parameter;
@@ -260,13 +228,14 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     }
 
     /// <summary>
-    /// Sets all the actions that this WeakAction contains to null,
-    /// which is a signal for containing objects that this WeakAction
-    /// should be deleted.
+    /// Sets all references to null, marking this WeakAction for deletion.
     /// </summary>
-    public new void MarkForDeletion()
+    public void MarkForDeletion()
     {
         _staticAction = null;
-        base.MarkForDeletion();
+        _targetReference = null;
+        _actionTargetReference = null;
+        _liveReference = null;
+        _method = null;
     }
 }

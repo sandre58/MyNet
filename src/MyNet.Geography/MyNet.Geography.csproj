@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Utilities - Geography Extensions</Product>
+        <PackageIcon>MyNetUtilities.png</PackageIcon>
+        <Description>A comprehensive .NET library for accessing and managing detailed geographical information. MyNet.Utilities.Geography.Extensions provides powerful tools and resources for working with country data, enabling easy integration of geography features into your applications.</Description>
+        <PackageTags>My;Utilities;Country;Geography</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
+        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Flags/**/*.png" />
+        <EmbeddedResource Update="Localization\CountryResources.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <LastGenOutput>CountryResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+
+        <EmbeddedResource Update="Localization\CountryResources.en.resx">
+            <DependentUpon>CountryResources.resx</DependentUpon>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Localization\CountryResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CountryResources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+</Project>

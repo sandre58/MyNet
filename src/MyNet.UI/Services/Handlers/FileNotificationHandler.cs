@@ -4,8 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Messages;
-using MyNet.UI.Notifications;
 using MyNet.UI.Toasting;
 using MyNet.UI.Toasting.Settings;
 using MyNet.Utilities.Messaging;
@@ -35,7 +35,7 @@ public sealed class FileNotificationHandler : NotificationHandlerBase
     private void OnFileExportedMessage(FileExportedMessage obj)
     {
         var notification = new FileNotification(obj.FilePath, obj.OpenAction);
-        ToasterManager.Show(notification, new ToastSettings { ClosingStrategy = ToastClosingStrategy.AutoClose }, true, _ => obj.OpenAction(obj.FilePath));
+        ToasterManager.Show(notification, new() { ClosingStrategy = ToastClosingStrategy.AutoClose }, true, _ => obj.OpenAction(obj.FilePath));
 
         Notify(notification);
     }

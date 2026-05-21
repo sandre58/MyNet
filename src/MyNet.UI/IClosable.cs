@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace MyNet.UI;
@@ -18,16 +17,11 @@ public interface IClosable
     /// <summary>
     /// Occurs when a request to close the object is made.
     /// </summary>
-    event EventHandler<CancelEventArgs> CloseRequest;
+    event EventHandler<CloseRequestedEventArgs> CloseRequested;
 
     /// <summary>
     /// Determines asynchronously whether the object can be closed.
     /// </summary>
     /// <returns>A task that returns true if the object can be closed; otherwise, false.</returns>
     Task<bool> CanCloseAsync();
-
-    /// <summary>
-    /// Closes the object and raises the <see cref="CloseRequest"/> event.
-    /// </summary>
-    void Close();
 }

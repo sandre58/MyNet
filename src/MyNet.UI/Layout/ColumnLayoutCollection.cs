@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyNet.UI.Collections;
+using MyNet.UI.Legacy.Collections;
 
 namespace MyNet.UI.Layout;
 
