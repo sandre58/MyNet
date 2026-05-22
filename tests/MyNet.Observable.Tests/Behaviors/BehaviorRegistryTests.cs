@@ -13,14 +13,14 @@ namespace MyNet.Observable.Tests.Behaviors;
 public sealed class BehaviorRegistryTests
 {
     [Fact]
-    public void Replace_SameKey_DoesNotDuplicatePipeline()
+    public void Register_SameKey_ReplacesWithoutDuplicatingPipeline()
     {
         var owner = new PipelineOwner();
         var first = new CountingChangedBehavior();
         var second = new CountingChangedBehavior();
 
         owner.Behaviors.Register(first);
-        owner.Behaviors.Replace(second);
+        owner.Behaviors.Register(second);
 
         Assert.True(first.Disposed);
         owner.RaiseValue();
@@ -75,14 +75,14 @@ public sealed class BehaviorRegistryTests
     }
 
     [Fact]
-    public void ReplaceForwarding_DoesNotLeaveDisposedBehaviorInPipeline()
+    public void RegisterForwarding_ReplacesPreviousInstance()
     {
         const string wrapperProperty = "Wrapper";
         var owner = new PipelineOwner();
-        owner.Behaviors.Replace(new CountingChangedBehavior(), wrapperProperty, nameof(PropertyChangedForwardingBehavior));
+        owner.Behaviors.Register(new CountingChangedBehavior(), wrapperProperty, nameof(PropertyChangedForwardingBehavior));
 
         var first = owner.Behaviors.Get<CountingChangedBehavior>(wrapperProperty, nameof(PropertyChangedForwardingBehavior));
-        owner.Behaviors.Replace(new CountingChangedBehavior(), wrapperProperty, nameof(PropertyChangedForwardingBehavior));
+        owner.Behaviors.Register(new CountingChangedBehavior(), wrapperProperty, nameof(PropertyChangedForwardingBehavior));
 
         Assert.True(first.Disposed);
         Assert.NotSame(first, owner.Behaviors.Get<CountingChangedBehavior>(wrapperProperty, nameof(PropertyChangedForwardingBehavior)));

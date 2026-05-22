@@ -21,7 +21,7 @@ where T : IObservableObject
     public bool IsSuspended => _suspender.IsSuspended;
 
     /// <summary>
-    /// Suspends property changed notifications for culture changes until the returned scope is disposed. This can be useful when multiple properties need to be updated in response to a culture change, to prevent multiple notifications from being raised. When the returned scope is disposed, any deferred property changed notifications that were raised during the suspension will be replayed, allowing the object to react to the culture change and update its display accordingly.
+    /// Suspends this behavior until the returned scope is disposed. While suspended, the behavior does not react to property or event notifications.
     /// </summary>
     /// <returns>A disposable suspension scope.</returns>
     public IDisposable Suspend() => IsDisposed ? Disposable.Empty : _suspender.Suspend();

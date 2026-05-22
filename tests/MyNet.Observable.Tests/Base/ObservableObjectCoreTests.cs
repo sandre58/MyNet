@@ -49,7 +49,7 @@ public sealed class ObservableObjectCoreTests
     }
 
     [Fact]
-    public void RegisterBehavior_ExposesBehaviorAndInvokesPipeline()
+    public void Behaviors_Register_ExposesBehaviorAndInvokesPipeline()
     {
         var sut = new TestObservable();
         var behavior = new SpyChangedBehavior();

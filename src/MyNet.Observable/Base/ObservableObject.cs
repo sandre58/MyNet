@@ -9,7 +9,6 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
-using System.Runtime.CompilerServices;
 using MyNet.Observable.Behaviors;
 using MyNet.Utilities.Suspending;
 
@@ -182,6 +181,14 @@ public abstract class ObservableObject : IObservableObject
     protected virtual void OnPropertyChangedCore(PropertyMutationContext context)
     {
     }
+
+    /// <summary>
+    /// Notifies subscribers that a property has changed when old and new values are not available (for example relayed or synthetic property names).
+    /// Prefer <see cref="NotifyPropertyChanged(string, object?, object?)"/> from property setters when mutation values are known.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that has changed.</param>
+    protected internal void NotifyPropertyChanged(string propertyName)
+        => ProcessPropertyChanged(propertyName, UnknownValue.Instance, UnknownValue.Instance);
 
     /// <summary>
     /// Notifies subscribers that a property has changed by raising the PropertyChanged event for the specified property name, with the provided before and after values. This method calls the ProcessPropertyChanged method to raise the event with the specified before and after values, allowing subscribers to react to the change with knowledge of both the old and new values. By calling this method, you can ensure that subscribers are properly notified after a property changes, enabling them to execute any necessary logic in response to the change, such as updating the UI, triggering other actions, or performing additional processing in response to the change, allowing you to enhance the functionality of your observable objects in a modular and reusable way.

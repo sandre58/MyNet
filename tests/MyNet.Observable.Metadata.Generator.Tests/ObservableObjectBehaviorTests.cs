@@ -57,7 +57,7 @@ public sealed class ObservableObjectBehaviorTests
     }
 
     [Fact]
-    public void RegisterBehavior_And_Retrieve_Api_Works()
+    public void Behaviors_Register_And_Retrieve_Api_Works()
     {
         var vm = new TestVm();
 

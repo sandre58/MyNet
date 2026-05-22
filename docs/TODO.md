@@ -66,7 +66,7 @@ Checklist README :
 - Titre & courte description
 - Installation (NuGet, versions compatibles)
 - Quick Start (ex : classe héritant `ObservableObject`, enregistrement d’un behavior)
-- API highlights (ProcessPropertyChanging, NotifyPropertyChanged, RegisterBehavior)
+- API highlights (ProcessPropertyChanging, NotifyPropertyChanged with before/after, Behaviors.Register)
 - Contribution / build instructions (dotnet sdk, commandes)
 - Licence, contact, badges (CI, tests, nuget)
 
@@ -189,7 +189,7 @@ Vérifier :
 Extrait d’utilisation d’un behavior dans le constructeur d’un objet :
 ```csharp
 // dans la classe dérivée de ObservableObject
-this.RegisterBehavior(new LoggingBehavior(logger));
+this.Behaviors.Register(new LoggingBehavior(logger));
 ```
 
 Exemple conceptuel de règle de validation :

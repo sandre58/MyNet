@@ -19,18 +19,11 @@ public sealed class ObservableBehaviors
     internal ObservableBehaviors(BehaviorRegistry registry) => _registry = registry;
 
     /// <summary>
-    /// Registers or replaces a behavior.
+    /// Registers or replaces a behavior for the computed key.
     /// </summary>
     public void Register<T>(T behavior, string? propertyName = null, string? scope = null)
         where T : class, IObservableBehavior
         => _registry.Register(behavior, propertyName, scope);
-
-    /// <summary>
-    /// Replaces the behavior for the same key.
-    /// </summary>
-    public void Replace<T>(T behavior, string? propertyName = null, string? scope = null)
-        where T : class, IObservableBehavior
-        => _registry.Replace(behavior, propertyName, scope);
 
     /// <summary>
     /// Removes a behavior for the specified key.
