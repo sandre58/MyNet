@@ -8,9 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using System.Reactive.Disposables;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using MyNet.Observable.Behaviors;
 using MyNet.Utilities.Suspending;
@@ -26,7 +24,6 @@ public abstract class ObservableObject : IObservableObject
 {
     private static readonly ConcurrentDictionary<string, PropertyChangedEventArgs> PropertyChangedEventArgsCache = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, PropertyChangingEventArgs> PropertyChangingEventArgsCache = new(StringComparer.Ordinal);
-    private static readonly ConcurrentDictionary<(Type Type, string PropertyName), Func<object, object?>> PropertyGetterCache = new();
 
     private readonly Suspender _propertyNotificationsSuspender = new();
 
@@ -178,15 +175,12 @@ public abstract class ObservableObject : IObservableObject
     }
 
     /// <summary>
-    /// Notifies subscribers that a property has changed by raising the PropertyChanged event for the specified property name. This method retrieves the current value of the property using the GetPropertyValue method and then calls the ProcessPropertyChanged method to raise the event with the current value as both the old and new values. By calling this method, you can ensure that subscribers are properly notified after a property changes, allowing them to execute any necessary logic in response to the change.
+    /// Notifies subscribers that a property has changed without supplying old/new values.
+    /// Prefer <see cref="NotifyPropertyChanged(string, object?, object?)"/> or <see cref="OnPropertyChanged(string, object?, object?)"/> from the property setter.
     /// </summary>
     /// <param name="propertyName">The name of the property that has changed.</param>
     protected internal void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        var currentValue = GetPropertyValue(propertyName);
-
-        ProcessPropertyChanged(propertyName, UnknownValue.Instance, currentValue);
-    }
+        => ProcessPropertyChanged(propertyName, UnknownValue.Instance, UnknownValue.Instance);
 
     /// <summary>
     /// Notifies subscribers that a property has changed by raising the PropertyChanged event for the specified property name, with the provided before and after values. This method calls the ProcessPropertyChanged method to raise the event with the specified before and after values, allowing subscribers to react to the change with knowledge of both the old and new values. By calling this method, you can ensure that subscribers are properly notified after a property changes, enabling them to execute any necessary logic in response to the change, such as updating the UI, triggering other actions, or performing additional processing in response to the change, allowing you to enhance the functionality of your observable objects in a modular and reusable way.
@@ -366,30 +360,6 @@ public abstract class ObservableObject : IObservableObject
     #region Helpers
 
     /// <summary>
-    /// Creates a getter function for the specified property of the given type using expression trees. This method generates a compiled lambda expression that retrieves the value of the specified property from an instance of the given type. The generated getter function takes an object as input, casts it to the specified type, accesses the property, and returns its value as an object. By using expression trees and caching the generated getters, this method provides an efficient way to access property values by name without incurring the overhead of reflection for subsequent accesses to the same property.
-    /// </summary>
-    /// <param name="type">The type of the object containing the property.</param>
-    /// <param name="propertyName">The name of the property.</param>
-    /// <returns>A function that gets the value of the specified property from an object.</returns>
-    private static Func<object, object?> CreateGetter(Type type, string propertyName)
-    {
-        var property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
-
-        if (property?.CanRead != true || property.GetIndexParameters().Length != 0)
-            return static _ => UnknownValue.Instance;
-
-        var parameter = Expression.Parameter(typeof(object));
-
-        var cast = Expression.Convert(parameter, type);
-
-        var propertyAccess = Expression.Property(cast, property);
-
-        var convert = Expression.Convert(propertyAccess, typeof(object));
-
-        return Expression.Lambda<Func<object, object?>>(convert, parameter).Compile();
-    }
-
-    /// <summary>
     /// Gets a cached PropertyChangedEventArgs instance for the specified property name.
     /// </summary>
     /// <param name="propertyName">The name of the property.</param>
@@ -402,20 +372,6 @@ public abstract class ObservableObject : IObservableObject
     /// <param name="propertyName">The name of the property.</param>
     /// <returns>A cached PropertyChangingEventArgs instance.</returns>
     private static PropertyChangingEventArgs GetPropertyChangingEventArgs(string propertyName) => PropertyChangingEventArgsCache.GetOrAdd(propertyName, static x => new(x));
-
-    /// <summary>
-    /// Gets the value of a property by name using a cached getter function. This method retrieves the value of a property from the current instance based on the provided property name. It uses a cache to store compiled getter functions for each property, improving performance by avoiding reflection for subsequent accesses to the same property. If the getter function for the specified property name does not exist in the cache, it is created using expression trees and added to the cache before being invoked to retrieve the property value.
-    /// </summary>
-    /// <param name="propertyName">The name of the property.</param>
-    /// <returns>The value of the property.</returns>
-    private object? GetPropertyValue(string propertyName)
-    {
-        var key = (GetType(), propertyName);
-
-        var getter = PropertyGetterCache.GetOrAdd(key, static x => CreateGetter(x.Type, x.PropertyName));
-
-        return getter(this);
-    }
 
     #endregion
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Reflection;
 using System.Threading;
 
 namespace MyNet.Observable.Behaviors;
@@ -16,7 +15,7 @@ namespace MyNet.Observable.Behaviors;
 /// to the owner. The behavior watches a named property on the owner; when that
 /// property's value implements <see cref="INotifyPropertyChanged"/>, the behavior
 /// subscribes to its PropertyChanged and forwards notifications to the owner by
-/// calling <see cref="ObservableObject.NotifyPropertyChanged(string)"/> with either
+/// calling <see cref="ObservableObject.NotifyPropertyChanged(string, object?, object?)"/> with either
 /// the child property name or a qualified name (<c>Wrapper.Property</c>) depending
 /// on configuration.
 /// </summary>
@@ -39,11 +38,7 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
         _propertyName = propertyName;
         _concatenatePropertyName = concatenatePropertyName;
 
-        // Attach to current value if any
         AttachCurrentValue();
-
-        // Base constructor can run before derived initializers; retry once asynchronously.
-        _ = ThreadPool.QueueUserWorkItem(_ => AttachCurrentValue());
     }
 
     /// <inheritdoc />
@@ -55,17 +50,13 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
         if (!string.Equals(context.PropertyName, _propertyName, StringComparison.Ordinal))
             return;
 
-        // wrapper property changed on owner: detach old, attach new
         Attach(context.NewValue as INotifyPropertyChanged);
     }
 
     private void AttachCurrentValue()
     {
-        var prop = Owner.GetType().GetProperty(_propertyName, BindingFlags.Instance | BindingFlags.Public);
-        if (prop?.CanRead != true)
-            return;
-
-        Attach(prop.GetValue(Owner) as INotifyPropertyChanged);
+        var value = ObservableObjectPropertyAccess.GetPropertyValue(Owner, _propertyName);
+        Attach(value as INotifyPropertyChanged);
     }
 
     /// <summary>

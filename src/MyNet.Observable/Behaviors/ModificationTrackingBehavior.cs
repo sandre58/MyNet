@@ -58,11 +58,11 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     public bool IsModified { get; private set; }
 
     /// <summary>
-    /// Determines whether the specified property should be tracked for modifications. This method uses a predefined filter to check if the property should be included in modification tracking. It checks for reserved property names and attributes that indicate that a property should be ignored for modification tracking. By using this method, the behavior can efficiently determine which properties to track without having to perform expensive reflection operations on every property change, improving performance while still providing accurate modification tracking.
+    /// Determines whether the specified property should be tracked for modifications, using metadata from <see cref="MetadataRegistry"/> (no reflection on the mutation path).
     /// </summary>
-    /// <param name="property">The property to check.</param>
+    /// <param name="propertyName">The name of the property to check.</param>
     /// <returns><c>true</c> if the property should be tracked; otherwise, <c>false</c>.</returns>
-    public bool ShouldTrack(PropertyInfo property) => !MetadataRegistry.Get(Owner.GetType()).GetProperty(property.Name).TryGetFeature<ModificationTrackingFeature>(out var feature) || !feature.Ignore;
+    private bool ShouldTrack(string propertyName) => !MetadataRegistry.Get(Owner.GetType()).GetProperty(propertyName).TryGetFeature<ModificationTrackingFeature>(out var feature) || !feature.Ignore;
 
     /// <summary>
     /// Marks the object as modified.
@@ -114,12 +114,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
         if (string.IsNullOrWhiteSpace(context.PropertyName))
             return;
 
-        var property = Owner.GetType().GetProperty(context.PropertyName);
-
-        if (property is null)
-            return;
-
-        if (!ShouldTrack(property))
+        if (!ShouldTrack(context.PropertyName))
             return;
 
         if (Equals(context.OldValue, context.NewValue))
@@ -152,9 +147,10 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     {
         foreach (var property in Owner.GetType().GetPublicProperties())
         {
-            var value = property.GetValue(Owner);
+            if (!ShouldTrack(property.Name))
+                continue;
 
-            Attach(value);
+            Attach(property.GetValue(Owner));
         }
     }
 
