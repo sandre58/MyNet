@@ -1,0 +1,98 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Generators/">
+    <Project Path="src/MyNet.Observable.Metadata.Generator/MyNet.Observable.Metadata.Generator.csproj" />
+  </Folder>
+  <Folder Name="/Github Actions/">
+    <File Path=".github/workflows/ci.yml" />
+  </Folder>
+  <Folder Name="/Solution Files/" />
+  <Folder Name="/Solution Files/AI/">
+    <File Path=".ai/architecture.md" />
+    <File Path=".ai/conventions.md" />
+    <File Path=".ai/source-generators.md" />
+  </Folder>
+  <Folder Name="/Solution Files/AI/.cursor/">
+    <File Path=".cursor/rules/my-net.mdc" />
+  </Folder>
+  <Folder Name="/Solution Files/AI/.cursor/rules/" />
+  <Folder Name="/Solution Files/Assets/">
+    <File Path="assets/MyNetAutoMapper.png" />
+    <File Path="assets/MyNetCsvHelper.png" />
+    <File Path="assets/MyNetDynamicData.png" />
+    <File Path="assets/MyNetHttp.png" />
+    <File Path="assets/MyNetHumanizer.png" />
+    <File Path="assets/MyNetObservable.png" />
+    <File Path="assets/MyNetUI.png" />
+    <File Path="assets/MyNetUtilities.png" />
+  </Folder>
+  <Folder Name="/Solution Files/Build/">
+    <File Path=".runsettings" />
+    <File Path="build/code-analysis.props" />
+    <File Path="build/dependencies.props" />
+    <File Path="build/package.props" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/Solution Files/Code analysis/">
+    <File Path=".editorconfig" />
+    <File Path="stylecop.json" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/">
+    <File Path="docs/TODO.md" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Audits/" />
+  <Folder Name="/Solution Files/Docs/Audits/20260511/">
+    <File Path="docs/Audits/20260511/ACTION_PLAN.md" />
+    <File Path="docs/Audits/20260511/AUDIT_COMPLETION.md" />
+    <File Path="docs/Audits/20260511/AUDIT_GUIDE.md" />
+    <File Path="docs/Audits/20260511/AUDIT_INDEX.md" />
+    <File Path="docs/Audits/20260511/AUDIT_REPORT.md" />
+    <File Path="docs/Audits/20260511/AUDIT_SUMMARY.md" />
+    <File Path="docs/Audits/20260511/RECOMMENDATIONS.md" />
+    <File Path="docs/Audits/20260511/START_HERE.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Audits/ViewModels/">
+    <File Path="docs/Audits/ViewModels/01 - Review.md" />
+    <File Path="docs/Audits/ViewModels/02 - Implementation.md" />
+    <File Path="docs/Audits/ViewModels/03 - Guidelines.md" />
+    <File Path="docs/Audits/ViewModels/05 - Architecture Review - Current System vs Legacy.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Github/">
+    <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Guides/">
+    <File Path="docs/METADATA_GENERATION_GUIDE.md" />
+    <File Path="docs/TRANSLATION_SYSTEM_GUIDE.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/MyNet.Fakers.Tests/MyNet.Fakers.Tests.csproj" />
+    <Project Path="tests/MyNet.Geography.Tests/MyNet.Geography.Tests.csproj" />
+    <Project Path="tests/MyNet.Globalization.Tests/MyNet.Globalization.Tests.csproj" />
+    <Project Path="tests/MyNet.Humanizer.Tests/MyNet.Humanizer.Tests.csproj" />
+    <Project Path="tests/MyNet.Observable.Metadata.Generator.Tests/MyNet.Observable.Metadata.Generator.Tests.csproj" />
+    <Project Path="tests/MyNet.Observable.Tests/MyNet.Observable.Tests.csproj" />
+    <Project Path="tests/MyNet.UI.Tests/MyNet.UI.Tests.csproj" />
+    <Project Path="tests/MyNet.Utilities.Tests/MyNet.Utilities.Tests.csproj" />
+  </Folder>
+  <Project Path="src/MyNet.Fakers/MyNet.Fakers.csproj" />
+  <Project Path="src/MyNet.Geography/MyNet.Geography.csproj" />
+  <Project Path="src/MyNet.Globalization/MyNet.Globalization.csproj" />
+  <Project Path="src/MyNet.Http/MyNet.Http.csproj" />
+  <Project Path="src/MyNet.Humanizer/MyNet.Humanizer.csproj" />
+  <Project Path="src/MyNet.Mail.MailKit/MyNet.Mail.MailKit.csproj" />
+  <Project Path="src/MyNet.Observable/MyNet.Observable.csproj" />
+  <Project Path="src/MyNet.UI/MyNet.UI.csproj" />
+  <Project Path="src/MyNet.Utilities/MyNet.Utilities.csproj" />
+</Solution>

@@ -1,0 +1,14 @@
+# MyNet Framework Rules
+
+Always follow the architecture defined in /.ai/architecture.md.
+
+Always respect coding conventions defined in /.ai/conventions.md.
+
+Always follow source generator rules defined in /.ai/source-generator.md.
+
+This is a .NET framework focused on:
+- performance
+- compile-time generation
+- modular architecture
+- low allocations
+- AOT compatibility

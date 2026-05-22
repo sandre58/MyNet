@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\MyNet.Globalization\MyNet.Globalization.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Data\DataResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DataResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+</Project>
