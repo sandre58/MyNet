@@ -109,7 +109,7 @@ public static class FeaturesExtensions
         /// <returns>The property metadata instance for chaining.</returns>
         public PropertyMetadata ReactTo<TEvent>()
         {
-            var feature = new EventReactionFeature();
+            var feature = property.GetOrCreate<EventReactionFeature>();
             feature.Events.Add(typeof(TEvent));
 
             return property;

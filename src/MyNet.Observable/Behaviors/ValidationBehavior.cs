@@ -14,14 +14,14 @@ using FluentValidation;
 using FluentValidation.Internal;
 using FluentValidation.Results;
 using MyNet.Observable.Behaviors.Metadata.Features;
-using MyNet.Utilities;
+using MyNet.Utilities.Metadata;
 
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
 /// Provides validation support for an ObservableObject.
 /// </summary>
-public sealed class ValidationBehavior<T>(T owner, IValidator validator) : SuspendableBehavior(owner), IPropertyChangedBehavior, IValidationAware
+public sealed class ValidationBehavior<T>(T owner, IValidator validator) : SuspendableBehavior<T>(owner), IPropertyChangedBehavior, IValidationBehavior
     where T : ObservableObject
 {
     private readonly Dictionary<string, List<string>> _errors = [];
@@ -73,6 +73,12 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// <inheritdoc/>
     public void ValidateProperty(string propertyName)
     {
+        if (IsDisposed)
+            return;
+
+        if (IsSuspended)
+            return;
+
         var selector = new MemberNameValidatorSelector([propertyName]);
         var context = CreateValidationContext(selector);
         var result = validator.Validate(context);
@@ -130,7 +136,7 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// </summary>
     /// <param name="selector">The validator selector to use, or null to use the default selector.</param>
     /// <returns>The validation context for the owner object.</returns>
-    private ValidationContext<T> CreateValidationContext(IValidatorSelector? selector = null) => new((T)Owner, new(), selector ?? ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory());
+    private ValidationContext<T> CreateValidationContext(IValidatorSelector? selector = null) => new(Owner, new(), selector ?? ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory());
 
     /// <summary>
     /// Applies the validation result for the entire object. This method takes the validation result for the entire object and updates the internal dictionary of errors accordingly. It groups the validation errors by property name and updates the error messages in the dictionary for each property. If there are no errors for a property, it removes any existing entry for that property from the dictionary. After updating the errors, it raises the necessary notifications to indicate that the validation state has changed and that the errors for each affected property have been updated. By calling this method with the validation result for the entire object, you can ensure that the validation state of all properties is accurately reflected in the internal error tracking and that any UI elements or other components that are bound to the validation errors are properly updated to reflect the current state of validation for all properties of the object.
@@ -138,6 +144,8 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// <param name="result">The validation result for the entire object.</param>
     private void ApplyValidationResult(ValidationResult result)
     {
+        var previousProperties = _errors.Keys.ToArray();
+
         _errors.Clear();
 
         foreach (var group in result.Errors.GroupBy(x => x.PropertyName))
@@ -150,6 +158,12 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
             ];
 
             RaiseErrorsChanged(group.Key);
+        }
+
+        foreach (var property in previousProperties)
+        {
+            if (!_errors.ContainsKey(property))
+                RaiseErrorsChanged(property);
         }
 
         RaiseValidationStateChanged();
@@ -183,7 +197,7 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
         _errors[propertyName] = errors;
 
         RaiseValidationStateChanged();
-        RaiseErrorsChanged(new(propertyName));
+        RaiseErrorsChanged(propertyName);
     }
 
     #endregion
@@ -222,12 +236,9 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// </summary>
     /// <param name="propertyName">The name of the property whose dependent properties are to be retrieved.</param>
     /// <returns>An array of property names that are dependent on the specified property.</returns>
-    private string[] GetDependents(string propertyName)
-    {
-        var metadata = Owner.GetType().GetMetadata();
-
-        return metadata.GetFeatureOrDefault<ValidationDependencyFeature>(propertyName)?.Dependents.ToArray() ?? [];
-    }
+    private string[] GetDependents(string propertyName) => MetadataRegistry.Get(Owner.GetType()).GetProperty(propertyName).TryGetFeature<ValidationDependencyFeature>(out var feature)
+        ? [.. feature.Dependents]
+        : [];
 
     #endregion
 }

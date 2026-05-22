@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Metadata;
+using MyNet.Utilities.Text.Metadata;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Utilities;

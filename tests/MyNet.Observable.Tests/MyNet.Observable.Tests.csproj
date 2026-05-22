@@ -4,10 +4,14 @@
         <ProjectReference Include="..\..\src\MyNet.Observable\MyNet.Observable.csproj" />
     </ItemGroup>
 
-    <!-- System.Reactive and DynamicData are not included globally by dependencies.props -->
     <ItemGroup>
-        <PackageReference Include="System.Reactive" />
-        <PackageReference Include="DynamicData" />
+      <Compile Remove="Collections\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="Collections\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Collections\**" />
     </ItemGroup>
 
 </Project>

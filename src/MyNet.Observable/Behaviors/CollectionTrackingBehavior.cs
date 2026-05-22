@@ -15,7 +15,7 @@ namespace MyNet.Observable.Behaviors;
 /// <summary>
 /// Tracks changes on collections of an ObservableObject. This behavior allows you to track changes on collections that implement INotifyCollectionChanged, such as <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/>. It automatically tracks all observable collections on the owner object, and raises a CollectionChanged event whenever any of the tracked collections change. You can also manually track or untrack specific collections using the Track and Untrack methods. This behavior is useful for scenarios where you want to react to changes in collections, such as updating the UI or performing additional logic when items are added, removed, or modified in a collection. By implementing this behavior, you can easily track changes on collections without having to manually subscribe to each collection's events, making it easier to manage and maintain your code.
 /// </summary>
-public sealed class CollectionTrackingBehavior : SuspendableBehavior
+public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservableObject>
 {
     private readonly HashSet<INotifyCollectionChanged> _trackedCollections = [];
     private readonly Lock _gate = new();

@@ -4,9 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-
-namespace MyNet.Observable.Collections.Selection;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Defines the contract for an object that can be selected and notifies when its selection state changes.

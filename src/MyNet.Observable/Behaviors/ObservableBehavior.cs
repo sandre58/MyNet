@@ -9,16 +9,17 @@ using System;
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
-/// Represents a base behavior attached to an <see cref="ObservableObject"/>.
+/// Represents a base behavior attached to an <see cref="IObservableObject"/>.
 /// </summary>
 /// <param name="owner">The owner object.</param>
 /// <exception cref="ArgumentNullException">Thrown when owner is null.</exception>
-public abstract class ObservableBehavior(ObservableObject owner) : IObservableBehavior, IDisposable
+public abstract class ObservableBehavior<T>(T owner) : IObservableBehavior, IDisposable
+    where T : IObservableObject
 {
     /// <summary>
     /// Gets the owner object.
     /// </summary>
-    protected ObservableObject Owner { get; } = owner ?? throw new ArgumentNullException(nameof(owner));
+    protected T Owner { get; } = owner ?? throw new ArgumentNullException(nameof(owner));
 
     /// <summary>
     /// Gets a value indicating whether the behavior is disposed.

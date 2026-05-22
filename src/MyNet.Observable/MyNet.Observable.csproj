@@ -26,6 +26,9 @@
     <ItemGroup>
         <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+        <ProjectReference Include="..\MyNet.Observable.Metadata.Generator\MyNet.Observable.Metadata.Generator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,6 +37,13 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>ValidationResources.resx</DependentUpon>
         </Compile>
+        <Compile Remove="Translatables\**" />
+        <Compile Remove="Deferrers\**" />
+        <Compile Remove="Extensions\**" />
+        <Compile Remove="Suspenders\**" />
+        <Compile Remove="Resources\**" />
+        <Compile Remove="Statistics\**" />
+        <Compile Remove="Collections\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,6 +51,25 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>ValidationResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Remove="Globalization\**" />
+        <EmbeddedResource Remove="Collections\**" />
+        <EmbeddedResource Remove="Translatables\**" />
+        <EmbeddedResource Remove="Deferrers\**" />
+        <EmbeddedResource Remove="Extensions\**" />
+        <EmbeddedResource Remove="Suspenders\**" />
+        <EmbeddedResource Remove="Resources\**" />
+        <EmbeddedResource Remove="Statistics\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Globalization\**" />
+      <None Remove="Collections\**" />
+      <None Remove="Translatables\**" />
+      <None Remove="Deferrers\**" />
+      <None Remove="Extensions\**" />
+      <None Remove="Suspenders\**" />
+      <None Remove="Resources\**" />
+      <None Remove="Statistics\**" />
     </ItemGroup>
 
 </Project>

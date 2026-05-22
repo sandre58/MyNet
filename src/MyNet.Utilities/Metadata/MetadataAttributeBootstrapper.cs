@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace MyNet.Utilities.Metadata;
 
@@ -17,6 +18,7 @@ namespace MyNet.Utilities.Metadata;
 public static class MetadataAttributeBootstrapper
 {
     private static readonly List<IMetadataAttributeHandler> Handlers = [];
+    private static readonly Lock Gate = new();
 
     /// <summary>
     /// Registers a metadata attribute handler. This method allows you to add a handler that can process specific attributes and apply the corresponding metadata to the properties of types. The handler must implement the <see cref="IMetadataAttributeHandler"/> interface, which defines the methods for determining if the handler can process a given attribute and for applying the metadata based on the attribute. By registering handlers, you can enable the dynamic configuration of metadata based on attributes, allowing for various runtime behaviors based on the configured metadata information for types and their properties in an application.
@@ -27,7 +29,13 @@ public static class MetadataAttributeBootstrapper
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        Handlers.Add(handler);
+        lock (Gate)
+        {
+            if (Handlers.Any(x => x.GetType() == handler.GetType()))
+                return;
+
+            Handlers.Add(handler);
+        }
     }
 
     /// <summary>
@@ -66,6 +74,12 @@ public static class MetadataAttributeBootstrapper
     {
         ArgumentNullException.ThrowIfNull(type);
 
+        IMetadataAttributeHandler[] handlers;
+        lock (Gate)
+        {
+            handlers = [.. Handlers];
+        }
+
         var typeMetadata = MetadataRegistry.Get(type);
 
         foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -76,7 +90,7 @@ public static class MetadataAttributeBootstrapper
 
             foreach (var attribute in attributes)
             {
-                foreach (var handler in Handlers.Where(handler => handler.CanHandle(attribute)))
+                foreach (var handler in handlers.Where(handler => handler.CanHandle(attribute)))
                 {
                     handler.Apply(attribute, propertyMetadata, property);
                 }

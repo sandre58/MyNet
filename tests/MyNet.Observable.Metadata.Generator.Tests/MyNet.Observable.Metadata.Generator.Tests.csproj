@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MyNet.Observable.Metadata.Generator\MyNet.Observable.Metadata.Generator.csproj" />
+    <ProjectReference Include="..\..\src\MyNet.Observable\MyNet.Observable.csproj" />
+    <ProjectReference Include="..\..\src\MyNet.Utilities\MyNet.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+</Project>
+

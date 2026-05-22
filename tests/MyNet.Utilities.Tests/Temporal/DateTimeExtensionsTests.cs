@@ -557,7 +557,9 @@ public class DateTimeExtensionsTests
     [InlineData(30)]
     public void FirstDayOfWeekFirstDayOfWeekIsMonday(int value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         var expected = new DateTime(2011, 1, 24, 0, 0, 0, DateTimeKind.Utc);
         Assert.Equal(expected, new DateTime(2011, 1, value, 0, 0, 0, DateTimeKind.Utc).FirstDayOfWeek());
     }
@@ -572,7 +574,9 @@ public class DateTimeExtensionsTests
     [InlineData(29)]
     public void FirstDayOfWeekFirstDayOfWeekIsSunday(int value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        CultureInfo.CurrentCulture = culture;
         var expected = new DateTime(2011, 1, 23, 0, 0, 0, DateTimeKind.Utc);
         Assert.Equal(expected, new DateTime(2011, 1, value, 0, 0, 0, DateTimeKind.Utc).FirstDayOfWeek());
     }
@@ -589,7 +593,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-25T06:40:20.005")]
     public void LastDayOfWeekBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 25, 06, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).LastDayOfWeek());
     }
 
@@ -704,7 +710,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void BeginningOfWeekMondayBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 19, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
     }
 
@@ -714,7 +722,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void EndOfWeekMondayBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 25, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
     }
 
@@ -724,7 +734,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void BeginningOfWeekSundayBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 18, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
     }
 
@@ -734,7 +746,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void EndOfWeekSundayBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 24, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
     }
 
@@ -744,7 +758,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void BeginningOfMonthBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfMonth());
     }
 
@@ -754,7 +770,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void EndOfMonthBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfMonth());
     }
 
@@ -764,7 +782,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void BeginningOfQuarterBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 10, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfQuarter());
     }
 
@@ -774,7 +794,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void EndOfQuarterBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfQuarter());
     }
 
@@ -784,7 +806,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void BeginningOfYearBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 01, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfYear());
     }
 
@@ -794,7 +818,9 @@ public class DateTimeExtensionsTests
     [InlineData("2011-12-24T06:40:20.005")]
     public void EndOfYearBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfYear());
     }
 
@@ -804,7 +830,9 @@ public class DateTimeExtensionsTests
     [InlineData("2015-07-24T06:40:20.005")]
     public void BeginningOfDecadeBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2010, 01, 01, 00, 00, 00, 000, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfDecade());
     }
 
@@ -814,7 +842,9 @@ public class DateTimeExtensionsTests
     [InlineData("2015-07-24T06:40:20.005")]
     public void EndOfDecadeBasicTest(string value)
     {
-        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
+        CultureInfo.CurrentCulture = culture;
         Assert.Equal(new(2019, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfDecade());
     }
 

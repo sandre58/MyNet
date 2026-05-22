@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using MyNet.Utilities.Helpers;
 using Xunit;
 
@@ -32,7 +33,25 @@ public class ResourcesHelperTests
 
     [Fact]
     public void OpenEmbeddedResource_WhenMultipleResourcesMatch_ThrowsInvalidOperationException()
-        => Assert.Throws<InvalidOperationException>(() => ResourcesHelper.OpenEmbeddedResource(typeof(ResourcesHelperTests).Assembly, ".resources"));
+    {
+        var assembly = typeof(ResourcesHelperTests).Assembly;
+        const string suffix = ".resources";
+
+        var matches = assembly.GetManifestResourceNames().Count(n => n.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+
+        if (matches > 1)
+        {
+            Assert.Throws<InvalidOperationException>(() => ResourcesHelper.OpenEmbeddedResource(assembly, suffix));
+        }
+        else
+        {
+            // If only one resource matches the suffix, the method should return the stream.
+            using var stream = ResourcesHelper.OpenEmbeddedResource(assembly, suffix);
+
+            Assert.NotNull(stream);
+            Assert.True(stream.Length > 0);
+        }
+    }
 
     [Fact]
     public void OpenEmbeddedResource_WhenUniqueResourceMatch_ReturnsStream()

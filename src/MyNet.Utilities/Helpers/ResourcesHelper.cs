@@ -41,8 +41,7 @@ public static class ResourcesHelper
 
             if (match is not null)
             {
-                throw new InvalidOperationException(
-                    $"Multiple embedded resources match '{resourceNameSuffix}'.");
+                throw new InvalidOperationException($"Multiple embedded resources match '{resourceNameSuffix}'.");
             }
 
             match = resourceName;

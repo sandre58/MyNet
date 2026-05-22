@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Utilities;
 using MyNet.Utilities.Metadata;
 
@@ -13,7 +14,8 @@ namespace MyNet.Observable.Behaviors;
 /// Provides functionality to raise events and notify property changes for properties that are associated with a specific event type. This abstract class is designed to be inherited by concrete implementations that specify the event type they are interested in. When an event is raised using the RaiseEvent method, the class retrieves the metadata for the owner object and identifies all properties that are associated with the specified event type. It then notifies that these properties have changed, allowing any bindings or observers to react to the event. Additionally, if the owner object implements either the <see cref="IEventAware{TEvent}"/> or <see cref="IAsyncEventAware{TEvent}"/> interface, the corresponding OnEvent or OnEventAsync method will be invoked, allowing for further custom handling of the event. This class provides a structured way to manage events and their associated property changes within an observable object framework.
 /// </summary>
 /// <param name="owner">The owner object of this behavior.</param>
-public abstract class EventBehavior<TEvent>(ObservableObject owner) : SuspendableBehavior(owner)
+public abstract class EventBehavior<TOwner, TEvent>(TOwner owner) : SuspendableBehavior<TOwner>(owner)
+    where TOwner : ObservableObject
     where TEvent : class
 {
     /// <summary>
@@ -25,9 +27,7 @@ public abstract class EventBehavior<TEvent>(ObservableObject owner) : Suspendabl
         if (IsDisposed || IsSuspended)
             return;
 
-        var typeMetadata = MetadataRegistry.Get(Owner.GetType());
-
-        var properties = typeMetadata.WithFeature<TEvent>();
+        var properties = MetadataRegistry.Get(Owner.GetType()).WithFeature<EventReactionFeature>(x => x.Events.Contains(typeof(TEvent)));
 
         foreach (var property in properties)
         {

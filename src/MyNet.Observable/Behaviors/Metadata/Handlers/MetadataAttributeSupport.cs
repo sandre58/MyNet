@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="MetadataAttributeSupport.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.Threading;
 using MyNet.Utilities.Metadata;
 
 namespace MyNet.Observable.Behaviors.Metadata.Handlers;
@@ -7,12 +14,20 @@ namespace MyNet.Observable.Behaviors.Metadata.Handlers;
 /// </summary>
 public static class MetadataAttributeSupport
 {
+    private static int _isRegistered;
+
     /// <summary>
     /// Registers the default metadata attribute handlers for the MyNet.Observable library. This method should be called to ensure that the default handlers for specific metadata attributes, such as UpdateOnCultureChanged and IgnoreModificationTracking, are registered and available for use when working with metadata attributes in the MyNet.Observable library. By calling this method, developers can ensure that the default behaviors associated with these metadata attributes are properly handled and applied in their applications, allowing for consistent behavior based on the configured metadata attributes in observable objects.
     /// </summary>
     public static void RegisterDefaults()
     {
+        if (Interlocked.Exchange(ref _isRegistered, 1) == 1)
+            return;
+
         MetadataAttributeBootstrapper.Register(new UpdateOnCultureChangedAttributeHandler());
+        MetadataAttributeBootstrapper.Register(new UpdateOnTimeZoneChangedAttributeHandler());
         MetadataAttributeBootstrapper.Register(new IgnoreModificationTrackingAttributeHandler());
+        MetadataAttributeBootstrapper.Register(new AlsoValidateAttributeHandler());
+        MetadataAttributeBootstrapper.Register(new ForwardPropertyAttributeHandler());
     }
 }

@@ -9,7 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MyNet.Utilities.Metadata.Attributes;
+using MyNet.Utilities.Text.Metadata;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Utilities;

@@ -16,7 +16,7 @@ using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
-namespace MyNet.Globalization.Tests.Data {
+namespace MyNet.Utilities.Tests.Data {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -44,7 +44,7 @@ namespace MyNet.Globalization.Tests.Data {
         internal static ResourceManager ResourceManager {
             get {
                 if (ReferenceEquals(resourceMan, null)) {
-                    ResourceManager temp = new ResourceManager("MyNet.Globalization.Tests.Data.OtherDataResources", typeof(OtherDataResources).Assembly);
+                    ResourceManager temp = new ResourceManager("MyNet.Utilities.Tests.Data.OtherDataResources", typeof(OtherDataResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

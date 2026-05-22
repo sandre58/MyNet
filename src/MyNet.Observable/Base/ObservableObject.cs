@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ObservableObject.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using MyNet.Observable.Behaviors;
 using MyNet.Utilities.Suspending;
@@ -21,7 +22,7 @@ namespace MyNet.Observable;
 /// <summary>
 /// A base class for objects of which the properties must be observable.
 /// </summary>
-public abstract class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
+public abstract class ObservableObject : IObservableObject
 {
     private static readonly ConcurrentDictionary<string, PropertyChangedEventArgs> PropertyChangedEventArgsCache = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, PropertyChangingEventArgs> PropertyChangingEventArgsCache = new(StringComparer.Ordinal);
@@ -31,6 +32,11 @@ public abstract class ObservableObject : INotifyPropertyChanged, INotifyProperty
 
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in DisposeManagedResources")]
     private readonly BehaviorRegistry _behaviors = new();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ObservableObject"/> class and applies generated property behaviors. The constructor initializes the observable object and applies any generated property behaviors that are registered in the GeneratedPropertyBehaviorRegistry. This allows for automatic application of behaviors to properties without needing to manually register them in the constructor, enabling a more modular and reusable design for observable objects.
+    /// </summary>
+    protected ObservableObject() => GeneratedPropertyBehaviorRegistry.Apply(this);
 
     /// <summary>
     /// Gets the collection of disposables that will be disposed when the object is disposed.
@@ -79,9 +85,6 @@ public abstract class ObservableObject : INotifyPropertyChanged, INotifyProperty
         foreach (var behavior in _behaviors.Changing)
         {
             behavior.OnPropertyChanging(context);
-
-            if (context.Cancel)
-                return;
         }
 
         OnPropertyChangingCore(context);
@@ -219,86 +222,106 @@ public abstract class ObservableObject : INotifyPropertyChanged, INotifyProperty
     /// Adds a behavior to the observable object. This method allows you to add any behavior that implements the <see cref="IObservableBehavior"/> interface to the observable object, enabling you to enhance its functionality in a modular and reusable way. By calling this method with a specific behavior, you can easily add new features or capabilities to your observable objects without modifying their original implementation or creating new derived classes.
     /// </summary>
     /// <param name="behavior">The behavior to add.</param>
-    public void RegisterBehavior(IObservableBehavior behavior) => _behaviors.Register(behavior);
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
+    /// <typeparam name="T">The type of the behavior to register.</typeparam>
+    public void RegisterBehavior<T>(T behavior, string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.Register(behavior, propertyName, scope);
 
     /// <summary>
     /// Tries to get a behavior of the specified type that is attached to the observable object. This method can be called by derived classes to retrieve a specific behavior that is currently attached to the observable object using the Attach method. By calling this method with a specific behavior type, you can attempt to retrieve that behavior if it is currently attached, allowing you to interact with its functionality or properties in a modular and reusable way. The method returns true if the behavior of the specified type is found and assigned to the out parameter; otherwise, it returns false and assigns null to the out parameter.
     /// </summary>
     /// <param name="behavior">When this method returns, contains the behavior of the specified type if it is found; otherwise, null.</param>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
     /// <returns>True if the behavior of the specified type is found; otherwise, false.</returns>
-    public bool TryGetBehavior<T>([NotNullWhen(true)] out T? behavior)
-        where T : class => _behaviors.TryGet(out behavior);
+    public bool TryGetBehavior<T>([NotNullWhen(true)] out T? behavior, string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.TryGet(out behavior, propertyName, scope);
 
     /// <summary>
     /// Gets a behavior of the specified type that is attached to the observable object. This method can be called by derived classes to retrieve a specific behavior that is currently attached to the observable object using the Attach method. By calling this method with a specific behavior type, you can retrieve that behavior if it is currently attached, allowing you to interact with its functionality or properties in a modular and reusable way. If the behavior of the specified type is not found, this method throws an InvalidOperationException, indicating that the requested behavior is not currently attached to the observable object.
     /// </summary>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
     /// <returns>The behavior of the specified type.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the behavior of the specified type is not found.</exception>
-    public T GetBehavior<T>()
-        where T : class => _behaviors.Get<T>();
+    public T GetBehavior<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.Get<T>(propertyName, scope);
 
     /// <summary>
     /// Checks if a behavior of the specified type is registered in the registry. This method calls TryGet to determine if a behavior of the specified type exists in the registry. It returns true if a behavior of the specified type is found, and false otherwise. This allows for quick checks to see if a particular behavior is available in the registry without needing to retrieve the behavior instance itself.
     /// </summary>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to check.</typeparam>
     /// <returns>True if a behavior of the specified type is registered; otherwise, false.</returns>
-    public bool HasBehavior<T>()
-        where T : class => _behaviors.Has<T>();
+    public bool HasBehavior<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.Has<T>(propertyName, scope);
 
     /// <summary>
     /// Gets a behavior of the specified type from the registry, or returns null if no behavior of that type is found. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, it is returned; otherwise, null is returned. This provides a convenient way to access behaviors when their presence in the registry is optional, allowing for more flexible code that can handle cases where certain behaviors may not be registered without throwing exceptions.
     /// </summary>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
     /// <returns>The behavior instance of the specified type, or null if not found.</returns>
-    public T? GetBehaviorOrDefault<T>()
-        where T : class => _behaviors.GetOrDefault<T>();
+    public T? GetBehaviorOrDefault<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.GetOrDefault<T>(propertyName, scope);
 
     /// <summary>
     /// Tries to execute an action on a behavior of the specified type if it is registered in the registry. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided action is executed with the behavior as its parameter, and the method returns true. If no behavior of the specified type is found, the method returns false and the action is not executed. This allows for conditional execution of actions based on the presence of specific behaviors in the registry, enabling more dynamic and flexible code that can adapt to different configurations of registered behaviors.
     /// </summary>
     /// <param name="action">The action to execute on the behavior if it is found.</param>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to execute the action on.</typeparam>
     /// <returns>True if the action was executed; otherwise, false.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
-    public bool TryExecuteBehavior<T>(Action<T> action)
-        where T : class => _behaviors.TryExecute(action);
+    public bool TryExecuteBehavior<T>(Action<T> action, string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.TryExecute(action, propertyName, scope);
 
     /// <summary>
     /// Executes an action on a behavior of the specified type. This method calls Get to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided action is executed with the behavior as its parameter. If no behavior of the specified type is found, an InvalidOperationException is thrown with a message indicating that the behavior was not found. This method provides a convenient way to execute actions on behaviors when you expect them to be present in the registry, while also providing clear error handling when they are not found.
     /// </summary>
     /// <param name="action">The action to execute on the behavior.</param>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="T">The type of the behavior to execute the action on.</typeparam>
     /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the behavior is not found.</exception>
-    public void ExecuteBehavior<T>(Action<T> action)
-        where T : class => _behaviors.Execute(action);
+    public void ExecuteBehavior<T>(Action<T> action, string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior => _behaviors.Execute(action, propertyName, scope);
 
     /// <summary>
     /// Tries to evaluate a selector function on a behavior of the specified type if it is registered in the registry. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided selector function is executed with the behavior as its parameter, and the result is returned through the out parameter. The method returns true if the selector was executed; otherwise, false if no behavior of the specified type was found. This allows for conditional evaluation of functions based on the presence of specific behaviors in the registry, enabling more dynamic and flexible code that can adapt to different configurations of registered behaviors.
     /// </summary>
     /// <param name="selector">The selector function to evaluate on the behavior.</param>
     /// <param name="result">The result of the selector function if the behavior is found; otherwise, the default value of TResult.</param>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="TBehavior">The type of the behavior to evaluate the selector on.</typeparam>
     /// <typeparam name="TResult">The type of the result returned by the selector function.</typeparam>
     /// <returns>True if the selector was executed; otherwise, false.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the selector is null.</exception>
-    public bool TryEvaluateBehavior<TBehavior, TResult>(Func<TBehavior, TResult> selector, [MaybeNullWhen(false)] out TResult result)
-        where TBehavior : class => _behaviors.TryEvaluate(selector, out result);
+    public bool TryEvaluateBehavior<TBehavior, TResult>(Func<TBehavior, TResult> selector, [MaybeNullWhen(false)] out TResult result, string? propertyName = null, string? scope = null)
+        where TBehavior : class, IObservableBehavior => _behaviors.TryEvaluate(selector, out result, propertyName, scope);
 
     /// <summary>
     /// Evaluates a selector function on a behavior of the specified type. This method calls Get to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided selector function is executed with the behavior as its parameter, and the result is returned. If no behavior of the specified type is found, the default value is returned. This method provides a convenient way to evaluate functions on behaviors when you expect them to be present in the registry, while also providing a fallback value when they are not found.
     /// </summary>
     /// <param name="selector">The selector function to evaluate on the behavior.</param>
     /// <param name="defaultValue">The default value to return if the behavior is not found.</param>
+    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
+    /// <param name="scope">The scope associated with the behavior, if any.</param>
     /// <typeparam name="TBehavior">The type of the behavior to evaluate the selector on.</typeparam>
     /// <typeparam name="TResult">The type of the result returned by the selector function.</typeparam>
     /// <returns>The result of the selector function if the behavior is found; otherwise, the default value.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the selector is null.</exception>
-    public TResult EvaluateBehavior<TBehavior, TResult>(Func<TBehavior, TResult> selector, TResult defaultValue = default!)
-        where TBehavior : class
-        => _behaviors.Evaluate(selector, defaultValue);
+    public TResult EvaluateBehavior<TBehavior, TResult>(Func<TBehavior, TResult> selector, TResult defaultValue = default!, string? propertyName = null, string? scope = null)
+        where TBehavior : class, IObservableBehavior
+        => _behaviors.Evaluate(selector, defaultValue, propertyName, scope);
 
     #endregion;
 
@@ -350,13 +373,18 @@ public abstract class ObservableObject : INotifyPropertyChanged, INotifyProperty
     /// <returns>A function that gets the value of the specified property from an object.</returns>
     private static Func<object, object?> CreateGetter(Type type, string propertyName)
     {
+        var property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+
+        if (property?.CanRead != true || property.GetIndexParameters().Length != 0)
+            return static _ => UnknownValue.Instance;
+
         var parameter = Expression.Parameter(typeof(object));
 
         var cast = Expression.Convert(parameter, type);
 
-        var property = Expression.Property(cast, propertyName);
+        var propertyAccess = Expression.Property(cast, property);
 
-        var convert = Expression.Convert(property, typeof(object));
+        var convert = Expression.Convert(propertyAccess, typeof(object));
 
         return Expression.Lambda<Func<object, object?>>(convert, parameter).Compile();
     }

@@ -13,7 +13,7 @@ namespace MyNet.Observable.Behaviors;
 /// <summary>
 /// Defines a behavior that listens for changes in the system time zone and raises an event when the time zone changes. This behavior can be used in scenarios where an application needs to respond to changes in the system time zone, such as updating displayed times or adjusting scheduled tasks based on the new time zone. By subscribing to the TimeZoneChanged event, you can ensure that your application remains responsive and accurate when the system time zone is modified, providing a better user experience in applications that rely on date and time information.
 /// </summary>
-public sealed class TimeZoneChangedBehavior : EventBehavior<TimeZoneChangedEvent>
+public sealed class TimeZoneChangedBehavior : EventBehavior<ObservableObject, TimeZoneChangedEvent>
 {
     private readonly ITimeZoneService _service;
 

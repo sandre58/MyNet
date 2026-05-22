@@ -10,7 +10,8 @@ using MyNet.Utilities.Suspending;
 
 namespace MyNet.Observable.Behaviors;
 
-public abstract class SuspendableBehavior(ObservableObject owner) : ObservableBehavior(owner), ISuspendable
+public abstract class SuspendableBehavior<T>(T owner) : ObservableBehavior<T>(owner), ISuspendable
+where T : IObservableObject
 {
     private readonly Suspender _suspender = new();
 

@@ -13,7 +13,7 @@ namespace MyNet.Observable.Behaviors;
 /// <summary>
 /// Defines a behavior that listens for culture change events from an ICultureService and raises an event with the new culture information when the culture changes. This behavior can be used to automatically update properties or perform actions in response to changes in the application's culture settings, allowing for a more dynamic and responsive user interface that adapts to different cultural contexts. By subscribing to the CultureChanged event of the ICultureService, this behavior ensures that any relevant updates or changes are triggered whenever the culture changes, enabling developers to easily implement culture-aware features in their applications.
 /// </summary>
-public sealed class CultureChangedBehavior : EventBehavior<CultureChangedEvent>
+public sealed class CultureChangedBehavior : EventBehavior<ObservableObject, CultureChangedEvent>
 {
     private readonly ICultureService _service;
 

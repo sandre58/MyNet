@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -15,7 +16,7 @@ namespace MyNet.Utilities.Metadata;
 /// </summary>
 public sealed class PropertyMetadata
 {
-    private readonly Dictionary<Type, object> _features = [];
+    private readonly ConcurrentDictionary<Type, object> _features = new();
 
     /// <summary>
     /// Sets the feature for the specified type. This method allows you to associate a specific piece of metadata (referred to as a "feature") with the property represented by this instance of <see cref="PropertyMetadata"/>. The feature is stored in a dictionary, where the key is the type of the feature and the value is the feature object itself. By calling this method, you can add or update feature information for the property, which can then be retrieved later using the corresponding get methods. This provides a flexible way to manage and organize metadata features for properties in an application, allowing for various runtime behaviors based on the configured feature information for the property.
@@ -51,13 +52,11 @@ public sealed class PropertyMetadata
     /// <returns>The existing or newly created feature of the specified type.</returns>
     public TFeature GetOrCreate<TFeature>()
         where TFeature : class, new()
-    {
-        if (TryGetFeature<TFeature>(out var feature))
-            return feature;
+        => (TFeature)_features.GetOrAdd(typeof(TFeature), static _ => new TFeature());
 
-        feature = new();
-        SetFeature(feature);
-
-        return feature;
-    }
+    /// <summary>
+    /// Returns an enumerable collection of key-value pairs representing the features associated with this property metadata. Each key in the collection is a Type that represents the type of the feature, and each value is the corresponding feature object associated with that type. This method allows you to retrieve all the features that have been set for this property metadata, enabling you to inspect or utilize the features as needed in various runtime behaviors based on the configured feature information for the property.
+    /// </summary>
+    /// <returns>An enumerable collection of key-value pairs representing the features associated with this property metadata.</returns>
+    internal IEnumerable<KeyValuePair<Type, object>> FeaturesSnapshot() => _features;
 }

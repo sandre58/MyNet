@@ -10,23 +10,26 @@ using System.ComponentModel;
 using System.Reflection;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Utilities;
+using MyNet.Utilities.Metadata;
 
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
-/// Provides a behavior that tracks modifications to an object and its nested properties, including collections. It implements the <see cref="IModificationAware"/> interface to indicate whether the object has been modified since the last reset. The behavior listens for property changes and collection changes to automatically update the modification state. It also supports suspending modification tracking to allow for batch updates without triggering intermediate modification states.
+/// Provides a behavior that tracks modifications to an object and its nested properties, including collections. It implements the <see cref="IModificationTrackingBehavior"/> interface to indicate whether the object has been modified since the last reset. The behavior listens for property changes and collection changes to automatically update the modification state. It also supports suspending modification tracking to allow for batch updates without triggering intermediate modification states.
 /// </summary>
-public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropertyChangedBehavior, IModificationAware
+public sealed class ModificationTrackingBehavior : SuspendableBehavior<ObservableObject>, IModificationTrackingBehavior
 {
     private readonly CollectionTrackingBehavior? _collections;
+    private readonly bool _ownsCollections;
     private readonly HashSet<IModificationAware> _trackedChildren = [];
+    private readonly Dictionary<IModificationAware, INotifyPropertyChanged> _childNotifiers = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModificationTrackingBehavior"/> class with the specified owner. This constructor initializes the behavior and attaches it to the owner object, allowing it to track modifications to the owner and its nested properties. It also initializes a default collection tracking behavior to handle modifications to collections within the owner object, ensuring that changes to collections are properly tracked and reflected in the modification state of the owner.
     /// </summary>
     /// <param name="owner">The owner object.</param>
     public ModificationTrackingBehavior(ObservableObject owner)
-        : this(owner, new(owner))
+        : this(owner, new(owner), ownsCollections: true)
     {
     }
 
@@ -36,9 +39,15 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropert
     /// <param name="owner">The owner object.</param>
     /// <param name="collections">The collection tracking behavior.</param>
     public ModificationTrackingBehavior(ObservableObject owner, CollectionTrackingBehavior collections)
+        : this(owner, collections, ownsCollections: false)
+    {
+    }
+
+    private ModificationTrackingBehavior(ObservableObject owner, CollectionTrackingBehavior? collections, bool ownsCollections)
         : base(owner)
     {
         _collections = collections;
+        _ownsCollections = ownsCollections;
 
         _collections?.CollectionChanged += OnCollectionChanged;
 
@@ -53,7 +62,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropert
     /// </summary>
     /// <param name="property">The property to check.</param>
     /// <returns><c>true</c> if the property should be tracked; otherwise, <c>false</c>.</returns>
-    public bool ShouldTrack(PropertyInfo property) => !Owner.GetType().GetMetadata().HasFeature<ModificationTrackingFeature>(property.Name, x => x.Ignore);
+    public bool ShouldTrack(PropertyInfo property) => !MetadataRegistry.Get(Owner.GetType()).GetProperty(property.Name).TryGetFeature<ModificationTrackingFeature>(out var feature) || !feature.Ignore;
 
     /// <summary>
     /// Marks the object as modified.
@@ -158,8 +167,9 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropert
         {
             if (_trackedChildren.Add(child))
             {
-                if (child is INotifyPropertyChanged npc)
+                if (value is INotifyPropertyChanged npc)
                 {
+                    _childNotifiers[child] = npc;
                     npc.PropertyChanged += OnChildChanged;
                 }
             }
@@ -175,9 +185,10 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropert
         {
             if (_trackedChildren.Remove(child))
             {
-                if (child is INotifyPropertyChanged npc)
+                if (_childNotifiers.TryGetValue(child, out var npc))
                 {
                     npc.PropertyChanged -= OnChildChanged;
+                    _childNotifiers.Remove(child);
                 }
             }
         }
@@ -217,14 +228,15 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior, IPropert
     {
         _collections?.CollectionChanged -= OnCollectionChanged;
 
-        foreach (var child in _trackedChildren)
+        if (_ownsCollections)
+            _collections?.Dispose();
+
+        foreach (var notifier in _childNotifiers.Values)
         {
-            if (child is INotifyPropertyChanged npc)
-            {
-                npc.PropertyChanged -= OnChildChanged;
-            }
+            notifier.PropertyChanged -= OnChildChanged;
         }
 
+        _childNotifiers.Clear();
         _trackedChildren.Clear();
 
         base.DisposeManagedResources();

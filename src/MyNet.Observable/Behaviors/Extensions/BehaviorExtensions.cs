@@ -5,10 +5,13 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using FluentValidation;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
 using MyNet.Observable.Behaviors;
+using MyNet.Utilities;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;
@@ -22,19 +25,20 @@ public static class BehaviorExtensions
     /// <summary>
     /// Adds localization behavior to the specified observable object. This method registers a new instance of <see cref="CultureChangedBehavior"/> with the observable object, allowing it to react to culture and time zone changes by updating specific properties. By calling this method on an observable object, you can easily add localization support to it, enabling it to update its display when the culture or time zone changes without modifying the original class or creating a new derived class.
     /// </summary>
-    extension(ObservableObject obj)
+    extension<TOwner>(TOwner owner)
+        where TOwner : ObservableObject
     {
         /// <summary>
         /// Adds the specified behavior to the observable object. This method allows you to add any behavior that implements the <see cref="IObservableBehavior"/> interface to the observable object, enabling you to enhance its functionality in a modular and reusable way. By calling this method with a specific behavior, you can easily add new features or capabilities to your observable objects without modifying their original implementation or creating new derived classes.
         /// </summary>
         /// <typeparam name="TBehavior">The type of the behavior to add.</typeparam>
         /// <returns>The observable object with the added behavior.</returns>
-        public ObservableObject Use<TBehavior>()
-            where TBehavior : IObservableBehavior
+        public TOwner Use<TBehavior>()
+            where TBehavior : class, IObservableBehavior
         {
-            obj.RegisterBehavior((TBehavior)Activator.CreateInstance(typeof(TBehavior), obj)!);
+            owner.RegisterBehavior((TBehavior)Activator.CreateInstance(typeof(TBehavior), owner)!);
 
-            return obj;
+            return owner;
         }
 
         /// <summary>
@@ -44,9 +48,9 @@ public static class BehaviorExtensions
         /// <returns>The observable object with localization behavior added.</returns>
         public ObservableObject ReactOnCultureChanged(ICultureService cultureService)
         {
-            obj.RegisterBehavior(new CultureChangedBehavior(obj, cultureService));
+            owner.RegisterBehavior(new CultureChangedBehavior(owner, cultureService));
 
-            return obj;
+            return owner;
         }
 
         /// <summary>
@@ -56,9 +60,9 @@ public static class BehaviorExtensions
         /// <returns>The observable object with time zone localization behavior added.</returns>
         public ObservableObject ReactOnTimeZoneChanged(ITimeZoneService timeZoneService)
         {
-            obj.RegisterBehavior(new TimeZoneChangedBehavior(obj, timeZoneService));
+            owner.RegisterBehavior(new TimeZoneChangedBehavior(owner, timeZoneService));
 
-            return obj;
+            return owner;
         }
 
         /// <summary>
@@ -67,25 +71,52 @@ public static class BehaviorExtensions
         /// <returns>The observable object with modification tracking behavior added.</returns>
         public ObservableObject UseTracking()
         {
-            obj.RegisterBehavior(new ModificationTrackingBehavior(obj));
+            owner.RegisterBehavior(new ModificationTrackingBehavior(owner));
 
-            return obj;
+            return owner;
         }
 
         /// <summary>
         /// Adds validation behavior to the specified observable object. This method registers a new instance of <see cref="ValidationBehavior{T}"/> with the observable object, allowing it to validate its properties using the specified validator. By calling this method on an observable object, you can easily add validation support to it, enabling it to validate its properties and react accordingly without modifying the original class or creating new derived classes.
         /// </summary>
         /// <param name="validator">The validator used to validate the observable object's properties.</param>
-        /// <typeparam name="T">The type of the observable object.</typeparam>
         /// <returns>The validation behavior added to the observable object.</returns>
-        public ValidationBehavior<T> UseValidation<T>(IValidator validator)
-            where T : ObservableObject
+        public ValidationBehavior<TOwner> UseValidation(IValidator validator)
         {
-            var behavior = new ValidationBehavior<T>((T)obj, validator);
+            var behavior = new ValidationBehavior<TOwner>(owner, validator);
 
-            obj.RegisterBehavior(behavior);
+            owner.RegisterBehavior(behavior);
 
             return behavior;
+        }
+
+        /// <summary>
+        /// Registers a <see cref="PropertyChangedForwardingBehavior"/> for the property selected by the expression.
+        /// </summary>
+        /// <typeparam name="T">The type of the property.</typeparam>
+        /// <param name="selector">Expression selecting the property (e.g. x => x.Wrapper).</param>
+        /// <param name="concatenatePropertyName">True to emit Wrapper.Name; false to emit Name only.</param>
+        /// <returns>The observable object.</returns>
+        public ObservableObject ForwardProperty<T>(Expression<Func<TOwner, T?>> selector, bool concatenatePropertyName = true)
+            where T : class, INotifyPropertyChanged
+        {
+            var propertyName = selector.PropertyName();
+            owner.RegisterBehavior(new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName), propertyName, nameof(PropertyChangedForwardingBehavior));
+
+            return owner;
+        }
+
+        /// <summary>
+        /// Registers a <see cref="PropertyChangedForwardingBehavior"/> for the provided property name.
+        /// </summary>
+        /// <param name="propertyName">The wrapper property name.</param>
+        /// <param name="concatenatePropertyName">True to emit Wrapper.Name; false to emit Name only.</param>
+        /// <returns>The observable object.</returns>
+        public ObservableObject ForwardProperty(string propertyName, bool concatenatePropertyName = true)
+        {
+            owner.RegisterBehavior(new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName), propertyName, nameof(PropertyChangedForwardingBehavior));
+
+            return owner;
         }
     }
 }

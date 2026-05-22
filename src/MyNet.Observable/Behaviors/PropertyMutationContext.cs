@@ -7,7 +7,7 @@
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
-/// Represents the context of a property mutation operation, providing information about the sender, property name, old value, new value, and a cancellation flag. This context can be used in scenarios where you want to intercept or react to property changes in an observable object, allowing you to access relevant details about the mutation and optionally cancel it if necessary.
+/// Represents the context of a property mutation operation, providing information about the sender, property name, old value, and new value. This context is passed to property-changing and property-changed behaviors so they can react to mutations on an observable object.
 /// </summary>
 public sealed class PropertyMutationContext
 {
@@ -30,9 +30,4 @@ public sealed class PropertyMutationContext
     /// Gets the new value of the property after the mutation. This property is required and must be initialized when creating an instance of the <see cref="PropertyMutationContext"/> class. The new value provides context about the updated state of the property, allowing event handlers or behaviors to access additional information or perform actions based on the new value.
     /// </summary>
     public required object? NewValue { get; init; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the property mutation should be canceled. This property can be set by event handlers or behaviors to prevent the property change from occurring, allowing for validation or other conditional logic to be applied before the mutation is finalized.
-    /// </summary>
-    public bool Cancel { get; set; }
 }

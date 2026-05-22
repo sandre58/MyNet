@@ -6,7 +6,7 @@
 
 using System;
 
-namespace MyNet.Utilities.Metadata.Attributes;
+namespace MyNet.Utilities.Text.Metadata;
 
 /// <summary>
 /// Specifies a symbolic representation for a type member or property.
