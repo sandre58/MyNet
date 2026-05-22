@@ -54,10 +54,10 @@ public sealed class ObservableObjectCoreTests
         var sut = new TestObservable();
         var behavior = new SpyChangedBehavior();
 
-        sut.RegisterBehavior(behavior);
+        sut.Behaviors.Register(behavior);
 
-        Assert.True(sut.HasBehavior<SpyChangedBehavior>());
-        Assert.Same(behavior, sut.GetBehavior<SpyChangedBehavior>());
+        Assert.True(sut.Behaviors.Has<SpyChangedBehavior>());
+        Assert.Same(behavior, sut.Behaviors.Get<SpyChangedBehavior>());
 
         sut.Value = 7;
 

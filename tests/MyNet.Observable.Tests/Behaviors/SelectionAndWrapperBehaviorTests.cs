@@ -19,12 +19,12 @@ public sealed class SelectionAndWrapperBehaviorTests
     public void SelectionBehavior_NotifiesOwnerOnSelectionChanges()
     {
         var owner = new DummyOwner();
-        owner.RegisterBehavior(new SelectionBehavior(owner));
+        owner.Behaviors.Register(new SelectionBehavior(owner));
 
         var changed = new List<string>();
         owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
 
-        var sel = owner.GetBehavior<SelectionBehavior>();
+        var sel = owner.Behaviors.Get<SelectionBehavior>();
 
         sel.IsSelected = true;
 
@@ -62,9 +62,9 @@ public sealed class SelectionAndWrapperBehaviorTests
     public void SelectionBehavior_Suspend_PreventsNotifications()
     {
         var owner = new DummyOwner();
-        owner.RegisterBehavior(new SelectionBehavior(owner));
+        owner.Behaviors.Register(new SelectionBehavior(owner));
 
-        var sel = owner.GetBehavior<SelectionBehavior>();
+        var sel = owner.Behaviors.Get<SelectionBehavior>();
 
         var changed = new List<string>();
         owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
@@ -82,7 +82,7 @@ public sealed class SelectionAndWrapperBehaviorTests
     {
         var owner = new OwnerWithWrapper();
         owner.ForwardProperty(x => x.Wrapper);
-        var behavior = owner.GetBehavior<PropertyChangedForwardingBehavior>(nameof(OwnerWithWrapper.Wrapper), nameof(PropertyChangedForwardingBehavior));
+        var behavior = owner.Behaviors.Get<PropertyChangedForwardingBehavior>(nameof(OwnerWithWrapper.Wrapper), nameof(PropertyChangedForwardingBehavior));
 
         var changed = new List<string>();
         owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
@@ -141,7 +141,9 @@ public sealed class SelectionAndWrapperBehaviorTests
         owner.Wrapper.Name = "g";
 
         Assert.Contains($"{nameof(OwnerWithGeneratedBehavior.Wrapper)}.{nameof(Child.Name)}", changed);
-        Assert.True(owner.HasBehavior<PropertyChangedForwardingBehavior>(nameof(OwnerWithGeneratedBehavior.Wrapper), nameof(PropertyChangedForwardingBehavior)));
+        Assert.True(owner.Behaviors.Has<PropertyChangedForwardingBehavior>(
+            nameof(OwnerWithGeneratedBehavior.Wrapper),
+            nameof(PropertyChangedForwardingBehavior)));
     }
 
     [Fact]

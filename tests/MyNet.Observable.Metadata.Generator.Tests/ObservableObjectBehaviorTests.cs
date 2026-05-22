@@ -63,13 +63,13 @@ public sealed class ObservableObjectBehaviorTests
 
         var b = new TestBehavior();
 
-        vm.RegisterBehavior(b);
+        vm.Behaviors.Register(b);
 
-        Assert.True(vm.HasBehavior<TestBehavior>());
-        Assert.True(vm.TryGetBehavior(out TestBehavior? got));
+        Assert.True(vm.Behaviors.Has<TestBehavior>());
+        Assert.True(vm.Behaviors.TryGet(out TestBehavior? got));
         Assert.Same(b, got);
-        Assert.Same(b, vm.GetBehavior<TestBehavior>());
-        Assert.Same(b, vm.GetBehaviorOrDefault<TestBehavior>());
+        Assert.Same(b, vm.Behaviors.Get<TestBehavior>());
+        Assert.Same(b, vm.Behaviors.GetOrDefault<TestBehavior>());
     }
 
     [Fact]
@@ -77,16 +77,16 @@ public sealed class ObservableObjectBehaviorTests
     {
         var vm = new TestVm();
         var b = new TestBehavior();
-        vm.RegisterBehavior(b);
+        vm.Behaviors.Register(b);
 
         var executed = false;
 
-        var tryResult = vm.TryExecuteBehavior<TestBehavior>(x => executed = x == b);
+        var tryResult = vm.Behaviors.TryExecute<TestBehavior>(x => executed = x == b);
         Assert.True(tryResult);
         Assert.True(executed);
 
         // Execute should not throw and should invoke action
-        vm.ExecuteBehavior<TestBehavior>(x => x.IncrementChanged());
+        vm.Behaviors.Execute<TestBehavior>(x => x.IncrementChanged());
         Assert.Equal(1, b.ChangedCalled);
     }
 
@@ -95,13 +95,13 @@ public sealed class ObservableObjectBehaviorTests
     {
         var vm = new TestVm();
         var b = new TestBehavior();
-        vm.RegisterBehavior(b);
+        vm.Behaviors.Register(b);
 
-        var ok = vm.TryEvaluateBehavior<TestBehavior, string>(_ => "ok", out var result);
+        var ok = vm.Behaviors.TryEvaluate<TestBehavior, string>(_ => "ok", out var result);
         Assert.True(ok);
         Assert.Equal("ok", result);
 
-        var eval = vm.EvaluateBehavior<TestBehavior, string>(_ => "val", "def");
+        var eval = vm.Behaviors.Evaluate<TestBehavior, string>(_ => "val", "def");
         Assert.Equal("val", eval);
     }
 
@@ -110,7 +110,7 @@ public sealed class ObservableObjectBehaviorTests
     {
         var vm = new TestVm();
         var b = new TestBehavior();
-        vm.RegisterBehavior(b);
+        vm.Behaviors.Register(b);
 
         vm.Dispose();
 
@@ -123,7 +123,7 @@ public sealed class ObservableObjectBehaviorTests
     {
         var vm = new TestVm();
         var b = new TestBehavior();
-        vm.RegisterBehavior(b);
+        vm.Behaviors.Register(b);
 
         var changedRaised = false;
         vm.PropertyChanged += (_, e) =>

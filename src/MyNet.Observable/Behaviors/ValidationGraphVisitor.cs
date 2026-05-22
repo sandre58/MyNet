@@ -49,7 +49,7 @@ public static class ValidationGraphVisitor
             case IValidationAware validation:
                 result &= validation.Validate();
                 break;
-            case ObservableObject observableObject when observableObject.TryGetBehavior<IValidationBehavior>(out var behavior):
+            case ObservableObject observableObject when observableObject.Behaviors.TryGet<IValidationBehavior>(out var behavior):
                 result &= behavior.Validate();
                 break;
         }

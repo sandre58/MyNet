@@ -49,7 +49,9 @@ public sealed class MetadataApplicatorsTests
         MetadataApplicators.ApplyForwardProperty(typeMetadata.GetProperty(nameof(ForwardingOwner.Wrapper)));
 
         var owner = new ForwardingOwner();
-        Assert.True(owner.HasBehavior<PropertyChangedForwardingBehavior>(nameof(ForwardingOwner.Wrapper)));
+        Assert.True(owner.Behaviors.Has<PropertyChangedForwardingBehavior>(
+            nameof(ForwardingOwner.Wrapper),
+            nameof(PropertyChangedForwardingBehavior)));
 
         var changed = new List<string>();
         owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);

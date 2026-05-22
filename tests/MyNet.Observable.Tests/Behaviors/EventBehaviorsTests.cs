@@ -54,8 +54,8 @@ public sealed class EventBehaviorsTests
         var changedProperties = new List<string>();
         sut.PropertyChanged += (_, e) => changedProperties.Add(e.PropertyName ?? string.Empty);
 
-        sut.RegisterBehavior(new CultureChangedBehavior(sut, cultureService));
-        sut.RegisterBehavior(new TimeZoneChangedBehavior(sut, timeZoneService));
+        sut.Behaviors.Register(new CultureChangedBehavior(sut, cultureService));
+        sut.Behaviors.Register(new TimeZoneChangedBehavior(sut, timeZoneService));
 
         cultureService.Raise(CultureInfo.InvariantCulture, new("fr-FR"));
         timeZoneService.Raise(TimeZoneInfo.Utc, TimeZoneInfo.Local);

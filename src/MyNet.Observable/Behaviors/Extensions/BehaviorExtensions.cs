@@ -36,7 +36,7 @@ public static class BehaviorExtensions
         public TOwner Use<TBehavior>()
             where TBehavior : class, IObservableBehavior
         {
-            owner.RegisterBehavior((TBehavior)Activator.CreateInstance(typeof(TBehavior), owner)!);
+            owner.Behaviors.Register((TBehavior)Activator.CreateInstance(typeof(TBehavior), owner)!);
 
             return owner;
         }
@@ -48,7 +48,7 @@ public static class BehaviorExtensions
         /// <returns>The observable object with localization behavior added.</returns>
         public ObservableObject ReactOnCultureChanged(ICultureService cultureService)
         {
-            owner.RegisterBehavior(new CultureChangedBehavior(owner, cultureService));
+            owner.Behaviors.Register(new CultureChangedBehavior(owner, cultureService));
 
             return owner;
         }
@@ -60,7 +60,7 @@ public static class BehaviorExtensions
         /// <returns>The observable object with time zone localization behavior added.</returns>
         public ObservableObject ReactOnTimeZoneChanged(ITimeZoneService timeZoneService)
         {
-            owner.RegisterBehavior(new TimeZoneChangedBehavior(owner, timeZoneService));
+            owner.Behaviors.Register(new TimeZoneChangedBehavior(owner, timeZoneService));
 
             return owner;
         }
@@ -71,7 +71,7 @@ public static class BehaviorExtensions
         /// <returns>The observable object with modification tracking behavior added.</returns>
         public ObservableObject UseTracking()
         {
-            owner.RegisterBehavior(new ModificationTrackingBehavior(owner));
+            owner.Behaviors.Register(new ModificationTrackingBehavior(owner));
 
             return owner;
         }
@@ -85,7 +85,7 @@ public static class BehaviorExtensions
         {
             var behavior = new ValidationBehavior<TOwner>(owner, validator);
 
-            owner.RegisterBehavior(behavior);
+            owner.Behaviors.Register(behavior);
 
             return behavior;
         }

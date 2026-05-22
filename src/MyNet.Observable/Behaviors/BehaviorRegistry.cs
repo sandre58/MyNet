@@ -13,28 +13,34 @@ using System.Threading;
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
-/// Registry for behaviors. Behaviors are registered in the registry and then executed in the order they were registered. The registry is used to store pipeline behaviors (property changing, property changed, disposing) and attached behaviors (behaviors that are attached to an observable object and can be disposed when the object is disposed).
+/// Registry for behaviors attached to an <see cref="ObservableObject"/>.
+/// Each entry is keyed by <see cref="BehaviorKey"/>; registration order defines pipeline execution order.
 /// </summary>
 internal sealed class BehaviorRegistry : IDisposable
 {
     private readonly Dictionary<BehaviorKey, IObservableBehavior> _behaviors = [];
-    private readonly List<IPropertyChangingBehavior> _changing = [];
-    private readonly List<IPropertyChangedBehavior> _changed = [];
+    private readonly List<BehaviorKey> _registrationOrder = [];
     private readonly Lock _gate = new();
     private bool _disposed;
 
+    private static void DisposeBehavior(IObservableBehavior behavior)
+    {
+        if (behavior is IDisposable disposable)
+            disposable.Dispose();
+    }
+
     /// <summary>
-    /// Gets the registered property changing behaviors. These behaviors are executed in the order they were registered when a property is about to change. Each behavior can perform actions such as validation, logging, or canceling the change by throwing an exception. The array is rebuilt each time a new behavior is registered to ensure that the execution order is maintained.
+    /// Gets property-changing behaviors in registration order.
     /// </summary>
     public IPropertyChangingBehavior[] Changing { get; private set; } = [];
 
     /// <summary>
-    /// Gets the registered property changed behaviors. These behaviors are executed in the order they were registered after a property has changed. Each behavior can perform actions such as updating related properties, logging, or triggering side effects based on the new property value. The array is rebuilt each time a new behavior is registered to ensure that the execution order is maintained.
+    /// Gets property-changed behaviors in registration order.
     /// </summary>
     public IPropertyChangedBehavior[] Changed { get; private set; } = [];
 
     /// <summary>
-    /// Gets all registered behaviors in the registry. This property returns an array of all behaviors that have been registered in the registry, regardless of their type (property changing, property changed, disposing, or attached). The array is built by taking the values from the internal dictionary of behaviors, which allows for efficient retrieval of all registered behaviors. This can be useful for scenarios where you need to iterate over all behaviors or perform actions on all registered behaviors without needing to differentiate between their types.
+    /// Gets all registered behavior instances in registration order.
     /// </summary>
     public IObservableBehavior[] All
     {
@@ -42,35 +48,55 @@ internal sealed class BehaviorRegistry : IDisposable
         {
             lock (_gate)
             {
-                return [.. _behaviors.Values];
+                return [.. _registrationOrder.Select(k => _behaviors[k])];
             }
         }
     }
 
-    #region Register (pipeline behaviors)
+    #region Register / unregister
 
     /// <summary>
-    /// Registers a behavior in the registry. This method takes an IObservableBehavior as a parameter and adds it to the list of attached behaviors. If the behavior also implements IPropertyChangedBehavior or IPropertyChangingBehavior, it is added to the respective lists for those types of behaviors as well. The pipeline cache is rebuilt each time a new behavior is registered to ensure that the execution order is maintained. This allows for efficient execution of the behaviors in the correct order when properties change or when an object is being disposed.
+    /// Registers or replaces a behavior for the computed key. Previous instances are disposed when <see cref="IDisposable"/>; registration order is preserved on replace.
     /// </summary>
-    /// <param name="behavior">The behavior to register.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement", Justification = "Switch statement would be less efficient here since we are checking for multiple interfaces on the same object.")]
     public void Register(IObservableBehavior behavior, string? propertyName = null, string? scope = null)
+    {
+        ArgumentNullException.ThrowIfNull(behavior);
+        ThrowIfDisposed();
+
+        lock (_gate)
+        {
+            var key = BehaviorKey.Create(behavior.GetType(), scope, propertyName);
+
+            if (_behaviors.TryGetValue(key, out var existing) && !ReferenceEquals(existing, behavior))
+                DisposeBehavior(existing);
+
+            if (!_behaviors.ContainsKey(key))
+                _registrationOrder.Add(key);
+
+            _behaviors[key] = behavior;
+            RebuildPipeline();
+        }
+    }
+
+    /// <summary>
+    /// Removes a behavior for the specified key and disposes it when <see cref="IDisposable"/>.
+    /// </summary>
+    public bool Unregister<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior
     {
         ThrowIfDisposed();
 
         lock (_gate)
         {
-            _behaviors[new(behavior.GetType(), scope, propertyName)] = behavior;
+            var key = BehaviorKey.Create(typeof(T), scope, propertyName);
 
-            if (behavior is IPropertyChangedBehavior changedBehavior)
-                _changed.Add(changedBehavior);
+            if (!_behaviors.Remove(key, out var existing))
+                return false;
 
-            if (behavior is IPropertyChangingBehavior changingBehavior)
-                _changing.Add(changingBehavior);
-
-            Rebuild();
+            _registrationOrder.Remove(key);
+            DisposeBehavior(existing);
+            RebuildPipeline();
+            return true;
         }
     }
 
@@ -79,83 +105,68 @@ internal sealed class BehaviorRegistry : IDisposable
     #region Lookup
 
     /// <summary>
-    /// Tries to get a behavior of the specified type from the registry. This method searches through the lists of attached behaviors, property changing behaviors, property changed behaviors, and disposing behaviors in that order to find a behavior of the specified type. If a behavior of the specified type is found, it is returned through the out parameter and the method returns true. If no behavior of the specified type is found, the out parameter is set to null and the method returns false. This allows for efficient retrieval of behaviors based on their type, enabling dynamic access to registered behaviors as needed during the execution of observable objects.
+    /// Tries to get a behavior using an exact or filtered key match. Returns false when zero or more than one instance matches.
     /// </summary>
-    /// <param name="behavior">The behavior instance if found; otherwise, null.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
-    /// <returns>True if a behavior of the specified type is found; otherwise, false.</returns>
     public bool TryGet<T>([NotNullWhen(true)] out T? behavior, string? propertyName = null, string? scope = null)
         where T : class, IObservableBehavior
     {
         lock (_gate)
         {
-            var key = !string.IsNullOrEmpty(propertyName) || !string.IsNullOrEmpty(scope) ? new BehaviorKey(typeof(T), propertyName, scope) : (BehaviorKey?)null;
-            if (key is not null && _behaviors.TryGetValue(key.Value, out var found) && found is T typed)
+            var key = BehaviorKey.Create(typeof(T), scope, propertyName);
+
+            if (_behaviors.TryGetValue(key, out var exact) && exact is T typed)
             {
                 behavior = typed;
                 return true;
             }
 
-            behavior = _behaviors.Values.OfType<T>().FirstOrDefault();
-            return behavior is not null;
+            var matches = CollectMatches<T>(propertyName, scope);
+
+            if (matches.Count == 1)
+            {
+                behavior = matches[0];
+                return true;
+            }
+
+            behavior = null;
+            return false;
         }
     }
 
     /// <summary>
-    /// Gets a behavior of the specified type from the registry. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, it is returned. If no behavior of the specified type is found, an InvalidOperationException is thrown with a message indicating that the behavior was not found. This method provides a convenient way to retrieve behaviors when you expect them to be present in the registry, while also providing clear error handling when they are not found.
+    /// Gets all registered behaviors assignable to <typeparamref name="T"/> that match the optional scope and property name filter.
     /// </summary>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
-    /// <returns>The behavior instance of the specified type.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if a behavior of the specified type is not found.</exception>
+    public T[] GetAll<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior
+    {
+        lock (_gate)
+        {
+            return [.. CollectMatches<T>(propertyName, scope)];
+        }
+    }
+
     public T Get<T>(string? propertyName = null, string? scope = null)
         where T : class, IObservableBehavior
         => TryGet<T>(out var b, propertyName, scope)
             ? b
-            : throw new InvalidOperationException($"Behavior {typeof(T).Name} not found for propertyName {propertyName ?? "<null>"} and scope {scope ?? "<null>"}.");
+            : throw new InvalidOperationException(
+                $"Behavior {typeof(T).Name} not found for propertyName '{propertyName ?? "<null>"}' and scope '{scope ?? "<null>"}'.");
+
+    public bool Has<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior
+        => TryGet<T>(out _, propertyName, scope);
+
+    public T? GetOrDefault<T>(string? propertyName = null, string? scope = null)
+        where T : class, IObservableBehavior
+    {
+        TryGet<T>(out var behavior, propertyName, scope);
+        return behavior;
+    }
 
     #endregion
 
     #region Api
 
-    /// <summary>
-    /// Checks if a behavior of the specified type is registered in the registry. This method calls TryGet to determine if a behavior of the specified type exists in the registry. It returns true if a behavior of the specified type is found, and false otherwise. This allows for quick checks to see if a particular behavior is available in the registry without needing to retrieve the behavior instance itself.
-    /// </summary>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to check.</typeparam>
-    /// <returns>True if a behavior of the specified type is registered; otherwise, false.</returns>
-    public bool Has<T>(string? propertyName = null, string? scope = null)
-        where T : class, IObservableBehavior
-        => TryGet<T>(out _, propertyName, scope);
-
-    /// <summary>
-    /// Gets a behavior of the specified type from the registry, or returns null if no behavior of that type is found. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, it is returned; otherwise, null is returned. This provides a convenient way to access behaviors when their presence in the registry is optional, allowing for more flexible code that can handle cases where certain behaviors may not be registered without throwing exceptions.
-    /// </summary>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to retrieve.</typeparam>
-    /// <returns>The behavior instance of the specified type, or null if not found.</returns>
-    public T? GetOrDefault<T>(string? propertyName = null, string? scope = null)
-        where T : class, IObservableBehavior
-    {
-        TryGet<T>(out var behavior, propertyName, scope);
-
-        return behavior;
-    }
-
-    /// <summary>
-    /// Tries to execute an action on a behavior of the specified type if it is registered in the registry. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided action is executed with the behavior as its parameter, and the method returns true. If no behavior of the specified type is found, the method returns false and the action is not executed. This allows for conditional execution of actions based on the presence of specific behaviors in the registry, enabling more dynamic and flexible code that can adapt to different configurations of registered behaviors.
-    /// </summary>
-    /// <param name="action">The action to execute on the behavior if it is found.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to execute the action on.</typeparam>
-    /// <returns>True if the action was executed; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
     public bool TryExecute<T>(Action<T> action, string? propertyName = null, string? scope = null)
         where T : class, IObservableBehavior
     {
@@ -168,34 +179,13 @@ internal sealed class BehaviorRegistry : IDisposable
         return true;
     }
 
-    /// <summary>
-    /// Executes an action on a behavior of the specified type. This method calls Get to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided action is executed with the behavior as its parameter. If no behavior of the specified type is found, an InvalidOperationException is thrown with a message indicating that the behavior was not found. This method provides a convenient way to execute actions on behaviors when you expect them to be present in the registry, while also providing clear error handling when they are not found.
-    /// </summary>
-    /// <param name="action">The action to execute on the behavior.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="T">The type of the behavior to execute the action on.</typeparam>
-    /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if the behavior is not found.</exception>
     public void Execute<T>(Action<T> action, string? propertyName = null, string? scope = null)
         where T : class, IObservableBehavior
     {
         ArgumentNullException.ThrowIfNull(action);
-
         action(Get<T>(propertyName, scope));
     }
 
-    /// <summary>
-    /// Tries to evaluate a selector function on a behavior of the specified type if it is registered in the registry. This method calls TryGet to attempt to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided selector function is executed with the behavior as its parameter, and the result is returned through the out parameter. The method returns true if the selector was executed; otherwise, false if no behavior of the specified type was found. This allows for conditional evaluation of functions based on the presence of specific behaviors in the registry, enabling more dynamic and flexible code that can adapt to different configurations of registered behaviors.
-    /// </summary>
-    /// <param name="selector">The selector function to evaluate on the behavior.</param>
-    /// <param name="result">The result of the selector function if the behavior is found; otherwise, the default value of TResult.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="TBehavior">The type of the behavior to evaluate the selector on.</typeparam>
-    /// <typeparam name="TResult">The type of the result returned by the selector function.</typeparam>
-    /// <returns>True if the selector was executed; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the selector is null.</exception>
     public bool TryEvaluate<TBehavior, TResult>(Func<TBehavior, TResult> selector, [MaybeNullWhen(false)] out TResult result, string? propertyName = null, string? scope = null)
         where TBehavior : class, IObservableBehavior
     {
@@ -208,47 +198,61 @@ internal sealed class BehaviorRegistry : IDisposable
         }
 
         result = selector(behavior);
-
         return true;
     }
 
-    /// <summary>
-    /// Evaluates a selector function on a behavior of the specified type. This method calls Get to retrieve a behavior of the specified type. If a behavior of the specified type is found, the provided selector function is executed with the behavior as its parameter, and the result is returned. If no behavior of the specified type is found, the default value is returned. This method provides a convenient way to evaluate functions on behaviors when you expect them to be present in the registry, while also providing a fallback value when they are not found.
-    /// </summary>
-    /// <param name="selector">The selector function to evaluate on the behavior.</param>
-    /// <param name="defaultValue">The default value to return if the behavior is not found.</param>
-    /// <param name="propertyName">The name of the property associated with the behavior, if any.</param>
-    /// <param name="scope">The scope associated with the behavior, if any.</param>
-    /// <typeparam name="TBehavior">The type of the behavior to evaluate the selector on.</typeparam>
-    /// <typeparam name="TResult">The type of the result returned by the selector function.</typeparam>
-    /// <returns>The result of the selector function if the behavior is found; otherwise, the default value.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the selector is null.</exception>
     public TResult Evaluate<TBehavior, TResult>(Func<TBehavior, TResult> selector, TResult defaultValue = default!, string? propertyName = null, string? scope = null)
         where TBehavior : class, IObservableBehavior
     {
         ArgumentNullException.ThrowIfNull(selector);
-
         return TryGet<TBehavior>(out var behavior, propertyName, scope) ? selector(behavior) : defaultValue;
     }
 
     #endregion
 
-    #region Rebuild pipeline cache
+    #region Pipeline
 
-    /// <summary>
-    /// Rebuilds the pipeline cache for property changing, property changed, and disposing behaviors. This method is called each time a new behavior is registered to ensure that the execution order of the behaviors is maintained. The arrays for Changing, Changed, and Disposing are updated to reflect the current list of registered behaviors. This allows for efficient execution of the behaviors in the correct order when properties change or when an object is being disposed.
-    /// </summary>
-    private void Rebuild()
+    private void RebuildPipeline()
     {
-        Changing = [.. _changing];
-        Changed = [.. _changed];
+        var changing = new List<IPropertyChangingBehavior>();
+        var changed = new List<IPropertyChangedBehavior>();
+
+        foreach (var key in _registrationOrder)
+        {
+            var behavior = _behaviors[key];
+
+            if (behavior is IPropertyChangingBehavior changingBehavior)
+                changing.Add(changingBehavior);
+
+            if (behavior is IPropertyChangedBehavior changedBehavior)
+                changed.Add(changedBehavior);
+        }
+
+        Changing = [.. changing];
+        Changed = [.. changed];
+    }
+
+    private List<T> CollectMatches<T>(string? propertyName, string? scope)
+        where T : class, IObservableBehavior
+    {
+        var matches = new List<T>();
+
+        foreach (var entry in _behaviors)
+        {
+            if (entry.Value is not T typed)
+                continue;
+
+            if (!entry.Key.Matches(scope, propertyName))
+                continue;
+
+            matches.Add(typed);
+        }
+
+        return matches;
     }
 
     #endregion
 
-    /// <summary>
-    /// Disposes the behavior registry and all registered behaviors. This method is called when the registry is no longer needed, allowing for cleanup of resources and proper disposal of any behaviors that implement IDisposable. The method ensures that each behavior in the Changing, Changed, Disposing, and Attached lists is disposed if it implements IDisposable, and then clears the lists to release references to the behaviors. This helps prevent memory leaks and ensures that all resources are properly released when the registry is disposed.
-    /// </summary>
     public void Dispose()
     {
         if (_disposed)
@@ -258,28 +262,53 @@ internal sealed class BehaviorRegistry : IDisposable
 
         lock (_gate)
         {
-            foreach (var b in _behaviors.Values.OfType<IDisposable>())
-                b.Dispose();
+            foreach (var behavior in _behaviors.Values.OfType<IDisposable>())
+                behavior.Dispose();
 
             _behaviors.Clear();
-            _changing.Clear();
-            _changed.Clear();
-
-            Rebuild();
+            _registrationOrder.Clear();
+            RebuildPipeline();
         }
     }
 
-    /// <summary>
-    /// Throws an ObjectDisposedException if the registry has been disposed. This method is called at the beginning of each public method to ensure that operations are not performed on a disposed registry, which could lead to undefined behavior or exceptions. By throwing an ObjectDisposedException, it provides a clear indication that the registry is no longer available for use and helps prevent potential issues caused by accessing disposed resources.
-    /// </summary>
     private void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(_disposed, nameof(BehaviorRegistry));
 }
 
 /// <summary>
-/// Represents a key for identifying a behavior in the registry. This struct is used to uniquely identify a behavior based on its scope and property name. Scope can be used to differentiate behaviors that are registered for different scopes (e.g., different observable objects or contexts), and PropertyName can be used to differentiate behaviors that are registered for different properties. By using a BehaviorKey, the registry can efficiently manage and retrieve behaviors based on their unique identifiers, allowing for more flexible and dynamic behavior management in observable objects.
-/// </summary>dynamic behavior /summary>
-/// <param name="BehaviorTye">The type of the behavior.</param>
-/// <param name="Scope">The scope of the behavior.</param>
-/// <param name="PropertyName">The name of the property associated with the behavior.</param>
-[SuppressMessage("ReSharper", "NotAccessedPositionalProperty.Global", Justification = "Properties are used for equality and hashing, not for direct access.")]
-public readonly record struct BehaviorKey(Type BehaviorTye, string? Scope = null, string? PropertyName = null);
+/// Identifies a behavior instance in <see cref="BehaviorRegistry"/>.
+/// </summary>
+/// <param name="BehaviorType">Concrete behavior type used at registration.</param>
+/// <param name="Scope">Optional scope discriminator (for example behavior kind name).</param>
+/// <param name="PropertyName">Optional property name the behavior is bound to.</param>
+[SuppressMessage("ReSharper", "NotAccessedPositionalProperty.Global", Justification = "Properties are used for equality and hashing.")]
+public readonly record struct BehaviorKey(Type BehaviorType, string? Scope = null, string? PropertyName = null)
+{
+    private static string? Normalize(string? value) => string.IsNullOrEmpty(value) ? null : value;
+
+    /// <summary>
+    /// Creates a normalized key for the given behavior type and optional scope/property identifiers.
+    /// </summary>
+    public static BehaviorKey Create(Type behaviorType, string? scope = null, string? propertyName = null)
+        => new(behaviorType, Normalize(scope), Normalize(propertyName));
+
+    /// <summary>
+    /// Returns whether this key matches the optional scope and property filters.
+    /// When both filters are null, only keys without scope and property name match.
+    /// </summary>
+    public bool Matches(string? scope, string? propertyName)
+    {
+        var normalizedScope = Normalize(scope);
+        var normalizedProperty = Normalize(propertyName);
+
+        if (normalizedScope is null && normalizedProperty is null)
+            return Scope is null && PropertyName is null;
+
+        if (normalizedScope is not null && Scope != normalizedScope)
+            return false;
+
+        if (normalizedProperty is not null && PropertyName != normalizedProperty)
+            return false;
+
+        return true;
+    }
+}

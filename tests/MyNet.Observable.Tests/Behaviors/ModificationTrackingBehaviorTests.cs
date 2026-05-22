@@ -22,7 +22,7 @@ public sealed class ModificationTrackingBehaviorTests
 
         var sut = new TrackableOwner();
         var behavior = new ModificationTrackingBehavior(sut);
-        sut.RegisterBehavior(behavior);
+        sut.Behaviors.Register(behavior);
 
         sut.Ignored = 1;
 
@@ -46,7 +46,7 @@ public sealed class ModificationTrackingBehaviorTests
 
         var sut = new TrackableOwner();
         var behavior = new ModificationTrackingBehavior(sut);
-        sut.RegisterBehavior(behavior);
+        sut.Behaviors.Register(behavior);
 
         var child = new TrackableChild();
         sut.Child = child;
