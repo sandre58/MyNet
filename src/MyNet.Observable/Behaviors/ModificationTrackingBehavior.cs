@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Reflection;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Utilities;
 using MyNet.Utilities.Metadata;

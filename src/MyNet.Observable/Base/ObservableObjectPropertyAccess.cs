@@ -9,7 +9,9 @@ using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Cached compiled property getters for <see cref="ObservableObject"/> instances (startup / attach paths only).

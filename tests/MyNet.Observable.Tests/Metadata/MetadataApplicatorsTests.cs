@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using MyNet.Observable.Behaviors;
 using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
@@ -29,17 +30,17 @@ public sealed class MetadataApplicatorsTests
         MetadataApplicators.ApplyForwardProperty(metadata, concatenatePropertyName: false);
 
         Assert.True(metadata.TryGetFeature<EventReactionFeature>(out var events));
-        Assert.Contains(typeof(CultureChangedEvent), events!.Events);
+        Assert.Contains(typeof(CultureChangedEvent), events.Events);
         Assert.Contains(typeof(TimeZoneChangedEvent), events.Events);
 
         Assert.True(metadata.TryGetFeature<ModificationTrackingFeature>(out var tracking));
-        Assert.True(tracking!.Ignore);
+        Assert.True(tracking.Ignore);
 
         Assert.True(metadata.TryGetFeature<ValidationDependencyFeature>(out var validation));
-        Assert.Contains(nameof(Sample.Confirm), validation!.Dependents);
+        Assert.Contains(nameof(Sample.Confirm), validation.Dependents);
 
         Assert.True(metadata.TryGetFeature<PropertyChangedForwardingFeature>(out var forwarding));
-        Assert.False(forwarding!.ConcatenatePropertyName);
+        Assert.False(forwarding.ConcatenatePropertyName);
     }
 
     [Fact]
@@ -60,6 +61,7 @@ public sealed class MetadataApplicatorsTests
         Assert.Contains($"{nameof(ForwardingOwner.Wrapper)}.{nameof(WrapperChild.Name)}", changed);
     }
 
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local", Justification = "Used for metadata tests.")]
     private sealed class Sample
     {
         public string Confirm { get; set; } = string.Empty;
@@ -67,26 +69,26 @@ public sealed class MetadataApplicatorsTests
 
     private sealed class ForwardingOwner : ObservableObject
     {
-        public WrapperChild Wrapper { get; set; } = new();
+        public WrapperChild Wrapper { get; } = new();
     }
 
     private sealed class WrapperChild : INotifyPropertyChanged
     {
-        private string _name = string.Empty;
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string Name
         {
-            get => _name;
+            get;
             set
             {
-                if (_name == value)
+                if (field == value)
                     return;
 
-                _name = value;
+                field = value;
                 PropertyChanged?.Invoke(this, new(nameof(Name)));
             }
         }
+
+            = string.Empty;
     }
 }

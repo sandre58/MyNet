@@ -6,7 +6,6 @@
 
 using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
-using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Utilities;
 using MyNet.Utilities.Metadata;
 

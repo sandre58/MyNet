@@ -59,6 +59,44 @@ public sealed class SelectionAndWrapperBehaviorTests
     }
 
     [Fact]
+    public void WrapperRelayBehavior_RelaysSnapshotWhenWrapperAssignedWithPresets()
+    {
+        var owner = new OwnerWithWrapper();
+        owner.ForwardProperty(x => x.Wrapper);
+
+        var changed = new List<string>();
+        owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
+
+        changed.Clear();
+        owner.Wrapper = new() { Name = "b" };
+
+        Assert.Contains($"{nameof(OwnerWithWrapper.Wrapper)}.{nameof(Child.Name)}", changed);
+    }
+
+    [Fact]
+    public void WrapperRelayBehavior_IgnoresStaleSourceEventsAfterSwap()
+    {
+        var owner = new OwnerWithWrapper();
+        owner.ForwardProperty(x => x.Wrapper);
+
+        var first = owner.Wrapper;
+        var second = new Child();
+        owner.Wrapper = second;
+
+        var changed = new List<string>();
+        owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
+
+        changed.Clear();
+        first.Name = "stale";
+
+        Assert.Empty(changed);
+
+        second.Name = "live";
+
+        Assert.Equal([$"{nameof(OwnerWithWrapper.Wrapper)}.{nameof(Child.Name)}"], changed);
+    }
+
+    [Fact]
     public void SelectionBehavior_Suspend_PreventsNotifications()
     {
         var owner = new DummyOwner();

@@ -29,14 +29,14 @@ public sealed class ObservableObjectCoreTests
     }
 
     [Fact]
-    public void SuspendNotifications_SkipsEventsInsideScope()
+    public void SuspendNotifications_Drop_SkipsEventsInsideScope()
     {
         var sut = new TestObservable();
         var changedCount = 0;
 
         sut.PropertyChanged += (_, _) => changedCount++;
 
-        using (sut.SuspendPublicNotifications())
+        using (sut.SuspendPublicNotifications(NotificationSuspensionMode.Drop))
         {
             sut.Value = 10;
         }
@@ -46,6 +46,44 @@ public sealed class ObservableObjectCoreTests
         sut.Value = 11;
 
         Assert.Equal(1, changedCount);
+    }
+
+    [Fact]
+    public void SuspendNotifications_CoalesceOnResume_FlushesOncePerProperty()
+    {
+        var sut = new TestObservable();
+        var behavior = new SpyChangedBehavior();
+        sut.Behaviors.Register(behavior);
+
+        var changed = new List<string>();
+        sut.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
+
+        using (sut.SuspendPublicNotifications())
+        {
+            sut.Value = 10;
+            sut.Value = 20;
+        }
+
+        Assert.Equal(["Value"], changed);
+        Assert.Equal(1, behavior.OnChangedCalls);
+    }
+
+    [Fact]
+    public void SuspendNotifications_CoalesceOnResume_PreservesFirstOldAndLastNew()
+    {
+        var sut = new TestObservable();
+        var capture = new CaptureChangedBehavior();
+        sut.Behaviors.Register(capture);
+
+        using (sut.SuspendPublicNotifications())
+        {
+            sut.Value = 10;
+            sut.Value = 20;
+        }
+
+        Assert.NotNull(capture.Last);
+        Assert.Equal(0, capture.Last!.OldValue);
+        Assert.Equal(20, capture.Last.NewValue);
     }
 
     [Fact]
@@ -89,7 +127,8 @@ public sealed class ObservableObjectCoreTests
             }
         }
 
-        public IDisposable SuspendPublicNotifications() => SuspendNotifications();
+        public IDisposable SuspendPublicNotifications(NotificationSuspensionMode mode = NotificationSuspensionMode.CoalesceOnResume)
+            => SuspendNotifications(mode);
     }
 
     private sealed class SpyChangedBehavior : IPropertyChangedBehavior
@@ -97,6 +136,13 @@ public sealed class ObservableObjectCoreTests
         public int OnChangedCalls { get; private set; }
 
         public void OnPropertyChanged(PropertyMutationContext context) => OnChangedCalls++;
+    }
+
+    private sealed class CaptureChangedBehavior : IPropertyChangedBehavior
+    {
+        public PropertyMutationContext? Last { get; private set; }
+
+        public void OnPropertyChanged(PropertyMutationContext context) => Last = context;
     }
 
     private sealed class ObservableWithDisposables : ObservableObject

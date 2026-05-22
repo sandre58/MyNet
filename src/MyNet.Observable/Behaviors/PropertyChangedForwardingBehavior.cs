@@ -23,6 +23,7 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
 {
     private readonly string _propertyName;
     private readonly bool _concatenatePropertyName;
+    private readonly bool _raiseInitialSnapshot;
     private readonly Lock _gate = new();
     private INotifyPropertyChanged? _source;
 
@@ -32,13 +33,19 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
     /// <param name="owner">Owner observable object.</param>
     /// <param name="propertyName">The owner property that contains the wrapper source.</param>
     /// <param name="concatenatePropertyName">True to emit notifications like Wrapper.Name; false to emit only Name.</param>
-    public PropertyChangedForwardingBehavior(ObservableObject owner, string propertyName, bool concatenatePropertyName = true)
+    /// <param name="raiseInitialSnapshot">When <c>true</c>, relays a snapshot of the source's public properties after each attach.</param>
+    public PropertyChangedForwardingBehavior(
+        ObservableObject owner,
+        string propertyName,
+        bool concatenatePropertyName = true,
+        bool raiseInitialSnapshot = true)
         : base(owner)
     {
         _propertyName = propertyName;
         _concatenatePropertyName = concatenatePropertyName;
+        _raiseInitialSnapshot = raiseInitialSnapshot;
 
-        AttachCurrentValue();
+        Attach(ObservableObjectPropertyAccess.GetPropertyValue(Owner, _propertyName) as INotifyPropertyChanged);
     }
 
     /// <inheritdoc />
@@ -53,18 +60,14 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
         Attach(context.NewValue as INotifyPropertyChanged);
     }
 
-    private void AttachCurrentValue()
-    {
-        var value = ObservableObjectPropertyAccess.GetPropertyValue(Owner, _propertyName);
-        Attach(value as INotifyPropertyChanged);
-    }
-
     /// <summary>
     /// Attaches to the specified source object by subscribing to its PropertyChanged event.
     /// </summary>
     /// <param name="value">The source object to attach to.</param>
     private void Attach(INotifyPropertyChanged? value)
     {
+        INotifyPropertyChanged? attached;
+
         lock (_gate)
         {
             if (ReferenceEquals(_source, value))
@@ -74,8 +77,25 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
 
             _source = value;
 
-            _source?.PropertyChanged += OnSourcePropertyChanged;
+            attached = _source;
+
+            attached?.PropertyChanged += OnSourcePropertyChanged;
         }
+
+        if (attached is not null && _raiseInitialSnapshot)
+            RaiseInitialSnapshot(attached);
+    }
+
+    /// <summary>
+    /// Relays current values of the source's public properties (attach-time snapshot).
+    /// </summary>
+    private void RaiseInitialSnapshot(INotifyPropertyChanged source)
+    {
+        if (IsDisposed || IsSuspended)
+            return;
+
+        foreach (var (childPropertyName, _) in NotifyPropertyChangedSourceSnapshot.EnumerateValues(source))
+            RelayPropertyChanged(childPropertyName);
     }
 
     /// <summary>
@@ -91,8 +111,22 @@ public sealed class PropertyChangedForwardingBehavior : SuspendableBehavior<Obse
         if (string.IsNullOrWhiteSpace(e.PropertyName))
             return;
 
-        var relayedName = _concatenatePropertyName ? $"{_propertyName}.{e.PropertyName}" : e.PropertyName;
-        Owner.NotifyPropertyChanged(relayedName);
+        lock (_gate)
+        {
+            if (!ReferenceEquals(sender, _source))
+                return;
+        }
+
+        RelayPropertyChanged(e.PropertyName);
+    }
+
+    private void RelayPropertyChanged(string childPropertyName)
+    {
+        if (IsDisposed || IsSuspended)
+            return;
+
+        var relayedName = _concatenatePropertyName ? $"{_propertyName}.{childPropertyName}" : childPropertyName;
+        Owner.NotifyPropertyChanged(relayedName, UnknownValue.Instance, UnknownValue.Instance);
     }
 
     /// <inheritdoc/>

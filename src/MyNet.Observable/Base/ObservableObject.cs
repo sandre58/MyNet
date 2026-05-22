@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reactive.Disposables;
 using MyNet.Observable.Behaviors;
 using MyNet.Utilities.Suspending;
@@ -24,17 +26,20 @@ public abstract class ObservableObject : IObservableObject
     private static readonly ConcurrentDictionary<string, PropertyChangedEventArgs> PropertyChangedEventArgsCache = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, PropertyChangingEventArgs> PropertyChangingEventArgsCache = new(StringComparer.Ordinal);
 
-    private readonly Suspender _propertyNotificationsSuspender = new();
+    private readonly PropertyNotificationSuspension _notificationSuspension = new();
 
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in DisposeManagedResources")]
     private readonly BehaviorRegistry _behaviors = new();
+
+    private readonly Suspender _deliveringDeferredNotificationsSuspender = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableObject"/> class and applies metadata-driven behaviors.
     /// </summary>
     protected ObservableObject()
     {
-        Behaviors = new ObservableBehaviors(_behaviors);
+        _notificationSuspension.PendingFlush = DeliverDeferredPropertyChanged;
+        Behaviors = new(_behaviors);
         MetadataBehaviorApplicator.Apply(this);
     }
 
@@ -51,7 +56,7 @@ public abstract class ObservableObject : IObservableObject
     /// <summary>
     /// Gets a value indicating whether property notifications are currently suspended.
     /// </summary>
-    protected bool AreNotificationsSuspended => _propertyNotificationsSuspender.IsSuspended;
+    protected bool AreNotificationsSuspended => _notificationSuspension.IsSuspended;
 
     /// <summary>
     /// Gets a value indicating whether the object has been disposed.
@@ -76,7 +81,7 @@ public abstract class ObservableObject : IObservableObject
         if (ShouldSkipNotification(propertyName))
             return;
 
-        if (AreNotificationsSuspended)
+        if (!_deliveringDeferredNotificationsSuspender.IsSuspended && _notificationSuspension.IsSuspended)
             return;
 
         var context = new PropertyMutationContext
@@ -139,7 +144,7 @@ public abstract class ObservableObject : IObservableObject
         if (ShouldSkipNotification(propertyName))
             return;
 
-        if (AreNotificationsSuspended)
+        if (!_deliveringDeferredNotificationsSuspender.IsSuspended && _notificationSuspension.TryHandlePropertyChanged(propertyName, before, after))
             return;
 
         var context = new PropertyMutationContext
@@ -187,8 +192,7 @@ public abstract class ObservableObject : IObservableObject
     /// Prefer <see cref="NotifyPropertyChanged(string, object?, object?)"/> from property setters when mutation values are known.
     /// </summary>
     /// <param name="propertyName">The name of the property that has changed.</param>
-    protected internal void NotifyPropertyChanged(string propertyName)
-        => ProcessPropertyChanged(propertyName, UnknownValue.Instance, UnknownValue.Instance);
+    protected internal void NotifyPropertyChanged(string propertyName) => ProcessPropertyChanged(propertyName, UnknownValue.Instance, UnknownValue.Instance);
 
     /// <summary>
     /// Notifies subscribers that a property has changed by raising the PropertyChanged event for the specified property name, with the provided before and after values. This method calls the ProcessPropertyChanged method to raise the event with the specified before and after values, allowing subscribers to react to the change with knowledge of both the old and new values. By calling this method, you can ensure that subscribers are properly notified after a property changes, enabling them to execute any necessary logic in response to the change, such as updating the UI, triggering other actions, or performing additional processing in response to the change, allowing you to enhance the functionality of your observable objects in a modular and reusable way.
@@ -204,10 +208,20 @@ public abstract class ObservableObject : IObservableObject
 
     /// <summary>
     /// Suspends property notifications until the returned scope is disposed.
-    /// Notifications raised while suspended are not delivered to subscribers.
+    /// By default, changes are coalesced per property and replayed when the outermost scope ends.
     /// </summary>
+    /// <param name="mode">How notifications are handled while suspended.</param>
     /// <returns>A disposable suspension scope.</returns>
-    protected IDisposable SuspendNotifications() => IsDisposed ? Disposable.Empty : _propertyNotificationsSuspender.Suspend();
+    protected IDisposable SuspendNotifications(NotificationSuspensionMode mode = NotificationSuspensionMode.CoalesceOnResume) => IsDisposed ? Disposable.Empty : _notificationSuspension.Enter(mode);
+
+    private void DeliverDeferredPropertyChanged(string propertyName, object? before, object? after)
+    {
+        if (IsDisposed)
+            return;
+
+        using (_deliveringDeferredNotificationsSuspender.Suspend())
+            ProcessPropertyChanged(propertyName, before, after);
+    }
 
     /// <summary>
     /// Determines whether property change notifications should be skipped based on the current state of the object and the provided property name. This method checks if the object has been disposed or if the property name is null, empty, or consists only of whitespace. If either of these conditions is true, it returns true, indicating that notifications should be skipped; otherwise, it returns false, allowing notifications to proceed.
@@ -225,6 +239,7 @@ public abstract class ObservableObject : IObservableObject
     /// </summary>
     protected virtual void DisposeManagedResources()
     {
+        _notificationSuspension.Dispose();
         _behaviors.Dispose();
 
         Disposables.Dispose();
@@ -273,4 +288,150 @@ public abstract class ObservableObject : IObservableObject
     private static PropertyChangingEventArgs GetPropertyChangingEventArgs(string propertyName) => PropertyChangingEventArgsCache.GetOrAdd(propertyName, static x => new(x));
 
     #endregion
+}
+
+/// <summary>
+/// Defines how <see cref="ObservableObject"/> handles property notifications while a suspension scope is active.
+/// </summary>
+public enum NotificationSuspensionMode
+{
+    /// <summary>
+    /// Notifications are suppressed and not replayed when the scope ends.
+    /// </summary>
+    Drop,
+
+    /// <summary>
+    /// Notifications are coalesced per property name and replayed once when the outermost scope ends.
+    /// </summary>
+    CoalesceOnResume
+}
+
+/// <summary>
+/// Tracks nested notification suspension scopes and coalesced property mutations.
+/// </summary>
+internal sealed class PropertyNotificationSuspension
+{
+    private readonly List<NotificationSuspensionMode> _modes = [];
+    private readonly List<string> _pendingOrder = [];
+    private readonly Dictionary<string, PendingPropertyMutation> _pending = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Gets a value indicating whether at least one suspension scope is active.
+    /// </summary>
+    public bool IsSuspended => _modes.Count > 0;
+
+    /// <summary>
+    /// Gets the mode of the innermost active scope.
+    /// </summary>
+    public NotificationSuspensionMode CurrentMode => _modes[^1];
+
+    /// <summary>
+    /// Begins a suspension scope with the specified mode.
+    /// </summary>
+    public IDisposable Enter(NotificationSuspensionMode mode)
+    {
+        _modes.Add(mode);
+        return new Scope(this);
+    }
+
+    /// <summary>
+    /// Clears pending mutations without replaying them.
+    /// </summary>
+    public void Dispose()
+    {
+        _modes.Clear();
+        ClearPending();
+    }
+
+    /// <summary>
+    /// Handles a property-changed notification while suspended.
+    /// </summary>
+    /// <returns><c>true</c> if the notification was handled and must not be delivered now.</returns>
+    public bool TryHandlePropertyChanged(string propertyName, object? before, object? after)
+    {
+        if (!IsSuspended)
+            return false;
+
+        if (CurrentMode == NotificationSuspensionMode.Drop)
+            return true;
+
+        if (_pending.TryGetValue(propertyName, out var pending))
+        {
+            pending.NewValue = after;
+            return true;
+        }
+
+        _pendingOrder.Add(propertyName);
+        _pending[propertyName] = new(before, after);
+        return true;
+    }
+
+    private void Exit()
+    {
+        if (_modes.Count == 0)
+            return;
+
+        _modes.RemoveAt(_modes.Count - 1);
+
+        if (IsSuspended)
+            return;
+
+        FlushPending();
+    }
+
+    private void FlushPending()
+    {
+        if (_pendingOrder.Count == 0)
+            return;
+
+        var snapshot = new List<(string Name, object? Before, object? After)>(_pendingOrder.Count);
+        snapshot.AddRange(from propertyName in _pendingOrder
+            let pending = _pending[propertyName]
+            where !Equals(pending.OldValue, pending.NewValue)
+            select (propertyName, pending.OldValue, pending.NewValue));
+
+        ClearPending();
+
+        foreach (var (name, before, after) in snapshot)
+            PendingFlush?.Invoke(name, before, after);
+    }
+
+    private void ClearPending()
+    {
+        _pendingOrder.Clear();
+        _pending.Clear();
+    }
+
+    /// <summary>
+    /// Gets or sets the callback invoked for each coalesced property when the outermost scope ends.
+    /// Must deliver without re-entering suspension.
+    /// </summary>
+    public Action<string, object?, object?>? PendingFlush { get; set; }
+
+    private sealed class PendingPropertyMutation(object? oldValue, object? newValue)
+    {
+        /// <summary>
+        /// Gets the first observed value before coalescing.
+        /// </summary>
+        public object? OldValue { get; } = oldValue;
+
+        /// <summary>
+        /// Gets or sets the last observed value after coalescing.
+        /// </summary>
+        public object? NewValue { get; set; } = newValue;
+    }
+
+    private sealed class Scope(PropertyNotificationSuspension owner) : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            owner.Exit();
+        }
+    }
 }

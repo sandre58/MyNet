@@ -58,11 +58,8 @@ public static class MetadataBehaviorApplicator
         ReplaceForwardingBehavior(owner, propertyName, concatenatePropertyName);
     }
 
-    private static void ReplaceForwardingBehavior(ObservableObject owner, string propertyName, bool concatenatePropertyName)
-    {
-        owner.Behaviors.Register(
-            new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName),
-            propertyName,
-            nameof(PropertyChangedForwardingBehavior));
-    }
+    private static void ReplaceForwardingBehavior(ObservableObject owner, string propertyName, bool concatenatePropertyName) => owner.Behaviors.Register(
+        new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName),
+        propertyName,
+        nameof(PropertyChangedForwardingBehavior));
 }

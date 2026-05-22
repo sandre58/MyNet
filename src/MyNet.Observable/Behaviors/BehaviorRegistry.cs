@@ -217,10 +217,8 @@ internal sealed class BehaviorRegistry : IDisposable
         var changing = new List<IPropertyChangingBehavior>();
         var changed = new List<IPropertyChangedBehavior>();
 
-        foreach (var key in _registrationOrder)
+        foreach (var behavior in _registrationOrder.Select(key => _behaviors[key]))
         {
-            var behavior = _behaviors[key];
-
             if (behavior is IPropertyChangingBehavior changingBehavior)
                 changing.Add(changingBehavior);
 
@@ -300,15 +298,6 @@ public readonly record struct BehaviorKey(Type BehaviorType, string? Scope = nul
         var normalizedScope = Normalize(scope);
         var normalizedProperty = Normalize(propertyName);
 
-        if (normalizedScope is null && normalizedProperty is null)
-            return Scope is null && PropertyName is null;
-
-        if (normalizedScope is not null && Scope != normalizedScope)
-            return false;
-
-        if (normalizedProperty is not null && PropertyName != normalizedProperty)
-            return false;
-
-        return true;
+        return normalizedScope is null && normalizedProperty is null ? Scope is null && PropertyName is null : (normalizedScope is null || Scope == normalizedScope) && (normalizedProperty is null || PropertyName == normalizedProperty);
     }
 }
