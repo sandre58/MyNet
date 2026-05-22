@@ -27,6 +27,7 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
     // Behavior-related property attributes
     private const string ForwardPropertyAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.ForwardPropertyAttribute";
     private const string EnforceGeneratedMetadataAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.EnforceGeneratedMetadataAttribute";
+    private const string ExemptFromGeneratedMetadataAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.ExemptFromGeneratedMetadataAttribute";
     private const string ObservableObjectType = "MyNet.Observable.ObservableObject";
 
     private static readonly DiagnosticDescriptor MissingProviderDescriptor = new(
@@ -182,10 +183,8 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
         source.AppendLine("#nullable enable");
         source.AppendLine("using System;");
         source.AppendLine("using System.Runtime.CompilerServices;");
-        source.AppendLine("using MyNet.Observable.Behaviors;");
-        source.AppendLine("using MyNet.Utilities;");
+        source.AppendLine("using MyNet.Observable.Behaviors.Metadata;");
         source.AppendLine("using MyNet.Utilities.Metadata;");
-        source.AppendLine("using MyNet.Observable;");
         source.AppendLine();
         source.AppendLine("namespace MyNet.Utilities.Metadata.Generated");
         source.AppendLine("{");
@@ -194,18 +193,28 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
         if (distinctModels.Length > 0)
         {
             source.AppendLine();
-            source.AppendLine("    internal static class MetadataFluentConfigurator");
+            source.AppendLine("    internal static class ObservableMetadataInitializer");
             source.AppendLine("    {");
             source.AppendLine("        [ModuleInitializer]");
-            source.AppendLine("        internal static void Configure()");
+            source.AppendLine("        internal static void Initialize()");
             source.AppendLine("        {");
 
             foreach (var t in distinctModels)
             {
-                EmitFluentConfiguration(source, t);
+                var methodName = GetConfigureMethodName(t.FullyQualifiedTypeName);
+                source.Append("            ");
+                source.Append(methodName);
+                source.AppendLine("();");
             }
 
             source.AppendLine("        }");
+            source.AppendLine();
+
+            foreach (var t in distinctModels)
+            {
+                EmitTypeConfigurationMethod(source, t);
+            }
+
             source.AppendLine("    }");
         }
 
@@ -233,6 +242,9 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
                 continue;
 
             if (!InheritsFrom(type, observableObjectSymbol))
+                continue;
+
+            if (type.GetAttributes().Any(attr => attr.AttributeClass?.ToDisplayString() == ExemptFromGeneratedMetadataAttribute))
                 continue;
 
             var typeName = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -286,90 +298,81 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
         }
     }
 
-    private static void EmitFluentConfiguration(StringBuilder source, TypeModel model)
+    private static string GetConfigureMethodName(string fullyQualifiedTypeName)
     {
-        source.AppendLine("            // Configure metadata fluently for " + model.FullyQualifiedTypeName);
+        var name = fullyQualifiedTypeName
+            .Replace("global::", string.Empty)
+            .Replace('.', '_')
+            .Replace('<', '_')
+            .Replace('>', '_');
 
-        foreach (var property in model.Properties.Where(property => property.IgnoreModificationTracking || property.ReactsToCulture || property.ReactsToTimeZone || property.PropertyChangedForwarding || property.ValidationDependents.Length > 0))
+        return "Configure_" + name;
+    }
+
+    private static void EmitTypeConfigurationMethod(StringBuilder source, TypeModel model)
+    {
+        var methodName = GetConfigureMethodName(model.FullyQualifiedTypeName);
+        source.Append("        private static void ");
+        source.Append(methodName);
+        source.AppendLine("()");
+        source.AppendLine("        {");
+
+        foreach (var property in model.Properties)
         {
-            EmitFluentPropertyConfiguration(source, model, property);
+            EmitPropertyConfiguration(source, model, property);
         }
 
+        source.AppendLine("        }");
         source.AppendLine();
     }
 
-    private static void EmitFluentPropertyConfiguration(StringBuilder source, TypeModel model, PropertyModel property)
+    private static void EmitPropertyConfiguration(StringBuilder source, TypeModel model, PropertyModel property)
     {
-        var emitsMetadataConfiguration = property.IgnoreModificationTracking || property.ReactsToCulture || property.ReactsToTimeZone || property.ValidationDependents.Length > 0;
-        if (emitsMetadataConfiguration)
-        {
-            // Generates code that directly configures metadata features for the property
-            source.Append("            var metadata_");
-            source.Append(property.Name);
-            source.Append(" = MetadataRegistry.Get(typeof(");
-            source.Append(model.FullyQualifiedTypeName);
-            source.Append(")).GetProperty(\"");
-            source.Append(property.Name);
-            source.AppendLine("\");");
-
-            EmitFeatureConfiguration(source, property);
-
-            if (property.ValidationDependents.Length > 0)
-            {
-                source.Append("            metadata_");
-                source.Append(property.Name);
-                source.Append(".Validates(");
-                for (var i = 0; i < property.ValidationDependents.Length; i++)
-                {
-                    if (i > 0)
-                        source.Append(", ");
-                    source.Append('"');
-                    source.Append(property.ValidationDependents[i].Replace("\"", "\\\""));
-                    source.Append('"');
-                }
-
-                source.AppendLine(");");
-            }
-        }
-
-        EmitBehaviorConfiguration(source, model, property);
-    }
-
-    private static void EmitBehaviorConfiguration(StringBuilder source, TypeModel model, PropertyModel property)
-    {
-        if (!property.PropertyChangedForwarding)
-            return;
-
-        source.Append("            GeneratedPropertyBehaviorRegistry.RegisterForwardProperty(typeof(");
-        source.Append(model.FullyQualifiedTypeName);
-        source.Append("), \"");
+        source.Append("            var metadata_");
         source.Append(property.Name);
-        source.Append("\", ");
-        source.Append(property.ConcatenateForwardedPropertyName ? "true" : "false");
-        source.AppendLine(");");
-    }
+        source.Append(" = MetadataRegistry.Get(typeof(");
+        source.Append(model.FullyQualifiedTypeName);
+        source.Append(")).GetProperty(\"");
+        source.Append(property.Name);
+        source.AppendLine("\");");
 
-    private static void EmitFeatureConfiguration(StringBuilder source, PropertyModel property)
-    {
         if (property.IgnoreModificationTracking)
         {
-            source.Append("            metadata_");
+            source.Append("            MetadataApplicators.ApplyIgnoreModificationTracking(metadata_");
             source.Append(property.Name);
-            source.AppendLine(".IgnoreModificationTracking();");
+            source.AppendLine(");");
         }
 
         if (property.ReactsToCulture)
         {
-            source.Append("            metadata_");
+            source.Append("            MetadataApplicators.ApplyUpdateOnCultureChanged(metadata_");
             source.Append(property.Name);
-            source.AppendLine(".UpdateOnCultureChanged();");
+            source.AppendLine(");");
         }
 
         if (property.ReactsToTimeZone)
         {
-            source.Append("            metadata_");
+            source.Append("            MetadataApplicators.ApplyUpdateOnTimeZoneChanged(metadata_");
             source.Append(property.Name);
-            source.AppendLine(".UpdateOnTimeZoneChanged();");
+            source.AppendLine(");");
+        }
+
+        foreach (var dependent in property.ValidationDependents)
+        {
+            source.Append("            MetadataApplicators.ApplyAlsoValidate(metadata_");
+            source.Append(property.Name);
+            source.Append(", \"");
+            source.Append(dependent.Replace("\"", "\\\""));
+            source.AppendLine("\");");
+        }
+
+        if (property.PropertyChangedForwarding)
+        {
+            source.Append("            MetadataApplicators.ApplyForwardProperty(metadata_");
+            source.Append(property.Name);
+            source.Append(", ");
+            source.Append(property.ConcatenateForwardedPropertyName ? "true" : "false");
+            source.AppendLine(");");
         }
     }
 

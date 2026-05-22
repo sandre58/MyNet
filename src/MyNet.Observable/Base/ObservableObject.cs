@@ -34,9 +34,9 @@ public abstract class ObservableObject : IObservableObject
     private readonly BehaviorRegistry _behaviors = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ObservableObject"/> class and applies generated property behaviors. The constructor initializes the observable object and applies any generated property behaviors that are registered in the GeneratedPropertyBehaviorRegistry. This allows for automatic application of behaviors to properties without needing to manually register them in the constructor, enabling a more modular and reusable design for observable objects.
+    /// Initializes a new instance of the <see cref="ObservableObject"/> class and applies metadata-driven behaviors.
     /// </summary>
-    protected ObservableObject() => GeneratedPropertyBehaviorRegistry.Apply(this);
+    protected ObservableObject() => MetadataBehaviorApplicator.Apply(this);
 
     /// <summary>
     /// Gets the collection of disposables that will be disposed when the object is disposed.

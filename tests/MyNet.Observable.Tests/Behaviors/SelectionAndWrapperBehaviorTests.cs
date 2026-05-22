@@ -7,6 +7,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using MyNet.Observable.Behaviors;
+using MyNet.Observable.Behaviors.Metadata;
+using MyNet.Utilities.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;
@@ -49,7 +51,9 @@ public sealed class SelectionAndWrapperBehaviorTests
 
         // Change wrapper instance: ensure detach/attach works
         changed.Clear();
-        owner.Wrapper = new() { Name = "b" };
+        var nextWrapper = new Child();
+        owner.Wrapper = nextWrapper;
+        nextWrapper.Name = "b";
 
         Assert.Contains($"{nameof(OwnerWithWrapper.Wrapper)}.{nameof(Child.Name)}", changed);
     }
@@ -127,7 +131,8 @@ public sealed class SelectionAndWrapperBehaviorTests
     [Fact]
     public void GeneratedRegistry_RegistersPropertyBehavior_WithUniquePropertyKey()
     {
-        GeneratedPropertyBehaviorRegistry.RegisterForwardProperty(typeof(OwnerWithGeneratedBehavior), nameof(OwnerWithGeneratedBehavior.Wrapper));
+        MetadataApplicators.ApplyForwardProperty(
+            MetadataRegistry.Get(typeof(OwnerWithGeneratedBehavior)).GetProperty(nameof(OwnerWithGeneratedBehavior.Wrapper)));
         var owner = new OwnerWithGeneratedBehavior();
 
         var changed = new List<string>();
@@ -142,7 +147,9 @@ public sealed class SelectionAndWrapperBehaviorTests
     [Fact]
     public void GeneratedRegistry_CanDisablePropertyNameConcatenation()
     {
-        GeneratedPropertyBehaviorRegistry.RegisterForwardProperty(typeof(OwnerWithGeneratedBehaviorWithoutPrefix), nameof(OwnerWithGeneratedBehaviorWithoutPrefix.Wrapper), concatenatePropertyName: false);
+        MetadataApplicators.ApplyForwardProperty(
+            MetadataRegistry.Get(typeof(OwnerWithGeneratedBehaviorWithoutPrefix)).GetProperty(nameof(OwnerWithGeneratedBehaviorWithoutPrefix.Wrapper)),
+            concatenatePropertyName: false);
         var owner = new OwnerWithGeneratedBehaviorWithoutPrefix();
 
         var changed = new List<string>();

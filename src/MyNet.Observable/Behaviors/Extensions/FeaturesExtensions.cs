@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Utilities;
@@ -63,41 +64,60 @@ public static class FeaturesExtensions
         /// <returns>The updated property builder.</returns>
         public PropertyBuilder<T, TProperty> ReactTo<TEvent>()
         {
-            builder.Feature<EventReactionFeature>(x => x.Events.Add(typeof(TEvent)));
-
+            var feature = builder.Metadata.GetOrCreate<EventReactionFeature>();
+            feature.Events.Add(typeof(TEvent));
             return builder;
         }
 
         /// <summary>
-        /// Configures the property to update when the culture changes. This method adds a feature to the property metadata that indicates that the property's value should be updated whenever the culture changes in the application. This is particularly useful for properties that are culture-sensitive, such as those that display formatted dates, numbers, or localized strings. By calling this method, you ensure that the property's value will be refreshed to reflect the new culture settings whenever a culture change occurs in the application, allowing for proper localization and formatting based on the current culture.
+        /// Configures the property to update when the culture changes.
         /// </summary>
-        public PropertyBuilder<T, TProperty> UpdateOnCultureChanged() => builder.ReactTo<T, TProperty, CultureChangedEvent>();
+        public PropertyBuilder<T, TProperty> UpdateOnCultureChanged()
+        {
+            MetadataApplicators.ApplyUpdateOnCultureChanged(builder.Metadata);
+            return builder;
+        }
 
         /// <summary>
-        /// Configures the property to update when the time zone changes. This method adds a feature to the property metadata that indicates that the property's value should be updated whenever the time zone changes in the application. This is particularly useful for properties that are time zone-sensitive, such as those that display dates and times. By calling this method, you ensure that the property's value will be refreshed to reflect the new time zone settings whenever a time zone change occurs in the application, allowing for proper display of date and time information based on the current time zone.
+        /// Configures the property to update when the time zone changes.
         /// </summary>
-        /// <returns>The updated property builder.</returns>
-        public PropertyBuilder<T, TProperty> UpdateOnTimeZoneChanged() => builder.ReactTo<T, TProperty, TimeZoneChangedEvent>();
+        public PropertyBuilder<T, TProperty> UpdateOnTimeZoneChanged()
+        {
+            MetadataApplicators.ApplyUpdateOnTimeZoneChanged(builder.Metadata);
+            return builder;
+        }
 
         /// <summary>
-        /// Configures the property to ignore modification tracking. This method adds a feature to the property metadata that indicates that the property's value should not be tracked for modifications. This is particularly useful for properties that do not need to trigger change notifications or validation when their values are modified. By calling this method, you ensure that the property's value will be ignored by the modification tracking system, allowing for more efficient handling of properties that do not require tracking.
+        /// Configures the property to ignore modification tracking.
         /// </summary>
-        /// <returns>The updated property builder.</returns>
-        public PropertyBuilder<T, TProperty> IgnoreModificationTracking() => builder.Feature<ModificationTrackingFeature>(f => f.Ignore = true);
+        public PropertyBuilder<T, TProperty> IgnoreModificationTracking()
+        {
+            MetadataApplicators.ApplyIgnoreModificationTracking(builder.Metadata);
+            return builder;
+        }
 
         /// <summary>
-        /// Configures the property to validate when the specified dependent properties change. This method adds a feature to the property metadata that indicates that the property's value should be validated whenever any of the specified dependent properties change in the application. This is particularly useful for properties that have validation rules that depend on the values of other properties. By calling this method and providing the names of the dependent properties, you ensure that the property's value will be re-validated whenever any of those dependent properties change, allowing for proper validation based on the current state of the related properties in an application.
+        /// Configures the property to relay child property-changed notifications to the owner.
+        /// </summary>
+        public PropertyBuilder<T, TProperty> ForwardPropertyChanged(bool concatenatePropertyName = true)
+        {
+            MetadataApplicators.ApplyForwardProperty(builder.Metadata, concatenatePropertyName);
+            return builder;
+        }
+
+        /// <summary>
+        /// Configures the property to validate when the specified dependent properties change.
         /// </summary>
         /// <param name="dependentProperties">The names of the properties that the current property depends on for validation.</param>
-        /// <returns>The property builder instance for chaining.</returns>
         public PropertyBuilder<T, TProperty> Validates(params string[] dependentProperties)
-            => builder.Feature<ValidationDependencyFeature>(f =>
+        {
+            foreach (var dependentProperty in dependentProperties)
             {
-                foreach (var property in dependentProperties)
-                {
-                    f.Dependents.Add(property);
-                }
-            });
+                MetadataApplicators.ApplyAlsoValidate(builder.Metadata, dependentProperty);
+            }
+
+            return builder;
+        }
     }
 
     extension(PropertyMetadata property)
@@ -116,39 +136,52 @@ public static class FeaturesExtensions
         }
 
         /// <summary>
-        /// Configures the property to update when the culture changes. This method adds a feature to the property metadata that indicates that the property's value should be updated whenever the culture changes in the application. This is particularly useful for properties that are culture-sensitive, such as those that display formatted dates, numbers, or localized strings. By calling this method, you ensure that the property's value will be refreshed to reflect the new culture settings whenever a culture change occurs in the application, allowing for proper localization and formatting based on the current culture.
+        /// Configures the property to update when the culture changes.
         /// </summary>
-        public PropertyMetadata UpdateOnCultureChanged() => property.ReactTo<CultureChangedEvent>();
-
-        /// <summary>
-        /// Configures the property to update when the time zone changes. This method adds a feature to the property metadata that indicates that the property's value should be updated whenever the time zone changes in the application. This is particularly useful for properties that are time zone-sensitive, such as those that display dates and times. By calling this method, you ensure that the property's value will be refreshed to reflect the new time zone settings whenever a time zone change occurs in the application, allowing for proper display of date and time information based on the current time zone.
-        /// </summary>
-        /// <returns>The property metadata instance for chaining.</returns>
-        public PropertyMetadata UpdateOnTimeZoneChanged() => property.ReactTo<TimeZoneChangedEvent>();
-
-        /// <summary>
-        /// Configures the property to update when the time zone changes. This method adds a feature to the property metadata that indicates that the property's value should be updated whenever the time zone changes in the application. This is particularly useful for properties that are time zone-sensitive, such as those that display dates and times. By calling this method, you ensure that the property's value will be refreshed to reflect the new time zone settings whenever a time zone change occurs in the application, allowing for proper display of date and time information based on the current time zone.
-        /// </summary>
-        public PropertyMetadata IgnoreModificationTracking()
+        public PropertyMetadata UpdateOnCultureChanged()
         {
-            property.SetFeature(new ModificationTrackingFeature { Ignore = true });
+            MetadataApplicators.ApplyUpdateOnCultureChanged(property);
             return property;
         }
 
         /// <summary>
-        /// Configures the property to validate when the specified dependent properties change. This method adds a feature to the property metadata that indicates that the property's value should be validated whenever any of the specified dependent properties change in the application. This is particularly useful for properties that have validation rules that depend on the values of other properties. By calling this method and providing the names of the dependent properties, you ensure that the property's value will be re-validated whenever any of those dependent properties change, allowing for proper validation based on the current state of the related properties in an application.
+        /// Configures the property to update when the time zone changes.
+        /// </summary>
+        public PropertyMetadata UpdateOnTimeZoneChanged()
+        {
+            MetadataApplicators.ApplyUpdateOnTimeZoneChanged(property);
+            return property;
+        }
+
+        /// <summary>
+        /// Configures the property to ignore modification tracking.
+        /// </summary>
+        public PropertyMetadata IgnoreModificationTracking()
+        {
+            MetadataApplicators.ApplyIgnoreModificationTracking(property);
+            return property;
+        }
+
+        /// <summary>
+        /// Configures the property to relay child property-changed notifications to the owner.
+        /// </summary>
+        public PropertyMetadata ForwardPropertyChanged(bool concatenatePropertyName = true)
+        {
+            MetadataApplicators.ApplyForwardProperty(property, concatenatePropertyName);
+            return property;
+        }
+
+        /// <summary>
+        /// Configures the property to validate when the specified dependent properties change.
         /// </summary>
         /// <param name="dependentProperties">The names of the properties that the current property depends on for validation.</param>
-        /// <returns>The updated property metadata.</returns>
         public PropertyMetadata Validates(params string[] dependentProperties)
         {
-            var feature = new ValidationDependencyFeature();
-            foreach (var p in dependentProperties)
+            foreach (var dependentProperty in dependentProperties)
             {
-                feature.Dependents.Add(p);
+                MetadataApplicators.ApplyAlsoValidate(property, dependentProperty);
             }
 
-            property.SetFeature(feature);
             return property;
         }
     }

@@ -20,7 +20,7 @@ namespace MyNet.Observable.Metadata.Generator.Tests;
 public sealed class MetadataProviderGeneratorTests
 {
     [Fact]
-    public void GeneratesFluentConfigurator_WhenGenerateFluentMetadataIsPresent()
+    public void GeneratesFluentConfigurator_WhenMetadataAttributesArePresent()
     {
         const string source = """
                               using MyNet.Observable;
@@ -28,7 +28,6 @@ public sealed class MetadataProviderGeneratorTests
 
                               namespace Demo;
 
-                              [GenerateFluentMetadata]
                               public sealed class Vm : ObservableObject
                               {
                                   private string _title = string.Empty;
@@ -54,15 +53,16 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("MetadataFluentConfigurator", generated, StringComparison.Ordinal);
+        Assert.Contains("ObservableMetadataInitializer", generated, StringComparison.Ordinal);
+        Assert.Contains("Configure_", generated, StringComparison.Ordinal);
         Assert.Contains("MetadataRegistry.Get", generated, StringComparison.Ordinal);
-        Assert.Contains("UpdateOnCultureChanged", generated, StringComparison.Ordinal);
+        Assert.Contains("MetadataApplicators.ApplyUpdateOnCultureChanged", generated, StringComparison.Ordinal);
         Assert.DoesNotContain("GeneratedMetadataProvider0", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 
     [Fact]
-    public void GeneratesFluentConfigurator_WhenMetadataAttributesArePresent_WithoutGenerateFluentMetadata()
+    public void GeneratesFluentConfigurator_ForAutoPropertyWithMetadataAttributes()
     {
         const string source = """
                               using MyNet.Observable;
@@ -95,9 +95,10 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("MetadataFluentConfigurator", generated, StringComparison.Ordinal);
+        Assert.Contains("ObservableMetadataInitializer", generated, StringComparison.Ordinal);
+        Assert.Contains("Configure_", generated, StringComparison.Ordinal);
         Assert.Contains("MetadataRegistry.Get", generated, StringComparison.Ordinal);
-        Assert.Contains("UpdateOnCultureChanged", generated, StringComparison.Ordinal);
+        Assert.Contains("MetadataApplicators.ApplyUpdateOnCultureChanged", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 
@@ -137,6 +138,34 @@ public sealed class MetadataProviderGeneratorTests
     }
 
     [Fact]
+    public void DoesNotReportStrictDiagnostic_WhenTypeIsExempt()
+    {
+        const string source = """
+                              using MyNet.Observable;
+                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+
+                              [assembly: EnforceGeneratedMetadata]
+
+                              namespace Demo;
+
+                              [ExemptFromGeneratedMetadata]
+                              public sealed class BaseVm : ObservableObject
+                              {
+                              }
+
+                              public sealed class VmWithoutMetadata : BaseVm
+                              {
+                                  public string Title { get; set; } = string.Empty;
+                              }
+                              """;
+
+        var compilation = CreateCompilation(source);
+        var result = RunGenerator(compilation);
+
+        Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Id == "MNETMETA001");
+    }
+
+    [Fact]
     public void GeneratesBehaviorConfiguration_WhenForwardPropertyAttributeIsPresent()
     {
         const string source = """
@@ -170,9 +199,9 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("GeneratedPropertyBehaviorRegistry.RegisterForwardProperty(typeof(global::Demo.Vm), \"Wrapper\", true);", generated, StringComparison.Ordinal);
-        Assert.DoesNotContain("ForwardPropertyChanged", generated, StringComparison.Ordinal);
-        Assert.DoesNotContain("var metadata_Wrapper", generated, StringComparison.Ordinal);
+        Assert.Contains("MetadataApplicators.ApplyForwardProperty(metadata_Wrapper, true);", generated, StringComparison.Ordinal);
+        Assert.Contains("var metadata_Wrapper", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain("GeneratedPropertyBehaviorRegistry.RegisterForwardProperty", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 
@@ -211,8 +240,8 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("metadata_Wrapper.IgnoreModificationTracking();", generated, StringComparison.Ordinal);
-        Assert.Contains("GeneratedPropertyBehaviorRegistry.RegisterForwardProperty(typeof(global::Demo.Vm), \"Wrapper\", true);", generated, StringComparison.Ordinal);
+        Assert.Contains("MetadataApplicators.ApplyIgnoreModificationTracking(metadata_Wrapper);", generated, StringComparison.Ordinal);
+        Assert.Contains("MetadataApplicators.ApplyForwardProperty(metadata_Wrapper, true);", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 
@@ -236,7 +265,7 @@ public sealed class MetadataProviderGeneratorTests
 
     private static ImmutableArray<MetadataReference> GetMetadataReferences()
     {
-        var assemblies = new[] { typeof(object).Assembly, typeof(Enumerable).Assembly, typeof(List<>).Assembly, typeof(GCSettings).Assembly, typeof(ObservableObject).Assembly, typeof(GenerateFluentMetadataAttribute).Assembly, typeof(MetadataRegistry).Assembly };
+        var assemblies = new[] { typeof(object).Assembly, typeof(Enumerable).Assembly, typeof(List<>).Assembly, typeof(GCSettings).Assembly, typeof(ObservableObject).Assembly, typeof(UpdateOnCultureChangedAttribute).Assembly, typeof(MetadataRegistry).Assembly };
 
         return
         [

@@ -100,9 +100,7 @@ public static class BehaviorExtensions
         public ObservableObject ForwardProperty<T>(Expression<Func<TOwner, T?>> selector, bool concatenatePropertyName = true)
             where T : class, INotifyPropertyChanged
         {
-            var propertyName = selector.PropertyName();
-            owner.RegisterBehavior(new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName), propertyName, nameof(PropertyChangedForwardingBehavior));
-
+            MetadataBehaviorApplicator.ApplyForwardProperty(owner, selector.PropertyName(), concatenatePropertyName);
             return owner;
         }
 
@@ -114,8 +112,7 @@ public static class BehaviorExtensions
         /// <returns>The observable object.</returns>
         public ObservableObject ForwardProperty(string propertyName, bool concatenatePropertyName = true)
         {
-            owner.RegisterBehavior(new PropertyChangedForwardingBehavior(owner, propertyName, concatenatePropertyName), propertyName, nameof(PropertyChangedForwardingBehavior));
-
+            MetadataBehaviorApplicator.ApplyForwardProperty(owner, propertyName, concatenatePropertyName);
             return owner;
         }
     }

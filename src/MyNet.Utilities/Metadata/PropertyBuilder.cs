@@ -17,6 +17,11 @@ namespace MyNet.Utilities.Metadata;
 public sealed class PropertyBuilder<T, TProperty>(PropertyMetadata metadata)
 {
     /// <summary>
+    /// Gets the underlying property metadata being configured.
+    /// </summary>
+    public PropertyMetadata Metadata => metadata;
+
+    /// <summary>
     /// Specifies a feature or attribute that should be associated with the property being configured. This method allows you to define additional metadata information for the property by associating a specific feature or attribute with it. The configure parameter is an action that takes an instance of the feature type, allowing you to configure the properties or settings of the feature as needed. By calling this method, you can enhance the metadata for the property with additional information that can be used at runtime to influence behavior based on the configured metadata information for that property in an application.
     /// </summary>
     /// <param name="configure">An action that configures the feature for the property.</param>

@@ -209,6 +209,14 @@ Generated code must:
 - be debuggable
 - avoid unnecessary complexity
 
+## Observable metadata
+
+- **Author** with attributes on `ObservableObject` properties.
+- **Apply** at compile time via `MyNet.Observable.Metadata.Generator` (`ModuleInitializer` → `MetadataApplicators` → `MetadataRegistry`).
+- **Runtime behaviors** via `MetadataBehaviorApplicator` reading `MetadataRegistry` (including `PropertyChangedForwardingFeature`).
+- Strict mode: `[assembly: EnforceGeneratedMetadata]`; opt-out with `[ExemptFromGeneratedMetadata]`.
+- Manual `MetadataRegistry.For<T>()` / `MetadataApplicators` is for exceptions only; see `docs/METADATA_GENERATION_GUIDE.md`.
+
 ---
 
 # Extensibility
