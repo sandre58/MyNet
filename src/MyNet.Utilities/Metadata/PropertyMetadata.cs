@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MyNet.Utilities.Metadata;
@@ -53,10 +52,4 @@ public sealed class PropertyMetadata
     public TFeature GetOrCreate<TFeature>()
         where TFeature : class, new()
         => (TFeature)_features.GetOrAdd(typeof(TFeature), static _ => new TFeature());
-
-    /// <summary>
-    /// Returns an enumerable collection of key-value pairs representing the features associated with this property metadata. Each key in the collection is a Type that represents the type of the feature, and each value is the corresponding feature object associated with that type. This method allows you to retrieve all the features that have been set for this property metadata, enabling you to inspect or utilize the features as needed in various runtime behaviors based on the configured feature information for the property.
-    /// </summary>
-    /// <returns>An enumerable collection of key-value pairs representing the features associated with this property metadata.</returns>
-    internal IEnumerable<KeyValuePair<Type, object>> FeaturesSnapshot() => _features;
 }

@@ -10,6 +10,7 @@
     <ItemGroup>
         <PackageReference Include="FluentValidation" />
         <PackageReference Include="System.Reactive" />
+        <PackageReference Include="DynamicData" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,11 +29,9 @@
         </Compile>
         <Compile Remove="Translatables\**" />
         <Compile Remove="Deferrers\**" />
-        <Compile Remove="Extensions\**" />
         <Compile Remove="Suspenders\**" />
         <Compile Remove="Resources\**" />
         <Compile Remove="Statistics\**" />
-        <Compile Remove="Collections\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,10 +40,8 @@
             <LastGenOutput>ValidationResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <EmbeddedResource Remove="Globalization\**" />
-        <EmbeddedResource Remove="Collections\**" />
         <EmbeddedResource Remove="Translatables\**" />
         <EmbeddedResource Remove="Deferrers\**" />
-        <EmbeddedResource Remove="Extensions\**" />
         <EmbeddedResource Remove="Suspenders\**" />
         <EmbeddedResource Remove="Resources\**" />
         <EmbeddedResource Remove="Statistics\**" />
@@ -52,10 +49,8 @@
 
     <ItemGroup>
       <None Remove="Globalization\**" />
-      <None Remove="Collections\**" />
       <None Remove="Translatables\**" />
       <None Remove="Deferrers\**" />
-      <None Remove="Extensions\**" />
       <None Remove="Suspenders\**" />
       <None Remove="Resources\**" />
       <None Remove="Statistics\**" />

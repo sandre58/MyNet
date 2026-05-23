@@ -29,19 +29,6 @@ public static class BehaviorExtensions
         where TOwner : ObservableObject
     {
         /// <summary>
-        /// Adds the specified behavior to the observable object. This method allows you to add any behavior that implements the <see cref="IObservableBehavior"/> interface to the observable object, enabling you to enhance its functionality in a modular and reusable way. By calling this method with a specific behavior, you can easily add new features or capabilities to your observable objects without modifying their original implementation or creating new derived classes.
-        /// </summary>
-        /// <typeparam name="TBehavior">The type of the behavior to add.</typeparam>
-        /// <returns>The observable object with the added behavior.</returns>
-        public TOwner Use<TBehavior>()
-            where TBehavior : class, IObservableBehavior
-        {
-            owner.Behaviors.Register((TBehavior)Activator.CreateInstance(typeof(TBehavior), owner)!);
-
-            return owner;
-        }
-
-        /// <summary>
         /// Adds localization behavior to the specified observable object.
         /// </summary>
         /// <param name="cultureService">The culture service used to handle culture changes.</param>

@@ -95,12 +95,7 @@ public sealed class BehaviorRegistryTests
         public int Value
         {
             get => _value;
-            set
-            {
-                var before = _value;
-                OnPropertyChanged(nameof(Value), before, value);
-                _value = value;
-            }
+            set => SetProperty(ref _value, value);
         }
 
         public void RaiseValue() => OnPropertyChanged(nameof(Value), _value, _value);

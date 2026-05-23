@@ -165,7 +165,7 @@ public sealed class MetadataProviderGeneratorTests
     {
         const string source = """
                               using MyNet.Observable;
-                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+                              using MyNet.Observable.Metadata;
 
                               [assembly: EnforceGeneratedMetadata]
 
@@ -201,7 +201,7 @@ public sealed class MetadataProviderGeneratorTests
     {
         const string source = """
                               using MyNet.Observable;
-                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+                              using MyNet.Observable.Metadata;
 
                               [assembly: EnforceGeneratedMetadata]
 

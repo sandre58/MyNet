@@ -73,14 +73,14 @@ No application startup call is required.
 Add to any file in the assembly (e.g. `AssemblyInfo.cs`):
 
 ```csharp
-using MyNet.Observable.Behaviors.Metadata.Attributes;
+using MyNet.Observable.Metadata;
 
 [assembly: EnforceGeneratedMetadata]
 ```
 
 When enabled, types deriving from `ObservableObject` **without** any generated metadata configuration produce compile-time error `MNETMETA001`.
 
-Use `[ExemptFromGeneratedMetadata]` on types that intentionally have no metadata (abstract bases, markers, infrastructure VMs).
+Use `[ExemptFromGeneratedMetadata]` from `MyNet.Observable.Metadata` on types that intentionally have no metadata (abstract bases, markers, infrastructure VMs).
 
 ## Observable properties (`SetProperty` + `[ObservableProperty]`)
 
@@ -110,20 +110,33 @@ public string Name
 
 ## Manual fluent configuration (secondary)
 
-Use `MetadataRegistry.For<T>()` and `FeaturesExtensions` only when attributes are not possible:
+Use when attributes are not possible (third-party types, dynamic scenarios, tests).
 
-- Third-party types you do not own
-- Dynamic scenarios
-- Tests
-
-Example:
+### Per-property (preferred for manual setup)
 
 ```csharp
 MetadataRegistry.For<MyType>()
-    .UpdateOnCultureChanged(nameof(MyType.DisplayName));
+    .Property(x => x.DisplayName)
+    .UpdateOnCultureChanged();
 ```
 
-Do **not** duplicate the same rules with both attributes and manual fluent configuration on the same type.
+### Batch by property name
+
+```csharp
+MetadataRegistry.Get(typeof(MyType))
+    .UpdateOnCultureChanged(nameof(MyType.DisplayName), nameof(MyType.Subtitle));
+```
+
+### API surfaces (do not duplicate)
+
+| Surface | Role |
+|---------|------|
+| `MetadataRegistry.For<T>().Property(expr).…` | **Authoring** — type-safe fluent configuration |
+| `TypeMetadata.UpdateOnCultureChanged(names…)` | **Batch authoring** on several properties |
+| `TypeMetadata.WithFeature<T>()` / `GetFeatureOrDefault<T>(name)` | **Runtime queries** (behaviors, forwarding) |
+| `PropertyMetadata.TryGetFeature<T>()` | **Low-level** feature access on a property instance |
+
+Do **not** duplicate the same rules with attributes and manual fluent configuration on the same type.
 
 ## Team rules
 

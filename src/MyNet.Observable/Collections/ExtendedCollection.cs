@@ -121,7 +121,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
         Disposables.AddRange(
         [
-            _sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => ProcessPropertyChanged(nameof(SourceCount))),
+            _sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => NotifyPropertyChanged(nameof(SourceCount))),
             _itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(),
             _source.Connect().SubscribeMany(SubscribeToItemChanges).Subscribe(),
             ObserveCollectionChanges(_items).Subscribe(HandleCollectionChanged)

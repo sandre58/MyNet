@@ -20,6 +20,7 @@ public sealed class ObservablePropertyGeneratorTests
     {
         const string source = """
                               using MyNet.Observable;
+                              using MyNet.Observable.Metadata;
 
                               namespace Demo;
 
@@ -42,6 +43,7 @@ public sealed class ObservablePropertyGeneratorTests
     {
         const string source = """
                               using MyNet.Observable;
+                              using MyNet.Observable.Metadata;
 
                               namespace Demo;
 
@@ -67,7 +69,7 @@ public sealed class ObservablePropertyGeneratorTests
         driver = driver.RunGenerators(compilation);
         var result = driver.GetRunResult();
 
-        diagnostics = result.Results.SelectMany(static r => r.Diagnostics).ToImmutableArray();
+        diagnostics = [..result.Results.SelectMany(static r => r.Diagnostics)];
 
         return string.Join(Environment.NewLine, result.Results.SelectMany(static r => r.GeneratedSources).Select(static x => x.SourceText.ToString()));
     }

@@ -6,15 +6,20 @@
 
 using System;
 
-namespace MyNet.Utilities.Tests.Metadata;
+#pragma warning disable IDE0130
+namespace MyNet.Utilities.Metadata.Generated;
+#pragma warning restore IDE0130
 
+/// <summary>
+/// Test double for the source generator bootstrap type (same namespace and name as generated code).
+/// </summary>
 internal static class ObservableMetadataBootstrap
 {
     internal static bool WasInvoked { get; private set; }
 
     internal static void Ensure(Type type)
     {
-        if (type == typeof(GeneratedMetadataBootstrapInvokerTests))
+        if (type == typeof(MyNet.Utilities.Tests.Metadata.GeneratedMetadataBootstrapInvokerTests))
             WasInvoked = true;
     }
 

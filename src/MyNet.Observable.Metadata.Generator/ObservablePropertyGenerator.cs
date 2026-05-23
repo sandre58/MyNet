@@ -59,7 +59,7 @@ public sealed class ObservablePropertyGenerator : IIncrementalGenerator
     private static ImmutableArray<FieldModel?> GetFieldModels(GeneratorSyntaxContext context)
     {
         if (context.Node is not FieldDeclarationSyntax fieldDeclaration)
-            return ImmutableArray<FieldModel?>.Empty;
+            return [];
 
         var builder = ImmutableArray.CreateBuilder<FieldModel?>();
 
@@ -121,16 +121,7 @@ public sealed class ObservablePropertyGenerator : IIncrementalGenerator
         return new(namespaceName, containingType.Name, propertyName, propertyType, fieldName, null);
     }
 
-    private static bool HasObservablePropertyAttribute(IFieldSymbol fieldSymbol)
-    {
-        foreach (var attribute in fieldSymbol.GetAttributes())
-        {
-            if (attribute.AttributeClass?.ToDisplayString() == ObservablePropertyAttribute)
-                return true;
-        }
-
-        return false;
-    }
+    private static bool HasObservablePropertyAttribute(IFieldSymbol fieldSymbol) => Enumerable.Any(fieldSymbol.GetAttributes(), attribute => attribute.AttributeClass?.ToDisplayString() == ObservablePropertyAttribute);
 
     private static bool InheritsFrom(INamedTypeSymbol type, INamedTypeSymbol baseType)
     {
@@ -151,13 +142,12 @@ public sealed class ObservablePropertyGenerator : IIncrementalGenerator
         if (fieldName.StartsWith("m_", StringComparison.Ordinal))
             fieldName = fieldName.Substring(2);
 
-        if (fieldName.Length == 0)
-            return string.Empty;
-
-        if (fieldName.Length == 1)
-            return fieldName.ToUpperInvariant();
-
-        return char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1);
+        return fieldName.Length switch
+        {
+            0 => string.Empty,
+            1 => fieldName.ToUpperInvariant(),
+            _ => char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1)
+        };
     }
 
     private static void Emit(SourceProductionContext context, ImmutableArray<FieldModel?> models)

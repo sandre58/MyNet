@@ -41,6 +41,32 @@ public sealed class MetadataFeatureExtensionsTests
     }
 
     [Fact]
+    public void PropertyBuilder_ForwardPropertyChanged_ConfiguresForwardingFeature()
+    {
+        MetadataRegistry.For<ForwardingModel>()
+            .Property(x => x.Wrapper)
+            .ForwardPropertyChanged(concatenatePropertyName: false);
+
+        var property = MetadataRegistry.Get(typeof(ForwardingModel)).GetProperty(nameof(ForwardingModel.Wrapper));
+
+        Assert.True(property.TryGetFeature<PropertyChangedForwardingFeature>(out var feature));
+        Assert.False(feature.ConcatenatePropertyName);
+    }
+
+    [Fact]
+    public void PropertyBuilder_ReactTo_AddsCustomEvent()
+    {
+        MetadataRegistry.For<EventModel>()
+            .Property(x => x.Label)
+            .ReactTo(typeof(CustomRefreshEvent));
+
+        var property = MetadataRegistry.Get(typeof(EventModel)).GetProperty(nameof(EventModel.Label));
+
+        Assert.True(property.TryGetFeature<EventReactionFeature>(out var feature));
+        Assert.Contains(typeof(CustomRefreshEvent), feature.Events);
+    }
+
+    [Fact]
     public void TypeMetadataExtensions_ApplyToAllSpecifiedProperties()
     {
         var metadata = MetadataRegistry.Get(typeof(SecondModel));
@@ -78,4 +104,16 @@ public sealed class MetadataFeatureExtensionsTests
 
         public string Second { get; set; } = string.Empty;
     }
+
+    private sealed class ForwardingModel
+    {
+        public object Wrapper { get; } = new();
+    }
+
+    private sealed class EventModel
+    {
+        public string Label { get; } = string.Empty;
+    }
+
+    private sealed class CustomRefreshEvent;
 }

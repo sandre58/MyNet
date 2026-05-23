@@ -1,15 +1,16 @@
 # MyNet.Observable.Metadata.Generator.Tests
 
-Tests dedicated to `MetadataProviderGenerator`.
+Tests for **MetadataProviderGenerator**, **ObservablePropertyGenerator**, and **ObservableObjectSetterAnalyzer**.
 
 ## Scope
 
-- verifies source emission for `ObservableMetadataInitializer` + `MetadataApplicators`
-- verifies strict fail-fast diagnostic (`MNETMETA001`) when `[assembly: EnforceGeneratedMetadata]` is enabled and an `ObservableObject` has no generated provider
+- lazy `ObservableMetadataBootstrap` emission and `MetadataApplicators` calls
+- strict fail-fast diagnostic (`MNETMETA001`) with `[assembly: EnforceGeneratedMetadata]` (`MyNet.Observable.Metadata`)
+- `[ObservableProperty]` emission (`MNETOBS001`–`003`)
+- setter usage diagnostic (`MNETOBS004`)
 
 ## Run
 
 ```powershell
-dotnet test D:\repos\github\sandre58\MyNet2\tests\MyNet.Observable.Metadata.Generator.Tests\MyNet.Observable.Metadata.Generator.Tests.csproj -c Debug
+dotnet test tests/MyNet.Observable.Metadata.Generator.Tests/MyNet.Observable.Metadata.Generator.Tests.csproj -c Debug
 ```
-

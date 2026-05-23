@@ -136,9 +136,10 @@ public sealed class ObservableObjectCoreTests
     [Fact]
     public void SetProperty_WhenOnPropertyChangingCoreCancels_DoesNotAssign()
     {
-        var sut = new VetoInCoreObservable();
-
-        sut.Value = 5;
+        var sut = new VetoInCoreObservable
+        {
+            Value = 5
+        };
 
         Assert.Equal(0, sut.Value);
     }
@@ -157,12 +158,10 @@ public sealed class ObservableObjectCoreTests
 
     private sealed class TestObservable : ObservableObject
     {
-        private int _value;
-
         public int Value
         {
-            get => _value;
-            set => SetProperty(ref _value, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public IDisposable SuspendPublicNotifications(NotificationSuspensionMode mode = NotificationSuspensionMode.CoalesceOnResume)
@@ -196,12 +195,10 @@ public sealed class ObservableObjectCoreTests
 
     private sealed class VetoInCoreObservable : ObservableObject
     {
-        private int _value;
-
         public int Value
         {
-            get => _value;
-            set => SetProperty(ref _value, value);
+            get;
+            init => SetProperty(ref field, value);
         }
 
         protected override void OnPropertyChangingCore(PropertyMutationContext context) => context.Cancel = true;

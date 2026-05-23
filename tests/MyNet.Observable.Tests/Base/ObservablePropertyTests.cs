@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using MyNet.Observable.Metadata;
 using Xunit;
 
@@ -28,6 +29,7 @@ public sealed class ObservablePropertyTests
     }
 }
 
+[SuppressMessage("ReSharper", "ReplaceWithFieldKeyword", Justification = "Testing the source generator")]
 internal sealed partial class GeneratedPropertySample : ObservableObject
 {
     [ObservableProperty]

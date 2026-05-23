@@ -26,8 +26,8 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
 
     // Behavior-related property attributes
     private const string ForwardPropertyAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.ForwardPropertyAttribute";
-    private const string EnforceGeneratedMetadataAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.EnforceGeneratedMetadataAttribute";
-    private const string ExemptFromGeneratedMetadataAttribute = "MyNet.Observable.Behaviors.Metadata.Attributes.ExemptFromGeneratedMetadataAttribute";
+    private const string EnforceGeneratedMetadataAttribute = "MyNet.Observable.Metadata.EnforceGeneratedMetadataAttribute";
+    private const string ExemptFromGeneratedMetadataAttribute = "MyNet.Observable.Metadata.ExemptFromGeneratedMetadataAttribute";
     private const string ObservableObjectType = "MyNet.Observable.ObservableObject";
 
     private static readonly DiagnosticDescriptor MissingProviderDescriptor = new(

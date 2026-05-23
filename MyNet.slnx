@@ -50,23 +50,6 @@
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/Solution Files/Docs/Audits/" />
-  <Folder Name="/Solution Files/Docs/Audits/20260511/">
-    <File Path="docs/Audits/20260511/ACTION_PLAN.md" />
-    <File Path="docs/Audits/20260511/AUDIT_COMPLETION.md" />
-    <File Path="docs/Audits/20260511/AUDIT_GUIDE.md" />
-    <File Path="docs/Audits/20260511/AUDIT_INDEX.md" />
-    <File Path="docs/Audits/20260511/AUDIT_REPORT.md" />
-    <File Path="docs/Audits/20260511/AUDIT_SUMMARY.md" />
-    <File Path="docs/Audits/20260511/RECOMMENDATIONS.md" />
-    <File Path="docs/Audits/20260511/START_HERE.md" />
-  </Folder>
-  <Folder Name="/Solution Files/Docs/Audits/ViewModels/">
-    <File Path="docs/Audits/ViewModels/01 - Review.md" />
-    <File Path="docs/Audits/ViewModels/02 - Implementation.md" />
-    <File Path="docs/Audits/ViewModels/03 - Guidelines.md" />
-    <File Path="docs/Audits/ViewModels/05 - Architecture Review - Current System vs Legacy.md" />
-  </Folder>
   <Folder Name="/Solution Files/Docs/Github/">
     <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
     <File Path="CODE_OF_CONDUCT.md" />
@@ -74,6 +57,7 @@
   </Folder>
   <Folder Name="/Solution Files/Docs/Guides/">
     <File Path="docs/METADATA_GENERATION_GUIDE.md" />
+    <File Path="docs/OBSERVABLE_USAGE.md" />
     <File Path="docs/TRANSLATION_SYSTEM_GUIDE.md" />
   </Folder>
   <Folder Name="/Tests/">
