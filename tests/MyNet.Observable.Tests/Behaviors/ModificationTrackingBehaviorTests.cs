@@ -81,7 +81,8 @@ public sealed class ModificationTrackingBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Tracked), before, value);
+                if (!OnPropertyChanging(nameof(Tracked), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Tracked), before, value);
             }
@@ -93,7 +94,8 @@ public sealed class ModificationTrackingBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Ignored), before, value);
+                if (!OnPropertyChanging(nameof(Ignored), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Ignored), before, value);
             }
@@ -105,7 +107,8 @@ public sealed class ModificationTrackingBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Child), before, value);
+                if (!OnPropertyChanging(nameof(Child), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Child), before, value);
             }

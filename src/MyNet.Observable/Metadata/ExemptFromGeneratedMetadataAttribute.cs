@@ -6,7 +6,7 @@
 
 using System;
 
-namespace MyNet.Observable.Behaviors.Metadata.Attributes;
+namespace MyNet.Observable.Metadata;
 
 /// <summary>
 /// Excludes a type from <see cref="EnforceGeneratedMetadataAttribute"/> diagnostics when it derives from

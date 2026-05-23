@@ -42,7 +42,8 @@ public sealed class MetadataProviderGeneratorTests
                                       set
                                       {
                                           var before = _title;
-                                          OnPropertyChanging(nameof(Title), before, value);
+                                          if (!OnPropertyChanging(nameof(Title), before, value))
+                                              return;
                                           _title = value;
                                           OnPropertyChanged(nameof(Title), before, value);
                                       }
@@ -87,7 +88,8 @@ public sealed class MetadataProviderGeneratorTests
                                       set
                                       {
                                           var before = _title;
-                                          OnPropertyChanging(nameof(Title), before, value);
+                                          if (!OnPropertyChanging(nameof(Title), before, value))
+                                              return;
                                           _title = value;
                                           OnPropertyChanged(nameof(Title), before, value);
                                       }
@@ -179,7 +181,8 @@ public sealed class MetadataProviderGeneratorTests
                                       set
                                       {
                                           var before = _title;
-                                          OnPropertyChanging(nameof(Title), before, value);
+                                          if (!OnPropertyChanging(nameof(Title), before, value))
+                                              return;
                                           _title = value;
                                           OnPropertyChanged(nameof(Title), before, value);
                                       }
@@ -241,7 +244,8 @@ public sealed class MetadataProviderGeneratorTests
                                       set
                                       {
                                           var before = _wrapper;
-                                          OnPropertyChanging(nameof(Wrapper), before, value);
+                                          if (!OnPropertyChanging(nameof(Wrapper), before, value))
+                                              return;
                                           _wrapper = value;
                                           OnPropertyChanged(nameof(Wrapper), before, value);
                                       }
@@ -282,7 +286,8 @@ public sealed class MetadataProviderGeneratorTests
                                       set
                                       {
                                           var before = _wrapper;
-                                          OnPropertyChanging(nameof(Wrapper), before, value);
+                                          if (!OnPropertyChanging(nameof(Wrapper), before, value))
+                                              return;
                                           _wrapper = value;
                                           OnPropertyChanged(nameof(Wrapper), before, value);
                                       }
@@ -347,7 +352,7 @@ public sealed class MetadataProviderGeneratorTests
             options: new(OutputKind.DynamicallyLinkedLibrary));
     }
 
-    private static ImmutableArray<MetadataReference> GetMetadataReferences()
+    public static ImmutableArray<MetadataReference> GetMetadataReferences()
     {
         var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var references = new List<MetadataReference>();

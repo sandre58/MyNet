@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Runtime.CompilerServices;
 using MyNet.Observable.Behaviors;
 using MyNet.Utilities.Suspending;
 
@@ -76,13 +77,14 @@ public abstract class ObservableObject : IObservableObject
     /// <param name="propertyName">The name of the property that is changing.</param>
     /// <param name="before">The value of the property before the change.</param>
     /// <param name="after">The value of the property after the change.</param>
-    protected virtual void ProcessPropertyChanging(string propertyName, object? before, object? after)
+    /// <returns><c>false</c> when the mutation was vetoed via <see cref="PropertyMutationContext.Cancel"/>; otherwise <c>true</c>.</returns>
+    protected virtual bool ProcessPropertyChanging(string propertyName, object? before, object? after)
     {
         if (ShouldSkipNotification(propertyName))
-            return;
+            return true;
 
         if (!_deliveringDeferredNotificationsSuspender.IsSuspended && _notificationSuspension.IsSuspended)
-            return;
+            return true;
 
         var context = new PropertyMutationContext
         {
@@ -95,11 +97,19 @@ public abstract class ObservableObject : IObservableObject
         foreach (var behavior in _behaviors.Changing)
         {
             behavior.OnPropertyChanging(context);
+
+            if (context.Cancel)
+                return false;
         }
 
         OnPropertyChangingCore(context);
 
+        if (context.Cancel)
+            return false;
+
         RaisePropertyChanging(propertyName);
+
+        return true;
     }
 
     /// <summary>
@@ -108,7 +118,8 @@ public abstract class ObservableObject : IObservableObject
     /// <param name="propertyName">The name of the property that is changing.</param>
     /// <param name="before">The value of the property before the change.</param>
     /// <param name="after">The value of the property after the change.</param>
-    protected virtual void OnPropertyChanging(string propertyName, object? before, object? after) => ProcessPropertyChanging(propertyName, before, after);
+    /// <returns><c>false</c> when the mutation was vetoed; otherwise <c>true</c>.</returns>
+    protected virtual bool OnPropertyChanging(string propertyName, object? before, object? after) => ProcessPropertyChanging(propertyName, before, after);
 
     /// <summary>
     /// Raises the PropertyChanging event for the specified property name. This method is called to notify subscribers that a property is about to change. It creates a PropertyChangingEventArgs instance for the specified property name and invokes the PropertyChanging event handlers, allowing them to react to the impending change. By calling this method, you can ensure that subscribers are properly notified before a property changes, enabling them to execute any necessary logic in response to the change.
@@ -270,6 +281,35 @@ public abstract class ObservableObject : IObservableObject
     }
 
     #endregion IDisposable Support
+
+    #region SetProperty
+
+    /// <summary>
+    /// Assigns the field and raises changing/changed notifications through the behavior pipeline when the value differs.
+    /// </summary>
+    /// <typeparam name="T">The type of the property.</typeparam>
+    /// <param name="field">Reference to the backing field.</param>
+    /// <param name="value">The new value.</param>
+    /// <param name="propertyName">The name of the property (inferred from the caller by default).</param>
+    /// <returns><c>true</c> if the value changed and notifications were raised; otherwise, <c>false</c> (unchanged value or vetoed via <see cref="PropertyMutationContext.Cancel"/>).</returns>
+    protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value))
+            return false;
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+
+        var before = field;
+
+        if (!OnPropertyChanging(propertyName, before, value))
+            return false;
+
+        field = value;
+        OnPropertyChanged(propertyName, before, value);
+        return true;
+    }
+
+    #endregion
 
     #region Helpers
 

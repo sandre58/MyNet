@@ -6,7 +6,7 @@
 
 using System;
 
-namespace MyNet.Observable.Behaviors.Metadata.Attributes;
+namespace MyNet.Observable.Metadata;
 
 /// <summary>
 /// Indicates that metadata verification should be strict. When applied to an assembly,

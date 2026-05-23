@@ -4,27 +4,16 @@
         <Product>My .NET Observable</Product>
         <PackageIcon>MyNetObservable.png</PackageIcon>
         <Description>This library is a comprehensive class library designed to simplify the creation and management of editable and validatable objects in .NET applications.</Description>
-        <PackageTags>My;Utilities;Observable;Models;Fody;PropertyChanged;Edition;Validation</PackageTags>
+        <PackageTags>My;Utilities;Observable;Models;PropertyChanged;Edition;Validation</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" />
         <PackageReference Include="System.Reactive" />
-        <PackageReference Include="Fody">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="PropertyChanged.Fody">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="PropertyChanging.Fody">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="DynamicData" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
+        <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
         <ProjectReference Include="..\MyNet.Observable.Metadata.Generator\MyNet.Observable.Metadata.Generator.csproj"
                           OutputItemType="Analyzer"

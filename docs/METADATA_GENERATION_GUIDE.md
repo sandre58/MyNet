@@ -40,7 +40,7 @@ public sealed class Person : ObservableObject
 }
 ```
 
-Auto-properties are fine when using Fody (`PropertyChanged` / `PropertyChanging` weavers).
+Declare observable properties with `[ObservableProperty]` on a **partial** backing field, or set values through `SetProperty` in explicit setters (see below).
 
 ### What the generator does
 
@@ -82,6 +82,32 @@ When enabled, types deriving from `ObservableObject` **without** any generated m
 
 Use `[ExemptFromGeneratedMetadata]` on types that intentionally have no metadata (abstract bases, markers, infrastructure VMs).
 
+## Observable properties (`SetProperty` + `[ObservableProperty]`)
+
+Use a **partial** class deriving from `ObservableObject`:
+
+```csharp
+public partial class Person : ObservableObject
+{
+    [ObservableProperty]
+    private string _name = string.Empty;
+}
+```
+
+The generator emits a public property whose setter calls `SetProperty(ref _name, value)`, which runs the full changing/changed pipeline and behaviors.
+
+For business rules (e.g. reset paging when page size changes), prefer an explicit method or override `OnPropertyChangedCore` — not Fody-style `On{Name}Changed` weaving.
+
+Manual setter without the generator:
+
+```csharp
+public string Name
+{
+    get => _name;
+    set => SetProperty(ref _name, value);
+}
+```
+
 ## Manual fluent configuration (secondary)
 
 Use `MetadataRegistry.For<T>()` and `FeaturesExtensions` only when attributes are not possible:
@@ -102,7 +128,7 @@ Do **not** duplicate the same rules with both attributes and manual fluent confi
 ## Team rules
 
 1. **Author with attributes** on `ObservableObject` properties.
-2. **Rely on the generator** for initialization (module initializer → `MetadataApplicators`).
+2. **Rely on the metadata generator** for lazy bootstrap (`MetadataRegistry.Get` → `MetadataApplicators`).
 3. **Do not** configure the same property via attributes and manual fluent API.
 4. Use **`[assembly: EnforceGeneratedMetadata]`** when you want compile-time coverage.
 5. Imperative forwarding: `owner.ForwardProperty(...)` or `MetadataBehaviorApplicator.ApplyForwardProperty` — updates metadata and registers the behavior.

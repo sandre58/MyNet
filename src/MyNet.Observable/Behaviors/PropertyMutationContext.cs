@@ -7,7 +7,7 @@
 namespace MyNet.Observable.Behaviors;
 
 /// <summary>
-/// Represents the context of a property mutation operation, providing information about the sender, property name, old value, and new value. This context is passed to property-changing and property-changed behaviors so they can react to mutations on an observable object.
+/// Represents the context of a property mutation operation, providing information about the sender, property name, old value, and new value. This context is passed to property-changing and property-changed behaviors so they can react to mutations on an observable object. During the changing phase, <see cref="Cancel"/> can veto the mutation when used with <see cref="ObservableObject.SetProperty{T}"/>.
 /// </summary>
 public sealed class PropertyMutationContext
 {
@@ -30,4 +30,9 @@ public sealed class PropertyMutationContext
     /// Gets the new value of the property after the mutation. This property is required and must be initialized when creating an instance of the <see cref="PropertyMutationContext"/> class. The new value provides context about the updated state of the property, allowing event handlers or behaviors to access additional information or perform actions based on the new value.
     /// </summary>
     public required object? NewValue { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the mutation was vetoed during the changing phase. When <c>true</c>, <see cref="ObservableObject.SetProperty{T}"/> does not assign the new value and the changed pipeline is not run.
+    /// </summary>
+    public bool Cancel { get; set; }
 }

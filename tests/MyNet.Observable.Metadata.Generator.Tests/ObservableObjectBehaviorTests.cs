@@ -20,7 +20,8 @@ public sealed class ObservableObjectBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Title), before, value);
+                if (!OnPropertyChanging(nameof(Title), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Title), before, value);
             }
@@ -138,5 +139,29 @@ public sealed class ObservableObjectBehaviorTests
         Assert.True(changedRaised);
         Assert.Equal(nameof(TestVm.Title), b.LastContext?.PropertyName);
         Assert.Equal(string.Empty, b.LastContext?.OldValue as string);
+    }
+
+    [Fact]
+    public void Canceling_Behavior_PreventsAssignmentAndChangedPipeline()
+    {
+        var vm = new TestVm();
+        vm.Behaviors.Register(new CancelingBehavior());
+
+        var changedRaised = false;
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(TestVm.Title))
+                changedRaised = true;
+        };
+
+        vm.Title = "Blocked";
+
+        Assert.Equal(string.Empty, vm.Title);
+        Assert.False(changedRaised);
+    }
+
+    private sealed class CancelingBehavior : IPropertyChangingBehavior
+    {
+        public void OnPropertyChanging(PropertyMutationContext context) => context.Cancel = true;
     }
 }

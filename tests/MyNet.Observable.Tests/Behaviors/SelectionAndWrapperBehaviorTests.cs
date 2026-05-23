@@ -230,7 +230,8 @@ public sealed class SelectionAndWrapperBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Wrapper), before, value);
+                if (!OnPropertyChanging(nameof(Wrapper), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Wrapper), before, value);
             }
@@ -247,7 +248,8 @@ public sealed class SelectionAndWrapperBehaviorTests
             init
             {
                 var before = field;
-                OnPropertyChanging(nameof(Wrapper), before, value);
+                if (!OnPropertyChanging(nameof(Wrapper), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Wrapper), before, value);
             }
@@ -264,7 +266,8 @@ public sealed class SelectionAndWrapperBehaviorTests
             init
             {
                 var before = field;
-                OnPropertyChanging(nameof(Wrapper), before, value);
+                if (!OnPropertyChanging(nameof(Wrapper), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Wrapper), before, value);
             }

@@ -213,6 +213,7 @@ Generated code must:
 
 - **Author** with attributes on `ObservableObject` properties.
 - **Apply** at compile time via `MyNet.Observable.Metadata.Generator` (lazy `ObservableMetadataBootstrap` on first `MetadataRegistry.Get` → `MetadataApplicators`).
+- **Observable properties**: `[ObservableProperty]` on a partial backing field → generated property using `SetProperty`; manual setters call `SetProperty` directly. No Fody.
 - **Runtime behaviors** via `MetadataBehaviorApplicator` reading `MetadataRegistry` (including `PropertyChangedForwardingFeature`).
 - Strict mode: `[assembly: EnforceGeneratedMetadata]`; opt-out with `[ExemptFromGeneratedMetadata]`.
 - Manual `MetadataRegistry.For<T>()` / `MetadataApplicators` is for exceptions only; see `docs/METADATA_GENERATION_GUIDE.md`.

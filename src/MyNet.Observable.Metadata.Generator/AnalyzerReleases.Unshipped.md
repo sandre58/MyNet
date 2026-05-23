@@ -6,3 +6,6 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 MNETMETA001 | MyNet.Observable.Metadata.Generator | Error | MetadataProviderGenerator
+MNETOBS001 | MyNet.Observable.Generator | Error | ObservablePropertyGenerator
+MNETOBS002 | MyNet.Observable.Generator | Error | ObservablePropertyGenerator
+MNETOBS003 | MyNet.Observable.Generator | Error | ObservablePropertyGenerator

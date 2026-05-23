@@ -53,7 +53,8 @@ public sealed class ValidationBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Name), before, value);
+                if (!OnPropertyChanging(nameof(Name), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Name), before, value);
             }
@@ -67,7 +68,8 @@ public sealed class ValidationBehaviorTests
             set
             {
                 var before = field;
-                OnPropertyChanging(nameof(Confirm), before, value);
+                if (!OnPropertyChanging(nameof(Confirm), before, value))
+                    return;
                 field = value;
                 OnPropertyChanged(nameof(Confirm), before, value);
             }

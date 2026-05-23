@@ -113,18 +113,56 @@ public sealed class ObservableObjectCoreTests
         Assert.True(sut.IsDisposed);
     }
 
+    [Fact]
+    public void SetProperty_WhenBehaviorCancels_DoesNotAssignOrRaiseChanged()
+    {
+        var sut = new TestObservable();
+        var canceling = new CancelingChangingBehavior();
+        sut.Behaviors.Register(canceling);
+
+        var changingCount = 0;
+        var changedCount = 0;
+        sut.PropertyChanging += (_, _) => changingCount++;
+        sut.PropertyChanged += (_, _) => changedCount++;
+
+        sut.Value = 99;
+
+        Assert.Equal(0, sut.Value);
+        Assert.Equal(0, changingCount);
+        Assert.Equal(0, changedCount);
+        Assert.Equal(1, canceling.Calls);
+    }
+
+    [Fact]
+    public void SetProperty_WhenOnPropertyChangingCoreCancels_DoesNotAssign()
+    {
+        var sut = new VetoInCoreObservable();
+
+        sut.Value = 5;
+
+        Assert.Equal(0, sut.Value);
+    }
+
+    [Fact]
+    public void SetProperty_SameValue_DoesNotRaiseNotifications()
+    {
+        var sut = new TestObservable { Value = 5 };
+        var changedCount = 0;
+        sut.PropertyChanged += (_, _) => changedCount++;
+
+        sut.Value = 5;
+
+        Assert.Equal(0, changedCount);
+    }
+
     private sealed class TestObservable : ObservableObject
     {
+        private int _value;
+
         public int Value
         {
-            get;
-            set
-            {
-                var before = field;
-                OnPropertyChanging(nameof(Value), before, value);
-                field = value;
-                OnPropertyChanged(nameof(Value), before, value);
-            }
+            get => _value;
+            set => SetProperty(ref _value, value);
         }
 
         public IDisposable SuspendPublicNotifications(NotificationSuspensionMode mode = NotificationSuspensionMode.CoalesceOnResume)
@@ -143,6 +181,30 @@ public sealed class ObservableObjectCoreTests
         public PropertyMutationContext? Last { get; private set; }
 
         public void OnPropertyChanged(PropertyMutationContext context) => Last = context;
+    }
+
+    private sealed class CancelingChangingBehavior : IPropertyChangingBehavior
+    {
+        public int Calls { get; private set; }
+
+        public void OnPropertyChanging(PropertyMutationContext context)
+        {
+            Calls++;
+            context.Cancel = true;
+        }
+    }
+
+    private sealed class VetoInCoreObservable : ObservableObject
+    {
+        private int _value;
+
+        public int Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value);
+        }
+
+        protected override void OnPropertyChangingCore(PropertyMutationContext context) => context.Cancel = true;
     }
 
     private sealed class ObservableWithDisposables : ObservableObject
