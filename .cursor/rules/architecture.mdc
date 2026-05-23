@@ -1,0 +1,50 @@
+# MyNet Architecture Review Rules
+
+The current codebase is actively being redesigned and restructured.
+
+Do not assume the existing architecture is correct.
+
+Do not prioritize backward compatibility unless explicitly requested.
+
+When analyzing code:
+- critically evaluate existing patterns
+- question current abstractions
+- identify unnecessary complexity
+- identify outdated designs
+- identify architectural inconsistencies
+- identify runtime mechanisms that should become compile-time
+
+You are encouraged to:
+- propose major redesigns
+- suggest removal of obsolete systems
+- simplify abstractions
+- replace runtime infrastructure with generated infrastructure
+- remove unnecessary layers
+- reduce coupling
+- improve modularity
+- improve performance
+- improve AOT compatibility
+
+Prefer:
+- simple architectures
+- explicit designs
+- compile-time safety
+- deterministic behavior
+- immutable infrastructure
+- strongly typed APIs
+
+Do not preserve an abstraction only because it already exists.
+
+When appropriate:
+- recommend deleting systems entirely
+- recommend rebuilding systems from scratch
+- recommend merging responsibilities
+- recommend splitting oversized modules
+
+Always explain:
+- why the current design is problematic
+- what the proposed design improves
+- migration risks
+- tradeoffs
+
+The goal is long-term framework quality, not minimal changes.

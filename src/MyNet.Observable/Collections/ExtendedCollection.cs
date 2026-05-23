@@ -21,7 +21,6 @@ using MyNet.Observable.Collections.Filters;
 using MyNet.Observable.Collections.Grouping;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Collections.Sources;
-using MyNet.Observable.Collections.Wrappers;
 using MyNet.Observable.Extensions;
 using MyNet.Utilities;
 
@@ -371,34 +370,6 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     }));
 
     #endregion
-
-    #region Wrappers
-
-    /// <summary>
-    /// Creates a wrapper projection of the collection using the specified factory function to create wrapper instances for each item in the collection. This method allows you to create a new collection that contains wrapper objects instead of the original items, providing a way to add additional functionality or properties to the items while still maintaining a connection to the original data. The CreateWrapperProjectionFromItems method returns a new instance of the WrapperProjection class, which automatically updates its contents based on changes to the underlying collection and applies the factory function to create wrapper instances for each item, while still maintaining encapsulation and integrity of the data.
-    /// </summary>
-    /// <param name="factory">The factory function to create wrapper instances for each item in the collection.</param>
-    /// <param name="scheduler">The scheduler to use for updating the wrapper projection.</param>
-    /// <typeparam name="TWrapper">The type of the wrapper.</typeparam>
-    /// <returns>A new instance of the WrapperProjection class.</returns>
-    public WrapperProjection<T, TWrapper> CreateWrapperProjectionFromItems<TWrapper>(
-        Func<T, TWrapper> factory,
-        IScheduler? scheduler = null)
-        where TWrapper : class, IWrapper<T> => new(Connect(), factory, scheduler);
-
-    /// <summary>
-    /// Creates a wrapper projection of the source collection using the specified factory function to create wrapper instances for each item in the source collection. This method allows you to create a new collection that contains wrapper objects instead of the original items from the source collection, providing a way to add additional functionality or properties to the items while still maintaining a connection to the original data. The CreateWrapperProjectionFromSource method returns a new instance of the WrapperProjection class, which automatically updates its contents based on changes to the underlying source collection and applies the factory function to create wrapper instances for each item, while still maintaining encapsulation and integrity of the data.
-    /// </summary>
-    /// <param name="factory">The factory function to create wrapper instances for each item in the source collection.</param>
-    /// <param name="scheduler">The scheduler to use for updating the wrapper projection.</param>
-    /// <typeparam name="TWrapper">The type of the wrapper.</typeparam>
-    /// <returns>A new instance of the WrapperProjection class.</returns>
-    public WrapperProjection<T, TWrapper> CreateWrapperProjectionFromSource<TWrapper>(
-        Func<T, TWrapper> factory,
-        IScheduler? scheduler = null)
-        where TWrapper : class, IWrapper<T> => new(ConnectSource(), factory, scheduler);
-
-    #endregion Wrappers
 
     #region Observable
 

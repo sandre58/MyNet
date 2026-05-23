@@ -7,14 +7,4 @@
                           ReferenceOutputAssembly="false" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="Collections\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Remove="Collections\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Collections\**" />
-    </ItemGroup>
-
 </Project>

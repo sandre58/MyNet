@@ -110,9 +110,28 @@ public sealed class SourceEngine<T> : ISourceEngine<T>, ISourceWriter<T>, IRefre
     /// </summary>
     /// <param name="provider">The items provider that provides the current state of the collection.</param>
     /// <returns>A new instance of the <see cref="SourceEngine{T}"/> class.</returns>
-    public static SourceEngine<T> FromProvider(IItemsProvider<T> provider) => FromSnapshot(provider.GetItemsAsync());
+    public static SourceEngine<T> FromProvider(IItemsProvider<T> provider) =>
+        FromSnapshot(() => Materialize(provider.GetItemsAsync()));
 
     #endregion
+
+    private static List<T> Materialize(IAsyncEnumerable<T> source)
+    {
+        var list = new List<T>();
+        var enumerator = source.GetAsyncEnumerator();
+
+        try
+        {
+            while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
+                list.Add(enumerator.Current);
+        }
+        finally
+        {
+            enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
+
+        return list;
+    }
 
     /// <summary>
     /// Reloads the snapshot of the collection by calling the snapshot factory function to get the current state of the collection and updating the internal source list with the new items. This method is used when the source engine is operating in read-only snapshot mode, allowing subscribers to refresh their view of the collection whenever they need to get the latest state of the collection from the snapshot factory. Any changes will be automatically propagated to subscribers through the Connect method, ensuring that they stay up-to-date with the latest state of the collection.

@@ -16,10 +16,11 @@
     <File Path=".ai/conventions.md" />
     <File Path=".ai/source-generators.md" />
   </Folder>
-  <Folder Name="/Solution Files/AI/.cursor/">
+  <Folder Name="/Solution Files/AI/.cursor/" />
+  <Folder Name="/Solution Files/AI/.cursor/rules/">
+    <File Path=".cursor/rules/architecture.mdc" />
     <File Path=".cursor/rules/my-net.mdc" />
   </Folder>
-  <Folder Name="/Solution Files/AI/.cursor/rules/" />
   <Folder Name="/Solution Files/Assets/">
     <File Path="assets/MyNetAutoMapper.png" />
     <File Path="assets/MyNetCsvHelper.png" />
