@@ -130,6 +130,10 @@ using (SuspendNotifications(NotificationSuspensionMode.Drop))
 | MNETOBS003 | Error | Nested types not supported for `[ObservableProperty]` |
 | MNETOBS004 | Warning | Setter assigns without `SetProperty` / changing pipeline |
 
+## Extended collections
+
+See [Extended collections (filter, sort, group, selection)](../../docs/OBSERVABLE_USAGE.md#6-extended-collections-filter-sort-group-selection) in the consumer guide for `ExtendedCollection<T>`, `ExtendedCollectionBuilder<T>`, and `SelectableCollection<T>`.
+
 ## Relay / synthetic property names
 
 When old/new values are unknown (e.g. forwarded `Wrapper.Name`), call:

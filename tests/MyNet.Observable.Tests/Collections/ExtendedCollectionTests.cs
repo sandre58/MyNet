@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using FluentAssertions;
 using MyNet.Observable.Collections;
@@ -156,6 +157,24 @@ public sealed class ExtendedCollectionTests
         groups[^1].Should().BeEmpty();
         return;
         void onNext(IReadOnlyList<CollectionGroup<string>> g) => groups.Add(g);
+    }
+
+    [Fact]
+    public void Count_WhenFilterChanges_ShouldRaisePropertyChanged()
+    {
+        using var col = ExtendedCollection.From([1, 2, 3, 4, 5]);
+
+        var countChanges = 0;
+        col.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ExtendedCollection<int>.Count))
+                countChanges++;
+        };
+
+        col.SetFilter(new ExpressionFilter<int>(x => x > 3));
+
+        countChanges.Should().BeGreaterThan(0);
+        col.Count.Should().Be(2);
     }
 
     // ── Dispose ───────────────────────────────────────────────────────────────

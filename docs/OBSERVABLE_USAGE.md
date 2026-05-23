@@ -135,7 +135,65 @@ using (SuspendNotifications(NotificationSuspensionMode.Drop))
 }
 ```
 
-## 6. Relay / synthetic property names
+## 6. Extended collections (filter, sort, group, selection)
+
+`ExtendedCollection<T>` is the reactive list pipeline built on DynamicData. It exposes:
+
+- `Items` — filtered and sorted view (bind list UI here)
+- `Source` / `SourceCount` — sorted source before filtering
+- `Count` — filtered item count (`PropertyChanged` when the view changes)
+- `SetFilter` / `SetSorting` / `SetGrouping` — runtime pipeline configuration
+
+### Factory
+
+```csharp
+using MyNet.Observable.Collections;
+
+using var list = ExtendedCollection.From(people);
+list.SetFilter(new ExpressionFilter<Person>(p => p.IsActive));
+list.SetSorting(new ExpressionSortingProperty<Person>(p => p.Name));
+```
+
+### Fluent builder
+
+```csharp
+using var list = new ExtendedCollectionBuilder<Person>()
+    .From(people)
+    .Where(p => p.IsActive)
+    .OrderBy(p => p.Name)
+    .Build();
+```
+
+When an item implements `INotifyPropertyChanged`, properties referenced in the active filter or sort expressions trigger a pipeline refresh automatically.
+
+### Selection (without row wrappers)
+
+Use `SelectableCollection<T>` on top of an `ExtendedCollection<T>`:
+
+```csharp
+using MyNet.Observable.Collections.Selection;
+
+// Owns the extended collection — dispose once
+using var selectable = SelectableCollection.From(items, SelectionMode.Multiple);
+selectable.Select(items[0]);
+
+// External collection — only disposes selection state
+using var collection = ExtendedCollection.From(items);
+using var selectable = new SelectableCollection<Item>(collection);
+```
+
+For per-row `IsSelected` binding, prefer list items that are `ObservableObject` instances with `SelectionBehavior` rather than a parallel wrapper collection.
+
+### UI-thread collection notifications
+
+```csharp
+using MyNet.Observable.Collections.Extensions;
+using MyNet.Utilities.Collections;
+
+var dispatched = new ObservableRangeCollection<Row>().Scheduled(Scheduler.CurrentThread);
+```
+
+## 7. Relay / synthetic property names
 
 When old/new values are unknown (forwarded names):
 

@@ -20,17 +20,31 @@ namespace MyNet.Observable.Collections;
 public sealed class SchedulerCollectionEventDispatcher(IScheduler scheduler) : ICollectionEventDispatcher
 {
     private readonly IScheduler _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+    private volatile int _schedulerThreadId = -1;
 
     /// <summary>
-    /// Checks if the current thread has access to the scheduler, allowing for optimized dispatching when already on the correct thread.
+    /// Checks if the current thread can invoke collection notifications without marshaling.
     /// </summary>
-    /// <returns>true if the current thread has access; otherwise, false.</returns>
-    public bool CheckAccess() => _scheduler.Now == DateTimeOffset.Now;
+    /// <returns><c>true</c> when already on the scheduler's execution context; otherwise <c>false</c>.</returns>
+    public bool CheckAccess()
+    {
+        if (ReferenceEquals(_scheduler, ImmediateScheduler.Instance) ||
+            ReferenceEquals(_scheduler, CurrentThreadScheduler.Instance))
+            return true;
+
+        var threadId = _schedulerThreadId;
+        return threadId >= 0 && threadId == Environment.CurrentManagedThreadId;
+    }
 
     /// <inheritdoc />
     public void Dispatch(Action action)
     {
         ArgumentNullException.ThrowIfNull(action);
-        _scheduler.Schedule(action);
+
+        _scheduler.Schedule(() =>
+        {
+            _schedulerThreadId = Environment.CurrentManagedThreadId;
+            action();
+        });
     }
 }

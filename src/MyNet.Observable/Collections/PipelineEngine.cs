@@ -28,7 +28,7 @@ internal static class PipelineEngine
         IObservable<IChangeSet<T>> source,
         FilterEngine<T> filterEngine,
         SortEngine<T> sortEngine)
-    where T : notnull
+        where T : notnull
     {
         var sorted = source
             .Sort(sortEngine.Comparer, resort: sortEngine.Resort);

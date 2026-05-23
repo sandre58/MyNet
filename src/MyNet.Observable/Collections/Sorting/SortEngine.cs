@@ -18,7 +18,12 @@ namespace MyNet.Observable.Collections.Sorting;
 /// <typeparam name="T">The type of items to be sorted.</typeparam>
 public sealed class SortEngine<T> : IDisposable
 {
-    private readonly BehaviorSubject<IComparer<T>> _comparer = new(Comparer<T>.Default);
+    /// <summary>
+    /// Preserves source order when no explicit sort keys are configured (avoids <see cref="Comparer{T}.Default"/> on non-<see cref="IComparable"/> types).
+    /// </summary>
+    private static readonly IComparer<T> SourceOrderComparer = Comparer<T>.Create(static (_, _) => 0);
+
+    private readonly BehaviorSubject<IComparer<T>> _comparer = new(SourceOrderComparer);
     private readonly Subject<Unit> _resort = new();
 
     /// <summary>
@@ -63,7 +68,8 @@ public sealed class SortEngine<T> : IDisposable
 
         if (newSorting.Length == 0)
         {
-            _comparer.OnNext(Comparer<T>.Default);
+            _comparer.OnNext(SourceOrderComparer);
+            _resort.OnNext(Unit.Default);
             return;
         }
 

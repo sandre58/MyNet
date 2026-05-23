@@ -251,6 +251,6 @@ public sealed class ExtendedCollectionBuilder<T>
         if (grouping.Count > 0)
             collection.SetGrouping([.. grouping]);
 
-        return new(collection, selectionMode);
+        return new(collection, selectionMode, disposeCollection: true);
     }
 }

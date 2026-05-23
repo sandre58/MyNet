@@ -62,7 +62,7 @@ public static class SelectableCollection
     }
 
     /// <summary>
-    /// Core factory.
+    /// Core factory. The created <see cref="ExtendedCollection{T}"/> is owned and disposed with the selectable collection.
     /// </summary>
     public static SelectableCollection<T> Create<T>(
         SourceEngine<T> source,
@@ -70,28 +70,42 @@ public static class SelectableCollection
         IScheduler? scheduler = null)
         where T : notnull
     {
-        var wrappers = new ExtendedCollection<T>(
-            source,
-            scheduler: scheduler);
+        var collection = new ExtendedCollection<T>(source, scheduler);
 
-        return new(wrappers, mode);
+        return new(collection, mode, disposeCollection: true);
     }
 }
 
 /// <summary>
 /// Represents a collection of items that can be selected, providing methods to manage the selection state of the items.
 /// </summary>
-/// <param name="collection">The collection of wrappers for the items.</param>
-/// <param name="mode">The selection mode for the collection.</param>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
-[SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This class wrap a collection.")]
-public sealed class SelectableCollection<T>(
-    ExtendedCollection<T> collection,
-    SelectionMode mode = SelectionMode.Multiple)
-    : IDisposable
+[SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This class wraps a collection.")]
+public sealed class SelectableCollection<T> : IDisposable
     where T : notnull
 {
-    private readonly SelectionEngine<T> _selection = new(collection.Connect(), mode);
+    private readonly ExtendedCollection<T> _collection;
+    private readonly SelectionEngine<T> _selection;
+    private readonly bool _disposeCollection;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SelectableCollection{T}"/> class over an existing <see cref="ExtendedCollection{T}"/>.
+    /// The underlying collection is not disposed unless <paramref name="disposeCollection"/> is <c>true</c>.
+    /// </summary>
+    /// <param name="collection">The extended collection whose filtered items participate in selection.</param>
+    /// <param name="mode">The selection mode.</param>
+    /// <param name="disposeCollection">When <c>true</c>, <see cref="Dispose"/> also disposes <paramref name="collection"/>.</param>
+    public SelectableCollection(
+        ExtendedCollection<T> collection,
+        SelectionMode mode = SelectionMode.Multiple,
+        bool disposeCollection = false)
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+
+        _collection = collection;
+        _selection = new(collection.Connect(), mode);
+        _disposeCollection = disposeCollection;
+    }
 
     /// <summary>
     /// Gets the selection mode of the collection, indicating whether multiple items can be selected simultaneously or only a single item can be selected at a time.
@@ -99,9 +113,14 @@ public sealed class SelectableCollection<T>(
     public SelectionMode Mode => _selection.Mode;
 
     /// <summary>
-    /// Gets the collection of wrappers for the items in the selectable collection. Each wrapper provides information about the selection state of its corresponding item.
+    /// Gets the underlying extended collection.
     /// </summary>
-    public ReadOnlyObservableCollection<T> Items => collection.Items;
+    public ExtendedCollection<T> Collection => _collection;
+
+    /// <summary>
+    /// Gets the filtered items exposed by the underlying collection.
+    /// </summary>
+    public ReadOnlyObservableCollection<T> Items => _collection.Items;
 
     /// <summary>
     /// Gets the collection of selected items in the selectable collection.
@@ -152,5 +171,11 @@ public sealed class SelectableCollection<T>(
     /// <summary>
     /// Disposes the selectable collection and releases all resources.
     /// </summary>
-    public void Dispose() => _selection.Dispose();
+    public void Dispose()
+    {
+        _selection.Dispose();
+
+        if (_disposeCollection)
+            _collection.Dispose();
+    }
 }

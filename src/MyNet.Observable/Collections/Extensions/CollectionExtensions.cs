@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="EnumerableExtensions.cs" company="Stéphane ANDRE">
+// <copyright file="CollectionExtensions.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
