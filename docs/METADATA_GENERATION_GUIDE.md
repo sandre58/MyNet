@@ -5,11 +5,11 @@ This guide describes the **single supported pipeline** for configuring observabl
 ## Pipeline (authoring → application → runtime)
 
 ```
-Property attributes on ObservableObject
+Property attributes on ObservableObject subclasses
         ↓ compile time
 MyNet.Observable.Metadata.Generator
-        ↓ ModuleInitializer
-MetadataRegistry (all features, including forwarding)
+        ↓ GeneratedMetadataProviders.g.cs (lazy bootstrap per type)
+MetadataRegistry.Get(type) → ObservableMetadataBootstrap.Ensure(type)
         ↓ runtime
 MetadataBehaviorApplicator.Apply → behaviors
 ```
@@ -44,13 +44,16 @@ Auto-properties are fine when using Fody (`PropertyChanged` / `PropertyChanging`
 
 ### What the generator does
 
-When at least one supported attribute is present on a property, the generator emits `ObservableMetadataInitializer` with a `[ModuleInitializer]` that calls one `Configure_{TypeName}()` method per type. Each method invokes `MetadataApplicators` on the relevant `PropertyMetadata` entries in `MetadataRegistry`.
+When at least one supported attribute is present on a property of a type that **derives from `ObservableObject`**, the generator emits `ObservableMetadataBootstrap` with one `Configure_{TypeName}()` method per type. Configuration runs **lazily** on the first `MetadataRegistry.Get(type)` for that type (no `[ModuleInitializer]`). Each configure method invokes `MetadataApplicators` on the relevant `PropertyMetadata` entries.
 
 Inspect generated code under `obj/` → `GeneratedMetadataProviders.g.cs`.
 
+Types that are not `ObservableObject` descendants are **not** generated (even if they carry metadata attributes).
+
 ### What consumes metadata at runtime
 
-- `MetadataRegistry` — features (`ModificationTrackingFeature`, `EventReactionFeature`, `ValidationDependencyFeature`, `PropertyChangedForwardingFeature`, …)
+- `MetadataRegistry.Get` — ensures generated configuration for the type, then returns `TypeMetadata`
+- Features: `ModificationTrackingFeature`, `EventReactionFeature`, `ValidationDependencyFeature`, `PropertyChangedForwardingFeature`, …
 - `MetadataBehaviorApplicator.Apply` — reads `PropertyChangedForwardingFeature` from metadata and registers `PropertyChangedForwardingBehavior` (called from `ObservableObject` constructor)
 
 No application startup call is required.

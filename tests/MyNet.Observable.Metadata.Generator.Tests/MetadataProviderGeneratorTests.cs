@@ -7,11 +7,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
 using MyNet.Observable.Behaviors.Metadata.Attributes;
+using MyNet.Observable.Behaviors.Metadata.Features;
+using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Utilities.Metadata;
 using Xunit;
 
@@ -53,10 +58,13 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("ObservableMetadataInitializer", generated, StringComparison.Ordinal);
+        Assert.Contains("ObservableMetadataBootstrap", generated, StringComparison.Ordinal);
+        Assert.Contains("internal static void Ensure(Type type)", generated, StringComparison.Ordinal);
         Assert.Contains("Configure_", generated, StringComparison.Ordinal);
         Assert.Contains("MetadataRegistry.Get", generated, StringComparison.Ordinal);
         Assert.Contains("MetadataApplicators.ApplyUpdateOnCultureChanged", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain("ModuleInitializer", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain("ObservableMetadataInitializer", generated, StringComparison.Ordinal);
         Assert.DoesNotContain("GeneratedMetadataProvider0", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
@@ -95,11 +103,61 @@ public sealed class MetadataProviderGeneratorTests
 
         var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
 
-        Assert.Contains("ObservableMetadataInitializer", generated, StringComparison.Ordinal);
-        Assert.Contains("Configure_", generated, StringComparison.Ordinal);
-        Assert.Contains("MetadataRegistry.Get", generated, StringComparison.Ordinal);
-        Assert.Contains("MetadataApplicators.ApplyUpdateOnCultureChanged", generated, StringComparison.Ordinal);
+        Assert.Contains("ObservableMetadataBootstrap", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain("ModuleInitializer", generated, StringComparison.Ordinal);
         Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    [Fact]
+    public void DoesNotGenerate_WhenTypeIsNotObservableObject()
+    {
+        const string source = """
+                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+
+                              namespace Demo;
+
+                              public sealed class PlainDto
+                              {
+                                  [UpdateOnCultureChanged]
+                                  public string Title { get; set; } = string.Empty;
+                              }
+
+                              """;
+
+        var compilation = CreateCompilation(source);
+        var result = RunGenerator(compilation);
+
+        var generated = string.Join(Environment.NewLine, result.Results[0].GeneratedSources.Select(x => x.SourceText.ToString()));
+
+        Assert.DoesNotContain("Configure_Demo_PlainDto", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain("ObservableMetadataBootstrap", generated, StringComparison.Ordinal);
+        Assert.DoesNotContain(result.Results[0].Diagnostics, d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    [Fact]
+    public void LazyBootstrap_AppliesMetadataOnFirstRegistryGet()
+    {
+        const string source = """
+                              using MyNet.Observable;
+                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+                              using MyNet.Observable.Behaviors.Metadata.Features.Events;
+                              using MyNet.Utilities.Metadata;
+
+                              namespace Demo;
+
+                              public sealed class Vm : ObservableObject
+                              {
+                                  [UpdateOnCultureChanged]
+                                  public string Title { get; set; } = string.Empty;
+                              }
+
+                              """;
+
+        var metadata = CompileAndGetMetadata(source, "Demo.Vm", "Title");
+
+        Assert.True(metadata.TryGetFeature<EventReactionFeature>(out var feature));
+        Assert.NotNull(feature);
+        Assert.Contains(typeof(CultureChangedEvent), feature.Events);
     }
 
     [Fact]
@@ -252,6 +310,40 @@ public sealed class MetadataProviderGeneratorTests
         return driver.GetRunResult();
     }
 
+    private static PropertyMetadata CompileAndGetMetadata(string source, string typeFullName, string propertyName)
+    {
+        var parseOptions = new CSharpParseOptions(LanguageVersion.Preview);
+        var syntaxTrees = new List<SyntaxTree>
+        {
+            CSharpSyntaxTree.ParseText(source, parseOptions),
+        };
+
+        var generated = RunGenerator(CreateCompilation(source));
+
+        foreach (var generatedSource in generated.Results[0].GeneratedSources)
+        {
+            syntaxTrees.Add(CSharpSyntaxTree.ParseText(
+                generatedSource.SourceText.ToString(),
+                parseOptions,
+                path: generatedSource.HintName));
+        }
+
+        var compilation = CSharpCompilation.Create(
+            assemblyName: "LazyBootstrapTests",
+            syntaxTrees: [.. syntaxTrees],
+            references: GetMetadataReferences(),
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+        using var stream = new MemoryStream();
+        var emitResult = compilation.Emit(stream);
+        Assert.True(emitResult.Success, string.Join(Environment.NewLine, emitResult.Diagnostics));
+
+        var assembly = Assembly.Load(stream.ToArray());
+        var type = assembly.GetType(typeFullName, throwOnError: true)!;
+
+        return MetadataRegistry.Get(type).GetProperty(propertyName);
+    }
+
     private static CSharpCompilation CreateCompilation(string source)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source, new(LanguageVersion.Preview));
@@ -265,14 +357,36 @@ public sealed class MetadataProviderGeneratorTests
 
     private static ImmutableArray<MetadataReference> GetMetadataReferences()
     {
-        var assemblies = new[] { typeof(object).Assembly, typeof(Enumerable).Assembly, typeof(List<>).Assembly, typeof(GCSettings).Assembly, typeof(ObservableObject).Assembly, typeof(UpdateOnCultureChangedAttribute).Assembly, typeof(MetadataRegistry).Assembly };
+        var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var references = new List<MetadataReference>();
 
-        return
-        [
-            ..
-            assemblies
-                .Select(a => MetadataReference.CreateFromFile(a.Location))
-                .DistinctBy(r => r.Display, StringComparer.OrdinalIgnoreCase)
-        ];
+        void AddAssembly(Assembly assembly)
+        {
+            if (assembly.IsDynamic || string.IsNullOrEmpty(assembly.Location))
+                return;
+
+            if (!paths.Add(assembly.Location))
+                return;
+
+            references.Add(MetadataReference.CreateFromFile(assembly.Location));
+
+            foreach (var referenceName in assembly.GetReferencedAssemblies())
+            {
+                try
+                {
+                    AddAssembly(Assembly.Load(referenceName));
+                }
+                catch (FileNotFoundException)
+                {
+                }
+            }
+        }
+
+        AddAssembly(typeof(object).Assembly);
+        AddAssembly(typeof(ObservableObject).Assembly);
+        AddAssembly(typeof(MetadataRegistry).Assembly);
+        AddAssembly(typeof(UpdateOnCultureChangedAttribute).Assembly);
+
+        return [.. references];
     }
 }

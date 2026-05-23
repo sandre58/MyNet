@@ -24,7 +24,7 @@ public static class MetadataRegistry
     /// <returns>A <see cref="MetadataBuilder{T}"/> that can be used to further configure the metadata for the specified type.</returns>
     public static MetadataBuilder<T> For<T>()
     {
-        var metadata = GetOrCreate(typeof(T));
+        var metadata = Get(typeof(T));
         return new(metadata);
     }
 
@@ -37,6 +37,8 @@ public static class MetadataRegistry
     public static TypeMetadata Get(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
+
+        GeneratedMetadataBootstrapInvoker.Ensure(type);
 
         return GetOrCreate(type);
     }
