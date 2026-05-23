@@ -6,7 +6,7 @@
 
 using System;
 
-namespace MyNet.Utilities.Metadata.Generated;
+namespace MyNet.Utilities.Tests.Metadata;
 
 internal static class ObservableMetadataBootstrap
 {
@@ -14,7 +14,7 @@ internal static class ObservableMetadataBootstrap
 
     internal static void Ensure(Type type)
     {
-        if (type == typeof(MyNet.Utilities.Tests.Metadata.GeneratedMetadataBootstrapInvokerTests))
+        if (type == typeof(GeneratedMetadataBootstrapInvokerTests))
             WasInvoked = true;
     }
 

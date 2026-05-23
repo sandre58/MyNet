@@ -33,19 +33,14 @@ internal static class GeneratedMetadataBootstrapInvoker
     private static Action<Type>? CreateInvoker(Assembly assembly)
     {
         var bootstrapType = assembly.GetType(BootstrapTypeFullName, throwOnError: false);
-        if (bootstrapType is null)
-            return null;
 
-        var ensureMethod = bootstrapType.GetMethod(
+        var ensureMethod = bootstrapType?.GetMethod(
             "Ensure",
             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
             binder: null,
             types: [typeof(Type)],
             modifiers: null);
 
-        if (ensureMethod is null)
-            return null;
-
-        return type => ensureMethod.Invoke(null, [type]);
+        return ensureMethod is null ? null : (type => ensureMethod.Invoke(null, [type]));
     }
 }

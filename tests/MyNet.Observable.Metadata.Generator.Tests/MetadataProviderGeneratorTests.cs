@@ -10,10 +10,8 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
 using MyNet.Observable.Behaviors.Metadata.Attributes;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
@@ -315,24 +313,18 @@ public sealed class MetadataProviderGeneratorTests
         var parseOptions = new CSharpParseOptions(LanguageVersion.Preview);
         var syntaxTrees = new List<SyntaxTree>
         {
-            CSharpSyntaxTree.ParseText(source, parseOptions),
+            CSharpSyntaxTree.ParseText(source, parseOptions)
         };
 
         var generated = RunGenerator(CreateCompilation(source));
 
-        foreach (var generatedSource in generated.Results[0].GeneratedSources)
-        {
-            syntaxTrees.Add(CSharpSyntaxTree.ParseText(
-                generatedSource.SourceText.ToString(),
-                parseOptions,
-                path: generatedSource.HintName));
-        }
+        syntaxTrees.AddRange(generated.Results[0].GeneratedSources.Select(generatedSource => CSharpSyntaxTree.ParseText(generatedSource.SourceText.ToString(), parseOptions, path: generatedSource.HintName)));
 
         var compilation = CSharpCompilation.Create(
             assemblyName: "LazyBootstrapTests",
             syntaxTrees: [.. syntaxTrees],
             references: GetMetadataReferences(),
-            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            options: new(OutputKind.DynamicallyLinkedLibrary));
 
         using var stream = new MemoryStream();
         var emitResult = compilation.Emit(stream);
@@ -360,7 +352,14 @@ public sealed class MetadataProviderGeneratorTests
         var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var references = new List<MetadataReference>();
 
-        void AddAssembly(Assembly assembly)
+        addAssembly(typeof(object).Assembly);
+        addAssembly(typeof(ObservableObject).Assembly);
+        addAssembly(typeof(MetadataRegistry).Assembly);
+        addAssembly(typeof(UpdateOnCultureChangedAttribute).Assembly);
+
+        return [.. references];
+
+        void addAssembly(Assembly assembly)
         {
             if (assembly.IsDynamic || string.IsNullOrEmpty(assembly.Location))
                 return;
@@ -374,19 +373,12 @@ public sealed class MetadataProviderGeneratorTests
             {
                 try
                 {
-                    AddAssembly(Assembly.Load(referenceName));
+                    addAssembly(Assembly.Load(referenceName));
                 }
                 catch (FileNotFoundException)
                 {
                 }
             }
         }
-
-        AddAssembly(typeof(object).Assembly);
-        AddAssembly(typeof(ObservableObject).Assembly);
-        AddAssembly(typeof(MetadataRegistry).Assembly);
-        AddAssembly(typeof(UpdateOnCultureChangedAttribute).Assembly);
-
-        return [.. references];
     }
 }
