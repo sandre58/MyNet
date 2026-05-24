@@ -9,7 +9,9 @@ using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
 
-namespace MyNet.Observable.Extensions;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> source,
     Func<T, IObservable<IChangeSet<TDestination>>> observableSelector)

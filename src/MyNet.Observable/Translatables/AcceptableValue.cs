@@ -67,10 +67,10 @@ public class AcceptableValue<T> : EditableObject, IAcceptableValue<T>
 
         ValidationRules.Add<IAcceptableValue<T>, T?>(_ => Value,
             () => Min.HasValue && Max.HasValue
-            ? ValidationResources.FieldXMustBeBetweenYAndZError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value, Max.Value)
+            ? ValidationResources.FieldMustBeBetween.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value, Max.Value)
             : Min.HasValue
-                ? ValidationResources.FieldXMustBeUpperOrEqualsThanYError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value)
-                : Max.HasValue ? ValidationResources.FieldXMustBeLowerOrEqualsThanYError.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Max.Value) : string.Empty,
+                ? ValidationResources.FieldMustBeGreaterThanOrEqualTo.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Min.Value)
+                : Max.HasValue ? ValidationResources.FieldMustBeLessThanOrEqualTo.FormatWith(CultureInfo.CurrentCulture, nameof(Value).Translate(), Max.Value) : string.Empty,
             _acceptableRange.IsValid);
         DefaultValue = defaultValue;
     }

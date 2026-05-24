@@ -36,7 +36,8 @@ public sealed class ValidationBehaviorTests
 
         Assert.False(behavior.Validate());
         Assert.True(behavior.HasErrors);
-        Assert.Contains(behavior.Errors, x => x.Contains("required", StringComparison.Ordinal));
+        Assert.Contains(behavior.Errors, x => x.Contains("required", StringComparison.OrdinalIgnoreCase)
+            || x.Contains("obligatoire", StringComparison.OrdinalIgnoreCase));
 
         sut.Name = "abc";
         sut.Confirm = "abc";
@@ -82,7 +83,7 @@ public sealed class ValidationBehaviorTests
     {
         public ValidationOwnerValidator()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+            this.RuleForLocalized(x => x.Name).NotEmptyRequired();
             RuleFor(x => x.Confirm).Equal(x => x.Name).WithMessage("Confirm must match Name");
         }
     }

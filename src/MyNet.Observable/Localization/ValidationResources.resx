@@ -117,49 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FieldXMustBeValidEmailAddressError" xml:space="preserve">
+  <data name="FieldInvalidEmail" xml:space="preserve">
     <value>Le champ "{0}" ne correspond pas à une adresse de messagerie valide.</value>
   </data>
-  <data name="FieldXMustBeValidPhoneNumberError" xml:space="preserve">
+  <data name="FieldInvalidPhoneNumber" xml:space="preserve">
     <value>Le champ "{0}" ne correspond pas à un numéro de téléphone valide.</value>
   </data>
-  <data name="FieldXMustHaveMaxLengthYError" xml:space="preserve">
+  <data name="FieldExceedsMaxLength" xml:space="preserve">
     <value>Le champ "{0}" ne doit pas dépasser {1} caractères.</value>
   </data>
-  <data name="FieldXIsRequiredError" xml:space="preserve">
+  <data name="FieldIsRequired" xml:space="preserve">
     <value>Le champ "{0}" est obligatoire.</value>
   </data>
-  <data name="FieldXMustHaveUniqueItemsError" xml:space="preserve">
-    <value>La collection "{0}" ne doit pas avoir d'élément identique.</value>
+  <data name="CollectionDuplicateItems" xml:space="preserve">
+    <value>La collection « {0} » ne doit pas contenir d'éléments en double.</value>
   </data>
-  <data name="FieldXMustBeContainOneItemAtLeastError" xml:space="preserve">
-    <value>La collection "{0}" doit contenir au moins 1 élément.</value>
+  <data name="CollectionRequiresAtLeastOneItem" xml:space="preserve">
+    <value>La collection « {0} » doit contenir au moins un élément.</value>
   </data>
-  <data name="FieldXMustBeBetweenYAndZError" xml:space="preserve">
+  <data name="FieldMustBeBetween" xml:space="preserve">
     <value>Le champ "{0}" doit être compris entre {1} et {2}.</value>
   </data>
-  <data name="FieldXMustBeAnValidFilePathError" xml:space="preserve">
+  <data name="FieldInvalidFilePath" xml:space="preserve">
     <value>Le champ "{0}" ne correspond pas à un chemin de fichier valide.</value>
   </data>
-  <data name="FieldXMustContainExistingFolderError" xml:space="preserve">
+  <data name="PathPartNotFound" xml:space="preserve">
     <value>Impossible de trouver une partie du chemin "{0}".</value>
   </data>
-  <data name="FieldXMustContainsExistingFileError" xml:space="preserve">
+  <data name="FieldFileNotFound" xml:space="preserve">
     <value>Le fichier spécifié dans le champ "{0}" n'a pas été trouvé.</value>
   </data>
-  <data name="FieldXMustBeInPastError" xml:space="preserve">
+  <data name="FieldMustBeInPast" xml:space="preserve">
     <value>Le champ "{0}" doit être dans le passé.</value>
   </data>
-  <data name="FieldXMustBeLowerOrEqualsThanYError" xml:space="preserve">
+  <data name="FieldMustBeLessThanOrEqualTo" xml:space="preserve">
     <value>Le champ "{0}" doit être inférieur ou égal à {1}.</value>
   </data>
-  <data name="FieldXMustBeUpperOrEqualsThanYError" xml:space="preserve">
+  <data name="FieldMustBeGreaterThanOrEqualTo" xml:space="preserve">
     <value>Le champ "{0}" doit être supérieur ou égal à {1}.</value>
   </data>
-  <data name="FieldXMustBeLowerThanYError" xml:space="preserve">
+  <data name="FieldMustBeLessThan" xml:space="preserve">
     <value>Le champ "{0}" doit être inférieur à {1}.</value>
   </data>
-  <data name="FieldXMustBeUpperThanYError" xml:space="preserve">
+  <data name="FieldMustBeGreaterThan" xml:space="preserve">
     <value>Le champ "{0}" doit être supérieur à {1}.</value>
   </data>
 </root>

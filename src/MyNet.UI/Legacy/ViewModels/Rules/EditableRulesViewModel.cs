@@ -33,7 +33,7 @@ public class EditableRulesViewModel<T> : EditableObject
         MoveDownCommand = RelayCommandFactory.Default.CreateRequired<T>(MoveDown, CanMoveDown);
 
         if (addValidationRuleForBlockEmptyRules)
-            ValidationRules.Add<EditableRulesViewModel<T>, UiObservableCollection<T>>(x => x.Rules, ValidationResources.FieldXMustBeContainOneItemAtLeastError.FormatWith(UiResources.Rules), x => x?.Count > 0);
+            ValidationRules.Add<EditableRulesViewModel<T>, UiObservableCollection<T>>(x => x.Rules, ValidationResources.CollectionRequiresAtLeastOneItem.FormatWith(UiResources.Rules), x => x?.Count > 0);
     }
 
     [CanSetIsModified(false)]

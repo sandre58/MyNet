@@ -21,7 +21,6 @@ using MyNet.Observable.Collections.Filters;
 using MyNet.Observable.Collections.Grouping;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Collections.Sources;
-using MyNet.Observable.Extensions;
 using MyNet.Utilities;
 
 namespace MyNet.Observable.Collections;

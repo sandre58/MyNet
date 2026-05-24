@@ -17,28 +17,38 @@ using DynamicData.Binding;
 using DynamicData.Kernel;
 using MyNet.Utilities;
 
-namespace MyNet.Observable.Extensions;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public static class DynamicDataExtensions
 {
     /// <summary>
-    /// Compared to MergeMany, MergeManyEx will forward all items belonged to the outer Observable which removed.
+    /// Like DynamicData <c>MergeMany</c>, but forwards a remove change set for inner items when an outer item is removed.
     /// </summary>
-    public static IObservable<IChangeSet<TDestination>> MergeMany<T, TDestination>(
+    /// <remarks>
+    /// <paramref name="observableSelector"/> must be idempotent for the same outer item (safe to call again on remove).
+    /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Ex distinguishes this operator from DynamicData MergeMany.")]
+    public static IObservable<IChangeSet<TDestination>> MergeManyEx<T, TDestination>(
         this IObservable<IChangeSet<T>> source,
         Func<T, IObservable<IChangeSet<TDestination>>> observableSelector)
         where T : notnull
         where TDestination : notnull
         => source == null
-        ? throw new ArgumentNullException(nameof(source))
-        : observableSelector == null
-            ? throw new ArgumentNullException(nameof(observableSelector))
-            : new MergeManyEx<T, TDestination>(source, observableSelector).Run();
+            ? throw new ArgumentNullException(nameof(source))
+            : observableSelector == null
+                ? throw new ArgumentNullException(nameof(observableSelector))
+                : new MergeManyEx<T, TDestination>(source, observableSelector).Run();
 
     /// <summary>
-    /// Compared to MergeMany, MergeManyEx will forward all items belonged to the outer Observable which removed.
+    /// Keyed variant of <see cref="MergeManyEx{T, TDestination}"/>.
     /// </summary>
-    public static IObservable<IChangeSet<TDestination, TDestinationKey>> MergeMany<T, TKey, TDestination, TDestinationKey>(
+    /// <remarks>
+    /// <paramref name="observableSelector"/> must be idempotent for the same outer item (safe to call again on remove).
+    /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Ex distinguishes this operator from DynamicData MergeMany.")]
+    public static IObservable<IChangeSet<TDestination, TDestinationKey>> MergeManyEx<T, TKey, TDestination, TDestinationKey>(
         this IObservable<IChangeSet<T, TKey>> source,
         Func<T, IObservable<IChangeSet<TDestination, TDestinationKey>>> observableSelector,
         Func<TDestination, TDestinationKey> observableKeySelector)
@@ -56,10 +66,10 @@ public static class DynamicDataExtensions
         where TObject : notnull
         where TKey : notnull
         => source.Edit(x =>
-    {
-        x.Clear();
-        x.AddOrUpdate(items);
-    });
+        {
+            x.Clear();
+            x.AddOrUpdate(items);
+        });
 
     public static void RemoveMany<T>(this ICollection<T> source, IEnumerable<T> itemsToRemove)
     {
@@ -110,9 +120,10 @@ public static class DynamicDataExtensions
             .Subscribe(_ => action());
 
     public static IObservable<TObject?> WhenExceptPropertyChanged<TObject>(this TObject source, params string[] propertiesToExclude)
-        where TObject : INotifyPropertyChanged => source is null
-        ? throw new ArgumentNullException(nameof(source))
-        : System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler?, PropertyChangedEventArgs>(handler => source.PropertyChanged += handler, handler => source.PropertyChanged -= handler).Where(x => !propertiesToExclude.Contains(x.EventArgs.PropertyName.OrEmpty())).Select(_ => source);
+        where TObject : INotifyPropertyChanged
+        => source is null
+            ? throw new ArgumentNullException(nameof(source))
+            : System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler?, PropertyChangedEventArgs>(handler => source.PropertyChanged += handler, handler => source.PropertyChanged -= handler).Where(x => !propertiesToExclude.Contains(x.EventArgs.PropertyName.OrEmpty())).Select(_ => source);
 
     public static IObservable<IChangeSet<T, TKey>> BindItems<T, TKey>(this IObservable<IChangeSet<T, TKey>> observable, ObservableCollection<T> source)
         where TKey : notnull
@@ -141,6 +152,5 @@ public static class DynamicDataExtensions
                 }
             });
 
-    public static IObservable<TSource> ObserveOnOptional<TSource>(this IObservable<TSource> source, IScheduler? scheduler)
-        => source == null ? throw new ArgumentNullException(nameof(source)) : scheduler is null ? source : source.ObserveOn(scheduler);
+    public static IObservable<TSource> ObserveOnOptional<TSource>(this IObservable<TSource> source, IScheduler? scheduler) => source == null ? throw new ArgumentNullException(nameof(source)) : scheduler is null ? source : source.ObserveOn(scheduler);
 }
