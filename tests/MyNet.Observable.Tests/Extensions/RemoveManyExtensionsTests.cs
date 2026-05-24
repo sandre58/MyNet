@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using MyNet.Observable;
 using MyNet.Observable.Collections.Sources;
 using Xunit;
 

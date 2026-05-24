@@ -13,6 +13,13 @@ using DynamicData;
 namespace MyNet.Observable;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
+/// <summary>
+/// Forwards inner change sets when outer items are added and synthesizes remove change sets when outer items are removed.
+/// </summary>
+/// <remarks>
+/// <paramref name="observableSelector"/> is invoked again on outer remove; it must return the same inner snapshot
+/// for the same outer item (no side effects, stable child collection).
+/// </remarks>
 internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> source,
     Func<T, IObservable<IChangeSet<TDestination>>> observableSelector)
     where T : notnull
@@ -35,23 +42,7 @@ internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> so
                 // ChangeSet and forward it to the original observer.
                 .Subscribe(t =>
                 {
-                    foreach (var x in t)
-                    {
-                        switch (x.Reason)
-                        {
-                            case ListChangeReason.RemoveRange:
-                                {
-                                    foreach (var item in x.Range) ForwardWhenRemove(observer, item);
-                                    break;
-                                }
-
-                            case ListChangeReason.Remove:
-                                {
-                                    ForwardWhenRemove(observer, x.Item.Current);
-                                    break;
-                                }
-                        }
-                    }
+                    foreach (var item in t.GetRemovedItems()) ForwardWhenRemove(observer, item);
                 },
                 observer.OnError);
         });
@@ -68,6 +59,7 @@ internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> so
     }
 }
 
+/// <inheritdoc cref="MergeManyEx{T, TDestination}"/>
 internal sealed class MergeManyEx<T, TKey, TDestination, TDestinationKey>(IObservable<IChangeSet<T, TKey>> source,
     Func<T, IObservable<IChangeSet<TDestination, TDestinationKey>>> observableSelector,
     Func<TDestination, TDestinationKey> observableKeySelector)
@@ -94,17 +86,7 @@ internal sealed class MergeManyEx<T, TKey, TDestination, TDestinationKey>(IObser
                 // ChangeSet and forward it to the original observer.
                 .Subscribe(t =>
                 {
-                    foreach (var x in t)
-                    {
-                        switch (x.Reason)
-                        {
-                            case ChangeReason.Remove:
-                                {
-                                    ForwardWhenRemove(observer, x.Current);
-                                    break;
-                                }
-                        }
-                    }
+                    foreach (var item in t.GetRemovedItems()) ForwardWhenRemove(observer, item);
                 },
                 observer.OnError);
         });

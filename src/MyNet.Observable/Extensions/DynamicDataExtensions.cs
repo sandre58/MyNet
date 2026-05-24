@@ -7,7 +7,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -15,7 +14,6 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 using DynamicData.Kernel;
-using MyNet.Utilities;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;
@@ -27,7 +25,11 @@ public static class DynamicDataExtensions
     /// Like DynamicData <c>MergeMany</c>, but forwards a remove change set for inner items when an outer item is removed.
     /// </summary>
     /// <remarks>
-    /// <paramref name="observableSelector"/> must be idempotent for the same outer item (safe to call again on remove).
+    /// <para>
+    /// <paramref name="observableSelector"/> is invoked again when an outer item is removed to build the forwarded
+    /// remove change set. For the same outer item it must return an observable that reflects the same inner items
+    /// (no side effects, no new disposable resources that leak).
+    /// </para>
     /// </remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Ex distinguishes this operator from DynamicData MergeMany.")]
     public static IObservable<IChangeSet<TDestination>> MergeManyEx<T, TDestination>(
@@ -45,7 +47,7 @@ public static class DynamicDataExtensions
     /// Keyed variant of <see cref="MergeManyEx{T, TDestination}"/>.
     /// </summary>
     /// <remarks>
-    /// <paramref name="observableSelector"/> must be idempotent for the same outer item (safe to call again on remove).
+    /// <inheritdoc cref="MergeManyEx{T, TDestination}(IObservable{IChangeSet{T}}, Func{T, IObservable{IChangeSet{TDestination}}})"/>
     /// </remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Ex distinguishes this operator from DynamicData MergeMany.")]
     public static IObservable<IChangeSet<TDestination, TDestinationKey>> MergeManyEx<T, TKey, TDestination, TDestinationKey>(
@@ -61,15 +63,6 @@ public static class DynamicDataExtensions
             : observableSelector == null
                 ? throw new ArgumentNullException(nameof(observableSelector))
                 : new MergeManyEx<T, TKey, TDestination, TDestinationKey>(source, observableSelector, observableKeySelector).Run();
-
-    public static void Set<TObject, TKey>(this ISourceCache<TObject, TKey> source, IEnumerable<TObject> items)
-        where TObject : notnull
-        where TKey : notnull
-        => source.Edit(x =>
-        {
-            x.Clear();
-            x.AddOrUpdate(items);
-        });
 
     public static void RemoveMany<T>(this ICollection<T> source, IEnumerable<T> itemsToRemove)
     {
@@ -104,53 +97,48 @@ public static class DynamicDataExtensions
     extension<T>(IChangeSet<T> changes)
         where T : notnull
     {
+        /// <summary>Gets items added in this change set (single add and add range).</summary>
         public IEnumerable<T> GetAddedItems() => changes.Where(y => y.Reason == ListChangeReason.Add).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.AddRange).SelectMany(z => z.Range));
+
+        /// <summary>Gets items removed in this change set (single remove and remove range).</summary>
         public IEnumerable<T> GetRemovedItems() => changes.Where(y => y.Reason == ListChangeReason.Remove).Select(z => z.Item.Current).Concat(changes.Where(y => y.Reason == ListChangeReason.RemoveRange).SelectMany(z => z.Range));
     }
 
+    extension<T, TKey>(IChangeSet<T, TKey> changes)
+        where T : notnull
+        where TKey : notnull
+    {
+        /// <summary>Gets outer items removed in this keyed change set (each <see cref="ChangeReason.Remove"/> entry).</summary>
+        public IEnumerable<T> GetRemovedItems() => changes.Where(c => c.Reason == ChangeReason.Remove).Select(c => c.Current);
+    }
+
+    /// <summary>
+    /// Invokes <paramref name="action"/> when the change set updates and when any item raises
+    /// <see cref="INotifyPropertyChanged.PropertyChanged"/>.
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="action"/> runs once immediately when the outer subscription receives a change set, and again
+    /// for each item property change. After the initial bind, expect at least one call per batch of changes.
+    /// </remarks>
     public static IDisposable SubscribeAll<T>(this IObservable<IChangeSet<T>> source, Action action)
         where T : INotifyPropertyChanged
         => source.SubscribeMany(x => x.WhenAnyPropertyChanged().Subscribe(_ => action()))
             .Subscribe(_ => action());
 
+    /// <inheritdoc cref="SubscribeAll{T}(IObservable{IChangeSet{T}}, Action)"/>
     public static IDisposable SubscribeAll<T, TKey>(this IObservable<IChangeSet<T, TKey>> source, Action action)
         where T : INotifyPropertyChanged
         where TKey : notnull
         => source.SubscribeMany(x => x.WhenAnyPropertyChanged().Subscribe(_ => action()))
             .Subscribe(_ => action());
 
-    public static IObservable<TObject?> WhenExceptPropertyChanged<TObject>(this TObject source, params string[] propertiesToExclude)
-        where TObject : INotifyPropertyChanged
-        => source is null
-            ? throw new ArgumentNullException(nameof(source))
-            : System.Reactive.Linq.Observable.FromEventPattern<PropertyChangedEventHandler?, PropertyChangedEventArgs>(handler => source.PropertyChanged += handler, handler => source.PropertyChanged -= handler).Where(x => !propertiesToExclude.Contains(x.EventArgs.PropertyName.OrEmpty())).Select(_ => source);
-
-    public static IObservable<IChangeSet<T, TKey>> BindItems<T, TKey>(this IObservable<IChangeSet<T, TKey>> observable, ObservableCollection<T> source)
-        where TKey : notnull
-        where T : notnull
-        => observable
-            .ForEachChange(change =>
-            {
-                switch (change.Reason)
-                {
-                    case ChangeReason.Add:
-                        if (change.CurrentIndex >= 0)
-                            source.Insert(change.CurrentIndex, change.Current);
-                        else
-                            source.Add(change.Current);
-                        break;
-                    case ChangeReason.Update:
-                        source.RemoveAt(change.PreviousIndex);
-                        source.Insert(change.CurrentIndex, change.Current);
-                        break;
-                    case ChangeReason.Remove:
-                        _ = source.Remove(change.Current);
-                        break;
-                    case ChangeReason.Moved:
-                        source.Move(change.PreviousIndex, change.CurrentIndex);
-                        break;
-                }
-            });
-
+    /// <summary>
+    /// Like ObserveOn(IScheduler), but if <paramref name="scheduler"/> is null, returns the source observable without observing on any scheduler..
+    /// </summary>
+    /// <param name="source">The source observable sequence.</param>
+    /// <param name="scheduler">The scheduler to observe on, or null to observe on the current thread.</param>
+    /// <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+    /// <returns>An observable sequence that observes on the specified scheduler, or the source sequence if the scheduler is null.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the source is null.</exception>
     public static IObservable<TSource> ObserveOnOptional<TSource>(this IObservable<TSource> source, IScheduler? scheduler) => source == null ? throw new ArgumentNullException(nameof(source)) : scheduler is null ? source : source.ObserveOn(scheduler);
 }
