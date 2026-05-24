@@ -141,7 +141,7 @@ using (SuspendNotifications(NotificationSuspensionMode.Drop))
 
 - `Items` — filtered and sorted view (bind list UI here)
 - `Source` / `SourceCount` — sorted source before filtering
-- `Count` — filtered item count (`PropertyChanged` when the view changes)
+- `Count` — filtered item count (`PropertyChanged` when the view changes, via `SetProperty`)
 - `SetFilter` / `SetSorting` / `SetGrouping` — runtime pipeline configuration
 
 ### Factory
@@ -184,6 +184,25 @@ using var selectable = new SelectableCollection<Item>(collection);
 
 For per-row `IsSelected` binding, prefer list items that are `ObservableObject` instances with `SelectionBehavior` rather than a parallel wrapper collection.
 
+### Aggregates (statistics)
+
+Statistics live in `MyNet.Observable.Collections.Statistics` and observe an `ExtendedCollection<T>` without modifying it. Aggregates run on the **filtered** `Items` view. Dispose statistics alongside the collection:
+
+```csharp
+using MyNet.Observable.Collections;
+using MyNet.Observable.Collections.Filters;
+
+using var list = ExtendedCollection.From(orders);
+list.SetFilter(new ExpressionFilter<Order>(o => o.IsActive));
+
+using var stats = list.Statistics(o => o.Amount);
+// stats.FilteredPercentage, stats.Sum, stats.Average, stats.Min, stats.Max
+
+using var durations = list.Statistics(o => o.Elapsed);
+```
+
+Bind list counts with `Count` and `SourceCount` on the collection; bind derived metrics via `Statistics(...)`.
+
 ### UI-thread collection notifications
 
 ```csharp
@@ -223,6 +242,7 @@ Prefer `NotifyPropertyChanged(name, before, after)` from setters when values are
 | `MetadataAttributeBootstrapper.Apply` | Generator + lazy `MetadataRegistry.Get` |
 | Fody `OnPropertyChanged` weaving | `SetProperty` or `[ObservableProperty]` |
 | `owner.Use<TBehavior>()` (Activator) | `Behaviors.Register(new MyBehavior(owner))` |
+| `CountStatistics` / `RangeStatistics` on `ObservableCollection` | `collection.Statistics(...)` on `ExtendedCollection` |
 
 ## Further reading
 

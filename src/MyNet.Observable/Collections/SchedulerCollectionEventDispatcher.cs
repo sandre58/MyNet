@@ -30,7 +30,9 @@ public sealed class SchedulerCollectionEventDispatcher(IScheduler scheduler) : I
     {
         if (ReferenceEquals(_scheduler, ImmediateScheduler.Instance) ||
             ReferenceEquals(_scheduler, CurrentThreadScheduler.Instance))
+        {
             return true;
+        }
 
         var threadId = _schedulerThreadId;
         return threadId >= 0 && threadId == Environment.CurrentManagedThreadId;

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using DynamicData;
 using FluentAssertions;
 using MyNet.Observable.Collections.Sources;
@@ -53,11 +54,11 @@ public sealed class SourceEngineTests
     }
 
     [Fact]
+    [SuppressMessage("ReSharper", "AccessToDisposedClosure", Justification = "Testing that Add throws when disposed")]
     public void Add_WhenReadOnly_ShouldThrow()
     {
         using var engine = SourceEngine<int>.From([1, 2], readOnly: true);
         var act = () => engine.Add(99);
-
         act.Should().Throw<InvalidOperationException>();
     }
 

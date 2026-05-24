@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Selection;
@@ -24,6 +25,7 @@ public sealed class SelectableCollectionTests
     }
 
     [Fact]
+    [SuppressMessage("ReSharper", "DisposeOnUsingVariable", Justification = "Testing ownership semantics of SelectableCollection.")]
     public void ExternalCollection_ShouldNotDisposeUnderlyingCollection()
     {
         using var collection = ExtendedCollection.From([1, 2]);

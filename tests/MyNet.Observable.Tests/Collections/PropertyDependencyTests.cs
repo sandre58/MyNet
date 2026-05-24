@@ -20,7 +20,7 @@ public sealed class PropertyDependencyTests
     public void SetFilter_WhenItemPropertyChanges_ShouldReevaluateFilter()
     {
         var item = new FilterableItem { Value = 1 };
-        using var collection = ExtendedCollection.From([item, new FilterableItem { Value = 2 }]);
+        using var collection = ExtendedCollection.From([item, new() { Value = 2 }]);
 
         collection.SetFilter(new ExpressionFilter<FilterableItem>(x => x.Value > 1));
 
@@ -44,20 +44,18 @@ public sealed class PropertyDependencyTests
 
     private sealed class FilterableItem : INotifyPropertyChanged
     {
-        private int _value;
-        private string _label = string.Empty;
-
         public int Value
         {
-            get => _value;
-            set => SetField(ref _value, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public string Label
         {
-            get => _label;
-            set => SetField(ref _label, value);
+            get;
         }
+
+            = string.Empty;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

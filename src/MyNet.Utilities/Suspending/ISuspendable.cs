@@ -6,9 +6,7 @@
 
 using System;
 
-#pragma warning disable IDE0130 // Namespace does not match folder structure
-namespace MyNet.Observable;
-#pragma warning restore IDE0130 // Namespace does not match folder structure
+namespace MyNet.Utilities.Suspending;
 
 /// <summary>
 /// Defines a contract for objects that can be temporarily suspended, allowing for the suppression of notifications or events during the suspension period. The <see cref="Suspend"/> method returns an <see cref="IDisposable"/> that, when disposed, will resume the normal operation of the object and re-enable any suppressed notifications or events.

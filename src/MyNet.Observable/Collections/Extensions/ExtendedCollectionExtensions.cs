@@ -7,8 +7,11 @@
 using System;
 using DynamicData;
 using DynamicData.Binding;
+using MyNet.Observable.Collections;
 
-namespace MyNet.Observable.Collections.Extensions;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Provides extension methods for the ExtendedCollection class, allowing it to be converted into an observable change set that can be subscribed to for real-time updates on changes to the collection.

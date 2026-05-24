@@ -6,9 +6,12 @@
 
 using System;
 using System.Reactive.Concurrency;
+using MyNet.Observable.Collections;
 using MyNet.Utilities.Collections;
 
-namespace MyNet.Observable.Collections.Extensions;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Observable;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Scheduling helpers for observable range collections.

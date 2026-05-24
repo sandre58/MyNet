@@ -38,10 +38,7 @@ public sealed class SchedulerCollectionEventDispatcherTests
         var dispatcher = new SchedulerCollectionEventDispatcher(scheduler);
         var onLoop = false;
 
-        scheduler.Schedule(() =>
-        {
-            dispatcher.Dispatch(() => onLoop = dispatcher.CheckAccess());
-        });
+        scheduler.Schedule(() => dispatcher.Dispatch(() => onLoop = dispatcher.CheckAccess()));
 
         SpinWait.SpinUntil(() => onLoop, TimeSpan.FromSeconds(2));
 

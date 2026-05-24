@@ -28,10 +28,6 @@
             <DependentUpon>ValidationResources.resx</DependentUpon>
         </Compile>
         <Compile Remove="Translatables\**" />
-        <Compile Remove="Deferrers\**" />
-        <Compile Remove="Suspenders\**" />
-        <Compile Remove="Resources\**" />
-        <Compile Remove="Statistics\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,21 +35,11 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>ValidationResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Remove="Globalization\**" />
         <EmbeddedResource Remove="Translatables\**" />
-        <EmbeddedResource Remove="Deferrers\**" />
-        <EmbeddedResource Remove="Suspenders\**" />
-        <EmbeddedResource Remove="Resources\**" />
-        <EmbeddedResource Remove="Statistics\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Globalization\**" />
       <None Remove="Translatables\**" />
-      <None Remove="Deferrers\**" />
-      <None Remove="Suspenders\**" />
-      <None Remove="Resources\**" />
-      <None Remove="Statistics\**" />
     </ItemGroup>
 
 </Project>

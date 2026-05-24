@@ -6,9 +6,7 @@
 
 using System;
 
-#pragma warning disable IDE0130 // Namespace does not match folder structure
-namespace MyNet.Observable;
-#pragma warning restore IDE0130 // Namespace does not match folder structure
+namespace MyNet.Utilities.Deferring;
 
 /// <summary>
 /// Defines a contract for objects that support deferring notifications. This interface allows implementing classes to provide a mechanism for temporarily postponing the execution of notifications, which can be useful in scenarios where multiple changes are made in quick succession and you want to avoid sending out notifications for each individual change, instead sending a single notification after all changes are complete. The Defer method returns an IDisposable that, when disposed, will trigger the execution of all deferred notifications. This pattern is commonly used in observable objects to optimize performance and reduce unnecessary notifications, especially when making batch updates to properties or collections. Implementing this interface allows for more efficient notification handling and can improve the responsiveness of applications that rely on observable patterns, such as those using data binding in UI frameworks.

@@ -99,6 +99,8 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     private readonly IObservable<IReadOnlyList<CollectionGroup<T>>> _groupsObservable;
     private readonly Dictionary<string, int> _filterPropertyUsage = [];
     private readonly Dictionary<string, int> _sortPropertyUsage = [];
+    private int _count;
+    private int _sourceCount;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtendedCollection{T}"/> class with a specified source list, read-only flag, and optional scheduler for observing collection changes. This constructor allows for more control over the initial state of the collection, including whether it should be read-only and which source list to use. The constructor sets up the necessary engines for filtering and sorting, and it subscribes to changes in the filters and sorting properties to ensure that the collection updates correctly when these configurations change.
@@ -120,11 +122,14 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
         Disposables.AddRange(
         [
-            _sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => NotifyPropertyChanged(nameof(SourceCount))),
-            _itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(_ => NotifyPropertyChanged(nameof(Count))),
+            _sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => UpdateSourceCount()),
+            _itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(_ => UpdateFilteredCount()),
             _source.Connect().SubscribeMany(SubscribeToItemChanges).Subscribe(),
             ObserveCollectionChanges(_items).Subscribe(HandleCollectionChanged)
         ]);
+
+        UpdateSourceCount();
+        UpdateFilteredCount();
     }
 
     /// <summary>
@@ -140,7 +145,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     /// <summary>
     /// Gets the count of items in the source collection after sorting but before filtering. This count reflects the number of items that are currently in the source collection, regardless of any filters that may be applied to the collection. The SourceCount property provides a way to determine how many items are in the source collection, which can be useful for scenarios where you want to know the total number of items available before any filtering is applied, while still maintaining encapsulation and integrity of the data.
     /// </summary>
-    public int SourceCount => _source.Count;
+    public int SourceCount => _sourceCount;
 
     /// <summary>
     /// Gets the collection of sorting properties that are applied to the items in the collection. The Sorting property allows you to define and manage a set of sorting properties that determine the order of items in the collection based on specific criteria. When sorting properties are added, removed, or modified, the collection automatically updates to reflect the changes, and it raises collection changed events to notify subscribers of any changes to the items in the collection. The Sorting property provides a flexible way to control the order of items in the collection based on dynamic conditions, while still maintaining encapsulation and integrity of the data.
@@ -278,7 +283,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     /// <summary>
     /// Gets the number of items in the collection after filtering is applied. This count reflects the number of items that are currently visible in the collection based on the defined filters, and it may differ from the total number of items in the source collection. The Count property provides a way to determine how many items are currently included in the collection after filtering, which can be useful for scenarios where you want to know the number of items that meet specific criteria defined by the filters, while still maintaining encapsulation and integrity of the data.
     /// </summary>
-    public int Count => _items.Count;
+    public int Count => _count;
 
     /// <summary>
     /// Gets a value indicating whether the collection is read-only. If true, the collection does not allow modifications such as adding, removing, or clearing items. The IsReadOnly property provides a way to determine if the collection can be modified, which can be useful for scenarios where you want to enforce immutability or restrict changes to the collection, while still maintaining encapsulation and integrity of the data.
@@ -384,6 +389,18 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
                 h => source.CollectionChanged += h,
                 h => source.CollectionChanged -= h)
             .Select(x => x.EventArgs);
+
+    /// <summary>
+    /// Synchronizes <see cref="SourceCount"/> with the underlying source.
+    /// </summary>
+    private void UpdateSourceCount() =>
+        SetProperty(ref _sourceCount, _source.Count, nameof(SourceCount));
+
+    /// <summary>
+    /// Synchronizes <see cref="Count"/> with the filtered view.
+    /// </summary>
+    private void UpdateFilteredCount() =>
+        SetProperty(ref _count, _items.Count, nameof(Count));
 
     /// <summary>
     /// Subscribes to property changes of an item in the collection if it implements INotifyPropertyChanged. This method creates an observable that listens for property change events on the item and triggers a refresh of the filter and sort engines when relevant properties change. The SubscribeToItemChanges method ensures that the collection remains up-to-date with changes to the properties of individual items, allowing for dynamic updates to the collection based on changes to the underlying data, while still maintaining encapsulation and integrity of the data.

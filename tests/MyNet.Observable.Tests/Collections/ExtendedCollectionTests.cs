@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using FluentAssertions;
 using MyNet.Observable.Collections;
@@ -138,7 +137,7 @@ public sealed class ExtendedCollectionTests
 
         var latest = groups[^1];
         latest.Should().HaveCount(3); // 'a', 'b', 'c'
-        latest.Select(g => g.Key).Should().BeEquivalentTo(["a", "b", "c"]);
+        latest.Select(g => g.Key).Should().BeEquivalentTo("a", "b", "c");
         return;
         void onNext(IReadOnlyList<CollectionGroup<string>> g) => groups.Add(g);
     }
@@ -167,7 +166,7 @@ public sealed class ExtendedCollectionTests
         var countChanges = 0;
         col.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(ExtendedCollection<int>.Count))
+            if (e.PropertyName == nameof(ExtendedCollection<>.Count))
                 countChanges++;
         };
 

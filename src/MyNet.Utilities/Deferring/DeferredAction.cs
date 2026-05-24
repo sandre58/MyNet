@@ -18,7 +18,7 @@ namespace MyNet.Utilities.Deferring;
 /// Initializes a new instance of the <see cref="DeferredAction"/> class and binds the provided action.
 /// </remarks>
 /// <param name="action">The action to execute when deferral ends.</param>
-public class DeferredAction(Action action)
+public class DeferredAction(Action action) : IDeferrable
 {
     private int _deferCount;
     private bool _pending;

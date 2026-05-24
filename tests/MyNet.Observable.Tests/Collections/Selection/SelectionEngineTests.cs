@@ -58,7 +58,7 @@ public sealed class SelectionEngineTests
         engine.Select("a");
         engine.Select("b");
 
-        engine.SelectedItems.Should().BeEquivalentTo(["a", "b"]);
+        engine.SelectedItems.Should().BeEquivalentTo("a", "b");
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public sealed class SelectionEngineTests
 
         engine.Set(["b", "c"]);
 
-        engine.SelectedItems.Should().BeEquivalentTo(["b", "c"]);
+        engine.SelectedItems.Should().BeEquivalentTo("b", "c");
     }
 
     [Fact]

@@ -6,7 +6,6 @@
 
 using FluentAssertions;
 using MyNet.Observable.Collections;
-using MyNet.Observable.Collections.Selection;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Collections;
@@ -32,13 +31,13 @@ public sealed class ExtendedCollectionBuilderTests
     {
         using var selectable = new ExtendedCollectionBuilder<string>()
             .From(["a", "b", "c"])
-            .BuildSelectable(SelectionMode.Multiple);
+            .BuildSelectable();
 
         selectable.Select("a");
         selectable.Select("c");
 
         selectable.SelectedCount.Should().Be(2);
-        selectable.SelectedItems.Should().BeEquivalentTo(["a", "c"]);
+        selectable.SelectedItems.Should().BeEquivalentTo("a", "c");
     }
 
     [Fact]

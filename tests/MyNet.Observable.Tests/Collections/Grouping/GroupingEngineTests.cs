@@ -32,8 +32,8 @@ public sealed class GroupingEngineTests
         var result = GroupingEngine<string>.ComputeGroups(items, properties);
 
         result.Should().HaveCount(3);
-        result.Select(g => g.Key).Should().BeEquivalentTo(["a", "b", "c"]);
-        result.Single(g => g.Key == "a").Items.Should().BeEquivalentTo(["apple", "ant", "avocado"]);
+        result.Select(g => g.Key).Should().BeEquivalentTo("a", "b", "c");
+        result.Single(g => g.Key == "a").Items.Should().BeEquivalentTo("apple", "ant", "avocado");
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public sealed class GroupingEngineTests
         var result = GroupingEngine<string>.ComputeGroups(items, properties);
 
         result.Should().HaveCount(4);
-        result.Select(g => g.Key).Should().BeEquivalentTo(["a|a", "a|b", "b|a", "b|b"]);
+        result.Select(g => g.Key).Should().BeEquivalentTo("a|a", "a|b", "b|a", "b|b");
     }
 
     [Fact]

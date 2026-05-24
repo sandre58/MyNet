@@ -84,7 +84,6 @@ public static class SelectableCollection
 public sealed class SelectableCollection<T> : IDisposable
     where T : notnull
 {
-    private readonly ExtendedCollection<T> _collection;
     private readonly SelectionEngine<T> _selection;
     private readonly bool _disposeCollection;
 
@@ -102,7 +101,7 @@ public sealed class SelectableCollection<T> : IDisposable
     {
         ArgumentNullException.ThrowIfNull(collection);
 
-        _collection = collection;
+        Collection = collection;
         _selection = new(collection.Connect(), mode);
         _disposeCollection = disposeCollection;
     }
@@ -115,12 +114,12 @@ public sealed class SelectableCollection<T> : IDisposable
     /// <summary>
     /// Gets the underlying extended collection.
     /// </summary>
-    public ExtendedCollection<T> Collection => _collection;
+    public ExtendedCollection<T> Collection { get; }
 
     /// <summary>
     /// Gets the filtered items exposed by the underlying collection.
     /// </summary>
-    public ReadOnlyObservableCollection<T> Items => _collection.Items;
+    public ReadOnlyObservableCollection<T> Items => Collection.Items;
 
     /// <summary>
     /// Gets the collection of selected items in the selectable collection.
@@ -176,6 +175,6 @@ public sealed class SelectableCollection<T> : IDisposable
         _selection.Dispose();
 
         if (_disposeCollection)
-            _collection.Dispose();
+            Collection.Dispose();
     }
 }
