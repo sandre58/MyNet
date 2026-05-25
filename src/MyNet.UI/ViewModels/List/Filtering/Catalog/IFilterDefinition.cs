@@ -23,7 +23,7 @@ public interface IFilterDefinition<T>
     /// <summary>
     /// Gets the display name for this filter definition, which is used in the UI to represent this filter option to the user. The display name can be a static string or a dynamic value that provides more context about the filter condition.
     /// </summary>
-    IProvideValue<string> DisplayName { get; }
+    IObservableValue<string> DisplayName { get; }
 
     /// <summary>
     /// Gets the type of the filter (for UI templating).

@@ -17,7 +17,7 @@ namespace MyNet.UI.ViewModels.List.Filtering.Catalog;
 /// <param name="factory">The factory function to create instances of the filter condition view model.</param>
 /// <typeparam name="T">The type of items to be filtered.</typeparam>
 /// <typeparam name="TFilter">The type of the filter condition view model.</typeparam>
-public sealed class FilterDefinition<T, TFilter>(string key, IProvideValue<string> displayName, Func<TFilter> factory)
+public sealed class FilterDefinition<T, TFilter>(string key, IObservableValue<string> displayName, Func<TFilter> factory)
     : IFilterDefinition<T>
     where TFilter : IFilterConditionViewModel<T>
 {
@@ -29,7 +29,7 @@ public sealed class FilterDefinition<T, TFilter>(string key, IProvideValue<strin
     /// <summary>
     /// Gets the provider for the display name of this filter definition. This provider is used to obtain the display name that can be shown in the UI.
     /// </summary>
-    public IProvideValue<string> DisplayName { get; } = displayName;
+    public IObservableValue<string> DisplayName { get; } = displayName;
 
     /// <summary>
     /// Gets the type of the filter condition view model. This property returns the type of the filter condition view model associated with this filter definition.

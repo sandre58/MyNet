@@ -8,7 +8,6 @@ using System;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Grouping;
-using MyNet.Observable.Translatables;
 using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
@@ -23,9 +22,14 @@ namespace MyNet.UI.ViewModels.List.Grouping;
 public class GroupingPropertyViewModel<T>(
     Expression<Func<T, object?>> expression,
     string key,
-    IProvideValue<string> displayName)
-    : DisplayWrapper<string>(key, displayName), IGroupingPropertyViewModel<T>
+    IObservableValue<string> displayName)
+    : IGroupingPropertyViewModel<T>
 {
+    /// <summary>
+    /// Gets the localized display name for this grouping property.
+    /// </summary>
+    public IObservableValue<string> DisplayName { get; } = displayName;
+
     /// <summary>
     /// Gets the unique identifier for the grouping property. This key is used to identify the grouping property within the collection of grouping properties. It should be unique among all grouping properties to avoid conflicts when applying grouping to a collection. The key can be used by consumers to reference this specific grouping property when configuring grouping behavior or when building the collection of active grouping properties.
     /// </summary>
@@ -65,4 +69,7 @@ public class GroupingPropertyViewModel<T>(
     /// Handles changes to the IsEnabled property. When the IsEnabled property changes, this method updates the ActivatedAt property to reflect the current date and time if the grouping property is enabled, or sets it to null if it is disabled. This allows consumers to track when each grouping property was activated, which can be important for determining the order of grouping when multiple properties are active.
     /// </summary>
     protected virtual void OnIsEnabledChanged() => ActivatedAt = IsEnabled ? DateTime.UtcNow : null;
+
+    /// <inheritdoc />
+    public override string ToString() => DisplayName.Value ?? key;
 }

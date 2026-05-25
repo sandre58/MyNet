@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Sorting;
-using MyNet.Observable.Translatables;
 using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
@@ -25,10 +24,15 @@ namespace MyNet.UI.ViewModels.List.Sorting;
 public class SortingPropertyViewModel<T>(
     Expression<Func<T, object?>> expression,
     string key,
-    IProvideValue<string> displayName,
+    IObservableValue<string> displayName,
     ListSortDirection direction = ListSortDirection.Ascending)
-    : DisplayWrapper<string>(key, displayName), ISortingPropertyViewModel<T>
+    : ISortingPropertyViewModel<T>
 {
+    /// <summary>
+    /// Gets the localized display name for this sorting property.
+    /// </summary>
+    public IObservableValue<string> DisplayName { get; } = displayName;
+
     /// <summary>
     /// Gets the unique identifier for the sorting property. This key is used to identify the sorting property within the collection of sorting properties. It should be unique among all sorting properties to avoid conflicts when applying sorting to a collection. The key can be used by consumers to reference this specific sorting property when configuring sorting behavior or when building the collection of active sorting properties.
     /// </summary>
@@ -73,4 +77,7 @@ public class SortingPropertyViewModel<T>(
     /// Handles changes to the IsEnabled property. When the IsEnabled property changes, this method updates the ActivatedAt property to reflect the current date and time if the sorting property is enabled, or sets it to null if it is disabled. This allows consumers to track when each sorting property was activated, which can be important for determining the order of sorting when multiple properties are active.
     /// </summary>
     protected virtual void OnIsEnabledChanged() => ActivatedAt = IsEnabled ? DateTime.UtcNow : null;
+
+    /// <inheritdoc />
+    public override string ToString() => DisplayName.Value ?? key;
 }

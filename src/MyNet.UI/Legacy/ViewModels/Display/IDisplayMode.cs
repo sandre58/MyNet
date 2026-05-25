@@ -15,7 +15,7 @@ using MyNet.Observable;
 
 namespace MyNet.UI.Legacy.ViewModels.Display;
 
-public interface IDisplayMode : IProvideValue<string>
+public interface IDisplayMode : IObservableValue<string>
 {
     string Key { get; }
 

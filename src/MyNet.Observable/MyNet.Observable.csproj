@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
+        <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
         <ProjectReference Include="..\MyNet.Observable.Metadata.Generator\MyNet.Observable.Metadata.Generator.csproj"
                           OutputItemType="Analyzer"
@@ -27,7 +28,6 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>ValidationResources.resx</DependentUpon>
         </Compile>
-        <Compile Remove="Translatables\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,11 +35,6 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>ValidationResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Remove="Translatables\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Translatables\**" />
     </ItemGroup>
 
 </Project>

@@ -14,6 +14,7 @@ using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
 using MyNet.Observable.Attributes;
+using MyNet.Observable;
 using MyNet.Observable.Translatables;
 using MyNet.UI.Commands;
 using MyNet.UI.Legacy.Selection.Models;
@@ -31,7 +32,7 @@ public abstract class FileExportByColumnsViewModelBase<T, TColumnMapping> : File
 
     public bool ShowHeaderColumnTraduction { get; set; } = true;
 
-    public ICollection<DisplayWrapper<ICollection<string>>> PresetColumns { get; }
+    public ICollection<LabeledValue<ICollection<string>>> PresetColumns { get; }
 
     public bool? AreAllSelected
     {
@@ -57,7 +58,7 @@ public abstract class FileExportByColumnsViewModelBase<T, TColumnMapping> : File
     protected FileExportByColumnsViewModelBase(FileExtensionInfo fileExtensionInfo,
         Func<string> defaultExportName,
         IDictionary<TColumnMapping, bool> defaultColumns,
-        IEnumerable<DisplayWrapper<ICollection<string>>>? presetColumns = null,
+        IEnumerable<LabeledValue<ICollection<string>>>? presetColumns = null,
         string? defaultFolder = null)
         : base(fileExtensionInfo, defaultExportName, defaultFolder)
     {

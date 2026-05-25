@@ -18,7 +18,7 @@ namespace MyNet.Observable;
 /// <typeparam name="TUnit">The type of the unit.</typeparam>
 public interface IBoundedUnitValue<T, TUnit> : IBoundedValue<T>
 where T : struct, INumber<T>
-where TUnit : Enum
+where TUnit : struct, Enum
 {
     /// <summary>
     /// Gets the unit of measurement associated with the value. This property represents the specific unit in which the value is expressed, such as meters, seconds, or any other relevant unit defined by the TUnit enum. The unit is essential for understanding the context of the value and for performing conversions between different units when necessary. Implementing classes should ensure that the Unit property is properly set and maintained to allow for accurate conversions and normalization based on the associated unit of measurement.
@@ -38,5 +38,5 @@ where TUnit : Enum
     /// <param name="minUnit">The optional minimum unit for normalization.</param>
     /// <param name="maxUnit">The optional maximum unit for normalization.</param>
     /// <returns>The normalized bounded unit value.</returns>
-    IBoundedUnitValue<T, TUnit> Normalize(TUnit? minUnit = default, TUnit? maxUnit = default);
+    IBoundedUnitValue<T, TUnit> Normalize(TUnit? minUnit, TUnit? maxUnit);
 }

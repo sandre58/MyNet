@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using MyNet.Observable;
 using MyNet.Observable.Collections.Wrappers;
+using MyNet.UI.ViewModels.List.Wrappers;
 using MyNet.UI.ViewModels.List.Wrappers;
 using MyNet.Utilities;
 using Xunit;

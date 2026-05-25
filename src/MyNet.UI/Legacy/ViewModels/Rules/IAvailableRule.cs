@@ -15,7 +15,7 @@ using MyNet.Observable;
 
 namespace MyNet.UI.Legacy.ViewModels.Rules;
 
-public interface IAvailableRule<out T> : IProvideValue<string>
+public interface IAvailableRule<out T> : IObservableValue<string>
     where T : IEditableRule
 {
     bool IsEnabled { get; }

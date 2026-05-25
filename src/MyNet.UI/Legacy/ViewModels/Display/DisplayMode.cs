@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using MyNet.Observable.Attributes;
-using MyNet.Observable.Translatables;
+using MyNet.Observable;
 using MyNet.UI.Commands;
 using MyNet.UI.Layout;
 using MyNet.Utilities;
@@ -57,7 +57,7 @@ public class DisplayModeList : DisplayMode
 
     public ColumnLayoutCollection ColumnLayouts { get; }
 
-    public ObservableRangeCollection<DisplayWrapper<string[]>> PresetColumns { get; } = [];
+    public ObservableRangeCollection<LabeledValue<string[]>> PresetColumns { get; } = [];
 
     public ICommand SetDisplayedColumnsCommand { get; }
 

@@ -19,7 +19,7 @@ namespace MyNet.UI.ViewModels.List.Grouping;
 public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, object?>> expression)
 {
     private string? _key;
-    private IProvideValue<string>? _displayName;
+    private IObservableValue<string>? _displayName;
     private GroupingDefaultState? _defaultState;
     private int _order;
 
@@ -35,7 +35,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
     /// <summary>
     /// Sets the display name provider used by the UI.
     /// </summary>
-    public GroupingPropertyViewModelBuilder<T> WithDisplayName(IProvideValue<string> displayName)
+    public GroupingPropertyViewModelBuilder<T> WithDisplayName(IObservableValue<string> displayName)
     {
         _displayName = displayName;
         return this;
@@ -59,7 +59,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
     internal GroupingPropertyDefinition<T> Build()
     {
         var key = ResolveKey();
-        var displayName = _displayName ?? new Translatable<string>(() => key);
+        var displayName = _displayName ?? new CultureBoundValue<string>(() => key);
 
         return new(key, expression, displayName, _defaultState);
     }
@@ -88,7 +88,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
 /// <param name="DisplayName">The display name provider for the UI.</param>
 /// <param name="DefaultState">The default configuration for the grouping property, if any.</param>
 /// <typeparam name="T">The type of the items being grouped.</typeparam>
-internal sealed record GroupingPropertyDefinition<T>(string Key, Expression<Func<T, object?>> Expression, IProvideValue<string> DisplayName, GroupingDefaultState? DefaultState);
+internal sealed record GroupingPropertyDefinition<T>(string Key, Expression<Func<T, object?>> Expression, IObservableValue<string> DisplayName, GroupingDefaultState? DefaultState);
 
 /// <summary>
 /// Represents the active configuration for a grouping property, including its default order in which it was activated. This record is used to track the state of active grouping properties, allowing the system to determine how to apply grouping based on the defined configuration and the order of activation. The DefaultDirection property indicates the initial grouping direction for the property when it becomes active, while the Order property can be used to determine the sequence in which multiple active grouping properties should be applied to a collection.
