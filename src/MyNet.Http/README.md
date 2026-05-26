@@ -30,21 +30,42 @@ dotnet add package MyNet.Http
 
 ## Features
 
-- Simplified HTTP client creation and configuration
-- Extension methods for common HTTP operations
-- Helpers for sending requests and handling responses
-- Support for JSON serialization/deserialization
+- Typed HTTP client built on `HttpClient` and `System.Text.Json`
+- `IWebApiService` abstraction for easier testing and DI
+- RFC 7807 problem details parsing via `ProblemDetailsParser`
+- Per-request timeout support via `HttpRequestExtensions.SetTimeout`
+- GET/POST/PUT/PATCH/DELETE helpers with async-first API
 
 ## Example Usage
 
 ```csharp
-using MyNet.Http.Extensions;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using MyNet.Http;
 
-// Create and configure HttpClient
-var client = HttpClientFactory.Create();
+public record MyResponseType(string Value);
 
-// Send a GET request
-var response = await client.GetJsonAsync<MyResponseType>("https://api.example.com/data");
+await using var api = new WebApiService(
+    new Uri("https://api.example.com/"),
+    timeout: TimeSpan.FromSeconds(30));
+
+var response = await api.GetDataAsync<MyResponseType>("/data", CancellationToken.None);
+await api.PostDataAsync("/items", new { Name = "Sample" }, CancellationToken.None);
+```
+
+### Custom HttpClient (tests or DI)
+
+```csharp
+using var client = new HttpClient(new MyHandler()) { BaseAddress = new Uri("https://api.example.com/") };
+await using var api = new WebApiService(client, timeout: TimeSpan.FromSeconds(10), disposeClient: true);
+```
+
+### Per-request timeout
+
+```csharp
+using var request = new HttpRequestMessage(HttpMethod.Get, "/slow");
+request.SetTimeout(TimeSpan.FromSeconds(2));
 ```
 
 ## License

@@ -67,6 +67,7 @@
     <Project Path="tests/MyNet.Generator.Tests/MyNet.Generator.Tests.csproj" />
     <Project Path="tests/MyNet.Geography.Tests/MyNet.Geography.Tests.csproj" />
     <Project Path="tests/MyNet.Globalization.Tests/MyNet.Globalization.Tests.csproj" />
+    <Project Path="tests/MyNet.Http.Tests/MyNet.Http.Tests.csproj" />
     <Project Path="tests/MyNet.Humanizer.Tests/MyNet.Humanizer.Tests.csproj" />
     <Project Path="tests/MyNet.IO.Tests/MyNet.IO.Tests.csproj" />
     <Project Path="tests/MyNet.Messaging.Tests/MyNet.Messaging.Tests.csproj" />
