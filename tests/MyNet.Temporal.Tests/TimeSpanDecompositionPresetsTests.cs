@@ -52,6 +52,6 @@ public sealed class TimeSpanDecompositionPresetsTests
     {
         var result = TimeSpan.FromHours(1).Full();
 
-        Assert.Contains(result, unit => unit.Unit == TimeUnit.Hour && unit.Value == 1);
+        Assert.Contains(result, unit => unit is { Unit: TimeUnit.Hour, Value: 1 });
     }
 }

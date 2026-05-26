@@ -57,6 +57,17 @@ public sealed class ResxProvidersTests
     }
 
     [Fact]
+    public void NameProvider_ForEnglishAndFrench_LoadDistinctDatasets()
+    {
+        var english = ResxNameFakerProvider.Create(CultureInfo.GetCultureInfo("en"));
+        var french = ResxNameFakerProvider.Create(CultureInfo.GetCultureInfo("fr"));
+
+        english.MaleFirstNames.Should().NotBeEmpty();
+        french.MaleFirstNames.Should().NotBeEmpty();
+        english.MaleFirstNames.Should().NotEqual(french.MaleFirstNames);
+    }
+
+    [Fact]
     public void Create_WithNullCulture_ShouldThrow()
     {
         Action name = () => ResxNameFakerProvider.Create(null!);

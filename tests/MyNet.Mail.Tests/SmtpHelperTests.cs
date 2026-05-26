@@ -15,17 +15,11 @@ public class SmtpHelperTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void TestSmtpConnection_WithMissingServer_ReturnsFalse(string? server)
-    {
-        Assert.False(SmtpHelper.TestSmtpConnection(server, 25));
-    }
+    public void TestSmtpConnection_WithMissingServer_ReturnsFalse(string? server) => Assert.False(SmtpHelper.TestSmtpConnection(server, 25));
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(70000)]
-    public void TestSmtpConnection_WithInvalidPort_ReturnsFalse(int port)
-    {
-        Assert.False(SmtpHelper.TestSmtpConnection("smtp.test", port));
-    }
+    public void TestSmtpConnection_WithInvalidPort_ReturnsFalse(int port) => Assert.False(SmtpHelper.TestSmtpConnection("smtp.test", port));
 }

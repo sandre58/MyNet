@@ -95,7 +95,7 @@ public class EmailTests
     {
         var email = Email.From("from@test.com");
 
-        Assert.Throws<ArgumentException>(() => email.AttachFromFilename(""));
+        Assert.Throws<ArgumentException>(() => email.AttachFromFilename(string.Empty));
     }
 
     [Fact]

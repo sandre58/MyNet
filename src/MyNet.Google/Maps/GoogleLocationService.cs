@@ -14,9 +14,11 @@ using MyNet.Primitives;
 
 namespace MyNet.Google.Maps;
 
-public class GoogleLocationService(string apikey, bool useHttps) : ILocationService
+public class GoogleLocationService(string apikey, bool useHttps, Func<string, XDocument>? loadXDocument = null, Func<string, XmlDocument>? loadXmlDocument = null) : ILocationService
 {
     private readonly string _urlProtocolPrefix = useHttps ? "https://" : "http://";
+    private readonly Func<string, XDocument> _loadXDocument = loadXDocument ?? XDocument.Load;
+    private readonly Func<string, XmlDocument> _loadXmlDocument = loadXmlDocument ?? LoadXmlDocumentFromUrl;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GoogleLocationService"/> class.
@@ -43,7 +45,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
     /// </summary>
     public Region? GetRegionFromCoordinates(double latitude, double longitude)
     {
-        var doc = XDocument.Load(string.Format(CultureInfo.InvariantCulture, ApiUrlRegionFromLatLong, latitude, longitude) + "&key=" + apikey);
+        var doc = _loadXDocument(string.Format(CultureInfo.InvariantCulture, ApiUrlRegionFromLatLong, latitude, longitude) + "&key=" + apikey);
 
         var els = doc.Descendants("result").First().Descendants("address_component").FirstOrDefault(s => s.Descendants("type").First().Value == "administrative_area_level_1");
 
@@ -56,15 +58,14 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
     public Address? GetAddressFromCoordinates(double latitude, double longitude)
     {
         var addressCountry = string.Empty;
+        var addressCountryCode = string.Empty;
         var addressLocality = string.Empty;
         var addressSubLocality = string.Empty;
         var addressRoute = string.Empty;
         var addressStreetNumber = string.Empty;
         var addressPostalCode = string.Empty;
 
-        var doc = new XmlDocument();
-
-        doc.Load(string.Format(CultureInfo.InvariantCulture, ApiUrlRegionFromLatLong, latitude, longitude) + "&key=" + apikey);
+        var doc = _loadXmlDocument(string.Format(CultureInfo.InvariantCulture, ApiUrlRegionFromLatLong, latitude, longitude) + "&key=" + apikey);
         var element = doc.SelectSingleNode("//GeocodeResponse/status");
         if (element is not { InnerText: not Constants.ApiResponses.ZeroResults })
         {
@@ -85,6 +86,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
             {
                 case "country":
                     addressCountry = longName;
+                    addressCountryCode = shortname;
                     break;
                 case "locality":
                     addressLocality = longName;
@@ -110,7 +112,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
             }
         }
 
-        _ = Country.TryFromValue(addressCountry.OrEmpty(), out var country);
+        var country = ResolveCountry(addressCountry, addressCountryCode);
         var streetParts = new[] { addressStreetNumber, addressRoute, addressSubLocality }.Where(static x => x is not null);
         return new(string.Join(" ", streetParts), addressPostalCode, addressLocality, country, new(latitude, longitude));
     }
@@ -121,7 +123,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
     /// <param name="address">The address.</param>
     public Coordinates? GetCoordinatesFromAddress(string address)
     {
-        var doc = XDocument.Load(string.Format(CultureInfo.InvariantCulture, ApiUrlLatLongFromAddress, Uri.EscapeDataString(address)) + "&key=" + apikey);
+        var doc = _loadXDocument(string.Format(CultureInfo.InvariantCulture, ApiUrlLatLongFromAddress, Uri.EscapeDataString(address)) + "&key=" + apikey);
 
         var status = doc.Descendants("status").FirstOrDefault()?.Value;
         switch (status)
@@ -151,7 +153,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
     /// <param name="address">The address.</param>
     public string[] GetAddressesListFromAddress(string address)
     {
-        var doc = XDocument.Load(string.Format(CultureInfo.InvariantCulture, ApiUrlLatLongFromAddress, Uri.EscapeDataString(address)) + "&key=" + apikey);
+        var doc = _loadXDocument(string.Format(CultureInfo.InvariantCulture, ApiUrlLatLongFromAddress, Uri.EscapeDataString(address)) + "&key=" + apikey);
         var status = doc.Descendants("status").FirstOrDefault()?.Value;
 
         switch (status)
@@ -183,7 +185,7 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
     {
         var direction = new Directions();
 
-        var doc = XDocument.Load(string.Format(CultureInfo.InvariantCulture,
+        var doc = _loadXDocument(string.Format(CultureInfo.InvariantCulture,
             ApiUrlDirections,
             Uri.EscapeDataString(fromAddress.ToString()),
             Uri.EscapeDataString(toAddress.ToString())) + "&key=" + apikey);
@@ -234,5 +236,24 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
         return direction;
     }
 
+    private static Country? ResolveCountry(string? countryName, string? countryCode)
+    {
+        if (Country.TryFromValue(countryName.OrEmpty(), out var byName))
+            return byName;
+
+        if (string.IsNullOrEmpty(countryCode))
+            return null;
+
+        return Country.All.FirstOrDefault(c =>
+            string.Equals(c.Alpha2, countryCode, StringComparison.OrdinalIgnoreCase));
+    }
+
     private static double? ParseUs(string? value) => value is null ? null : double.Parse(value, new CultureInfo("en-US"));
+
+    private static XmlDocument LoadXmlDocumentFromUrl(string url)
+    {
+        var doc = new XmlDocument();
+        doc.Load(url);
+        return doc;
+    }
 }

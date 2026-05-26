@@ -22,7 +22,7 @@ public class MockMailServiceTests
     }
 
     [Fact]
-    public async Task CanConnectAsync_ReturnsTrue()
+    public async Task CanConnectAsync_ReturnsTrueAsync()
     {
         var service = new MockMailService();
 
@@ -30,7 +30,7 @@ public class MockMailServiceTests
     }
 
     [Fact]
-    public async Task SendAsync_WhenCanceled_AddsErrorMessage()
+    public async Task SendAsync_WhenCanceled_AddsErrorMessageAsync()
     {
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();

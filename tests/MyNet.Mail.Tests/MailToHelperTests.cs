@@ -11,14 +11,8 @@ namespace MyNet.Mail.Tests;
 public class MailToHelperTests
 {
     [Fact]
-    public void SendMail_WithNoRecipients_ReturnsFalse()
-    {
-        Assert.False(MailToHelper.SendMail([], "title", "body"));
-    }
+    public void SendMail_WithNoRecipients_ReturnsFalse() => Assert.False(MailToHelper.SendMail([], "title", "body"));
 
     [Fact]
-    public void SendMail_WithWhitespaceRecipients_ReturnsFalse()
-    {
-        Assert.False(MailToHelper.SendMail([" ", "\t"], "title", "body"));
-    }
+    public void SendMail_WithWhitespaceRecipients_ReturnsFalse() => Assert.False(MailToHelper.SendMail([" ", "\t"], "title", "body"));
 }
