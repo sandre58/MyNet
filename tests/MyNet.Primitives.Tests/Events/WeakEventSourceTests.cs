@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using MyNet.Primitives.Events;
 using Xunit;
 
@@ -60,23 +61,29 @@ public sealed class WeakEventSourceTests
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        var ex = Record.Exception(() => sut.Raise(this, EventArgs.Empty));
+        sut.Raise(this, EventArgs.Empty);
 
-        Assert.Null(ex);
         Assert.Equal(0, TransientHandler.LastCount);
     }
 
     private static void SubscribeTransientHandler(WeakEventSource<EventArgs> source)
     {
-        TransientHandler.LastCount = 0;
-        source.Subscribe(TransientHandler.Handle);
+        subscribe();
+
+        void subscribe()
+        {
+            var handler = new TransientHandler();
+            TransientHandler.LastCount = 0;
+            source.Subscribe(handler.Handle);
+        }
     }
 
-    private static class TransientHandler
+    private sealed class TransientHandler
     {
         public static int LastCount { get; set; }
 
-        public static void Handle(object? sender, EventArgs e) => LastCount++;
+        [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Local", Justification = "Instance method to test instance handler collection.")]
+        public void Handle(object? sender, EventArgs e) => LastCount++;
     }
 
     private sealed class CountingHandler

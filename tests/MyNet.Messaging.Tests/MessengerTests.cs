@@ -10,12 +10,10 @@ using Xunit;
 
 namespace MyNet.Messaging.Tests;
 
-[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Messenger is disposed by calling Reset in Dispose method")]
+[Collection("Messenger")]
 public sealed class MessengerTests : IDisposable
 {
     private readonly Messenger _messenger = new();
-
-    public void Dispose() => Messenger.Reset();
 
     #region Register tests
 
@@ -320,13 +318,20 @@ public sealed class MessengerTests : IDisposable
         var custom = new Messenger();
         var executed = false;
 
-        // Act
-        Messenger.OverrideDefault(custom);
-        Messenger.Default?.Register<TestMessage>(this, _ => executed = true);
-        Messenger.Default?.Send(new TestMessage());
+        try
+        {
+            // Act
+            Messenger.OverrideDefault(custom);
+            Messenger.Default?.Register<TestMessage>(this, _ => executed = true);
+            Messenger.Default?.Send(new TestMessage());
 
-        // Assert
-        Assert.True(executed);
+            // Assert
+            Assert.True(executed);
+        }
+        finally
+        {
+            Messenger.Reset();
+        }
     }
 
     #endregion
@@ -347,4 +352,6 @@ public sealed class MessengerTests : IDisposable
     private sealed class TargetClass;
 
     #endregion
+
+    public void Dispose() => _messenger.Dispose();
 }

@@ -5,17 +5,14 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace MyNet.Messaging.Tests;
 
-[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Messenger is disposed by calling Reset in Dispose method")]
+[Collection("Messenger")]
 public sealed class MessengerExtensionsTests : IDisposable
 {
     private readonly Messenger _messenger = new();
-
-    public void Dispose() => Messenger.Reset();
 
     #region RegisterOnce tests
 
@@ -243,4 +240,6 @@ public sealed class MessengerExtensionsTests : IDisposable
     private sealed class TargetClass;
 
     #endregion
+
+    public void Dispose() => _messenger.Dispose();
 }
