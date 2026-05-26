@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MyNet.Generator;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 
 namespace MyNet.Fakers.Geography;
 
@@ -16,17 +16,17 @@ namespace MyNet.Fakers.Geography;
 public sealed class CountryFaker(IRandomGenerator random) : ICountryFaker
 {
     /// <inheritdoc />
-    public Country Country() => random.Item(Utilities.Geography.Country.All);
+    public Country Country() => random.Item(global::MyNet.Geography.Country.All);
 
     /// <inheritdoc />
-    public string Name() => random.Item(Utilities.Geography.Country.All).Name;
+    public string Name() => random.Item(global::MyNet.Geography.Country.All).Name;
 
     /// <inheritdoc />
-    public string Alpha2() => random.Item(Utilities.Geography.Country.All).Alpha2;
+    public string Alpha2() => random.Item(global::MyNet.Geography.Country.All).Alpha2;
 
     /// <inheritdoc />
-    public string Alpha3() => random.Item(Utilities.Geography.Country.All).Alpha3;
+    public string Alpha3() => random.Item(global::MyNet.Geography.Country.All).Alpha3;
 
     /// <inheritdoc />
-    public int Iso() => random.Item(Utilities.Geography.Country.All).Iso;
+    public int Iso() => random.Item(global::MyNet.Geography.Country.All).Iso;
 }

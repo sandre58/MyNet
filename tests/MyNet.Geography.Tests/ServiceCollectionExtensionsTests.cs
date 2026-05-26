@@ -8,7 +8,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using MyNet.Humanizer.Display;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Geography.Tests;

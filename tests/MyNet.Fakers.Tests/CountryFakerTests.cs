@@ -10,7 +10,7 @@ using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Geography;
 using MyNet.Generator;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using MyNet.Humanizer.Formatting.Addresses;
 using MyNet.Humanizer.Formatting.Addresses.Cultures;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Formatting;

@@ -8,7 +8,7 @@
         <Product>My .NET Utilities</Product>
         <PackageIcon>MyNetUtilities.png</PackageIcon>
         <Description>A powerful collection of utility classes and extension methods designed to extend the functionality of the .NET Framework.</Description>
-        <PackageTags>My;Utilities;Toolkit;Extensions;Authentication;Caching;Comparison;DateTime;Deffering;Encryption;Exceptions;Geography;Google;IO;Localization;Logging;Mail;Messaging;Progress;Suspending;Threading</PackageTags>
+        <PackageTags>My;Utilities;Toolkit;Extensions;Authentication;Caching;Comparison;DateTime;Deffering;Encryption;Exceptions;IO;Localization;Logging;Mail;Messaging;Progress;Suspending;Threading</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

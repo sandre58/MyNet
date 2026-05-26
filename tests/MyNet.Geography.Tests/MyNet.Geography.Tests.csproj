@@ -4,6 +4,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\src\MyNet.Geography.Localization\MyNet.Geography.Localization.csproj" />
         <ProjectReference Include="..\..\src\MyNet.Geography\MyNet.Geography.csproj" />
     </ItemGroup>
 

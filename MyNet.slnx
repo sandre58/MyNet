@@ -80,8 +80,10 @@
   <Project Path="src/MyNet.Platform.Windows/MyNet.Platform.Windows.csproj" />
   <Project Path="src/MyNet.Reflection/MyNet.Reflection.csproj" />
   <Project Path="src/MyNet.Fakers/MyNet.Fakers.csproj" />
+  <Project Path="src/MyNet.Geography.Localization/MyNet.Geography.Localization.csproj" />
   <Project Path="src/MyNet.Geography.Resources/MyNet.Geography.Resources.csproj" />
   <Project Path="src/MyNet.Geography/MyNet.Geography.csproj" />
+  <Project Path="src/MyNet.Google/MyNet.Google.csproj" />
   <Project Path="src/MyNet.Globalization/MyNet.Globalization.csproj" />
   <Project Path="src/MyNet.Http/MyNet.Http.csproj" />
   <Project Path="src/MyNet.Humanizer/MyNet.Humanizer.csproj" />

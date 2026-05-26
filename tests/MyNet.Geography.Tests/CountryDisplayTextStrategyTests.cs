@@ -7,11 +7,11 @@
 using System.Globalization;
 using FluentAssertions;
 using Moq;
-using MyNet.Geography.Providers;
+using MyNet.Geography.Localization.Providers;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Globalization.Localization.Translation.KeyGeneration;
 using MyNet.Humanizer.Display;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Geography.Tests;

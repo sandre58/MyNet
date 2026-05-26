@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 
 namespace MyNet.Humanizer.Formatting.Addresses;
 

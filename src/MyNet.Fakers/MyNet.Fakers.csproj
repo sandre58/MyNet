@@ -10,9 +10,9 @@
     <ItemGroup>
         <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.Generator\MyNet.Generator.csproj" />
+        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />
         <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
         <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
-        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>

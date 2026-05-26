@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />
         <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
         <ProjectReference Include="..\MyNet.Reflection\MyNet.Reflection.csproj" />

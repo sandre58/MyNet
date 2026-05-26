@@ -8,7 +8,7 @@ using System;
 using MyNet.Primitives.Intervals;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
-namespace MyNet.Utilities;
+namespace MyNet.Primitives;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public static class IntervalExtensions

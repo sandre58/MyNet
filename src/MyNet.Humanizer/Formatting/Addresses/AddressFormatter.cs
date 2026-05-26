@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 
 namespace MyNet.Humanizer.Formatting.Addresses;
 

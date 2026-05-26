@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
-using MyNet.Utilities.Geography;
+using MyNet.Geography;
 
 namespace MyNet.Fakers.Geography;
 
