@@ -4,8 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Globalization.Facade;
 using MyNet.Globalization.Localization.Translation;
-using MyNet.Globalization.Static;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Localization;

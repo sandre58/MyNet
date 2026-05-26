@@ -29,8 +29,8 @@ public static class OrdinalizeExtensions
         /// <summary>
         /// Turns a number into an ordinal string used to denote the position in an ordered sequence such as 1st, 2nd, 3rd, 4th.
         /// Gender for Brazilian Portuguese locale
-        /// "1".Ordinalize(GrammaticalGender.Masculine) -> "1�"
-        /// "1".Ordinalize(GrammaticalGender.Feminine) -> "1�".
+        /// "1".Ordinalize(GrammaticalGender.Masculine) -> "1º"
+        /// "1".Ordinalize(GrammaticalGender.Feminine) -> "1ª".
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
@@ -48,8 +48,8 @@ public static class OrdinalizeExtensions
         /// <summary>
         /// Turns a number into an ordinal number used to denote the position in an ordered sequence such as 1st, 2nd, 3rd, 4th.
         /// Gender for Brazilian Portuguese locale
-        /// 1.Ordinalize(GrammaticalGender.Masculine) -> "1�"
-        /// 1.Ordinalize(GrammaticalGender.Feminine) -> "1�".
+        /// 1.Ordinalize(GrammaticalGender.Masculine) -> "1º"
+        /// 1.Ordinalize(GrammaticalGender.Feminine) -> "1ª".
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>

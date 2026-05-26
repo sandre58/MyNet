@@ -7,8 +7,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MyNet.Globalization.Static;
-using MyNet.Utilities;
+using MyNet.Globalization.Facade;
+using MyNet.Text;
 using Xunit;
 
 namespace MyNet.Globalization.Tests.Extensions;

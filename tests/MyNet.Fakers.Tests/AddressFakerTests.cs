@@ -10,9 +10,9 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Geography;
-using MyNet.Globalization.Localization.Providers;
 using MyNet.Generator;
 using MyNet.Geography;
+using MyNet.Globalization.Localization.Providers;
 using MyNet.Text.Randomize;
 using Xunit;
 

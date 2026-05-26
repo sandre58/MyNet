@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using MyNet.Humanizer.Static;
-using MyNet.Utilities;
+using MyNet.Humanizer.Facade;
+using MyNet.Primitives;
 using Xunit;
 
 #pragma warning disable CA2263 // Intentional: these tests validate the Type-based overload behavior.
@@ -52,16 +52,16 @@ public class SmartEnumExtensionsTests
     [Fact]
     public void DehumanizeToType_WithExactName_ReturnsMatchingSmartEnum()
     {
-        var result = MyNet.Humanizer.Static.SmartEnumExtensions.DehumanizeTo("Active", typeof(TestStatus));
+        var result = Facade.SmartEnumExtensions.DehumanizeTo("Active", typeof(TestStatus));
 
         Assert.Same(TestStatus.Active, result);
     }
 
     [Fact]
-    public void DehumanizeToType_WithNullTargetType_ThrowsArgumentNullException() => _ = Assert.Throws<ArgumentNullException>(() => MyNet.Humanizer.Static.SmartEnumExtensions.DehumanizeTo("Active", null!));
+    public void DehumanizeToType_WithNullTargetType_ThrowsArgumentNullException() => _ = Assert.Throws<ArgumentNullException>(() => Humanizer.Facade.SmartEnumExtensions.DehumanizeTo("Active", null!));
 
     [Fact]
-    public void DehumanizeToType_WithNonSmartEnumType_ThrowsArgumentException() => _ = Assert.Throws<ArgumentException>(() => MyNet.Humanizer.Static.SmartEnumExtensions.DehumanizeTo("Active", typeof(string)));
+    public void DehumanizeToType_WithNonSmartEnumType_ThrowsArgumentException() => _ = Assert.Throws<ArgumentException>(() => Facade.SmartEnumExtensions.DehumanizeTo("Active", typeof(string)));
 
     [Fact]
     public void DehumanizeToGeneric_WithNullOrWhiteSpaceInput_ThrowsKeyNotFoundException() => _ = Assert.Throws<KeyNotFoundException>(() => " ".DehumanizeTo<TestStatus>());

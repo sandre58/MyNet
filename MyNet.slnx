@@ -62,12 +62,22 @@
     <File Path="docs/TRANSLATION_SYSTEM_GUIDE.md" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="tests/MyNet.Collections.Tests/MyNet.Collections.Tests.csproj" />
     <Project Path="tests/MyNet.Fakers.Tests/MyNet.Fakers.Tests.csproj" />
+    <Project Path="tests/MyNet.Generator.Tests/MyNet.Generator.Tests.csproj" />
     <Project Path="tests/MyNet.Geography.Tests/MyNet.Geography.Tests.csproj" />
     <Project Path="tests/MyNet.Globalization.Tests/MyNet.Globalization.Tests.csproj" />
     <Project Path="tests/MyNet.Humanizer.Tests/MyNet.Humanizer.Tests.csproj" />
+    <Project Path="tests/MyNet.IO.Tests/MyNet.IO.Tests.csproj" />
+    <Project Path="tests/MyNet.Messaging.Tests/MyNet.Messaging.Tests.csproj" />
+    <Project Path="tests/MyNet.Metadata.Tests/MyNet.Metadata.Tests.csproj" />
     <Project Path="tests/MyNet.Observable.Metadata.Generator.Tests/MyNet.Observable.Metadata.Generator.Tests.csproj" />
     <Project Path="tests/MyNet.Observable.Tests/MyNet.Observable.Tests.csproj" />
+    <Project Path="tests/MyNet.Platform.Windows.Tests/MyNet.Platform.Windows.Tests.csproj" />
+    <Project Path="tests/MyNet.Primitives.Tests/MyNet.Primitives.Tests.csproj" />
+    <Project Path="tests/MyNet.Reflection.Tests/MyNet.Reflection.Tests.csproj" />
+    <Project Path="tests/MyNet.Temporal.Tests/MyNet.Temporal.Tests.csproj" />
+    <Project Path="tests/MyNet.Text.Tests/MyNet.Text.Tests.csproj" />
     <Project Path="tests/MyNet.UI.Tests/MyNet.UI.Tests.csproj" />
     <Project Path="tests/MyNet.Utilities.Tests/MyNet.Utilities.Tests.csproj" />
   </Folder>

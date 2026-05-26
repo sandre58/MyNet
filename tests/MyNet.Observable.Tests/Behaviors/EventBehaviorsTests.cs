@@ -11,9 +11,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;

@@ -11,7 +11,6 @@ using MyNet.Geography.Localization.Providers;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Globalization.Localization.Translation.KeyGeneration;
 using MyNet.Humanizer.Display;
-using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Geography.Tests;

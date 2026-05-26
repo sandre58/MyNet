@@ -1,49 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MyNet.Collections\MyNet.Collections.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Generator\MyNet.Generator.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Metadata\MyNet.Metadata.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Messaging\MyNet.Messaging.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.IO\MyNet.IO.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Mail\MyNet.Mail.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Platform.Windows\MyNet.Platform.Windows.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Primitives\MyNet.Primitives.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Temporal\MyNet.Temporal.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Reflection\MyNet.Reflection.csproj" />
-    <ProjectReference Include="..\..\src\MyNet.Text\MyNet.Text.csproj" />
     <ProjectReference Include="..\..\src\MyNet.Utilities\MyNet.Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Data\DataResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataResources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Data\OtherDataResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>OtherDataResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Data\DataResources.resx">
-      <LastGenOutput>DataResources.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Data\OtherDataResources.resx">
-      <LastGenOutput>OtherDataResources.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\OtherDataResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>OtherDataResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

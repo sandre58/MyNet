@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
-using MyNet.Globalization.Static;
+using MyNet.Globalization.Facade;
 using Xunit.Sdk;
 
 namespace MyNet.Globalization.Tests;

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="EnumExtensionsTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="EnumExtensionsTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MyNet.Globalization.Localization.Translation;
-using MyNet.Humanizer.Static;
-using MyNet.Utilities;
+using MyNet.Humanizer.Facade;
+using MyNet.Primitives;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Extensions;
@@ -95,7 +95,7 @@ public class EnumExtensionsTests
 
     [Fact]
     public void DehumanizeToType_WithNonEnumType_ThrowsArgumentException()
-        => _ = Assert.Throws<ArgumentException>(() => MyNet.Humanizer.Static.EnumExtensions.DehumanizeTo("value", typeof(string)));
+        => _ = Assert.Throws<ArgumentException>(() => Humanizer.Facade.EnumExtensions.DehumanizeTo("value", typeof(string)));
 }
 
 internal enum EnumUnderTest

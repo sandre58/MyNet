@@ -6,9 +6,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors;
 using MyNet.Observable.Behaviors.Metadata;
-using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;

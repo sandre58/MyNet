@@ -78,7 +78,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Egal à.
+        ///   Looks up a localized string similar to Egal Ã .
         /// </summary>
         public static string ComparableOperatorEqualsTo {
             get {
@@ -87,7 +87,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supérieur ou égal à.
+        ///   Looks up a localized string similar to SupÃ©rieur ou Ã©gal Ã .
         /// </summary>
         public static string ComparableOperatorGreaterEqualThan {
             get {
@@ -96,7 +96,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supérieur à.
+        ///   Looks up a localized string similar to SupÃ©rieur Ã .
         /// </summary>
         public static string ComparableOperatorGreaterThan {
             get {
@@ -105,7 +105,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inférieur ou égal à.
+        ///   Looks up a localized string similar to InfÃ©rieur ou Ã©gal Ã .
         /// </summary>
         public static string ComparableOperatorLessEqualThan {
             get {
@@ -114,7 +114,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inférieur à.
+        ///   Looks up a localized string similar to InfÃ©rieur Ã .
         /// </summary>
         public static string ComparableOperatorLessThan {
             get {
@@ -123,7 +123,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Différent de.
+        ///   Looks up a localized string similar to DiffÃ©rent de.
         /// </summary>
         public static string ComparableOperatorNotEqualsTo {
             get {
@@ -132,7 +132,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Egal à.
+        ///   Looks up a localized string similar to Egal Ã .
         /// </summary>
         public static string ComplexComparableOperatorEqualsTo {
             get {
@@ -141,7 +141,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supérieur ou égal à.
+        ///   Looks up a localized string similar to SupÃ©rieur ou Ã©gal Ã .
         /// </summary>
         public static string ComplexComparableOperatorGreaterEqualThan {
             get {
@@ -150,7 +150,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supérieur à.
+        ///   Looks up a localized string similar to SupÃ©rieur Ã .
         /// </summary>
         public static string ComplexComparableOperatorGreaterThan {
             get {
@@ -177,7 +177,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inférieur ou égal à.
+        ///   Looks up a localized string similar to InfÃ©rieur ou Ã©gal Ã .
         /// </summary>
         public static string ComplexComparableOperatorLessEqualThan {
             get {
@@ -186,7 +186,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inférieur à.
+        ///   Looks up a localized string similar to InfÃ©rieur Ã .
         /// </summary>
         public static string ComplexComparableOperatorLessThan {
             get {
@@ -195,7 +195,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Différent de.
+        ///   Looks up a localized string similar to DiffÃ©rent de.
         /// </summary>
         public static string ComplexComparableOperatorNotEqualsTo {
             get {
@@ -276,7 +276,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to téraoctet.
+        ///   Looks up a localized string similar to tÃ©raoctet.
         /// </summary>
         public static string DataSizeUnitTerabyte {
             get {
@@ -294,7 +294,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to centimètre.
+        ///   Looks up a localized string similar to centimÃ¨tre.
         /// </summary>
         public static string LengthUnitCentimeter {
             get {
@@ -312,7 +312,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to décamètre.
+        ///   Looks up a localized string similar to dÃ©camÃ¨tre.
         /// </summary>
         public static string LengthUnitDecameter {
             get {
@@ -330,7 +330,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to décimètre.
+        ///   Looks up a localized string similar to dÃ©cimÃ¨tre.
         /// </summary>
         public static string LengthUnitDecimeter {
             get {
@@ -348,7 +348,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to hectomètre.
+        ///   Looks up a localized string similar to hectomÃ¨tre.
         /// </summary>
         public static string LengthUnitHectometer {
             get {
@@ -366,7 +366,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to kilomètre.
+        ///   Looks up a localized string similar to kilomÃ¨tre.
         /// </summary>
         public static string LengthUnitKilometer {
             get {
@@ -384,7 +384,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to mètre.
+        ///   Looks up a localized string similar to mÃ¨tre.
         /// </summary>
         public static string LengthUnitMeter {
             get {
@@ -402,7 +402,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to micromètre.
+        ///   Looks up a localized string similar to micromÃ¨tre.
         /// </summary>
         public static string LengthUnitMicrometer {
             get {
@@ -411,7 +411,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to µm.
+        ///   Looks up a localized string similar to Î¼m.
         /// </summary>
         public static string LengthUnitMicrometerAbbr {
             get {
@@ -420,7 +420,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to millimètre.
+        ///   Looks up a localized string similar to millimÃ¨tre.
         /// </summary>
         public static string LengthUnitMillimeter {
             get {
@@ -438,7 +438,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to nanomètre.
+        ///   Looks up a localized string similar to nanomÃ¨tre.
         /// </summary>
         public static string LengthUnitNanometer {
             get {
@@ -492,7 +492,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to décagramme.
+        ///   Looks up a localized string similar to dÃ©cagramme.
         /// </summary>
         public static string MassUnitDecagram {
             get {
@@ -510,7 +510,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to décigramme.
+        ///   Looks up a localized string similar to dÃ©cigramme.
         /// </summary>
         public static string MassUnitDecigram {
             get {
@@ -645,7 +645,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to degré Celsius.
+        ///   Looks up a localized string similar to degrÃ© Celsius.
         /// </summary>
         public static string TemperatureUnitCelsius {
             get {
@@ -654,7 +654,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to degré Fahrenheit.
+        ///   Looks up a localized string similar to degrÃ© Fahrenheit.
         /// </summary>
         public static string TemperatureUnitCelsiusAbbr {
             get {
@@ -825,7 +825,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Année(s).
+        ///   Looks up a localized string similar to AnnÃ©e(s).
         /// </summary>
         public static string TimeUnitYear {
             get {

@@ -12,10 +12,10 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Attributes;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Metadata.Generator.Tests;

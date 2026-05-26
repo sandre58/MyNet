@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\MyNet.Text\MyNet.Text.csproj" />
+    </ItemGroup>
+
+</Project>

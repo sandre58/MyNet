@@ -9,8 +9,8 @@ using System.Globalization;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Contacts;
-using MyNet.Globalization.Localization.Providers;
 using MyNet.Generator;
+using MyNet.Globalization.Localization.Providers;
 using MyNet.Text.Randomize;
 using Xunit;
 

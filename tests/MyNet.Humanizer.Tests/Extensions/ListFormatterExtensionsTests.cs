@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using MyNet.Humanizer.Facade;
 using MyNet.Humanizer.Formatting.Collections;
-using MyNet.Humanizer.Static;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Extensions;

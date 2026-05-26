@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="TimeHumanizerTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="TimeHumanizerTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,10 +11,10 @@ using System.Threading;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.Localization.Providers;
 using MyNet.Globalization.Localization.Translation;
+using MyNet.Humanizer.Facade;
 using MyNet.Humanizer.Formatting.Collections;
-using MyNet.Humanizer.Static;
 using MyNet.Humanizer.Temporal;
-using MyNet.Utilities;
+using MyNet.Primitives;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Temporal;

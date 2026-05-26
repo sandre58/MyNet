@@ -5,6 +5,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\MyNet.Geography.Localization\MyNet.Geography.Localization.csproj" />
+        <ProjectReference Include="..\..\src\MyNet.Geography.Resources\MyNet.Geography.Resources.csproj" />
         <ProjectReference Include="..\..\src\MyNet.Geography\MyNet.Geography.csproj" />
     </ItemGroup>
 

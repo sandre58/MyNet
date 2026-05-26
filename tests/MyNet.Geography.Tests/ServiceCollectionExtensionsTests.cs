@@ -7,8 +7,8 @@
 using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using MyNet.Geography.Resources;
 using MyNet.Humanizer.Display;
-using MyNet.Geography;
 using Xunit;
 
 namespace MyNet.Geography.Tests;
@@ -20,7 +20,8 @@ public sealed class ServiceCollectionExtensionsTests
     {
         var services = new ServiceCollection();
 
-        services.AddGeography();
+        services.AddGeographyLocalization();
+        services.AddGeographyFlags();
 
         var flagProviderRegistration = services.Single(x => x.ServiceType == typeof(ICountryFlagProvider));
         var displayNameRegistration = services.Single(x => x.ServiceType == typeof(IDisplayTextStrategy<Country>));
@@ -34,8 +35,8 @@ public sealed class ServiceCollectionExtensionsTests
     {
         var services = new ServiceCollection();
 
-        services.AddGeography();
-        services.AddGeography();
+        services.AddGeographyLocalization();
+        services.AddGeographyFlags();
 
         services.Count(x => x.ServiceType == typeof(ICountryFlagProvider)).Should().Be(1);
         services.Count(x => x.ServiceType == typeof(IDisplayTextStrategy<Country>)).Should().Be(1);

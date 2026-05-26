@@ -18,7 +18,7 @@ public class IdentityHelperTests
     [InlineData("DOMAIN\\User", "DOMAIN", "User")]
     [InlineData("DOMAIN\\", "DOMAIN", "")]
     [InlineData("\\User", "", "User")]
-    [InlineData("DOMAIN\\Team\\User", "DOMAIN", "Team\\User")]
+    [InlineData(@"DOMAIN\Team\User", "DOMAIN", "Team\\User")]
     public void CanParseIdentityParts(string? identity, string expectedDomain, string expectedName)
     {
         Assert.Equal(expectedDomain, IdentityHelper.GetDomain(identity));

@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System.ComponentModel;
-using MyNet.Observable.Behaviors;
 using MyNet.Metadata;
+using MyNet.Observable.Behaviors;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;

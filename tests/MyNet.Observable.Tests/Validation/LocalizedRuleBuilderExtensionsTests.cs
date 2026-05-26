@@ -7,7 +7,7 @@
 using System.Globalization;
 using FluentValidation;
 using MyNet.Observable.Localization;
-using MyNet.Utilities;
+using MyNet.Primitives;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Validation;

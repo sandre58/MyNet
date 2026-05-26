@@ -1,12 +1,12 @@
 // -----------------------------------------------------------------------
-// <copyright file="OrdinalizeExtensionsTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="OrdinalizeExtensionsTests.cs" company="StÃ©phane ANDRE">
+// Copyright (c) StÃ©phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Globalization;
-using MyNet.Humanizer.Static;
+using MyNet.Humanizer.Facade;
 using MyNet.Text;
 using Xunit;
 
@@ -81,50 +81,50 @@ public class OrdinalizeExtensionsTests
 
     [Theory]
     [UseCulture("fr-FR")]
-    [InlineData(0, "0ème")]
+    [InlineData(0, "0Ã¨me")]
     [InlineData(1, "1er")]
-    [InlineData(2, "2ème")]
-    [InlineData(3, "3ème")]
-    [InlineData(4, "4ème")]
-    [InlineData(5, "5ème")]
-    [InlineData(6, "6ème")]
-    [InlineData(7, "7ème")]
-    [InlineData(8, "8ème")]
-    [InlineData(9, "9ème")]
-    [InlineData(10, "10ème")]
-    [InlineData(11, "11ème")]
-    [InlineData(12, "12ème")]
-    [InlineData(13, "13ème")]
-    [InlineData(14, "14ème")]
-    [InlineData(20, "20ème")]
-    [InlineData(21, "21ème")]
-    [InlineData(22, "22ème")]
-    [InlineData(23, "23ème")]
-    [InlineData(24, "24ème")]
+    [InlineData(2, "2Ã¨me")]
+    [InlineData(3, "3Ã¨me")]
+    [InlineData(4, "4Ã¨me")]
+    [InlineData(5, "5Ã¨me")]
+    [InlineData(6, "6Ã¨me")]
+    [InlineData(7, "7Ã¨me")]
+    [InlineData(8, "8Ã¨me")]
+    [InlineData(9, "9Ã¨me")]
+    [InlineData(10, "10Ã¨me")]
+    [InlineData(11, "11Ã¨me")]
+    [InlineData(12, "12Ã¨me")]
+    [InlineData(13, "13Ã¨me")]
+    [InlineData(14, "14Ã¨me")]
+    [InlineData(20, "20Ã¨me")]
+    [InlineData(21, "21Ã¨me")]
+    [InlineData(22, "22Ã¨me")]
+    [InlineData(23, "23Ã¨me")]
+    [InlineData(24, "24Ã¨me")]
     public void OrdinalizeNumberFr(int number, string ordinalized) => Assert.Equal(number.Ordinalize(), ordinalized);
 
     [Theory]
     [UseCulture("fr-FR")]
-    [InlineData("0", "0ème")]
+    [InlineData("0", "0Ã¨me")]
     [InlineData("1", "1er")]
-    [InlineData("2", "2ème")]
-    [InlineData("3", "3ème")]
-    [InlineData("4", "4ème")]
-    [InlineData("5", "5ème")]
-    [InlineData("6", "6ème")]
-    [InlineData("7", "7ème")]
-    [InlineData("8", "8ème")]
-    [InlineData("9", "9ème")]
-    [InlineData("10", "10ème")]
-    [InlineData("11", "11ème")]
-    [InlineData("12", "12ème")]
-    [InlineData("13", "13ème")]
-    [InlineData("14", "14ème")]
-    [InlineData("20", "20ème")]
-    [InlineData("21", "21ème")]
-    [InlineData("22", "22ème")]
-    [InlineData("23", "23ème")]
-    [InlineData("24", "24ème")]
+    [InlineData("2", "2Ã¨me")]
+    [InlineData("3", "3Ã¨me")]
+    [InlineData("4", "4Ã¨me")]
+    [InlineData("5", "5Ã¨me")]
+    [InlineData("6", "6Ã¨me")]
+    [InlineData("7", "7Ã¨me")]
+    [InlineData("8", "8Ã¨me")]
+    [InlineData("9", "9Ã¨me")]
+    [InlineData("10", "10Ã¨me")]
+    [InlineData("11", "11Ã¨me")]
+    [InlineData("12", "12Ã¨me")]
+    [InlineData("13", "13Ã¨me")]
+    [InlineData("14", "14Ã¨me")]
+    [InlineData("20", "20Ã¨me")]
+    [InlineData("21", "21Ã¨me")]
+    [InlineData("22", "22Ã¨me")]
+    [InlineData("23", "23Ã¨me")]
+    [InlineData("24", "24Ã¨me")]
     public void OrdinalizeStringFr(string number, string ordinalized) => Assert.Equal(number.Ordinalize(), ordinalized);
 
     [Theory]

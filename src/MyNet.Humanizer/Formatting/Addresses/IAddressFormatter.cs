@@ -4,8 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Globalization.Localization.Providers;
 using MyNet.Geography;
+using MyNet.Globalization.Localization.Providers;
 
 namespace MyNet.Humanizer.Formatting.Addresses;
 

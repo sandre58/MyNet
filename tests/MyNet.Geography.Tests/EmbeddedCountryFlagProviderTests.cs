@@ -6,7 +6,7 @@
 
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using MyNet.Geography;
+using MyNet.Geography.Resources;
 using Xunit;
 
 namespace MyNet.Geography.Tests;
@@ -17,7 +17,7 @@ public sealed class EmbeddedCountryFlagProviderTests
     public void Open_ShouldReturnStream_ForExistingCountryAndSize()
     {
         using var serviceProvider = new ServiceCollection()
-            .AddGeography()
+            .AddGeographyFlags()
             .BuildServiceProvider();
         var sut = serviceProvider.GetRequiredService<ICountryFlagProvider>();
 
@@ -31,7 +31,7 @@ public sealed class EmbeddedCountryFlagProviderTests
     public void GetBytes_ShouldReturnPngBytes_ForExistingCountryAndSize()
     {
         using var serviceProvider = new ServiceCollection()
-            .AddGeography()
+            .AddGeographyFlags()
             .BuildServiceProvider();
         var sut = serviceProvider.GetRequiredService<ICountryFlagProvider>();
 
@@ -49,7 +49,7 @@ public sealed class EmbeddedCountryFlagProviderTests
     public void OpenAndGetBytes_ShouldReturnNull_ForUnknownFlagSize()
     {
         using var serviceProvider = new ServiceCollection()
-            .AddGeography()
+            .AddGeographyFlags()
             .BuildServiceProvider();
         var sut = serviceProvider.GetRequiredService<ICountryFlagProvider>();
 

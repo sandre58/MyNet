@@ -11,4 +11,8 @@
         <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="MyNet.Metadata.Tests" />
+    </ItemGroup>
+    
 </Project>

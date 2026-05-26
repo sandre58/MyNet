@@ -60,7 +60,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Siècle.
+        ///   Looks up a localized string similar to SiÃ¨cle.
         /// </summary>
         public static string Century {
             get {
@@ -78,7 +78,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Décennie.
+        ///   Looks up a localized string similar to DÃ©cennie.
         /// </summary>
         public static string Decade {
             get {
@@ -276,7 +276,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # année.
+        ///   Looks up a localized string similar to # annÃ©e.
         /// </summary>
         public static string DurationYear {
             get {
@@ -699,7 +699,7 @@ namespace MyNet.Humanizer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Année.
+        ///   Looks up a localized string similar to AnnÃ©e.
         /// </summary>
         public static string Year {
             get {

@@ -6,7 +6,7 @@
 
 using MyNet.Humanizer.Formatting.Collections;
 using MyNet.Humanizer.Temporal;
-using MyNet.Utilities;
+using MyNet.Primitives;
 using MyNet.Temporal.Decomposition;
 using Xunit;
 

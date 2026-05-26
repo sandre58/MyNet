@@ -10,9 +10,8 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Identity;
-using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities;
 using MyNet.Generator;
+using MyNet.Globalization.Localization.Providers;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

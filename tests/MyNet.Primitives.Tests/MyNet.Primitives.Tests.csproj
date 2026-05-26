@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\OtherDataResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>OtherDataResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\OtherDataResources.it-IT.resx">
+        <DependentUpon>OtherDataResources.resx</DependentUpon>
+      </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Resources\OtherDataResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>OtherDataResources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
