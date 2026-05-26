@@ -5,51 +5,68 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Security.Authentication;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using MimeKit;
-using MyNet.Utilities;
-using MyNet.Utilities.Logging;
-using MyNet.Mail;
+using MyNet.Mail.MailKit.Exceptions;
 using MyNet.Mail.Models;
 using MyNet.Mail.Smtp;
+using MyNet.Utilities;
+using MyNet.Utilities.Logging;
 
 namespace MyNet.Mail.MailKit;
 
 /// <summary>
-/// Creates a sender that uses the given SmtpClientOptions when sending with MailKit. Since the client is internal this will dispose of the client.
+/// Sends email through MailKit using the supplied <see cref="SmtpClientOptions"/>.
+/// Reuses a single SMTP connection per service instance; call <see cref="Dispose"/> when done.
 /// </summary>
-/// <param name="smtpClientOptions">The SmtpClientOptions to use to create the MailKit client.</param>
-/// <param name="logger">The logger to use for logging.</param>
-public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, ILogger? logger = null) : IMailService
+/// <param name="smtpClientOptions">SMTP settings for this sender.</param>
+/// <param name="logger">Optional logger; defaults to <see cref="Log.Create{T}"/>.</param>
+public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, ILogger? logger = null) : IMailService, IDisposable
 {
     private readonly ILogger _logger = logger ?? Log.Create<MailKitService>();
+    private readonly MailKitSmtpConnectionManager _connectionManager = new(smtpClientOptions);
+    private bool _disposed;
 
     /// <summary>
-    /// Create a MimMessage so MailKit can send it.
+    /// Builds a <see cref="MimeMessage"/> from <see cref="IEmail"/> data.
     /// </summary>
-    /// <returns>The mail message.</returns>
-    /// <param name="email">Email data.</param>
-    public static MimeMessage CreateMailMessage(IEmail email)
+    public static MimeMessage CreateMailMessage(IEmail email, Encoding? preferredEncoding = null)
     {
-        var data = email.Data;
+        ArgumentNullException.ThrowIfNull(email);
 
-        var message = new MimeMessage
-        {
-            Subject = data.Subject
-        };
+        var data = email.Data;
+        var encoding = preferredEncoding ?? Encoding.UTF8;
+
+        var message = new MimeMessage { Subject = data.Subject };
 
         message.From.Add(new MailboxAddress(data.From.Name, data.From.Address));
-        data.To.ForEach(x => message.To.Add(new MailboxAddress(x.Name, x.Address)));
-        data.Cc.ForEach(x => message.Cc.Add(new MailboxAddress(x.Name, x.Address)));
-        data.Bcc.ForEach(x => message.Bcc.Add(new MailboxAddress(x.Name, x.Address)));
-        data.ReplyTo.ForEach(x => message.ReplyTo.Add(new MailboxAddress(x.Name, x.Address)));
+
+        foreach (var address in data.To)
+        {
+            message.To.Add(new MailboxAddress(address.Name, address.Address));
+        }
+
+        foreach (var address in data.Cc)
+        {
+            message.Cc.Add(new MailboxAddress(address.Name, address.Address));
+        }
+
+        foreach (var address in data.Bcc)
+        {
+            message.Bcc.Add(new MailboxAddress(address.Name, address.Address));
+        }
+
+        foreach (var address in data.ReplyTo)
+        {
+            message.ReplyTo.Add(new MailboxAddress(address.Name, address.Address));
+        }
 
         var builder = new BodyBuilder();
         if (!string.IsNullOrEmpty(data.PlaintextAlternativeBody))
@@ -66,21 +83,22 @@ public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, 
             builder.HtmlBody = data.Body;
         }
 
-        data.Attachments.ForEach(x =>
+        foreach (var attachment in data.Attachments)
         {
-            if (x.Data is null)
+            if (attachment.Data is null)
             {
-                return;
+                continue;
             }
 
-            var attachment = builder.Attachments.Add(x.Filename, x.Data, ContentType.Parse(x.ContentType));
-            if (!string.IsNullOrWhiteSpace(x.ContentId))
+            var mimeAttachment = builder.Attachments.Add(attachment.Filename, attachment.Data, ContentType.Parse(attachment.ContentType));
+            if (!string.IsNullOrWhiteSpace(attachment.ContentId))
             {
-                attachment.ContentId = x.ContentId;
+                mimeAttachment.ContentId = attachment.ContentId;
             }
-        });
+        }
 
         message.Body = builder.ToMessageBody();
+        ApplyCharset(message.Body, encoding);
 
         foreach (var header in data.Headers)
         {
@@ -98,58 +116,52 @@ public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, 
         return message;
     }
 
-    /// <summary>
-    /// Send the specified email.
-    /// </summary>
-    /// <returns>A response with any errors and a success boolean.</returns>
-    /// <param name="email">Email.</param>
-    /// <param name="token">Cancellation Token.</param>
-    public SendResponse Send(IEmail email, CancellationToken? token = null)
-    {
-        var response = new SendResponse();
-        using var message = CreateMailMessage(email);
+    /// <inheritdoc />
+    [SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Synchronous wrapper over SendAsync")]
+    public SendResponse Send(IEmail email, CancellationToken? token = null) => SendAsync(email, token).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        using (_logger.MeasureTime(nameof(Send)))
+    /// <inheritdoc />
+    public async Task<SendResponse> SendAsync(IEmail email, CancellationToken? token = null)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        var response = new SendResponse();
+        var cancellationToken = token ?? CancellationToken.None;
+
+        using (_logger.MeasureTime(nameof(SendAsync)))
         {
-            if (token?.IsCancellationRequested ?? false) return response;
+            if (cancellationToken.IsCancellationRequested)
+            {
+                AddCanceled(response);
+                return response;
+            }
+
             try
             {
-                token?.ThrowIfCancellationRequested();
-                CheckOptions();
+                cancellationToken.ThrowIfCancellationRequested();
+                MailKitSmtpOptionsValidator.Validate(smtpClientOptions);
+
+                using var message = CreateMailMessage(email, MailEncodingResolver.Resolve(smtpClientOptions));
                 CheckMessage(message);
 
                 if (smtpClientOptions.UsePickupDirectory)
                 {
-                    SaveToPickupDirectory(message, smtpClientOptions.MailPickupDirectory);
+                    await SaveToPickupDirectoryAsync(message, smtpClientOptions.MailPickupDirectory, cancellationToken).ConfigureAwait(false);
+                    response.MessageId = message.MessageId ?? string.Empty;
+                    LogMailHasBeenSentSuccessfullyEmail(email);
                     return response;
                 }
 
-                var server = smtpClientOptions.Server!;
-                using var client = new SmtpClient
-                {
-                    SslProtocols = SslProtocols.None
-                };
-                client.Connect(
-                    server,
-                    smtpClientOptions.Port,
-                    GetSecureSocketOptions(smtpClientOptions),
-                    token.GetValueOrDefault());
-
-                // Note: only needed if the SMTP server requires authentication
-                if (smtpClientOptions.RequiresAuthentication)
-                {
-                    client.Authenticate(smtpClientOptions.User!, smtpClientOptions.Password!, token.GetValueOrDefault());
-                }
-
-                _ = client.Send(message, token.GetValueOrDefault());
-                client.Disconnect(true, token.GetValueOrDefault());
+                response.MessageId = await _connectionManager.SendAsync(message, cancellationToken).ConfigureAwait(false);
+                LogMailHasBeenSentSuccessfullyEmail(email);
             }
             catch (OperationCanceledException)
             {
-                response.ErrorMessages.Add("Send canceled.");
+                AddCanceled(response);
             }
             catch (Exception ex)
             {
+                _logger.LogException(ex);
                 response.ErrorMessages.Add(ex.Message);
             }
         }
@@ -157,198 +169,100 @@ public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, 
         return response;
     }
 
-    /// <summary>
-    /// Send the specified email.
-    /// </summary>
-    /// <returns>A response with any errors and a success boolean.</returns>
-    /// <param name="email">Email.</param>
-    /// <param name="token">Cancellation Token.</param>
-    public async Task<SendResponse> SendAsync(IEmail email, CancellationToken? token = null)
-    {
-        var response = new SendResponse();
-        using var message = CreateMailMessage(email);
+    /// <inheritdoc />
+    [SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Synchronous wrapper over CanConnectAsync")]
+    public bool CanConnect() => CanConnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
-        using (_logger.MeasureTime(nameof(SendAsync)))
-        {
-            if (token?.IsCancellationRequested ?? false) return response;
-            try
-            {
-                token?.ThrowIfCancellationRequested();
-                CheckOptions();
-                CheckMessage(message);
-
-                if (smtpClientOptions.UsePickupDirectory)
-                {
-                    await SaveToPickupDirectoryAsync(message, smtpClientOptions.MailPickupDirectory).ConfigureAwait(false);
-                    return response;
-                }
-
-                var server = smtpClientOptions.Server!;
-                using var client = new SmtpClient
-                {
-                    SslProtocols = SslProtocols.None
-                };
-                await client.ConnectAsync(
-                    server,
-                    smtpClientOptions.Port,
-                    GetSecureSocketOptions(smtpClientOptions),
-                    token.GetValueOrDefault()).ConfigureAwait(false);
-
-                // Note: only needed if the SMTP server requires authentication
-                if (smtpClientOptions.RequiresAuthentication)
-                {
-                    await client.AuthenticateAsync(smtpClientOptions.User!, smtpClientOptions.Password!, token.GetValueOrDefault()).ConfigureAwait(false);
-                }
-
-                _ = await client.SendAsync(message, token.GetValueOrDefault()).ConfigureAwait(false);
-                await client.DisconnectAsync(true, token.GetValueOrDefault()).ConfigureAwait(false);
-
-                LogMailHasBeenSentSuccessfullyEmail(email);
-            }
-            catch (OperationCanceledException)
-            {
-                response.ErrorMessages.Add("Send canceled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogException(ex);
-                response.ErrorMessages.Add(ex.Message);
-            }
-
-            return response;
-        }
-    }
-
-    public bool CanConnect()
-    {
-        SmtpClient? client = null;
-
-        try
-        {
-            CheckOptions();
-
-            var server = smtpClientOptions.Server!;
-            client = new()
-            {
-                SslProtocols = SslProtocols.None
-            };
-            client.Connect(
-                server,
-                smtpClientOptions.Port,
-                GetSecureSocketOptions(smtpClientOptions));
-
-            if (smtpClientOptions.RequiresAuthentication)
-            {
-                client.Authenticate(smtpClientOptions.User!, smtpClientOptions.Password!);
-            }
-
-            client.Disconnect(true);
-        }
-        catch (Exception e)
-        {
-            LogSmtpConnectivityCheckFailed(e);
-            return false;
-        }
-        finally
-        {
-            client?.Dispose();
-        }
-
-        return true;
-    }
-
+    /// <inheritdoc />
     public async Task<bool> CanConnectAsync()
     {
-        SmtpClient? client = null;
+        ObjectDisposedException.ThrowIf(_disposed, this);
 
+        SmtpClient? client = null;
         try
         {
-            CheckOptions();
-            const SslProtocols protocols = SslProtocols.None;
-
-            var server = smtpClientOptions.Server!;
-            client = new()
+            MailKitSmtpOptionsValidator.Validate(smtpClientOptions);
+            if (smtpClientOptions.UsePickupDirectory)
             {
-                SslProtocols = protocols
-            };
-            await client.ConnectAsync(
-                server,
-                smtpClientOptions.Port,
-                GetSecureSocketOptions(smtpClientOptions)).ConfigureAwait(false);
-
-            if (smtpClientOptions.RequiresAuthentication)
-            {
-                await client.AuthenticateAsync(smtpClientOptions.User!, smtpClientOptions.Password!).ConfigureAwait(false);
+                return Directory.Exists(smtpClientOptions.MailPickupDirectory);
             }
 
-            await client.DisconnectAsync(true).ConfigureAwait(false);
+            client = new();
+            await ConnectAndAuthenticateAsync(client, CancellationToken.None).ConfigureAwait(false);
+            await client.DisconnectAsync(true, CancellationToken.None).ConfigureAwait(false);
+            return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            LogSmtpConnectivityCheckFailed(ex);
             return false;
         }
         finally
         {
             client?.Dispose();
         }
-
-        return true;
     }
 
-    /// <summary>
-    /// Saves email to a pickup directory.
-    /// </summary>
-    /// <param name="message">Message to save for pickup.</param>
-    /// <param name="pickupDirectory">Pickup directory.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Ignore for using async")]
-    private static async Task SaveToPickupDirectoryAsync(MimeMessage message, string? pickupDirectory)
+    /// <inheritdoc />
+    public void Dispose()
     {
-        Directory.CreateDirectory(pickupDirectory ?? string.Empty);
-        var path = Path.Combine(pickupDirectory ?? string.Empty, Guid.NewGuid() + ".eml");
+        if (_disposed)
+        {
+            return;
+        }
 
-        await using var stream = new FileStream(path, FileMode.CreateNew);
-        await message.WriteToAsync(stream).ConfigureAwait(false);
+        _disposed = true;
+        _connectionManager.Dispose();
     }
 
-    private static void SaveToPickupDirectory(MimeMessage message, string? pickupDirectory)
+    private static void ApplyCharset(MimeEntity entity, Encoding encoding)
     {
-        Directory.CreateDirectory(pickupDirectory ?? string.Empty);
-        var path = Path.Combine(pickupDirectory ?? string.Empty, Guid.NewGuid() + ".eml");
-        using var stream = new FileStream(path, FileMode.CreateNew);
-        message.WriteTo(stream);
+        switch (entity)
+        {
+            case TextPart textPart:
+                textPart.ContentType.Charset = encoding.WebName;
+                break;
+            case Multipart multipart:
+                foreach (var part in multipart)
+                {
+                    ApplyCharset(part, encoding);
+                }
+
+                break;
+        }
     }
 
     private static void CheckMessage(MimeMessage message)
     {
         if (message.From.Mailboxes.All(x => string.IsNullOrEmpty(x.Address)))
+        {
             throw new EmptySenderAddressesException();
+        }
     }
 
-    private static SecureSocketOptions GetSecureSocketOptions(SmtpClientOptions options) =>
-        options.UseSsl ? SecureSocketOptions.StartTlsWhenAvailable : SecureSocketOptions.None;
+    private static void AddCanceled(SendResponse response) => response.ErrorMessages.Add("Send canceled.");
 
-    private void CheckOptions()
+    [SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "await using on FileStream")]
+    private static async Task SaveToPickupDirectoryAsync(MimeMessage message, string? pickupDirectory, CancellationToken cancellationToken)
     {
-        if (smtpClientOptions.UsePickupDirectory)
+        Directory.CreateDirectory(pickupDirectory ?? string.Empty);
+        var path = Path.Combine(pickupDirectory ?? string.Empty, Guid.NewGuid() + ".eml");
+
+        await using var stream = new FileStream(path, FileMode.CreateNew);
+        await message.WriteToAsync(stream, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task ConnectAndAuthenticateAsync(SmtpClient client, CancellationToken cancellationToken)
+    {
+        await client.ConnectAsync(
+            smtpClientOptions.Server!,
+            smtpClientOptions.Port,
+            SmtpSecureSocketOptionsResolver.Resolve(smtpClientOptions),
+            cancellationToken).ConfigureAwait(false);
+
+        if (smtpClientOptions.RequiresAuthentication)
         {
-            if (string.IsNullOrWhiteSpace(smtpClientOptions.MailPickupDirectory))
-                throw new ArgumentException("Pickup directory must be defined when UsePickupDirectory is enabled.");
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(smtpClientOptions.Server))
-            throw new UndefinedServerException();
-
-        if (smtpClientOptions.Port is < 1 or > 65535)
-            throw new ArgumentOutOfRangeException(nameof(smtpClientOptions.Port), "SMTP port must be between 1 and 65535.");
-
-        switch (smtpClientOptions.RequiresAuthentication)
-        {
-            case true when string.IsNullOrWhiteSpace(smtpClientOptions.User):
-                throw new ArgumentException("SMTP user must be defined when authentication is required.");
-            case true when smtpClientOptions.Password is null:
-                throw new ArgumentException("SMTP password must be defined when authentication is required.");
+            await client.AuthenticateAsync(smtpClientOptions.User!, smtpClientOptions.Password!, cancellationToken).ConfigureAwait(false);
         }
     }
 

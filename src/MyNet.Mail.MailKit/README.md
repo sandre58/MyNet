@@ -6,15 +6,12 @@
   <img src="../../assets/MyNetUtilities.png" width="128" alt="MyNetUtilities">
 </div>
 
-<h1 align="center">My .NET Utilities MailKit</h1>
+<h1 align="center">My .NET Mail — MailKit</h1>
 
 [![MIT License](https://img.shields.io/github/license/sandre58/mynet?style=for-the-badge)](https://github.com/sandre58/mynet/blob/main/LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Mail.MailKit?style=for-the-badge)](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit)
 
-A powerful extension library for sending emails in .NET applications using MailKit.
+Cross-platform SMTP email sending for .NET via [MailKit](https://github.com/jstedfast/MailKit), implementing `IMailService` from **MyNet.Mail**.
 
-[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](#)
-[![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple)](#)
 [![.NET 10.0](https://img.shields.io/badge/.NET-10.0-purple)](#)
 [![C#](https://img.shields.io/badge/language-C%23-blue)](#)
 
@@ -22,45 +19,96 @@ A powerful extension library for sending emails in .NET applications using MailK
 
 ## Installation
 
-Install via NuGet:
-
 ```bash
-dotnet add package MyNet.Utilities.Mail.MailKit
+dotnet add package MyNet.Mail.MailKit
 ```
 
-## Features
+Project reference:
 
-- Send emails using MailKit.
-- Support for multiple sender addresses and server configurations.
-- Exception handling for undefined servers and empty sender addresses.
+```xml
+<ProjectReference Include="path/to/MyNet.Mail.MailKit.csproj" />
+```
 
-## Example Usage
+---
+
+## Dependency injection
 
 ```csharp
-using MyNet.Utilities.Mail.MailKit;
+using Microsoft.Extensions.DependencyInjection;
+using MyNet.Mail;
+using MyNet.Mail.MailKit;
+using MyNet.Mail.Smtp;
 
-// Create a mail service
-var mailService = MailKitServiceFactory.Create();
+services.AddMailKitMailService();
 
-// Send an email
-await mailService.SendAsync(
-    to: "recipient@example.com",
-    subject: "Hello from MyNet",
-    body: "This is a test email."
-);
+// Later:
+var factory = serviceProvider.GetRequiredService<IMailServiceFactory>();
+var mail = factory.Create(new SmtpClientOptions
+{
+    Server = "smtp.example.com",
+    Port = 587,
+    UseSsl = true,
+    RequiresAuthentication = true,
+    User = "user",
+    Password = "secret",
+    PreferredEncoding = "utf-8",
+});
+
+var email = Email.From("sender@example.com", "Sender")
+    .To("recipient@example.com")
+    .Subject("Hello")
+    .Body("<p>Hello from MyNet.</p>", isHtml: true);
+
+var response = await mail.SendAsync(email);
+if (!response.Successful)
+{
+    // response.ErrorMessages
+}
+// response.MessageId when sent over SMTP
 ```
 
-## Related Packages
+Dispose the service when you manage its lifetime (it reuses the SMTP connection):
 
-| Package | Description | NuGet |
-|---|---|---|
-| [**MyNet.Utilities**](../MyNet.Utilities) | Core utilities for .NET development. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities) |
-| [**MyNet.Utilities.Generator.Extensions**](../MyNet.Utilities.Generator.Extensions) | Generate random data for .NET apps. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Generator.Extensions) |
-| [**MyNet.Utilities.Localization.Extensions**](../MyNet.Utilities.Localization.Extensions) | Localization resources and helpers. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Localization.Extensions) |
-| [**MyNet.Utilities.Logging.NLog**](../MyNet.Utilities.Logging.NLog) | Logging integration with NLog. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
+```csharp
+if (mail is IDisposable disposable)
+{
+    disposable.Dispose();
+}
+```
+
+---
+
+## TLS / security
+
+| Scenario | Configuration |
+|---|---|
+| Port **587** + TLS | `Port = 587`, `UseSsl = true` (STARTTLS required) |
+| Port **465** (implicit TLS) | `Port = 465` — `SecurityMode.Auto` selects SSL on connect |
+| Explicit mode | `SecurityMode = SmtpSecurityMode.SslOnConnect` (or `StartTls`, etc.) |
+
+`SecurityMode` is defined on `SmtpClientOptions` in **MyNet.Mail**.
+
+---
+
+## Pickup directory (IIS / local dev)
+
+```csharp
+var options = new SmtpClientOptions
+{
+    UsePickupDirectory = true,
+    MailPickupDirectory = @"C:\inetpub\mailroot\Pickup",
+};
+```
+
+---
+
+## Related packages
+
+| Package | Description |
+|---|---|
+| [**MyNet.Mail**](../MyNet.Mail) | Models, `IMailService`, `SmtpClientOptions` |
+| [**MyNet.Utilities**](../MyNet.Utilities) | Logging helpers |
 
 ## License
 
-Copyright © Stéphane ANDRE.
-
-Distributed under the MIT License. See [LICENSE](../../LICENSE) for details.
+Copyright © Stéphane ANDRE. MIT — see [LICENSE](../../LICENSE).

@@ -4,12 +4,18 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Mail;
+using Microsoft.Extensions.Logging;
 using MyNet.Mail.Smtp;
 
 namespace MyNet.Mail.MailKit;
 
-public class MailKitServiceFactory : IMailServiceFactory
+/// <summary>
+/// Creates <see cref="MailKitService"/> instances with optional structured logging.
+/// </summary>
+/// <param name="loggerFactory">Optional logger factory passed to each created service.</param>
+public sealed class MailKitServiceFactory(ILoggerFactory? loggerFactory = null) : IMailServiceFactory
 {
-    public IMailService Create(SmtpClientOptions options) => new MailKitService(options);
+    /// <inheritdoc />
+    public IMailService Create(SmtpClientOptions options) =>
+        new MailKitService(options, loggerFactory?.CreateLogger<MailKitService>());
 }

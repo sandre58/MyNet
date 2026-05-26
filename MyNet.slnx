@@ -70,6 +70,8 @@
     <Project Path="tests/MyNet.Http.Tests/MyNet.Http.Tests.csproj" />
     <Project Path="tests/MyNet.Humanizer.Tests/MyNet.Humanizer.Tests.csproj" />
     <Project Path="tests/MyNet.IO.Tests/MyNet.IO.Tests.csproj" />
+    <Project Path="tests/MyNet.Google.Tests/MyNet.Google.Tests.csproj" />
+    <Project Path="tests/MyNet.Mail.Tests/MyNet.Mail.Tests.csproj" />
     <Project Path="tests/MyNet.Messaging.Tests/MyNet.Messaging.Tests.csproj" />
     <Project Path="tests/MyNet.Metadata.Tests/MyNet.Metadata.Tests.csproj" />
     <Project Path="tests/MyNet.Observable.Metadata.Generator.Tests/MyNet.Observable.Metadata.Generator.Tests.csproj" />
@@ -81,6 +83,7 @@
     <Project Path="tests/MyNet.Text.Tests/MyNet.Text.Tests.csproj" />
     <Project Path="tests/MyNet.UI.Tests/MyNet.UI.Tests.csproj" />
     <Project Path="tests/MyNet.Utilities.Tests/MyNet.Utilities.Tests.csproj" />
+    <Project Path="tests/MyNet.Mail.MailKit.Tests/MyNet.Mail.MailKit.Tests.csproj" />
   </Folder>
   <Project Path="src/MyNet.Collections/MyNet.Collections.csproj" />
   <Project Path="src/MyNet.Generator/MyNet.Generator.csproj" />

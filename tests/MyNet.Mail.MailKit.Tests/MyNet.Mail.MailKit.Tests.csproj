@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MyNet.Mail.MailKit\MyNet.Mail.MailKit.csproj" />
+    <ProjectReference Include="..\..\src\MyNet.Mail\MyNet.Mail.csproj" />
+  </ItemGroup>
+
+</Project>

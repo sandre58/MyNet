@@ -18,6 +18,11 @@ public class SmtpClientOptions
 
     public bool UseSsl { get; set; }
 
+    /// <summary>
+    /// Gets or sets the explicit TLS mode for MailKit. When <see cref="SmtpSecurityMode.Auto"/>, port 465 uses SSL on connect and <see cref="UseSsl"/> enables required STARTTLS.
+    /// </summary>
+    public SmtpSecurityMode SecurityMode { get; set; } = SmtpSecurityMode.Auto;
+
     public bool RequiresAuthentication { get; set; }
 
     public string? PreferredEncoding { get; set; }

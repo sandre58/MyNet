@@ -1,33 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <Product>My .NET Utilities - MailKit</Product>
-      <PackageIcon>MyNetUtilities.png</PackageIcon>
-    <Description>A powerful .NET library designed to simplify email sending and management using MailKit. MyNet.Utilities.Mail.MailKit provides easy-to-use tools and resources for integrating email functionality into your applications.</Description>
-    <PackageTags>My;Utilities;Mail;MailKit</PackageTags>
+    <Product>My .NET Mail - MailKit</Product>
+    <PackageIcon>MyNetMail.png</PackageIcon>
+    <Description>MailKit implementation of MyNet.Mail IMailService with TLS configuration, connection reuse, and dependency injection support.</Description>
+    <PackageTags>My;Mail;Email;Smtp;MailKit</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
     <ProjectReference Include="..\MyNet.Mail\MyNet.Mail.csproj" />
+    <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="MailKitResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>MailKitResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="MailKitResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MailKitResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>
