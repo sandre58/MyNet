@@ -1,11 +1,11 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="TransformersTests.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="TransformersTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System.Globalization;
-using MyNet.Utilities.Text.TextCasing;
+using MyNet.Text.TextCasing;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;

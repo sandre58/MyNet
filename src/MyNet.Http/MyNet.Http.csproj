@@ -12,6 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
+        <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
     </ItemGroup>
 </Project>

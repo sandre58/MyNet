@@ -7,7 +7,7 @@
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging.Abstractions;
-using MyNet.Utilities.IO;
+using MyNet.IO;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

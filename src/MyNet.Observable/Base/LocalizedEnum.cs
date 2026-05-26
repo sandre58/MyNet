@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MyNet.Humanizer;
-using MyNet.Humanizer.Static;
+using MyNet.Humanizer.Facade;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Observable.Metadata;
 

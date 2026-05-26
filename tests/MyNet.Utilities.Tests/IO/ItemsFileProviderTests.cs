@@ -10,8 +10,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using MyNet.Utilities.IO;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
+using MyNet.IO;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

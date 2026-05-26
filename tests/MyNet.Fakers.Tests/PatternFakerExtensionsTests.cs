@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
-using MyNet.Utilities.Generator;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Generator;
+using MyNet.Text.Randomize;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

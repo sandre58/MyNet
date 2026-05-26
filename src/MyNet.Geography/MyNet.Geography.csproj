@@ -9,11 +9,11 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
+        <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Flags/**/*.png" />
         <EmbeddedResource Update="Localization\CountryResources.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>CountryResources.Designer.cs</LastGenOutput>

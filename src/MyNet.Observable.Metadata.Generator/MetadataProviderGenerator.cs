@@ -188,9 +188,9 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
         source.AppendLine("using System;");
         source.AppendLine("using System.Collections.Concurrent;");
         source.AppendLine("using MyNet.Observable.Behaviors.Metadata;");
-        source.AppendLine("using MyNet.Utilities.Metadata;");
+        source.AppendLine("using MyNet.Metadata;");
         source.AppendLine();
-        source.AppendLine("namespace MyNet.Utilities.Metadata.Generated");
+        source.AppendLine("namespace MyNet.Metadata.Generated");
         source.AppendLine("{");
 
         // Generate fluent metadata configuration class

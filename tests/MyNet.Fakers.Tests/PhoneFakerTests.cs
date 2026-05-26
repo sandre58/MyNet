@@ -10,8 +10,8 @@ using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Contacts;
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Generator;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Generator;
+using MyNet.Text.Randomize;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

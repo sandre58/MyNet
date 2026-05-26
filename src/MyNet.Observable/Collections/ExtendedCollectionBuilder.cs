@@ -15,7 +15,7 @@ using MyNet.Observable.Collections.Grouping;
 using MyNet.Observable.Collections.Selection;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Collections.Sources;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
 
 namespace MyNet.Observable.Collections;
 

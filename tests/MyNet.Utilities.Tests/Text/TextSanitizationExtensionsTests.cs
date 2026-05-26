@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Text.Sanitization;
+using MyNet.Text.Sanitization;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;

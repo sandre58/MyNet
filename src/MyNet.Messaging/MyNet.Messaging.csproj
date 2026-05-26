@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Messaging</Product>
+        <PackageIcon>MyNetMessaging.png</PackageIcon>
+        <Description>Weak-reference messenger for loosely coupled in-process messaging.</Description>
+        <PackageTags>My;Messaging;Messenger;MVVM</PackageTags>
+    </PropertyGroup>
+
+</Project>

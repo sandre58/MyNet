@@ -6,7 +6,7 @@
 
 using System;
 using FluentValidation;
-using MyNet.Utilities.Metadata;
+using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;

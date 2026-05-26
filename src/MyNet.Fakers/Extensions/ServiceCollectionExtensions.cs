@@ -14,7 +14,7 @@ using MyNet.Fakers.Internet;
 using MyNet.Fakers.Media;
 using MyNet.Fakers.Text;
 using MyNet.Globalization;
-using MyNet.Utilities;
+using MyNet.Text;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Fakers;

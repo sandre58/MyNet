@@ -14,8 +14,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
         <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
+        <ProjectReference Include="..\MyNet.Metadata\MyNet.Metadata.csproj" />
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+        <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
         <ProjectReference Include="..\MyNet.Observable.Metadata.Generator\MyNet.Observable.Metadata.Generator.csproj"
                           OutputItemType="Analyzer"

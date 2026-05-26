@@ -69,20 +69,20 @@ public sealed class CollectionStatistics<T, TValue> : ObservableObject
     public TValue Max => _max;
 
     /// <summary>
-    /// Creates a <see cref="CollectionStatistics{T, double}"/> instance to track view metrics and numeric aggregates (sum, average, min, max) over the filtered view.
+    /// Creates a <see cref="CollectionStatistics{T, TType}"/> instance to track view metrics and numeric aggregates (sum, average, min, max) over the filtered view.
     /// </summary>
     /// <param name="collection">The collection whose filtered view is aggregated.</param>
     /// <param name="valueSelector">Selects the numeric value for each item.</param>
-    /// <returns>A <see cref="CollectionStatistics{T, double}"/> instance.</returns>
+    /// <returns>A <see cref="CollectionStatistics{T, TType}"/> instance.</returns>
     internal static CollectionStatistics<T, double> ForDouble(ExtendedCollection<T> collection, Func<T, double> valueSelector) =>
         new(collection, valueSelector, DoubleStatisticsComputer.Instance);
 
     /// <summary>
-    /// Creates a <see cref="CollectionStatistics{T, TimeSpan}"/> instance to track view metrics and <see cref="TimeSpan"/> aggregates over the filtered view.
+    /// Creates a <see cref="CollectionStatistics{T, TType}"/> instance to track view metrics and <see cref="TimeSpan"/> aggregates over the filtered view.
     /// </summary>
     /// <param name="collection">The collection whose filtered view is aggregated.</param>
     /// <param name="valueSelector">Selects the duration for each item.</param>
-    /// <returns>A <see cref="CollectionStatistics{T, TimeSpan}"/> instance.</returns>
+    /// <returns>A <see cref="CollectionStatistics{T, TType}"/> instance.</returns>
     internal static CollectionStatistics<T, TimeSpan> ForTimeSpan(ExtendedCollection<T> collection, Func<T, TimeSpan> valueSelector) =>
         new(collection, valueSelector, TimeSpanStatisticsComputer.Instance);
 

@@ -1,13 +1,13 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="StringExtensionsTests.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="StringExtensionsTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Globalization;
 using System.Linq;
-using MyNet.Utilities.Text.Formatting;
+using MyNet.Text.Formatting;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;
@@ -28,7 +28,7 @@ public class StringExtensionsTests
 
     [Theory]
     [InlineData("en-US", "6,666.66")]
-    [InlineData("ru-RU", "6Â 666,66")]
+    [InlineData("ru-RU", "6 666,66")]
     public void CanSpecifyCultureExplicitly(string culture, string expected) => Assert.Equal(expected, "{0:N2}".FormatWith(new CultureInfo(culture), 6666.66));
 
     [Fact]

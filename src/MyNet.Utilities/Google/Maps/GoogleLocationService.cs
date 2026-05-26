@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using MyNet.Primitives;
 using MyNet.Utilities.Geography;
 
 namespace MyNet.Utilities.Google.Maps;
@@ -110,7 +111,8 @@ public class GoogleLocationService(string apikey, bool useHttps) : ILocationServ
         }
 
         _ = Country.TryFromValue(addressCountry.OrEmpty(), out var country);
-        return new(string.Join(" ", new[] { addressStreetNumber, addressRoute, addressSubLocality }.NotNull()), addressPostalCode, addressLocality, country, new(latitude, longitude));
+        var streetParts = new[] { addressStreetNumber, addressRoute, addressSubLocality }.Where(static x => x is not null);
+        return new(string.Join(" ", streetParts), addressPostalCode, addressLocality, country, new(latitude, longitude));
     }
 
     /// <summary>

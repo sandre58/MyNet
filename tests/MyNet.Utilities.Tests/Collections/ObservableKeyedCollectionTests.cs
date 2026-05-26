@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Collections;

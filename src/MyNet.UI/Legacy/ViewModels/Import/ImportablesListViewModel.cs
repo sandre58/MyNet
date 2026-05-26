@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="ImportablesListViewModel.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="ImportablesListViewModel.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ using MyNet.UI.Commands;
 using MyNet.UI.Legacy.Selection;
 using MyNet.UI.Legacy.Threading;
 using MyNet.UI.Legacy.ViewModels.List;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
 
 namespace MyNet.UI.Legacy.ViewModels.Import;
 

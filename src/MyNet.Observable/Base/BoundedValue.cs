@@ -6,12 +6,12 @@
 
 using System.Globalization;
 using System.Numerics;
-using MyNet.Globalization.Static;
+using MyNet.Globalization.Facade;
 using MyNet.Observable.Behaviors;
 using MyNet.Observable.Localization;
 using MyNet.Observable.Validation.Validators;
-using MyNet.Utilities;
-using MyNet.Utilities.Intervals;
+using MyNet.Primitives;
+using MyNet.Primitives.Intervals;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

@@ -7,7 +7,7 @@
 using System;
 
 #pragma warning disable IDE0130
-namespace MyNet.Utilities.Metadata.Generated;
+namespace MyNet.Metadata.Generated;
 #pragma warning restore IDE0130
 
 /// <summary>

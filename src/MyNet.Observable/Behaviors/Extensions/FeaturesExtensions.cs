@@ -5,9 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
-using MyNet.Utilities.Metadata;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

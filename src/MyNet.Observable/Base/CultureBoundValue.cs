@@ -7,7 +7,7 @@
 using System;
 using System.Globalization;
 using MyNet.Globalization.Culture;
-using MyNet.Globalization.Static;
+using MyNet.Globalization.Facade;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Observable.Metadata;
 

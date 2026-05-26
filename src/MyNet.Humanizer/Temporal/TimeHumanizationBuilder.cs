@@ -6,8 +6,8 @@
 
 using System;
 using MyNet.Humanizer.Formatting.Collections;
-using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Primitives;
+using MyNet.Temporal.Decomposition;
 
 namespace MyNet.Humanizer.Temporal;
 

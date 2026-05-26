@@ -11,8 +11,8 @@ using MyNet.Globalization.Localization.Providers;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Humanizer.Formatting.Collections;
 using MyNet.Humanizer.Resources;
-using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Primitives;
+using MyNet.Temporal.Decomposition;
 
 namespace MyNet.Humanizer.Temporal;
 

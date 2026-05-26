@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Generator</Product>
+        <PackageIcon>MyNetGenerator.png</PackageIcon>
+        <Description>Random data generation utilities for testing and prototyping.</Description>
+        <PackageTags>My;Generator;Random;Fakers</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>

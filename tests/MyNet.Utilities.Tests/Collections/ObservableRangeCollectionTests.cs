@@ -1,6 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ObservableRangeCollectionTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="ObservableRangeCollectionTests.cs" company="St�phane ANDRE">
+// Copyright (c) St�phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Collections;
@@ -247,7 +247,7 @@ public class ObservableRangeCollectionTests
         collection.Load([10, 20, 30]);
 
         // Assert
-        Assert.Equal(0, countNotifications); // Count didn't change (3 → 3)
+        Assert.Equal(0, countNotifications); // Count didn't change (3 ? 3)
     }
 
     [Fact]

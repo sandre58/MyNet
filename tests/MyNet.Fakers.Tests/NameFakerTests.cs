@@ -12,7 +12,7 @@ using Moq;
 using MyNet.Fakers.Identity;
 using MyNet.Globalization.Localization.Providers;
 using MyNet.Utilities;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

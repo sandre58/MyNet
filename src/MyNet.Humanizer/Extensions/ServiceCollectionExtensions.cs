@@ -15,15 +15,15 @@ using MyNet.Globalization.Localization.Translation;
 using MyNet.Humanizer.Display;
 using MyNet.Humanizer.Display.Registration;
 using MyNet.Humanizer.Display.Strategies;
+using MyNet.Humanizer.Facade;
 using MyNet.Humanizer.Formatting.Addresses;
 using MyNet.Humanizer.Formatting.Addresses.Cultures;
 using MyNet.Humanizer.Formatting.Collections;
 using MyNet.Humanizer.Ordinalizing;
 using MyNet.Humanizer.Ordinalizing.Cultures;
 using MyNet.Humanizer.Resources;
-using MyNet.Humanizer.Static;
 using MyNet.Humanizer.Temporal;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Humanizer;

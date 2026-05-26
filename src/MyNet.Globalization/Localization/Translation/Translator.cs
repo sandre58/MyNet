@@ -10,7 +10,7 @@ using MyNet.Globalization.Inflection;
 using MyNet.Globalization.Localization.Policies;
 using MyNet.Globalization.Localization.Translation.Catalog;
 using MyNet.Globalization.Localization.Translation.KeyResolving;
-using MyNet.Utilities.Text.Templating;
+using MyNet.Text.Templating;
 
 namespace MyNet.Globalization.Localization.Translation;
 

@@ -10,7 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
+using MyNet.Primitives.Providers;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Providers;

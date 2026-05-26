@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET IO</Product>
+        <PackageIcon>MyNetIO.png</PackageIcon>
+        <Description>File system, extensions, auto-save, and registry abstractions for .NET applications.</Description>
+        <PackageTags>My;IO;Files;Registry;AutoSave</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Localization\InternalResources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>InternalResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+
+        <EmbeddedResource Update="Localization\InternalResources.en.resx">
+            <DependentUpon>InternalResources.resx</DependentUpon>
+        </EmbeddedResource>
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Localization\InternalResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>InternalResources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+</Project>
+

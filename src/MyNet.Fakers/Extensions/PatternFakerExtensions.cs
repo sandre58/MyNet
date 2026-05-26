@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using MyNet.Utilities.Generator;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Generator;
+using MyNet.Text.Randomize;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Fakers;

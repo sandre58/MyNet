@@ -9,7 +9,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Geography;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using MyNet.Utilities.Geography;
 using Xunit;
 

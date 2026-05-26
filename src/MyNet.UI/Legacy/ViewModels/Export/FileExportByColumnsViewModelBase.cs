@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="FileExportByColumnsViewModelBase.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="FileExportByColumnsViewModelBase.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ using MyNet.UI.Commands;
 using MyNet.UI.Legacy.Selection.Models;
 using MyNet.UI.Resources;
 using MyNet.Utilities;
-using MyNet.Utilities.Exceptions;
+using MyNet.Primitives.Exceptions;
 using MyNet.Utilities.IO.FileExtensions;
 
 namespace MyNet.UI.Legacy.ViewModels.Export;

@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using MyNet.Fakers.Identity;
 using MyNet.Fakers.Internet;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 
 namespace MyNet.Fakers.Contacts;
 

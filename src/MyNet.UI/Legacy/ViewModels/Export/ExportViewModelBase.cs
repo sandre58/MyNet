@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="ExportViewModelBase.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="ExportViewModelBase.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ using MyNet.UI.Commands;
 using MyNet.UI.Legacy.ViewModels.Workspace;
 using MyNet.UI.Resources;
 using MyNet.UI.Toasting;
-using MyNet.Utilities.Exceptions;
+using MyNet.Primitives.Exceptions;
 
 namespace MyNet.UI.Legacy.ViewModels.Export;
 

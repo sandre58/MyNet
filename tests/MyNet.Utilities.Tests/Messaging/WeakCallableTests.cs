@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Messaging;
@@ -87,7 +87,7 @@ public class WeakCallableTests
 
     private static Type GetWeakCallableGenericType(Type delegateType)
         => typeof(Messenger).Assembly
-            .GetType("MyNet.Utilities.Messaging.WeakCallable`1", throwOnError: true)!
+            .GetType("MyNet.Messaging.WeakCallable`1", throwOnError: true)!
             .MakeGenericType(delegateType);
 
     private static object? InvokeExecute(object callable)

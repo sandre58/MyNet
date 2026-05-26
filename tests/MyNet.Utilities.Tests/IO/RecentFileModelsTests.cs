@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using MyNet.Utilities.IO.FileHistory;
+using MyNet.IO.FileHistory;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

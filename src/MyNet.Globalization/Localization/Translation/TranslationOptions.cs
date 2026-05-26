@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using MyNet.Utilities.Text.Templating;
+using MyNet.Text.Templating;
 
 namespace MyNet.Globalization.Localization.Translation;
 

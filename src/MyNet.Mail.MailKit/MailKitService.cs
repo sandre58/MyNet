@@ -16,9 +16,9 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using MyNet.Utilities;
 using MyNet.Utilities.Logging;
-using MyNet.Utilities.Mail;
-using MyNet.Utilities.Mail.Models;
-using MyNet.Utilities.Mail.Smtp;
+using MyNet.Mail;
+using MyNet.Mail.Models;
+using MyNet.Mail.Smtp;
 
 namespace MyNet.Mail.MailKit;
 

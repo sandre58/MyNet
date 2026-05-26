@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.Exceptions;
+using MyNet.Primitives.Exceptions;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Exceptions;

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Metadata</Product>
+        <PackageIcon>MyNetMetadata.png</PackageIcon>
+        <Description>Type and property metadata registry with feature-based extensibility.</Description>
+        <PackageTags>My;Metadata;Registry</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>

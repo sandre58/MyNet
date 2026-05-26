@@ -6,8 +6,8 @@
 
 using System;
 using System.Globalization;
-using MyNet.Utilities.Text;
-using MyNet.Utilities.Text.Truncation;
+using MyNet.Text;
+using MyNet.Text.Truncation;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;

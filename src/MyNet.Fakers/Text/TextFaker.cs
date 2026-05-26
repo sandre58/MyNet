@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 
 namespace MyNet.Fakers.Text;
 

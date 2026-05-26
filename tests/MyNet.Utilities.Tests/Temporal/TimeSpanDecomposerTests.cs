@@ -5,7 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Temporal.Decomposition;
+using MyNet.Temporal.Extensions;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Temporal;

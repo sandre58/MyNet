@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Globalization.Localization.Translation.KeyGeneration;
-using MyNet.Utilities;
+using MyNet.Reflection;
 
 namespace MyNet.Humanizer.Display.Strategies;
 

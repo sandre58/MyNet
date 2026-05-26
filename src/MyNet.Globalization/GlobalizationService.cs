@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Globalization;
 

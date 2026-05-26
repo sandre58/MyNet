@@ -9,7 +9,7 @@ using System.Globalization;
 using FluentValidation;
 using MyNet.Observable.Localization;
 using MyNet.Observable.Validation;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

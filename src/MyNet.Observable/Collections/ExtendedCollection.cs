@@ -21,7 +21,7 @@ using MyNet.Observable.Collections.Filters;
 using MyNet.Observable.Collections.Grouping;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Collections.Sources;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Observable.Collections;
 
@@ -119,13 +119,10 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
                 _groupingEngine.Grouping,
                 (items, grouping) => GroupingEngine<T>.ComputeGroups([.. items], grouping));
 
-        Disposables.AddRange(
-        [
-            _sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => UpdateSourceCount()),
-            _itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(_ => UpdateFilteredCount()),
-            _source.Connect().SubscribeMany(SubscribeToItemChanges).Subscribe(),
-            ObserveCollectionChanges(_items).Subscribe(HandleCollectionChanged)
-        ]);
+        Disposables.Add(_sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => UpdateSourceCount()));
+        Disposables.Add(_itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(_ => UpdateFilteredCount()));
+        Disposables.Add(_source.Connect().SubscribeMany(SubscribeToItemChanges).Subscribe());
+        Disposables.Add(ObserveCollectionChanges(_items).Subscribe(HandleCollectionChanged));
 
         UpdateSourceCount();
         UpdateFilteredCount();

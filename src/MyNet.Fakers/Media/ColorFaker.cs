@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 
 namespace MyNet.Fakers.Media;
 

@@ -1,13 +1,13 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="RecentFilesManager.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="RecentFilesManager.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using MyNet.UI.Messages;
 using MyNet.Utilities.IO.FileHistory;
 using MyNet.Utilities.Logging;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 
 namespace MyNet.UI.Services;
 

@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="NotificationsViewModel.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="NotificationsViewModel.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Legacy.Threading;
 using MyNet.UI.Messages;
 using MyNet.Utilities;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

@@ -6,9 +6,9 @@
 
 using System;
 using System.Globalization;
-using MyNet.Globalization.Static;
+using MyNet.Globalization.Facade;
 using MyNet.Observable.Localization;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Observable.Validation;
 

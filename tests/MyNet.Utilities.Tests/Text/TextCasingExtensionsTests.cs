@@ -5,9 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
-using MyNet.Utilities.Text.TextCasing;
+using MyNet.Text.TextCasing;
 using Xunit;
-using TextPortal = MyNet.Utilities.Text.Text;
+using TextPortal = MyNet.Text.Text;
 
 namespace MyNet.Utilities.Tests.Text;
 

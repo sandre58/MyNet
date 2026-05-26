@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.Intervals;
+using MyNet.Primitives.Intervals;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Intervals;

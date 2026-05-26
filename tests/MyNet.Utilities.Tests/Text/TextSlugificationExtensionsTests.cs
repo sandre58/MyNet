@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Text.Slugification;
+using MyNet.Text.Slugification;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;

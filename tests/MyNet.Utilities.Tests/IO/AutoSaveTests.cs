@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using MyNet.Utilities.IO.AutoSave;
+using MyNet.IO.AutoSave;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

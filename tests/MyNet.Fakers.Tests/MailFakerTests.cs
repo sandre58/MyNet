@@ -10,7 +10,7 @@ using Moq;
 using MyNet.Fakers.Contacts;
 using MyNet.Fakers.Identity;
 using MyNet.Fakers.Internet;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

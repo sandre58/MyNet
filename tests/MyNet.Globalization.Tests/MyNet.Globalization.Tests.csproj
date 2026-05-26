@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\MyNet.Globalization\MyNet.Globalization.csproj" />
+      <ProjectReference Include="..\..\src\MyNet.Text\MyNet.Text.csproj" />
     </ItemGroup>
 
     <ItemGroup>

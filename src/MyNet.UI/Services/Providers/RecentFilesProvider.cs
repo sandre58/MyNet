@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="RecentFilesProvider.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="RecentFilesProvider.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -12,9 +12,9 @@ using DynamicData.Binding;
 using MyNet.UI.Legacy.ViewModels.FileHistory;
 using MyNet.UI.Messages;
 using MyNet.Utilities;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using MyNet.Utilities.IO.FileHistory;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 
 namespace MyNet.UI.Services.Providers;
 

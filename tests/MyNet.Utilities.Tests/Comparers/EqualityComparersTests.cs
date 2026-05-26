@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using MyNet.Utilities.Comparers;
+using MyNet.Primitives.Comparers;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Comparers;
@@ -67,20 +67,20 @@ public class EqualityComparersTests
     #region ReferenceEqualityComparer
 
     [Fact]
-    public void Reference_Instance_IsSingleton() => Assert.Same(MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance, MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance);
+    public void Reference_Instance_IsSingleton() => Assert.Same(MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance, MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance);
 
     [Fact]
     public void Reference_GenericEquals_ReturnsTrueForSameReference()
     {
         var obj = new object();
-        IEqualityComparer<object> comparer = MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance;
+        IEqualityComparer<object> comparer = MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance;
         Assert.True(comparer.Equals(obj, obj));
     }
 
     [Fact]
     public void Reference_GenericEquals_ReturnsFalseForDifferentInstances()
     {
-        IEqualityComparer<object> comparer = MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance;
+        IEqualityComparer<object> comparer = MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance;
         Assert.False(comparer.Equals(new(), new()));
     }
 
@@ -88,7 +88,7 @@ public class EqualityComparersTests
     public void Reference_NonGenericEquals_ReturnsTrueForSameReference()
     {
         var obj = new object();
-        System.Collections.IEqualityComparer comparer = MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance;
+        System.Collections.IEqualityComparer comparer = MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance;
         Assert.True(comparer.Equals(obj, obj));
     }
 
@@ -96,7 +96,7 @@ public class EqualityComparersTests
     public void Reference_GetHashCode_ReturnsRuntimeHashCode()
     {
         var obj = new object();
-        IEqualityComparer<object> comparer = MyNet.Utilities.Comparers.ReferenceEqualityComparer.Instance;
+        IEqualityComparer<object> comparer = MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance;
         Assert.Equal(RuntimeHelpers.GetHashCode(obj), comparer.GetHashCode(obj));
     }
 

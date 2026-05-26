@@ -6,7 +6,7 @@
 
 using System;
 using System.IO;
-using MyNet.Utilities.IO;
+using MyNet.IO;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

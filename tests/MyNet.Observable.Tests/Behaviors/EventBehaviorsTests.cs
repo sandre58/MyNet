@@ -13,7 +13,7 @@ using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
 using MyNet.Observable.Behaviors;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Utilities.Metadata;
+using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Behaviors;

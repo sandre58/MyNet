@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Observable.Collections.Filters;
 
@@ -103,8 +103,8 @@ public sealed class FilterBuilder<T>
     /// Builds the filter expression tree based on the nodes added to the builder. If no nodes have been added, it returns a filter that always returns true. If only one node has been added, it returns that node directly. If multiple nodes have been added, it constructs a filter group that combines all nodes according to their specified logical operators, resulting in a single filter node that represents the entire filter expression tree built by the builder.
     /// </summary>
     /// <returns>The root filter node representing the entire filter expression tree.</returns>
-    public IFilter<T>? Build() =>
-        _nodes.Count switch
+    public IFilter<T>? Build()
+        => _nodes.Count switch
         {
             0 => null,
             1 => _nodes[0].Node,

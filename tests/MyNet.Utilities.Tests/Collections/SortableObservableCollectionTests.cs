@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Collections;

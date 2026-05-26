@@ -6,7 +6,7 @@
 
 using System;
 using MyNet.Humanizer.Temporal;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Temporal.Decomposition;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Humanizer;

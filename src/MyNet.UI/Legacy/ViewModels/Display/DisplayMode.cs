@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="DisplayMode.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="DisplayMode.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ using MyNet.Observable;
 using MyNet.UI.Commands;
 using MyNet.UI.Layout;
 using MyNet.Utilities;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using MyNet.Utilities.Conversion;
 using MyNet.Utilities.Conversion.Time;
 using MyNet.Utilities.Localization;

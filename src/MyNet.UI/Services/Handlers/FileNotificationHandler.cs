@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="FileNotificationHandler.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="FileNotificationHandler.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -8,7 +8,7 @@ using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Messages;
 using MyNet.UI.Toasting;
 using MyNet.UI.Toasting.Settings;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 
 namespace MyNet.UI.Services.Handlers;
 

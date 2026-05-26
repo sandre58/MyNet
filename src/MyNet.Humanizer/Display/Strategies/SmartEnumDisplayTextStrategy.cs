@@ -7,7 +7,7 @@
 using System.Globalization;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Globalization.Localization.Translation.KeyGeneration;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Humanizer.Display.Strategies;
 

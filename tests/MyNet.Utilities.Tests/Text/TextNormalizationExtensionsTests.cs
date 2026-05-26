@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Text;
-using MyNet.Utilities.Text.Normalization;
+using MyNet.Text.Normalization;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;
@@ -39,9 +39,9 @@ public class TextNormalizationExtensionsTests
     [Fact]
     public void Normalize_Pipeline_AppliesTransform()
     {
-        var result = Utilities.Text.Text.For("  Crème  brûlée ")
-            .Normalize(Normalization.CleanWhitespace)
-            .Normalize(Normalization.RemoveDiacritics)
+        var result = MyNet.Text.Text.For("  Crème  brûlée ")
+            .Normalize(TextNormalization.CleanWhitespace)
+            .Normalize(TextNormalization.RemoveDiacritics)
             .Value;
 
         Assert.Equal("Creme brulee", result);

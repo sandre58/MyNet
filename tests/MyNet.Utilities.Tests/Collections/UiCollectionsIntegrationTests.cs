@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Collections;

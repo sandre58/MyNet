@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Reflection</Product>
+        <PackageIcon>MyNetReflection.png</PackageIcon>
+        <Description>Reflection helpers, property caches, and object graph utilities.</Description>
+        <PackageTags>My;Reflection;Toolkit</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>

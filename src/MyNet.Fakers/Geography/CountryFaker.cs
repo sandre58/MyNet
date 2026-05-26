@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using MyNet.Utilities.Geography;
 
 namespace MyNet.Fakers.Geography;

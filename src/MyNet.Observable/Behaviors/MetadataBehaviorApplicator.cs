@@ -6,10 +6,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
-using MyNet.Utilities;
-using MyNet.Utilities.Metadata;
 
 namespace MyNet.Observable.Behaviors;
 

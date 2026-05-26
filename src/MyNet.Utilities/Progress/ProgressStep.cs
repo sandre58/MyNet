@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MyNet.Primitives;
 
 namespace MyNet.Utilities.Progress;
 

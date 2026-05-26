@@ -7,9 +7,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using MyNet.Utilities.IO;
-using MyNet.Utilities.IO.Registry;
-using MyNet.Utilities.IO.Registry.FileHistory;
+using MyNet.IO;
+using MyNet.IO.Registry;
+using MyNet.Platform.Windows.Registry.FileHistory;
+using MyNet.Utilities.Process;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

@@ -8,8 +8,8 @@ using System;
 using System.Linq;
 using System.Runtime.Versioning;
 using Microsoft.Win32;
-using MyNet.Utilities.IO.Registry;
-using MyNet.Utilities.IO.Registry.Windows;
+using MyNet.IO.Registry;
+using MyNet.Platform.Windows.Registry;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

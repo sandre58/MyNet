@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Collections;

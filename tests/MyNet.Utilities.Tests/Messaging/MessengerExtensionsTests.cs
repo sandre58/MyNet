@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Messaging;

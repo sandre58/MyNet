@@ -11,9 +11,9 @@ using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Geography;
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using MyNet.Utilities.Geography;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Text.Randomize;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

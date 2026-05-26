@@ -1,10 +1,10 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="NullableComparerTests.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="NullableComparerTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Comparers;
+using MyNet.Primitives.Comparers;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Comparers;

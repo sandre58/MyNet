@@ -1,14 +1,14 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="QuantityExtensionsTests.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="QuantityExtensionsTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Humanizer.Static;
+using MyNet.Primitives.Conversion;
 using MyNet.Utilities;
-using MyNet.Utilities.Conversion;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Extensions;

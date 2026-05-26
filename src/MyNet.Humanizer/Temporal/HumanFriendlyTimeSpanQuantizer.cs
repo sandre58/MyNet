@@ -6,8 +6,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Primitives;
+using MyNet.Temporal.Decomposition;
 
 namespace MyNet.Humanizer.Temporal;
 

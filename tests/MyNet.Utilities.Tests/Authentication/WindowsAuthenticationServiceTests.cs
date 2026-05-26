@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Versioning;
 using System.Security.Principal;
 using System.Threading;
-using MyNet.Utilities.Authentication.Windows;
+using MyNet.Platform.Windows.Authentication;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Authentication;

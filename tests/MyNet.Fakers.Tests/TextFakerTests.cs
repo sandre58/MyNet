@@ -10,7 +10,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Text;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

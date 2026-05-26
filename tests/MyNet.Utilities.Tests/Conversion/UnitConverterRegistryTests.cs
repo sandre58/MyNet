@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.Conversion;
+using MyNet.Primitives.Conversion;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Conversion;

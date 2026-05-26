@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
+using MyNet.Generator;
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Generator;
 
 namespace MyNet.Fakers.Internet;
 

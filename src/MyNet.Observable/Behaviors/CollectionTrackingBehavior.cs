@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
-using MyNet.Utilities;
+using MyNet.Reflection;
 
 namespace MyNet.Observable.Behaviors;
 

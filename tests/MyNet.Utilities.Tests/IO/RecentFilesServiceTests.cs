@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using MyNet.Utilities.IO.FileHistory;
+using MyNet.IO.FileHistory;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

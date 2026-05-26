@@ -6,8 +6,8 @@
 
 using System;
 using System.Reactive.Concurrency;
+using MyNet.Collections;
 using MyNet.Observable.Collections;
-using MyNet.Utilities.Collections;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

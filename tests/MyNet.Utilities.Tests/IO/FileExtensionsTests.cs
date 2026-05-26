@@ -6,7 +6,7 @@
 
 using System;
 using System.Linq;
-using MyNet.Utilities.IO.FileExtensions;
+using MyNet.IO.FileExtensions;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

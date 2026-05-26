@@ -6,7 +6,7 @@
 
 using System;
 using System.Globalization;
-using MyNet.Utilities.Text.Templating;
+using MyNet.Text.Templating;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Text;

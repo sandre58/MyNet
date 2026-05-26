@@ -5,10 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MyNet.Humanizer.Static;
+using MyNet.Humanizer.Facade;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Observable.Metadata;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.IO.Attributes;
-using MyNet.Utilities.IO.FileExtensions;
+using MyNet.IO.Attributes;
+using MyNet.IO.FileExtensions;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.IO;

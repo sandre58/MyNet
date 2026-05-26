@@ -80,7 +80,7 @@ public class SmartEnumTests
         Assert.Throws<InvalidOperationException>(() => _ = new DuplicateSmartEnum(unique));
     }
 
-    private sealed class TestSmartEnum(int value, string name) : SmartEnum<TestSmartEnum, int>(value)
+    private sealed class TestSmartEnum(int value, string name) : Primitives.SmartEnum<TestSmartEnum, int>(value)
     {
         public static readonly TestSmartEnum One = new(1, "One");
 
@@ -89,5 +89,5 @@ public class SmartEnumTests
         public override string Name { get; } = name;
     }
 
-    private sealed class DuplicateSmartEnum(int value) : SmartEnum<DuplicateSmartEnum, int>(value);
+    private sealed class DuplicateSmartEnum(int value) : Primitives.SmartEnum<DuplicateSmartEnum, int>(value);
 }

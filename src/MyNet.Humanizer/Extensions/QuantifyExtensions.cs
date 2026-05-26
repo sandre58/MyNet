@@ -1,12 +1,12 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="QuantifyExtensions.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System.Globalization;
-using MyNet.Utilities;
-using MyNet.Utilities.Text.Templating;
+using MyNet.Primitives;
+using MyNet.Text.Templating;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Humanizer;

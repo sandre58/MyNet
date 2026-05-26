@@ -6,7 +6,7 @@
 
 using System;
 using System.Globalization;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Messaging;

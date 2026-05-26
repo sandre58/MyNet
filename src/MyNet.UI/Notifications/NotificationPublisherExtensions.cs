@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="NotificationPublisherExtensions.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="NotificationPublisherExtensions.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ using System.Globalization;
 using MyNet.UI.Messages;
 using MyNet.UI.Notifications.Models;
 using MyNet.Utilities;
-using MyNet.Utilities.Exceptions;
+using MyNet.Primitives.Exceptions;
 using MyNet.Utilities.Logging;
 
 namespace MyNet.UI.Notifications;

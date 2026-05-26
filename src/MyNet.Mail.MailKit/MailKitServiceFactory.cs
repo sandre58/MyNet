@@ -4,8 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Mail;
-using MyNet.Utilities.Mail.Smtp;
+using MyNet.Mail;
+using MyNet.Mail.Smtp;
 
 namespace MyNet.Mail.MailKit;
 

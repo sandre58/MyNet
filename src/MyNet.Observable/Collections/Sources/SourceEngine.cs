@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using DynamicData;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
 
 namespace MyNet.Observable.Collections.Sources;
 

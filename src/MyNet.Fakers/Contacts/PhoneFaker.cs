@@ -5,9 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
+using MyNet.Generator;
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Generator;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Text.Randomize;
 
 namespace MyNet.Fakers.Contacts;
 

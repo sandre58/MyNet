@@ -6,7 +6,7 @@
 
 using System;
 using System.Text.RegularExpressions;
-using MyNet.Utilities.Text.Redaction;
+using MyNet.Text.Redaction;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Extensions;

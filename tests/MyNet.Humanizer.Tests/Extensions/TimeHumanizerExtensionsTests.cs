@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="TimeHumanizerExtensionsTests.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="TimeHumanizerExtensionsTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ using MyNet.Humanizer.Formatting.Collections;
 using MyNet.Humanizer.Static;
 using MyNet.Humanizer.Temporal;
 using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Temporal.Decomposition;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Extensions;

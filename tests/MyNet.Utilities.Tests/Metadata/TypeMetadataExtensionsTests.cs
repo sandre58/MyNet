@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Metadata;
+using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Metadata;

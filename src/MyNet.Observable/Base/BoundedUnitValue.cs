@@ -6,8 +6,8 @@
 
 using System;
 using System.Numerics;
-using MyNet.Utilities;
-using MyNet.Utilities.Intervals;
+using MyNet.Primitives;
+using MyNet.Primitives.Intervals;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

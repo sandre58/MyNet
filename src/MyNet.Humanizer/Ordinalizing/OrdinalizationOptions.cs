@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Text;
+using MyNet.Text;
 
 namespace MyNet.Humanizer.Ordinalizing;
 

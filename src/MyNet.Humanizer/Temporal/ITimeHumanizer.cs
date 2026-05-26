@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ITimeHumanizer.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using MyNet.Globalization.Localization.Providers;
 using MyNet.Humanizer.Formatting.Collections;
-using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Primitives;
+using MyNet.Temporal.Decomposition;
 
 namespace MyNet.Humanizer.Temporal;
 

@@ -6,7 +6,7 @@
 
 using System;
 using System.Reactive.Concurrency;
-using MyNet.Utilities.Collections;
+using MyNet.Collections;
 
 namespace MyNet.Observable.Collections;
 

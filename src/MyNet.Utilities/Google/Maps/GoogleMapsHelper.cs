@@ -4,9 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyNet.Utilities.IO;
+using MyNet.Primitives.Helpers;
 
 namespace MyNet.Utilities.Google.Maps;
 
@@ -39,7 +40,7 @@ public static class GoogleMapsHelper
 
         if (!string.IsNullOrEmpty(settings.Address))
         {
-            result.Add("q", settings.Address.Replace(" ", "+", System.StringComparison.OrdinalIgnoreCase));
+            result.Add("q", settings.Address.Replace(" ", "+", StringComparison.OrdinalIgnoreCase));
         }
 
         if (settings.Coordinates is not null)

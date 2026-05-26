@@ -14,9 +14,9 @@ using MyNet.Fakers.Identity;
 using MyNet.Fakers.Internet;
 using MyNet.Fakers.Media;
 using MyNet.Fakers.Text;
+using MyNet.Generator.Facade;
 using MyNet.Globalization.Localization.Providers;
-using MyNet.Utilities.Generator.Static;
-using MyNet.Utilities.Text.Randomize;
+using MyNet.Text.Randomize;
 
 namespace MyNet.Fakers.Static;
 

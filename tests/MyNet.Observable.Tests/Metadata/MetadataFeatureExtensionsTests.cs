@@ -6,7 +6,7 @@
 
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Utilities.Metadata;
+using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Metadata;

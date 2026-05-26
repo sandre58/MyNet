@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using MyNet.Globalization.Localization.Policies;
-using MyNet.Utilities.Comparers;
+using MyNet.Primitives.Comparers;
 
 namespace MyNet.Globalization.Localization.Providers.Factories;
 

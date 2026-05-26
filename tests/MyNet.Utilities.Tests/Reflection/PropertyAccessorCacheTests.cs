@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using MyNet.Utilities.Reflection;
+using MyNet.Reflection;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Reflection;

@@ -6,7 +6,7 @@
 
 using MyNet.Humanizer.Ordinalizing;
 using MyNet.Humanizer.Ordinalizing.Cultures;
-using MyNet.Utilities.Text;
+using MyNet.Text;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Ordinalizing;

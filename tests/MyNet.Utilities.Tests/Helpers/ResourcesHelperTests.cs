@@ -6,7 +6,7 @@
 
 using System;
 using System.Linq;
-using MyNet.Utilities.Helpers;
+using MyNet.Primitives.Helpers;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Helpers;

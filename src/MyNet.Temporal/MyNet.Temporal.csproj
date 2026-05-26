@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Temporal</Product>
+        <PackageIcon>MyNetTemporal.png</PackageIcon>
+        <Description>TimeSpan decomposition and temporal helpers built on MyNet.Primitives.</Description>
+        <PackageTags>My;Temporal;TimeSpan;Decomposition</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>
+

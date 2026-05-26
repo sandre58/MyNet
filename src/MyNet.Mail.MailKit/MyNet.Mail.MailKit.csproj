@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
+    <ProjectReference Include="..\MyNet.Mail\MyNet.Mail.csproj" />
   </ItemGroup>
 
   <ItemGroup>

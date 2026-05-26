@@ -4,9 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Utilities.Metadata;
 
 namespace MyNet.Observable.Behaviors.Metadata;
 

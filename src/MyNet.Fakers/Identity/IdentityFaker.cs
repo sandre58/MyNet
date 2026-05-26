@@ -7,7 +7,7 @@
 using System;
 using System.Text;
 using MyNet.Fakers.Text;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 
 namespace MyNet.Fakers.Identity;
 

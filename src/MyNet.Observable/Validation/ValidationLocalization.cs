@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using FluentValidation;
-using MyNet.Globalization.Static;
+using MyNet.Globalization.Facade;
 using MyNet.Observable.Localization;
 
 namespace MyNet.Observable.Validation;

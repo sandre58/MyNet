@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Platform - Windows</Product>
+        <PackageIcon>MyNetPlatformWindows.png</PackageIcon>
+        <Description>Windows-specific implementations: registry, authentication, and MAPI mail.</Description>
+        <PackageTags>My;Windows;Registry;Authentication;MAPI</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.IO\MyNet.IO.csproj" />
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+        <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
+    </ItemGroup>
+    
+</Project>
+

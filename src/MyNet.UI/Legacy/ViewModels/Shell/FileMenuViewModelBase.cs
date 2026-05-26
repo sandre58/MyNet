@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="FileMenuViewModelBase.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="FileMenuViewModelBase.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ using MyNet.UI.Legacy.Dialogs;
 using MyNet.UI.Messages;
 using MyNet.UI.Services;
 using MyNet.Utilities;
-using MyNet.Utilities.Messaging;
+using MyNet.Messaging;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

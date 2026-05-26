@@ -6,7 +6,7 @@
 
 using MyNet.Humanizer.Temporal;
 using MyNet.Utilities;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Temporal.Decomposition;
 using Xunit;
 
 namespace MyNet.Humanizer.Tests.Temporal;

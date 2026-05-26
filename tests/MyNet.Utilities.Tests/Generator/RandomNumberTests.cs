@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Utilities.Generator.Static;
+using MyNet.Generator.Facade;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Generator;

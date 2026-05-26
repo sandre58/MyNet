@@ -6,7 +6,7 @@
 
 using FluentAssertions;
 using MyNet.Observable.Behaviors;
-using MyNet.Utilities.Intervals;
+using MyNet.Primitives.Intervals;
 using Xunit;
 
 namespace MyNet.Observable.Tests.Base;

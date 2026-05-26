@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MyNet.Utilities;
+using MyNet.Text;
 using MyNet.Utilities.Geography;
 
 namespace MyNet.Geography.Providers;

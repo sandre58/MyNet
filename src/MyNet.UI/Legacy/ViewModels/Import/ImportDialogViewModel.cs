@@ -1,6 +1,6 @@
-ï»¿// -----------------------------------------------------------------------
-// <copyright file="ImportDialogViewModel.cs" company="StÃ©phane ANDRE">
-// Copyright (c) StÃ©phane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="ImportDialogViewModel.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ using MyNet.UI.Legacy.ViewModels.Dialogs;
 using MyNet.UI.Legacy.ViewModels.List;
 using MyNet.UI.Resources;
 using MyNet.UI.Toasting;
-using MyNet.Utilities.Providers;
+using MyNet.Primitives.Providers;
 
 namespace MyNet.UI.Legacy.ViewModels.Import;
 

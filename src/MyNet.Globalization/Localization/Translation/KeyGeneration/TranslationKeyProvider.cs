@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.Globalization.Localization.Translation.KeyGeneration;
 

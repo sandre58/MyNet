@@ -9,7 +9,7 @@ using System.Globalization;
 using FluentAssertions;
 using Moq;
 using MyNet.Fakers.Media;
-using MyNet.Utilities.Generator;
+using MyNet.Generator;
 using Xunit;
 
 namespace MyNet.Fakers.Tests;

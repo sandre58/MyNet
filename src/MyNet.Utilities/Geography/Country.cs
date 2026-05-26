@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using MyNet.Primitives;
 
 namespace MyNet.Utilities.Geography;
 

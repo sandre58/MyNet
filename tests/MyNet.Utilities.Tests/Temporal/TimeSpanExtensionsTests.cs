@@ -1,11 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TimeSpanExtensionsTests.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// -----------------------------------------------------------------------
+// <copyright file="TimeSpanExtensionsTests.cs" company="St�phane ANDRE">
+// Copyright (c) St�phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Utilities.Temporal.Decomposition;
+using MyNet.Temporal.Decomposition;
+using MyNet.Temporal.Extensions;
 using Xunit;
 
 namespace MyNet.Utilities.Tests.Temporal;

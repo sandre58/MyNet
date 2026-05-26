@@ -6,9 +6,9 @@
 
 using System;
 using MyNet.Globalization.Culture;
-using MyNet.Globalization.Static;
-using MyNet.Utilities;
-using MyNet.Utilities.Text.TextCasing;
+using MyNet.Globalization.Facade;
+using MyNet.Text;
+using MyNet.Text.TextCasing;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

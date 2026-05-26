@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
 using MyNet.Globalization.Events;
+using MyNet.Globalization.Facade;
 using MyNet.Globalization.Inflection;
 using MyNet.Globalization.Inflection.Cultures;
 using MyNet.Globalization.Localization.Providers;
@@ -22,8 +23,6 @@ using MyNet.Globalization.Localization.Translation;
 using MyNet.Globalization.Localization.Translation.Catalog;
 using MyNet.Globalization.Localization.Translation.KeyGeneration;
 using MyNet.Globalization.Localization.Translation.KeyResolving;
-using MyNet.Globalization.Static;
-using MyNet.Utilities;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Globalization;
@@ -173,9 +172,10 @@ public static class ServiceCollectionExtensions
             {
                 var builder = new LocalizationServiceFactoryBuilder<TService>(x => defaultFactory(sp, x));
 
-                sp.GetServices<ILocalizationFactoryRegistration<TService>>()
-                    .OrderBy(x => x.Priority)
-                    .ForEach(cfg => cfg.Configure(builder));
+                var services = sp.GetServices<ILocalizationFactoryRegistration<TService>>()
+                    .OrderBy(x => x.Priority).ToList();
+
+                services.ForEach(cfg => cfg.Configure(builder));
 
                 return builder.Build();
             });

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Mail</Product>
+        <PackageIcon>MyNetMail.png</PackageIcon>
+        <Description>Email models, SMTP abstractions, and mail helpers for .NET applications.</Description>
+        <PackageTags>My;Mail;Email;Smtp</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
+
+</Project>
+

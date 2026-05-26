@@ -15,7 +15,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using MyNet.Observable.Behaviors.Metadata.Attributes;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Observable.Behaviors.Metadata.Features.Events;
-using MyNet.Utilities.Metadata;
+using MyNet.Metadata;
 using Xunit;
 
 namespace MyNet.Observable.Metadata.Generator.Tests;
@@ -141,7 +141,7 @@ public sealed class MetadataProviderGeneratorTests
                               using MyNet.Observable;
                               using MyNet.Observable.Behaviors.Metadata.Attributes;
                               using MyNet.Observable.Behaviors.Metadata.Features.Events;
-                              using MyNet.Utilities.Metadata;
+                              using MyNet.Metadata;
 
                               namespace Demo;
 

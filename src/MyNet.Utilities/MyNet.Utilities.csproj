@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Globalization\Localization\Resources\InternalResources.resx">
-        <LastGenOutput>InternalResources.Designer.cs</LastGenOutput>
-        <Generator>ResXFileCodeGenerator</Generator>
-      </EmbeddedResource>
       <EmbeddedResource Update="Resources\InternalResources.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>InternalResources.Designer.cs</LastGenOutput>
@@ -28,11 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Globalization\Localization\Resources\InternalResources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>InternalResources.resx</DependentUpon>
-      </Compile>
+      <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
     </ItemGroup>
 
 </Project>

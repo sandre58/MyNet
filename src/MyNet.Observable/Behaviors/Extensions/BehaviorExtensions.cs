@@ -11,7 +11,7 @@ using FluentValidation;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;
 using MyNet.Observable.Behaviors;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace MyNet.Observable;

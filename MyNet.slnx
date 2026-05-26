@@ -71,13 +71,25 @@
     <Project Path="tests/MyNet.UI.Tests/MyNet.UI.Tests.csproj" />
     <Project Path="tests/MyNet.Utilities.Tests/MyNet.Utilities.Tests.csproj" />
   </Folder>
+  <Project Path="src/MyNet.Collections/MyNet.Collections.csproj" />
+  <Project Path="src/MyNet.Generator/MyNet.Generator.csproj" />
+  <Project Path="src/MyNet.Messaging/MyNet.Messaging.csproj" />
+  <Project Path="src/MyNet.IO/MyNet.IO.csproj" />
+  <Project Path="src/MyNet.Mail/MyNet.Mail.csproj" />
+  <Project Path="src/MyNet.Metadata/MyNet.Metadata.csproj" />
+  <Project Path="src/MyNet.Platform.Windows/MyNet.Platform.Windows.csproj" />
+  <Project Path="src/MyNet.Reflection/MyNet.Reflection.csproj" />
   <Project Path="src/MyNet.Fakers/MyNet.Fakers.csproj" />
+  <Project Path="src/MyNet.Geography.Resources/MyNet.Geography.Resources.csproj" />
   <Project Path="src/MyNet.Geography/MyNet.Geography.csproj" />
   <Project Path="src/MyNet.Globalization/MyNet.Globalization.csproj" />
   <Project Path="src/MyNet.Http/MyNet.Http.csproj" />
   <Project Path="src/MyNet.Humanizer/MyNet.Humanizer.csproj" />
   <Project Path="src/MyNet.Mail.MailKit/MyNet.Mail.MailKit.csproj" />
   <Project Path="src/MyNet.Observable/MyNet.Observable.csproj" />
+  <Project Path="src/MyNet.Primitives/MyNet.Primitives.csproj" />
+  <Project Path="src/MyNet.Text/MyNet.Text.csproj" />
+  <Project Path="src/MyNet.Temporal/MyNet.Temporal.csproj" />
   <Project Path="src/MyNet.UI/MyNet.UI.csproj" />
   <Project Path="src/MyNet.Utilities/MyNet.Utilities.csproj" />
 </Solution>
