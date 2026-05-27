@@ -83,6 +83,20 @@ public sealed class FileExtensionsAllowedAttributeTests
     }
 
     [Fact]
+    public void Constructor_WithOnlyWhitespaceExtensions_ThrowsArgumentException()
+        => Assert.Throws<ArgumentException>(() => new FileExtensionsAllowedAttribute(" ", "\t"));
+
+    [Fact]
+    public void IsValid_WithWildcard_AcceptsAnyNonEmptyPath()
+    {
+        var attribute = new FileExtensionsAllowedAttribute("*");
+
+        Assert.True(attribute.IsValid("report.json"));
+        Assert.True(attribute.IsValid("report"));
+        Assert.True(attribute.IsValid("report.TXT"));
+    }
+
+    [Fact]
     public void FormatErrorMessage_ContainsFieldNameAndAllowedExtensions()
     {
         var attribute = new FileExtensionsAllowedAttribute("txt", "csv");

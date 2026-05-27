@@ -37,6 +37,7 @@ public sealed class FileExtensionsAllowedAttribute : ValidationAttribute
 
         _extensions = extensions
             .Select(Normalize)
+            .Where(static x => !string.IsNullOrEmpty(x))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         if (_extensions.Count == 0)
@@ -90,6 +91,9 @@ public sealed class FileExtensionsAllowedAttribute : ValidationAttribute
 
         if (string.IsNullOrWhiteSpace(path))
             return AllowEmpty;
+
+        if (_extensions.Contains("*"))
+            return true;
 
         var extension = Normalize(Path.GetExtension(path));
 

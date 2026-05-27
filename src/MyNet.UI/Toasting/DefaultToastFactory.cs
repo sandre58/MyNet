@@ -24,7 +24,7 @@ public sealed class DefaultToastFactory(ICommandFactory? commandFactory = null) 
     {
         var settings = ToastSettings.Default;
 
-        var closeCommand = notification is ClosableNotification closable
+        var closeCommand = notification is IClosableNotification { IsClosable: true } closable
             ? _commandFactory.Create((Action)(() => closable.RequestClose()))
             : null;
 

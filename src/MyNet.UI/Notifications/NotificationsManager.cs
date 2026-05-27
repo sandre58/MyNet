@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Threading;
@@ -21,6 +22,7 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
 {
     private readonly ObservableCollection<INotification> _items = [];
     private readonly Dictionary<Guid, EventHandler<CloseRequestedEventArgs>> _closeHandlers = [];
+    private readonly ISchedulerProvider _schedulerProvider;
     private readonly IDisposable _subscription;
     private bool _isDisposed;
 
@@ -33,6 +35,7 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
         INotificationService service,
         ISchedulerProvider schedulerProvider)
     {
+        _schedulerProvider = schedulerProvider;
         Notifications = new(_items);
 
         _subscription = service.Notifications
@@ -94,7 +97,9 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
     }
 
     /// <inheritdoc />
-    public void Remove(INotification notification)
+    public void Remove(INotification notification) => _schedulerProvider.Ui.Schedule(() => RemoveCore(notification));
+
+    private void RemoveCore(INotification notification)
     {
         if (_isDisposed)
             return;
@@ -108,7 +113,9 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
     }
 
     /// <inheritdoc />
-    public void Clear()
+    public void Clear() => _schedulerProvider.Ui.Schedule(ClearCore);
+
+    private void ClearCore()
     {
         if (_isDisposed)
             return;

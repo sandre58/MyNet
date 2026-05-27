@@ -15,4 +15,9 @@ public interface IClosableNotification : INotification, IClosable
     /// Gets a value indicating whether the notification can be closed.
     /// </summary>
     bool IsClosable { get; }
+
+    /// <summary>
+    /// Requests that the notification is closed.
+    /// </summary>
+    void RequestClose();
 }
