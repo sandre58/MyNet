@@ -24,10 +24,9 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     /// <summary>
     /// Initializes a new instance of the <see cref="TabWorkspaceViewModel"/> class.
     /// </summary>
-    /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
-    protected TabWorkspaceViewModel(IBusyService? busyService = null, ICommandFactory? commandFactory = null)
-        : base(busyService, commandFactory)
+    protected TabWorkspaceViewModel(ICommandFactory? commandFactory = null)
+        : base(commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 

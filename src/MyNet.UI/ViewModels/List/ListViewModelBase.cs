@@ -38,7 +38,7 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     /// Initializes a new instance of the <see cref="ListViewModelBase{T}"/> class.
     /// </summary>
     protected ListViewModelBase(IListDataProvider<T> dataProvider, ListViewModelOptions<T>? options)
-        : this(dataProvider, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.BusyService, options?.Scheduler)
+        : this(dataProvider, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.Scheduler)
     {
     }
 
@@ -50,7 +50,6 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     /// <param name="sorting">Optional sorting configuration.</param>
     /// <param name="grouping">Optional grouping configuration.</param>
     /// <param name="paging">Optional paging configuration.</param>
-    /// <param name="busyService">Optional busy service.</param>
     /// <param name="scheduler">Optional scheduler for managing asynchronous operations.</param>
     protected ListViewModelBase(
         IListDataProvider<T> dataProvider,
@@ -58,9 +57,7 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
         ISortingViewModel<T>? sorting = null,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
-        IBusyService? busyService = null,
         IScheduler? scheduler = null)
-        : base(busyService)
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
 
@@ -304,7 +301,7 @@ public class ListViewModelBase<T, TCollection> : ListViewModelBase<T>
     /// Initializes a new instance of the <see cref="ListViewModelBase{T, TCollection}"/> class.
     /// </summary>
     protected ListViewModelBase(TCollection collection, ListViewModelOptions<T>? options)
-        : this(collection, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.BusyService, options?.Scheduler)
+        : this(collection, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.Scheduler)
     {
     }
 
@@ -317,9 +314,8 @@ public class ListViewModelBase<T, TCollection> : ListViewModelBase<T>
         ISortingViewModel<T>? sorting = null,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
-        IBusyService? busyService = null,
         IScheduler? scheduler = null)
-        : base(new ExtendedCollectionDataProvider<T>(collection), filters, sorting, grouping, paging, busyService, scheduler)
+        : base(new ExtendedCollectionDataProvider<T>(collection), filters, sorting, grouping, paging, scheduler)
         => Collection = collection;
 
     /// <summary>

@@ -20,11 +20,11 @@ namespace MyNet.UI.ViewModels;
 /// Provides common functionality like busy indication for async operations, error handling, and state management.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="ViewModelBase"/> class.
+/// <see cref="BusyService"/> is scoped to this view model (bind <see cref="BusyService"/> in the view).
+/// For application-wide busy, inject <see cref="IBusyService"/> on the operation or service that needs it.
 /// </remarks>
-/// <param name="busyService">Optional busy service. If null, a new instance is created.</param>
 [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Fields is not disposable and does not require cleanup.")]
-public abstract class ViewModelBase(IBusyService? busyService = null) : ObservableObject, IIdentifiable<Guid>
+public abstract class ViewModelBase : ObservableObject, IIdentifiable<Guid>
 {
     private readonly SemaphoreSlim _stateLock = new(1, 1);
 
@@ -40,9 +40,9 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     public LoadState State { get; private set => SetProperty(ref field, value); } = LoadState.NotLoaded;
 
     /// <summary>
-    /// Gets the busy service for indicating long-running operations.
+    /// Gets the local busy service for operations scoped to this view model.
     /// </summary>
-    public IBusyService BusyService { get; } = busyService ?? EmptyBusyService.Instance;
+    public IBusyService BusyService { get; } = new BusyService();
 
     #region Loading
 
@@ -70,7 +70,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     /// <param name="action">The asynchronous action to execute.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     protected async Task ExecuteStateAsync<TBusy>(Func<TBusy, CancellationToken, Task> action, CancellationToken cancellationToken = default)
-        where TBusy : class, IBusy, new()
+        where TBusy : IBusy, new()
     {
         await _stateLock.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -100,7 +100,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     }
 
     /// <summary>
-    /// Marks the workspace as loaded without performing any loading logic. This can be used when the loading process is handled externally and the workspace just needs to update its state.
+    /// Executes an asynchronous action with the local busy service.
     /// </summary>
     /// <param name="action">The asynchronous action to execute during the state transition.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
@@ -108,7 +108,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     {
         try
         {
-            await BusyService.RunAsync<IndeterminateBusy>(async (_, ct) => await action(ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
+            await BusyService.RunIndeterminateAsync(action, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -142,8 +142,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     }
 
     /// <summary>
-    /// Executes an asynchronous function with progress tracking and cancellation support.
-    /// Use this for async operations where progress can be reported.
+    /// Executes an asynchronous function with progress tracking and cancellation support on the local busy service.
     /// </summary>
     /// <param name="action">The asynchronous function to execute. Receives a <see cref="ProgressionBusy"/> instance for progress reporting.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
@@ -152,7 +151,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     {
         try
         {
-            await BusyService.RunAsync<ProgressionBusy>(async (x, ct) => await action(x, ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
+            await BusyService.RunProgressionAsync(action, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -170,31 +169,14 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     /// The default implementation does nothing, allowing exceptions to propagate.
     /// </summary>
     /// <param name="exception">The exception that occurred.</param>
-    /// <remarks>
-    /// Example override:
-    /// <code>
-    /// protected override void OnExecutionError(Exception exception)
-    /// {
-    ///  Logger.Error(exception, "Error in {ViewModelType}", GetType().Name);
-    ///     ToasterManager.ShowError($"An error occurred: {exception.Message}");
-    /// }
-    /// </code>
-    /// </remarks>
     protected virtual void OnExecutionError(Exception exception) { }
 
     #endregion
 
-    /// <summary>
-    /// Returns a hash code for this instance based on the unique identifier.
-    /// </summary>
-    /// <returns>A hash code for this instance.</returns>
+    /// <inheritdoc />
     public override int GetHashCode() => Id.GetHashCode();
 
-    /// <summary>
-    /// Determines whether the specified object is equal to this instance by comparing unique identifiers.
-    /// </summary>
-    /// <param name="obj">The object to compare with this instance.</param>
-    /// <returns>true if the specified object is a ViewModelBase with the same Id; otherwise, false.</returns>
+    /// <inheritdoc />
     public override bool Equals(object? obj) => obj is ViewModelBase viewModel && Id == viewModel.Id;
 
     /// <inheritdoc />

@@ -6,7 +6,6 @@
 
 using System.Reactive.Concurrency;
 using MyNet.UI.Commands;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
 using MyNet.UI.ViewModels.List.Paging;
@@ -40,11 +39,6 @@ public record ListViewModelOptions<T>
     /// Gets paging configuration.
     /// </summary>
     public IPagingViewModel? Paging { get; init; }
-
-    /// <summary>
-    /// Gets busy service.
-    /// </summary>
-    public IBusyService? BusyService { get; init; }
 
     /// <summary>
     /// Gets scheduler used for asynchronous operations.

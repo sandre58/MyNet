@@ -18,7 +18,7 @@ namespace MyNet.UI.ViewModels.Crud;
 /// <remarks>
 /// Initializes a new instance of the <see cref="ChildItemViewModel{T}"/> class.
 /// </remarks>
-public abstract class ChildItemViewModel<T>(IBusyService? busyService = null, ICommandFactory? commandFactory = null) : ItemViewModel<T>(busyService, commandFactory)
+public abstract class ChildItemViewModel<T>(ICommandFactory? commandFactory = null) : ItemViewModel<T>(commandFactory)
 {
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in Cleanup.")]
     private IDisposable? _parentSubscription;

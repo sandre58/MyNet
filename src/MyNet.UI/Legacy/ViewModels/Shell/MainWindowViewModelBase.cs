@@ -9,6 +9,8 @@ using System.Globalization;
 using System.Windows.Input;
 using MyNet.UI.Commands;
 using MyNet.UI.Helpers;
+using MyNet.UI.Loading;
+using MyNet.UI.Loading.Models;
 using MyNet.UI.Messages;
 using MyNet.UI.Services;
 using MyNet.UI.Theming;
@@ -50,12 +52,12 @@ public class MainWindowViewModelBase : LocalizableObject
 
     public NotificationsViewModel NotificationsViewModel { get; }
 
-    public IBusyService BusyService { get; }
+    public IBusyService ApplicationBusy { get; }
 
     public MainWindowViewModelBase(
         INotificationsManager notificationsManager,
         IAppCommandsService appCommandsService,
-        IBusyService mainBusyService,
+        IBusyService applicationBusy,
         IObservableGlobalization globalization)
     {
 #if DEBUG
@@ -64,7 +66,7 @@ public class MainWindowViewModelBase : LocalizableObject
 
         Globalization = globalization;
         NotificationsViewModel = new(notificationsManager);
-        BusyService = mainBusyService;
+        ApplicationBusy = applicationBusy;
 
         ToggleNotificationsCommand = RelayCommandFactory.Default.Create(() => Messenger.Default?.Send(new UpdateNotificationsVisibilityRequestedMessage(VisibilityAction.Toggle)), () => !DialogManager.HasOpenedDialogs && NotificationsViewModel.Notifications.Count != 0);
         ToggleFileMenuCommand = RelayCommandFactory.Default.Create(() => Messenger.Default?.Send(new UpdateFileMenuVisibilityRequestedMessage(VisibilityAction.Toggle)), () => !DialogManager.HasOpenedDialogs);
@@ -73,25 +75,25 @@ public class MainWindowViewModelBase : LocalizableObject
         IsLightCommand = RelayCommandFactory.Default.Create(() => IsDark = false);
         ExitCommand = RelayCommandFactory.Default.Create(appCommandsService.Exit, () => !DialogManager.HasOpenedDialogs);
 
-        Disposables.AddRange(
-        [
-            mainBusyService.WhenPropertyChanged(x => x.IsBusy).Subscribe(_ =>
+        applicationBusy.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is not (nameof(IBusyService.IsBusy) or nameof(IBusyService.CurrentBusy)))
+                return;
+
+            var currentBusy = applicationBusy.GetCurrent<ProgressionBusy>();
+            var progressState = applicationBusy.IsBusy ? TaskbarProgressState.Indeterminate : ProgressState == TaskbarProgressState.Error ? TaskbarProgressState.Error : TaskbarProgressState.None;
+            double? progressValue = null;
+
+            if (currentBusy != null)
             {
-                var currentBusy = mainBusyService.GetCurrent<ProgressionBusy>();
-                var progressState = mainBusyService.IsBusy ? TaskbarProgressState.Indeterminate : ProgressState == TaskbarProgressState.Error ? TaskbarProgressState.Error : TaskbarProgressState.None;
-                double? progressValue = null;
+                if (applicationBusy.IsBusy)
+                    currentBusy.PropertyChanged += OnProgressBusyPropertyChanged;
+                else
+                    currentBusy.PropertyChanged -= OnProgressBusyPropertyChanged;
+            }
 
-                if (currentBusy != null)
-                {
-                    if (mainBusyService.IsBusy)
-                        currentBusy.PropertyChanged += OnProgressBusyPropertyChanged;
-                    else
-                        currentBusy.PropertyChanged -= OnProgressBusyPropertyChanged;
-                }
-
-                RefreshTaskBarState(progressState, progressValue);
-            })
-        ]);
+            RefreshTaskBarState(progressState, progressValue);
+        };
 
         Messenger.Default?.Register<UpdateTaskBarInfoMessage>(this, UpdateTaskBarInfo);
 

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using MyNet.UI.Commands;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List;
 
 namespace MyNet.UI.ViewModels.Dialog;
@@ -41,11 +40,10 @@ public class ListDialogViewModel<T, TList> : DialogViewModel<IReadOnlyCollection
     /// Initializes a new instance of the <see cref="ListDialogViewModel{T, TList}"/> class with the specified list view model and an optional command factory. The constructor sets up the Validate and Cancel commands using the provided command factory or a default relay command factory if none is provided. The Validate command is configured to execute the Validate method and can only execute if the CanValidate method returns true, while the Cancel command is configured to execute the Cancel method without any execution constraints.
     /// </summary>
     /// <param name="list">The list view model containing the items to be displayed in the dialog.</param>
-    /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">An optional command factory to create commands.</param>
     /// <exception cref="ArgumentNullException">Thrown if the list parameter is null.</exception>
-    public ListDialogViewModel(TList list, IBusyService? busyService = null, ICommandFactory? commandFactory = null)
-        : base(busyService, commandFactory)
+    public ListDialogViewModel(TList list, ICommandFactory? commandFactory = null)
+        : base(commandFactory)
     {
         ArgumentNullException.ThrowIfNull(list);
         var commands = commandFactory ?? RelayCommandFactory.Default;

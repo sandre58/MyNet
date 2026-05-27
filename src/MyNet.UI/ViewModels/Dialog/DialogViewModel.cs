@@ -10,7 +10,6 @@ using System.Windows.Input;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.ContentDialogs;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.Workspace;
 
 namespace MyNet.UI.ViewModels.Dialog;
@@ -29,10 +28,9 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogViewModel"/> class.
     /// </summary>
-    /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
-    protected DialogViewModel(IBusyService? busyService = null, ICommandFactory? commandFactory = null)
-        : base(busyService, commandFactory)
+    protected DialogViewModel(ICommandFactory? commandFactory = null)
+        : base(commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
         CloseCommand = commands.Create<bool?>(close => RequestClose(close == true), CanClose);
@@ -70,7 +68,7 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
 /// time <see cref="OnOpenedAsync"/> is called, so the instance may be reused.
 /// </summary>
 /// <typeparam name="TResult">The type of the dialog result.</typeparam>
-public abstract class DialogViewModel<TResult>(IBusyService? busyService = null, ICommandFactory? commandFactory = null) : DialogViewModel(busyService, commandFactory), IDialog<TResult>
+public abstract class DialogViewModel<TResult>(ICommandFactory? commandFactory = null) : DialogViewModel(commandFactory), IDialog<TResult>
 {
     private TaskCompletionSource<DialogResult<TResult>> _tcs = new();
 

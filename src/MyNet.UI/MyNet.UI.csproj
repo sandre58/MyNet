@@ -10,7 +10,6 @@
 
         <ItemGroup Condition="'$(ExcludeLegacy)' == 'true'">
             <Compile Remove="Legacy\**\*.cs" />
-            <Compile Remove="Services\AppBusyManager.cs" />
             <Compile Remove="Services\RecentFilesManager.cs" />
             <Compile Remove="Services\Handlers\**\*.cs" />
             <Compile Remove="Services\Providers\**\*.cs" />

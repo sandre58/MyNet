@@ -45,7 +45,7 @@ public class Busy : ObservableObject, IBusy
     /// <summary>
     /// Gets a value indicating whether cancellation is possible.
     /// </summary>
-    public bool IsCancellable => _cts?.IsCancellationRequested == false;
+    public bool IsCancellable => _cts is { IsCancellationRequested: false };
 
     /// <summary>
     /// Gets the command used to trigger cancellation.
@@ -60,19 +60,24 @@ public class Busy : ObservableObject, IBusy
     /// <summary>
     /// Gets or sets a value indicating whether cancellation can be triggered by the user.
     /// </summary>
-    public bool CanCancel { get; set; } = true;
+    public bool CanCancel { get => field; set => SetProperty(ref field, value); } = true;
 
     /// <summary>
-    /// Internal: attach a CTS from BusyService.
+    /// Binds a cancellation source to this busy indicator.
+    /// Called by <see cref="Loading.BusyService"/> when a scope starts.
     /// </summary>
-    internal void Attach(CancellationTokenSource cts)
+    /// <param name="cancellationTokenSource">The source that drives <see cref="CancellationToken"/> and user-initiated <see cref="Cancel"/>.</param>
+    public void BindCancellation(CancellationTokenSource cancellationTokenSource)
     {
-        _cts = cts;
+        ArgumentNullException.ThrowIfNull(cancellationTokenSource);
+        _cts = cancellationTokenSource;
+        IsCancelling = false;
         NotifyPropertyChanged(nameof(IsCancellable));
+        NotifyPropertyChanged(nameof(IsCancelling));
     }
 
     /// <summary>
-    /// Requests cancellation of the busy operation. Sets <see cref="IsCancelling"/> to true and invokes <see cref="CancelAction"/> if set.
+    /// Requests cancellation of the busy operation.
     /// </summary>
     public void Cancel()
     {

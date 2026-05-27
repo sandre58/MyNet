@@ -11,7 +11,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Selection;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
@@ -37,7 +36,6 @@ public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollectio
         ISortingViewModel<T>? sorting = null,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
-        IBusyService? busyService = null,
         IScheduler? scheduler = null)
         : this(
             collection,
@@ -46,7 +44,6 @@ public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollectio
             sorting,
             grouping,
             paging,
-            busyService,
             scheduler)
     {
     }
@@ -58,7 +55,7 @@ public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollectio
         ExtendedCollection<T> collection,
         SelectionMode mode,
         ListViewModelOptions<T>? options)
-        : this(collection, mode, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.BusyService, options?.Scheduler)
+        : this(collection, mode, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.Scheduler)
     {
     }
 
@@ -72,9 +69,8 @@ public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollectio
         ISortingViewModel<T>? sorting = null,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
-        IBusyService? busyService = null,
         IScheduler? scheduler = null)
-        : base(collection, filters, sorting, grouping, paging, busyService, scheduler)
+        : base(collection, filters, sorting, grouping, paging, scheduler)
     {
         _selection = selectionManager ?? throw new ArgumentNullException(nameof(selectionManager));
         _selection.SelectionChanged += HandleSelectionChanged;

@@ -43,10 +43,9 @@ public abstract class EditionViewModel : DialogViewModel<bool>
     protected EditionViewModel(
         IDialogService dialogService,
         INotificationPublisher notificationPublisher,
-        IBusyService? busyService = null,
         ICommandFactory? commandFactory = null,
         IValidator? validator = null)
-        : base(busyService, commandFactory)
+        : base(commandFactory)
     {
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));

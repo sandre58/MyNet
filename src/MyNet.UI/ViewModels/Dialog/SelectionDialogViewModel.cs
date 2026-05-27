@@ -9,7 +9,6 @@ using System.Windows.Input;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Selection;
 using MyNet.UI.Commands;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Selection;
 
 namespace MyNet.UI.ViewModels.Dialog;
@@ -30,10 +29,9 @@ public class SelectionDialogViewModel<T> : ListDialogViewModel<T, ISelectableLis
     /// Initializes a new instance of the <see cref="SelectionDialogViewModel{T}"/> class with the specified selectable list and an optional command factory. The constructor sets up the double-click command to validate the selection when an item is double-clicked, but only if there is at least one selected item and the selection mode is single.
     /// </summary>
     /// <param name="list">The selectable list to be displayed in the dialog.</param>
-    /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">An optional command factory to create commands.</param>
-    public SelectionDialogViewModel(ISelectableListViewModel<T> list, IBusyService? busyService = null, ICommandFactory? commandFactory = null)
-        : base(list, busyService, commandFactory)
+    public SelectionDialogViewModel(ISelectableListViewModel<T> list, ICommandFactory? commandFactory = null)
+        : base(list, commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
         DoubleClickCommand = commands.Create(Validate, () => List is { SelectedCount: > 0, SelectionMode: SelectionMode.Single });

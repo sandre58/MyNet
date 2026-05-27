@@ -6,7 +6,6 @@
 
 using System.Reactive.Concurrency;
 using MyNet.Observable.Collections.Sources;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
@@ -20,22 +19,20 @@ namespace MyNet.UI.ViewModels.List;
 /// </summary>
 /// <typeparam name="T">The type of items in the list.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="ListViewModel{T}"/> class with the specified collection and optional view models for filtering, sorting, grouping, paging, and busy state management. This constructor allows you to create a list view model that is ready to be used in the UI with the provided collection and configurations for various list operations.
+/// Initializes a new instance of the <see cref="ListViewModel{T}"/> class with the specified collection and optional view models for filtering, sorting, grouping, and paging. This constructor allows you to create a list view model that is ready to be used in the UI with the provided collection and configurations for various list operations.
 /// </remarks>
 /// <param name="dataProvider">The collection of items to be managed by the view model.</param>
 /// <param name="filters">Optional view model for managing filters.</param>
 /// <param name="sorting">Optional view model for managing sorting.</param>
 /// <param name="grouping">Optional view model for managing grouping.</param>
 /// <param name="paging">Optional view model for managing paging.</param>
-/// <param name="busyService">Optional service for managing busy state.</param>
 /// <param name="scheduler">Optional scheduler for managing concurrency.</param>
 public class ListViewModel<T>(IListDataProvider<T> dataProvider,
     IFiltersViewModel<T>? filters = null,
     ISortingViewModel<T>? sorting = null,
     IGroupingViewModel<T>? grouping = null,
     IPagingViewModel? paging = null,
-    IBusyService? busyService = null,
-    IScheduler? scheduler = null) : ListViewModelBase<T>(dataProvider, filters, sorting, grouping, paging, busyService, scheduler)
+    IScheduler? scheduler = null) : ListViewModelBase<T>(dataProvider, filters, sorting, grouping, paging, scheduler)
     where T : notnull
 {
     /// <summary>
@@ -56,9 +53,8 @@ public class ListViewModel<T>(IListDataProvider<T> dataProvider,
         ISortingViewModel<T>? sorting = null,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
-        IBusyService? busyService = null,
         IScheduler? scheduler = null)
-        : this(new ExtendedCollectionDataProvider<T>(new(source, scheduler)), filters, sorting, grouping, paging, busyService, scheduler)
+        : this(new ExtendedCollectionDataProvider<T>(new(source, scheduler)), filters, sorting, grouping, paging, scheduler)
     {
     }
 
@@ -66,7 +62,7 @@ public class ListViewModel<T>(IListDataProvider<T> dataProvider,
     /// Initializes a new instance of the <see cref="ListViewModel{T}"/> class with optional options.
     /// </summary>
     public ListViewModel(IListDataProvider<T> dataProvider, ListViewModelOptions<T>? options)
-        : this(dataProvider, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.BusyService, options?.Scheduler)
+        : this(dataProvider, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.Scheduler)
     {
     }
 }

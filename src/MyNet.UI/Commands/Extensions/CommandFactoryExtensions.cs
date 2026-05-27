@@ -8,7 +8,9 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Commands;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Provides convenience helpers around <see cref="ICommandFactory"/>.

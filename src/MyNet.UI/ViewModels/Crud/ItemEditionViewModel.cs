@@ -26,11 +26,10 @@ public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionVi
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemEditionViewModel{T}"/> class.
     /// </summary>
-    /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
     /// <param name="validator">Optional validator used to validate the item edition view model.</param>
-    protected ItemEditionViewModel(IBusyService? busyService = null, ICommandFactory? commandFactory = null, IValidator<ItemEditionViewModel<T>>? validator = null)
-        : base(busyService, commandFactory)
+    protected ItemEditionViewModel(ICommandFactory? commandFactory = null, IValidator<ItemEditionViewModel<T>>? validator = null)
+        : base(commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 

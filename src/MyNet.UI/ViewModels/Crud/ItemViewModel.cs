@@ -17,7 +17,7 @@ namespace MyNet.UI.ViewModels.Crud;
 /// Provides a reusable base implementation for item view models.
 /// </summary>
 /// <typeparam name="T">The item type.</typeparam>
-public abstract class ItemViewModel<T>(IBusyService? busyService = null, ICommandFactory? commandFactory = null) : WorkspaceViewModel(busyService, commandFactory), IItemViewModel<T>
+public abstract class ItemViewModel<T>(ICommandFactory? commandFactory = null) : WorkspaceViewModel(commandFactory), IItemViewModel<T>
 {
     /// <summary>
     /// Gets or sets the current item.
