@@ -19,6 +19,22 @@ Résumé :
 services.AddViewLocators(r => r.Register(typeof(MainViewModel), typeof(MainView)));
 ```
 
+## Navigation
+
+Le dossier [`src/MyNet.UI/Navigation`](../src/MyNet.UI/Navigation) fournit la navigation applicative (journal, guards, middleware, lifecycle) **sans dépendance WPF/Avalonia**.
+
+Documentation détaillée : **[Navigation Guide](NAVIGATION_GUIDE.md)**.
+
+Résumé :
+
+- `AddNavigation()` enregistre le service, le client fluent et le journal.
+- Le **core UI** reste un stub ; un middleware côté application client affichera les vues (souvent avec [Locators](LOCATORS_GUIDE.md)).
+- `StateChanged` permet de mettre à jour Back/Forward dans les ViewModels.
+
+```csharp
+services.AddNavigation().AddNavigationGuard<UnsavedChangesGuard>();
+```
+
 ## Autres modules
 
 Voir les guides dédiés dans `docs/` (dialogs, notifications, traduction, etc.) au fur et à mesure de leur documentation.

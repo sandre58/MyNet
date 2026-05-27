@@ -18,6 +18,13 @@ namespace MyNet.UI.Navigation;
 public sealed class NavigationClient(INavigationService navigationService, IServiceProvider serviceProvider) : INavigationClient
 {
     /// <inheritdoc />
+    public event EventHandler<NavigationStateChangedEventArgs>? StateChanged
+    {
+        add => navigationService.StateChanged += value;
+        remove => navigationService.StateChanged -= value;
+    }
+
+    /// <inheritdoc />
     public NavigationContext? CurrentContext => navigationService.CurrentContext;
 
     /// <inheritdoc />

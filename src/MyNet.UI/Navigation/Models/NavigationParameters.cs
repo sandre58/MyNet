@@ -133,18 +133,7 @@ public sealed class NavigationParameters : INavigationParameters, IReadOnlyDicti
             return false;
         }
 
-        switch (rawValue)
-        {
-            case null:
-                value = default;
-                return true;
-            case T typedValue:
-                value = typedValue;
-                return true;
-            default:
-                value = default;
-                return false;
-        }
+        return NavigationParameterConversions.TryConvert(rawValue, out value);
     }
 
     /// <inheritdoc />

@@ -11,7 +11,7 @@ using MyNet.UI.Navigation.Models;
 namespace MyNet.UI.Navigation;
 
 /// <summary>
-/// Provides a default implementation of the INavigationLifecycle interface, allowing navigation lifecycle methods to be called on the source and target contexts during navigation operations.
+/// Forwards lifecycle calls to <see cref="INavigationLifecycle"/> pages in the context.
 /// </summary>
 public sealed class NavigationLifecycle : INavigationLifecycle
 {

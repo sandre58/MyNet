@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="NotificationPublisherExtensions.cs" company="St�phane ANDRE">
-// Copyright (c) St�phane ANDRE. All rights reserved.
+// <copyright file="NotificationPublisherExtensions.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -12,7 +12,9 @@ using MyNet.Primitives.Exceptions;
 using MyNet.UI.Messages;
 using MyNet.UI.Notifications.Models;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Notifications;
+#pragma warning restore IDE0130
 
 public static class NotificationPublisherExtensions
 {

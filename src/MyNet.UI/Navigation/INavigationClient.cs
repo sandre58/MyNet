@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Navigation.Models;
@@ -15,6 +16,9 @@ namespace MyNet.UI.Navigation;
 /// </summary>
 public interface INavigationClient
 {
+    /// <inheritdoc cref="INavigationService.StateChanged"/>
+    event EventHandler<NavigationStateChangedEventArgs>? StateChanged;
+
     /// <summary>
     /// Gets the current navigation context.
     /// </summary>

@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -95,6 +97,75 @@ public class NavigationServiceTests
         middleware.CancellationToken.CanBeCanceled.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task NavigateToAsync_DoesNotCallOnNavigatingTo_WhenMiddlewareFailsAsync()
+    {
+        var sut = CreateService(middlewares: [new FailingMiddleware()]);
+        var page = new TrackingPage();
+
+        var result = await sut.NavigateToAsync(page);
+
+        result.Status.Should().Be(NavigationStatus.Cancelled);
+        page.NavigatingToContext.Should().BeNull();
+        page.NavigatedContext.Should().BeNull();
+        sut.CurrentContext.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task NavigateToAsync_RaisesStateChanged_OnSuccessAsync()
+    {
+        var sut = CreateService();
+        var page = new TrackingPage();
+        NavigationStateChangedEventArgs? args = null;
+        sut.StateChanged += (_, eventArgs) => args = eventArgs;
+
+        await sut.NavigateToAsync(page);
+
+        args.Should().NotBeNull();
+        args!.CurrentContext.Should().NotBeNull();
+        args.CurrentContext!.To.Should().BeSameAs(page);
+        args.CanGoBack.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ResetAsync_ClearsState_AndRaisesStateChangedAsync()
+    {
+        var sut = CreateService();
+        var page = new TrackingPage();
+        await sut.NavigateToAsync(page);
+
+        NavigationStateChangedEventArgs? args = null;
+        sut.StateChanged += (_, eventArgs) => args = eventArgs;
+
+        await sut.ResetAsync();
+
+        sut.CurrentContext.Should().BeNull();
+        sut.CanGoBack.Should().BeFalse();
+        args.Should().NotBeNull();
+        args!.CurrentContext.Should().BeNull();
+        args.CanGoBack.Should().BeFalse();
+        args.CanGoForward.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task AddNavigationGuard_ExecutesGuardsInRegistrationOrderAsync()
+    {
+        var first = new OrderTrackingGuard(allow: false);
+        var second = new OrderTrackingGuard(allow: true);
+        var services = new ServiceCollection();
+        services.AddNavigation();
+        services.AddNavigationGuard(first);
+        services.AddNavigationGuard(second);
+        await using var provider = services.BuildServiceProvider();
+
+        var sut = provider.GetRequiredService<INavigationService>();
+        var result = await sut.NavigateToAsync(new TrackingPage());
+
+        result.Status.Should().Be(NavigationStatus.Cancelled);
+        first.WasInvoked.Should().BeTrue();
+        second.WasInvoked.Should().BeFalse();
+    }
+
     private static NavigationService CreateService(
         INavigationGuard[]? guards = null,
         INavigationMiddleware[]? middlewares = null)
@@ -145,6 +216,27 @@ public class NavigationServiceTests
             To = to;
             CancellationToken = cancellationToken;
             return await next().ConfigureAwait(false);
+        }
+    }
+
+    private sealed class FailingMiddleware : INavigationMiddleware
+    {
+        public Task<NavigationResult> InvokeAsync(
+            NavigationContext? from,
+            NavigationContext to,
+            Func<Task<NavigationResult>> next,
+            CancellationToken cancellationToken)
+            => Task.FromResult(new NavigationResult(NavigationStatus.Cancelled));
+    }
+
+    private sealed class OrderTrackingGuard(bool allow) : INavigationGuard
+    {
+        public bool WasInvoked { get; private set; }
+
+        public Task<bool> CanNavigateAsync(NavigationContext? from, NavigationContext to, CancellationToken cancellationToken)
+        {
+            WasInvoked = true;
+            return Task.FromResult(allow);
         }
     }
 }

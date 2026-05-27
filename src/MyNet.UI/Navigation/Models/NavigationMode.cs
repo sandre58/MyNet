@@ -6,23 +6,15 @@
 
 namespace MyNet.UI.Navigation.Models;
 
-/// <summary>
-/// Defines the mode of a navigation operation, indicating whether the navigation is a normal navigation, a backward navigation, or a forward navigation.
-/// </summary>
+/// <summary>How the navigation was initiated.</summary>
 public enum NavigationMode
 {
-    /// <summary>
-    /// Indicates a normal navigation, where the user is navigating to a new page or view.
-    /// </summary>
+    /// <summary>Standard forward navigation.</summary>
     Normal,
 
-    /// <summary>
-    /// Indicates a backward navigation, where the user is navigating back to a previous page or view in the navigation history.
-    /// </summary>
+    /// <summary>Back stack navigation.</summary>
     Back,
 
-    /// <summary>
-    /// Indicates a forward navigation, where the user is navigating forward to a page or view that was previously navigated back from in the navigation history.
-    /// </summary>
+    /// <summary>Forward stack navigation.</summary>
     Forward
 }

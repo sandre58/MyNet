@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Navigation.Models;
@@ -15,6 +16,12 @@ namespace MyNet.UI.Navigation;
 /// </summary>
 public interface INavigationService
 {
+    /// <summary>
+    /// Raised after <see cref="CurrentContext"/>, <see cref="CanGoBack"/>, or <see cref="CanGoForward"/> changes
+    /// following a successful navigation or a <see cref="ResetAsync"/> call.
+    /// </summary>
+    event EventHandler<NavigationStateChangedEventArgs>? StateChanged;
+
     /// <summary>
     /// Gets a value indicating whether the navigation service can navigate back.
     /// </summary>

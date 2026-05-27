@@ -9,9 +9,7 @@ using MyNet.UI.Navigation.Models;
 
 namespace MyNet.UI.Navigation;
 
-/// <summary>
-/// Represents a navigation journal that maintains the history of navigation contexts, allowing for backward and forward navigation through the navigation stack.
-/// </summary>
+/// <inheritdoc />
 public sealed class NavigationJournal : INavigationJournal
 {
     private readonly Stack<NavigationContext> _back = new();

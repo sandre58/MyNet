@@ -25,6 +25,9 @@ public sealed class NavigationService(
     private readonly SemaphoreSlim _navigationLock = new(1, 1);
 
     /// <inheritdoc />
+    public event EventHandler<NavigationStateChangedEventArgs>? StateChanged;
+
+    /// <inheritdoc />
     public NavigationContext? CurrentContext { get; private set; }
 
     /// <inheritdoc />
@@ -91,35 +94,30 @@ public sealed class NavigationService(
     }
 
     /// <inheritdoc />
-    public Task ResetAsync()
+    public async Task ResetAsync()
     {
-        CurrentContext = null;
-        journal.Clear();
-        return Task.CompletedTask;
+        await _navigationLock.WaitAsync().ConfigureAwait(false);
+
+        try
+        {
+            CurrentContext = null;
+            journal.Clear();
+            RaiseStateChanged();
+        }
+        finally
+        {
+            _navigationLock.Release();
+        }
     }
 
     #endregion
 
     #region Core Navigation Pipeline
 
-    /// <summary>
-    /// Executes the core navigation logic, which is responsible for performing the actual navigation between pages. This method is intended to be called within the middleware pipeline after all guards have been executed and lifecycle events have been triggered. The core navigation logic can include tasks such as updating the UI, loading resources, or performing any necessary operations to complete the navigation process.
-    /// </summary>
-    /// <param name="context">The navigation context containing information about the navigation operation.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a result indicating the navigation outcome.</returns>
-    [SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "Core navigation logic is not implemented in this example.")]
-    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Core navigation logic is not implemented in this example.")]
+    [SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "Reserved for UI host integration in client projects.")]
+    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Reserved for UI host integration in client projects.")]
     private static Task<NavigationResult> ExecuteCoreAsync(NavigationContext context, CancellationToken cancellationToken) => Task.FromResult(new NavigationResult(NavigationStatus.Succeeded));
 
-    /// <summary>
-    /// Executes the navigation process, which includes guards, lifecycle events, middleware pipeline, and journal updates. This method orchestrates the entire navigation flow, ensuring that all necessary steps are executed in the correct order to achieve a successful navigation operation. It handles the decision-making process through guards, triggers lifecycle events for both navigating from and navigating to pages, executes the middleware pipeline for any additional processing or modifications, and finally updates the navigation journal based on the navigation mode (normal, back, forward) to maintain an accurate history of navigation operations.
-    /// </summary>
-    /// <param name="to">The target page to navigate to.</param>
-    /// <param name="mode">The navigation mode indicating the type of navigation (normal, back, forward).</param>
-    /// <param name="parameters">Optional parameters to pass to the target page.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a result indicating the navigation outcome.</returns>
     private async Task<NavigationResult> NavigateInternalAsync(
         INavigationPage to,
         NavigationMode mode,
@@ -140,17 +138,15 @@ public sealed class NavigationService(
                 return new(NavigationStatus.Cancelled, "Navigation blocked by guard.");
             }
 
-            // 2. Lifecycle BEFORE navigation
+            // 2. Lifecycle: leaving the current page (source only)
             if (previousContext is not null)
             {
                 await lifecycle.OnNavigatingFromAsync(context, cancellationToken).ConfigureAwait(false);
             }
 
-            await lifecycle.OnNavigatingToAsync(context, cancellationToken).ConfigureAwait(false);
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            // 3. Middleware pipeline (around execution)
+            // 3. Middleware pipeline (includes core execution; no target lifecycle yet)
             var pipeline = BuildMiddlewarePipeline(previousContext, context, core, cancellationToken);
 
             var result = await pipeline().ConfigureAwait(false);
@@ -158,12 +154,17 @@ public sealed class NavigationService(
             if (result.Status != NavigationStatus.Succeeded)
                 return result;
 
-            // 4. Commit navigation atomically
+            // 4. Lifecycle: entering the target page (after a successful pipeline)
+            await lifecycle.OnNavigatingToAsync(context, cancellationToken).ConfigureAwait(false);
+
+            // 5. Commit navigation atomically
             UpdateJournal(mode, previousContext);
             CurrentContext = context;
 
-            // 5. Lifecycle AFTER navigation
+            // 6. Lifecycle: navigation committed
             await lifecycle.OnNavigatedAsync(context, cancellationToken).ConfigureAwait(false);
+
+            RaiseStateChanged();
 
             return result;
         }
@@ -183,13 +184,6 @@ public sealed class NavigationService(
 
     #region Guards
 
-    /// <summary>
-    /// Executes all registered navigation guards to determine whether the navigation operation should proceed. Each guard is evaluated in sequence, and if any guard returns false, the navigation process is cancelled. This method ensures that all necessary conditions are met before allowing the navigation to occur, providing a mechanism for enforcing rules or restrictions on navigation operations based on the current and target navigation contexts.
-    /// </summary>
-    /// <param name="previousContext">The previous navigation context, if any.</param>
-    /// <param name="context">The target navigation context containing information about the current navigation request.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a result indicating whether the navigation is allowed.</returns>
     private async Task<bool> ExecuteGuardsAsync(NavigationContext? previousContext, NavigationContext context, CancellationToken cancellationToken)
     {
         foreach (var guard in guards)
@@ -207,14 +201,6 @@ public sealed class NavigationService(
 
     #region Middleware Pipeline
 
-    /// <summary>
-    /// Builds the middleware pipeline by chaining the registered middleware components together, allowing each middleware to process the navigation operation in sequence. The pipeline is constructed in such a way that each middleware can perform its logic before and/or after invoking the next middleware in the chain, ultimately leading to the execution of the core navigation logic. This design enables a flexible and extensible architecture for handling navigation operations, where additional functionality can be easily added or modified by simply adding or updating middleware components without affecting the core navigation logic or other parts of the system.
-    /// </summary>
-    /// <param name="from">The current committed navigation context, if any.</param>
-    /// <param name="to">The target navigation context currently being processed.</param>
-    /// <param name="core">The core navigation logic to be executed at the end of the middleware pipeline.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A function representing the complete middleware pipeline, which can be invoked to execute the navigation operation.</returns>
     private Func<Task<NavigationResult>> BuildMiddlewarePipeline(
         NavigationContext? from,
         NavigationContext to,
@@ -241,11 +227,6 @@ public sealed class NavigationService(
 
     #region Journal
 
-    /// <summary>
-    /// Updates the navigation journal based on the navigation mode and the previous navigation context. Depending on whether the navigation is a normal navigation, a back navigation, or a forward navigation, the method updates the journal's back and forward stacks accordingly to maintain an accurate history of navigation operations. This ensures that users can navigate back and forth through their navigation history seamlessly, with the journal reflecting the correct state of past and future navigation contexts based on the user's actions.
-    /// </summary>
-    /// <param name="mode">The navigation mode indicating the type of navigation operation (Normal, Back, or Forward).</param>
-    /// <param name="previousContext">The previous navigation context representing the state before the current navigation operation.</param>
     private void UpdateJournal(NavigationMode mode, NavigationContext? previousContext)
     {
         switch (mode)
@@ -269,6 +250,11 @@ public sealed class NavigationService(
                 break;
         }
     }
+
+    private void RaiseStateChanged()
+        => StateChanged?.Invoke(
+            this,
+            new NavigationStateChangedEventArgs(CurrentContext, CanGoBack, CanGoForward));
 
     /// <inheritdoc />
     public void Dispose() => _navigationLock.Dispose();

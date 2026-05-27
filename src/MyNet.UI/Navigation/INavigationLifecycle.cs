@@ -11,31 +11,16 @@ using MyNet.UI.Navigation.Models;
 namespace MyNet.UI.Navigation;
 
 /// <summary>
-/// Defines the lifecycle methods for navigation events, allowing pages to respond to navigation actions such as navigating to, navigating from, and after navigation has occurred, enabling them to perform necessary initialization, cleanup, or state management based on the navigation context and parameters.
+/// Navigation lifecycle hooks for pages.
 /// </summary>
 public interface INavigationLifecycle
 {
-    /// <summary>
-    /// Asynchronously called when navigating to the page, allowing the page to perform any necessary initialization or data loading based on the provided navigation context and parameters.
-    /// </summary>
-    /// <param name="context">The navigation context.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Called on the target page before the navigation is committed.</summary>
     Task OnNavigatingToAsync(NavigationContext context, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Asynchronously called when the navigation to the page is completed, allowing the page to perform any necessary actions after the navigation has occurred, such as updating the UI or starting animations.
-    /// </summary>
-    /// <param name="context">The navigation context.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Called on the target page after the navigation is committed.</summary>
     Task OnNavigatedAsync(NavigationContext context, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Asynchronously called when navigating away from the page, allowing the page to perform any necessary cleanup or state preservation based on the provided navigation context and parameters.
-    /// </summary>
-    /// <param name="context">The navigation context.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Called on the source page before leaving.</summary>
     Task OnNavigatingFromAsync(NavigationContext context, CancellationToken cancellationToken);
 }

@@ -11,7 +11,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyNet.UI.Notifications.Processors;
 using MyNet.UI.Threading;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Notifications;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Extension methods for registering notification services.

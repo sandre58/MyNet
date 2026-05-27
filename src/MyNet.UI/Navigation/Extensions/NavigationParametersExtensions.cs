@@ -6,7 +6,9 @@
 
 using System.Collections.Generic;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Navigation.Models;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Provides convenience helpers for working with <see cref="INavigationParameters"/>.
