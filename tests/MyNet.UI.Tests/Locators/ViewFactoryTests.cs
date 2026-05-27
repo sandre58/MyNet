@@ -38,15 +38,16 @@ public class ViewFactoryTests
     }
 
     [Fact]
-    public void CreateView_ReturnsNull_WhenResolverReturnsNull()
+    public void CreateView_ThrowsViewResolutionException_WhenResolverReturnsNull()
     {
         var resolver = new TypeResolver([]);
 
         var factory = BuildFactory(resolver);
 
-        var result = factory.CreateView(typeof(PersonViewModel));
+        var act = () => factory.CreateView(typeof(PersonViewModel));
 
-        result.Should().BeNull();
+        act.Should().Throw<ViewResolutionException>()
+            .Which.ViewModelType.Should().Be(typeof(PersonViewModel));
     }
 
     [Fact]
@@ -60,6 +61,20 @@ public class ViewFactoryTests
         var result = factory.CreateView<PersonViewModel, PersonView>();
 
         result.Should().NotBeNull().And.BeOfType<PersonView>();
+    }
+
+    [Fact]
+    public void CreateView_Generic_ThrowsWhenResolvedTypeDoesNotMatch()
+    {
+        var resolver = new TypeResolver([]);
+        resolver.Register(typeof(PersonViewModel), typeof(PersonView));
+
+        var factory = BuildFactory(resolver);
+
+        var act = () => factory.CreateView<PersonViewModel, ItemView>();
+
+        act.Should().Throw<ViewResolutionException>()
+            .Which.ViewModelType.Should().Be(typeof(PersonViewModel));
     }
 
     [Fact]
@@ -86,5 +101,19 @@ public class ViewFactoryTests
         var result = factory.CreateView(typeof(PersonViewModel));
 
         result.Should().NotBeNull().And.BeOfType<PersonView>();
+    }
+
+    [Fact]
+    public void AddViewLocators_RegistersOnlySuffixConventionByDefault()
+    {
+        var services = new ServiceCollection();
+        services.AddViewLocators();
+
+        var provider = services.BuildServiceProvider();
+        provider.GetServices<ITypeNamingConvention>()
+            .Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<SuffixConvention>();
     }
 }

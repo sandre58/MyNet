@@ -23,9 +23,22 @@ public sealed class ViewLocator(IServiceProvider provider) : IViewLocator
     {
         ArgumentNullException.ThrowIfNull(viewType);
 
-        return provider.GetService(viewType)
-               ?? Activator.CreateInstance(viewType)!
-               ?? throw new InvalidOperationException($"Cannot create instance of {viewType}");
+        if (provider.GetService(viewType) is { } instance)
+            return instance;
+
+        try
+        {
+            return Activator.CreateInstance(viewType)
+                   ?? throw ViewResolutionException.CannotInstantiateView(viewType);
+        }
+        catch (ViewResolutionException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw ViewResolutionException.CannotInstantiateView(viewType, ex);
+        }
     }
 
     /// <summary>

@@ -9,52 +9,32 @@ using System;
 namespace MyNet.UI.Locators.Conventions;
 
 /// <summary>
-/// Implements a naming convention that maps view models to views based on their namespaces and class names.
+/// Maps view models to views via <c>ViewModels</c>/<c>Views</c> namespace segment swap and a fixed <c>*View</c> suffix.
+/// Opt-in via <see cref="ServiceCollectionExtensions.AddNamespaceConvention"/>.
 /// </summary>
-public sealed class NamespaceConvention : ITypeNamingConvention
+public sealed class NamespaceConvention : TypeNamingConventionBase
 {
-    /// <summary>
-    /// Resolves the target type based on the source type's namespace and class name. It follows a convention where:
-    /// - If the source type is a view model (ends with "ViewModel"), it looks for a corresponding view type by replacing "ViewModel" with "View" and changing the namespace segment from "ViewModels" to "Views".
-    /// - If the source type is a view (ends with "View"), it looks for a corresponding view model type by replacing "View" with "ViewModel" and changing the namespace segment from "Views" to "ViewModels".
-    /// </summary>
-    /// <param name="source">The source type to resolve from.</param>
-    /// <returns>The resolved target type if found; otherwise, null.</returns>
-    public Type? Resolve(Type source)
+    /// <inheritdoc />
+    protected override Type? ResolveViewFromViewModel(Type source)
     {
-        var assembly = source.Assembly;
-        var ns = source.Namespace;
-
-        if (ns is null)
+        if (source.Namespace is null)
             return null;
 
-        // ViewModel -> View
-        if (source.Name.EndsWith("ViewModel", StringComparison.Ordinal))
-        {
-            var baseName = NamingConventionHelpers.GetBaseNameFromViewModel(source);
-            var targetNs = NamingConventionHelpers.ReplaceNamespaceSegment(ns, "ViewModels", "Views");
+        var baseName = NamingConventionHelpers.GetBaseNameFromViewModel(source);
+        var targetNs = NamingConventionHelpers.ReplaceNamespaceSegment(source.Namespace, "ViewModels", "Views");
 
-            var fullName = $"{targetNs}.{baseName}View";
-            return assembly.GetType(fullName);
-        }
-
-        // View -> ViewModel
-        if (IsViewType(source))
-        {
-            var baseName = NamingConventionHelpers.GetBaseNameFromView(source);
-            var targetNs = NamingConventionHelpers.ReplaceNamespaceSegment(ns, "Views", "ViewModels");
-
-            var fullName = $"{targetNs}.{baseName}ViewModel";
-            return assembly.GetType(fullName);
-        }
-
-        return null;
+        return GetType(source, $"{targetNs}.{baseName}View");
     }
 
-    /// <summary>
-    /// Determines whether the specified type is a view type based on its name. A view type is identified by the presence of one of the recognized view suffixes in its name.
-    /// </summary>
-    /// <param name="type">The type to check.</param>
-    /// <returns>True if the type is a view; otherwise, false.</returns>
-    private static bool IsViewType(Type type) => NamingConventionHelpers.IsViewType(type);
+    /// <inheritdoc />
+    protected override Type? ResolveViewModelFromView(Type source)
+    {
+        if (source.Namespace is null)
+            return null;
+
+        var baseName = NamingConventionHelpers.GetBaseNameFromView(source);
+        var targetNs = NamingConventionHelpers.ReplaceNamespaceSegment(source.Namespace, "Views", "ViewModels");
+
+        return GetType(source, $"{targetNs}.{baseName}ViewModel");
+    }
 }

@@ -10,7 +10,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyNet.UI.Locators.Conventions;
 using MyNet.UI.Locators.Factories;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Locators;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Extension methods for registering the Locator system into a <see cref="IServiceCollection"/>.
@@ -23,8 +25,11 @@ public static class ServiceCollectionExtensions
     extension(IServiceCollection services)
     {
         /// <summary>
-        /// Registers all default Locator services into the DI container: <see cref="SuffixConvention"/>, <see cref="NamespaceConvention"/>,
-        /// <see cref="ITypeResolver"/>, <see cref="IViewLocator"/>, <see cref="IViewModelLocator"/> and <see cref="IViewFactory"/>.
+        /// Registers Locator services: <see cref="SuffixConvention"/> (default), <see cref="ITypeResolver"/>,
+        /// <see cref="IViewLocator"/>, <see cref="IViewModelLocator"/> and <see cref="IViewFactory"/>.
+        /// <para/>
+        /// Additional layout strategies are opt-in: <see cref="AddNamespaceConvention"/>,
+        /// <see cref="AddParentNamespaceConvention"/>, <see cref="AddAssemblyRootConvention"/>.
         /// <para/>
         /// The optional <paramref name="configureResolver"/> callback is called after the resolver has been built, allowing manual
         /// type registrations (e.g. <c>resolver.Register(typeof(MyViewModel), typeof(MyView))</c>).
@@ -33,10 +38,8 @@ public static class ServiceCollectionExtensions
         /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
         public IServiceCollection AddViewLocators(Action<ITypeResolver>? configureResolver = null)
         {
-            // --- Naming conventions (all registered as ITypeNamingConvention → collected by TypeResolver via IEnumerable<T>) ---
+            // Default: SuffixConvention handles ViewModels/Views segment swap and multiple view suffixes.
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention, SuffixConvention>());
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention, NamespaceConvention>());
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention, ParentNamespaceConvention>());
 
             // --- Resolver ---
             services.TryAddSingleton<ITypeResolver>(sp =>
@@ -47,14 +50,12 @@ public static class ServiceCollectionExtensions
                 return resolver;
             });
 
-            // --- Locators ---
             // ViewLocator: DI-first, fallback to Activator.CreateInstance for views not registered in DI.
             services.TryAddSingleton<IViewLocator, ViewLocator>();
 
             // ViewModelLocator: strict DI only — view models must be explicitly registered.
             services.TryAddSingleton<IViewModelLocator, ViewModelLocator>();
 
-            // --- Factory ---
             services.TryAddSingleton<IViewFactory, ViewFactory>();
 
             return services;
@@ -62,7 +63,7 @@ public static class ServiceCollectionExtensions
 
         /// <summary>
         /// Adds a single extra naming convention to the resolver chain.
-        /// Call before <see cref="ServiceCollectionExtensions.AddViewLocators"/> if you need custom conventions evaluated first, or after for lower-priority fallbacks.
+        /// Call before <see cref="AddViewLocators"/> for higher priority, or after for lower priority.
         /// </summary>
         /// <typeparam name="TConvention">The convention implementation type.</typeparam>
         /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
@@ -74,11 +75,28 @@ public static class ServiceCollectionExtensions
         }
 
         /// <summary>
-        /// Adds <see cref="AssemblyRootConvention"/> to the resolver chain with a configurable sub-namespace.
-        /// Useful for applications where views live under <c>{AssemblyName}.&lt;subNamespace&gt;.{Name}View</c>.
+        /// Adds <see cref="NamespaceConvention"/> (ViewModels/Views segment swap, <c>*View</c> suffix only).
+        /// </summary>
+        public IServiceCollection AddNamespaceConvention()
+        {
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention, NamespaceConvention>());
+            return services;
+        }
+
+        /// <summary>
+        /// Adds <see cref="ParentNamespaceConvention"/> (views under <c>{Parent}.Views</c>).
+        /// </summary>
+        public IServiceCollection AddParentNamespaceConvention()
+        {
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention, ParentNamespaceConvention>());
+            return services;
+        }
+
+        /// <summary>
+        /// Adds <see cref="AssemblyRootConvention"/> with a configurable sub-namespace.
+        /// Useful when views live under <c>{AssemblyName}.&lt;subNamespace&gt;.{Name}View</c>.
         /// </summary>
         /// <param name="subNamespace">The sub-namespace segment for views (default: <c>"UI.Views"</c>).</param>
-        /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
         public IServiceCollection AddAssemblyRootConvention(string subNamespace = "UI.Views")
         {
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ITypeNamingConvention>(new AssemblyRootConvention(subNamespace)));

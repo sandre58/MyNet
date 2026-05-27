@@ -57,9 +57,11 @@
     <File Path="CONTRIBUTING.md" />
   </Folder>
   <Folder Name="/Solution Files/Docs/Guides/">
+    <File Path="docs/LOCATORS_GUIDE.md" />
     <File Path="docs/METADATA_GENERATION_GUIDE.md" />
     <File Path="docs/OBSERVABLE_USAGE.md" />
     <File Path="docs/TRANSLATION_SYSTEM_GUIDE.md" />
+    <File Path="docs/UI_ARCHITECTURE.md" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/MyNet.Collections.Tests/MyNet.Collections.Tests.csproj" />

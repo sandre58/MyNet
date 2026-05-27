@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="MyNet.UI.Tests" />
+    </ItemGroup>
+
     <PropertyGroup>
         <Product>My .NET UI</Product>
         <PackageIcon>MyNetUI.png</PackageIcon>

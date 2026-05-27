@@ -65,13 +65,43 @@ internal static class NamingConventionHelpers
     public static bool IsViewType(Type type) => GetBaseNameFromView(type) != type.Name;
 
     /// <summary>
-    /// Replaces a segment of the namespace with a new value.
+    /// Determines whether the specified type is a view model type (name ends with <c>ViewModel</c>).
+    /// </summary>
+    public static bool IsViewModelType(Type type) =>
+        type.Name.EndsWith("ViewModel", StringComparison.Ordinal);
+
+    /// <summary>
+    /// Loads a type from the same assembly as <paramref name="source"/> using its fully qualified name.
+    /// </summary>
+    public static Type? GetAssemblyType(Type source, string fullTypeName) =>
+        source.Assembly.GetType(fullTypeName);
+
+    /// <summary>
+    /// Replaces exact namespace segments (dot-separated) with a new value. Only whole segments are matched.
     /// </summary>
     /// <param name="ns">The original namespace.</param>
     /// <param name="from">The segment to replace.</param>
     /// <param name="to">The new segment.</param>
-    /// <returns>The modified namespace if the original namespace is not null; otherwise, null.</returns>
-    public static string? ReplaceNamespaceSegment(string? ns, string from, string to) => ns?.Replace(from, to, StringComparison.Ordinal);
+    /// <returns>The modified namespace, or the original when no segment matches.</returns>
+    public static string? ReplaceNamespaceSegment(string? ns, string from, string to)
+    {
+        if (string.IsNullOrEmpty(ns))
+            return ns;
+
+        var segments = ns.Split('.');
+        var replaced = false;
+
+        for (var i = 0; i < segments.Length; i++)
+        {
+            if (!segments[i].Equals(from, StringComparison.Ordinal))
+                continue;
+
+            segments[i] = to;
+            replaced = true;
+        }
+
+        return replaced ? string.Join('.', segments) : ns;
+    }
 
     /// <summary>
     /// Gets the parent namespace of the given namespace.
