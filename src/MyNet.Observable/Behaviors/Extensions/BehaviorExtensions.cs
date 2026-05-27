@@ -53,6 +53,18 @@ public static class BehaviorExtensions
         }
 
         /// <summary>
+        /// Adds selection state (<see cref="ISelectable"/>) to the observable object.
+        /// </summary>
+        /// <param name="isSelectable">Initial value for <see cref="ISelectable.IsSelectable"/>.</param>
+        /// <returns>The registered <see cref="SelectionBehavior"/>.</returns>
+        public SelectionBehavior UseSelection(bool isSelectable = true)
+        {
+            var behavior = new SelectionBehavior(owner, isSelectable);
+            owner.Behaviors.Register(behavior);
+            return behavior;
+        }
+
+        /// <summary>
         /// Adds modification tracking behavior to the specified observable object. This method registers a new instance of <see cref="ModificationTrackingBehavior"/> with the observable object, allowing it to track changes to its properties and collections. By calling this method on an observable object, you can easily add modification tracking support to it, enabling it to keep track of changes and react accordingly without modifying the original class or creating new derived classes.
         /// </summary>
         /// <returns>The observable object with modification tracking behavior added.</returns>

@@ -8,7 +8,9 @@ using System;
 using System.Reactive.Disposables;
 using MyNet.UI.ViewModels.Crud;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.ViewModels;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Provides extension methods for view models, particularly for observing changes to items in IItemViewModel instances.

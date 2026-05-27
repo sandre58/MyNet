@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -36,18 +37,18 @@ public class CollectionContainsFilterViewModel<T, TElement>(
     /// <summary>
     /// Gets or sets the logical operator (And = all values must be present, Or = any value must be present).
     /// </summary>
-    public LogicalOperator Operator { get; set; } = operatorMode;
+    public LogicalOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the values to search for in the collection.
     /// When null or empty, the filter is considered empty.
     /// </summary>
-    public TElement[]? Values { get; set; }
+    public TElement[]? Values { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the available values for selection.
     /// </summary>
-    public IEnumerable<TElement> AvailableValues { get; set; } = availableValues;
+    public IEnumerable<TElement> AvailableValues { get; set => SetProperty(ref field, value); } = availableValues;
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.
@@ -67,18 +68,12 @@ public class CollectionContainsFilterViewModel<T, TElement>(
             .First(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Length == 2)
             .MakeGenericMethod(typeof(TElement));
 
-        Expression? combined = null;
-
-        foreach (var value in values)
-        {
-            var containsCall = Expression.Call(containsMethod, propertyBody, Expression.Constant(value, typeof(TElement)));
-
-            combined = combined is null
+        var combined = values.Select(value => Expression.Call(containsMethod, propertyBody, Expression.Constant(value, typeof(TElement))))
+            .Aggregate<MethodCallExpression?, Expression?>(null, (current, containsCall) => current is null
                 ? containsCall
                 : Operator == LogicalOperator.And
-                    ? Expression.AndAlso(combined, containsCall)
-                    : Expression.OrElse(combined, containsCall);
-        }
+                    ? Expression.AndAlso(current, containsCall!)
+                    : Expression.OrElse(current, containsCall!));
 
         combined ??= Expression.Constant(true);
 

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Sorting;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
@@ -25,7 +26,7 @@ public class SortingPropertyViewModel<T>(
     string key,
     IObservableValue<string> displayName,
     ListSortDirection direction = ListSortDirection.Ascending)
-    : ISortingPropertyViewModel<T>
+    : ObservableObject, ISortingPropertyViewModel<T>
 {
     /// <summary>
     /// Gets the localized display name for this sorting property.
@@ -45,19 +46,31 @@ public class SortingPropertyViewModel<T>(
     /// <summary>
     /// Gets or sets the sort direction (ascending or descending).
     /// </summary>
-    public ListSortDirection Direction { get; set; } = direction;
+    public ListSortDirection Direction { get; set => SetProperty(ref field, value); } = direction;
 
     /// <summary>
     /// Gets or sets a value indicating whether this sorting property is currently enabled/active.
     /// When true, this property contributes to the collection's sorting.
     /// When false, this property is available but not applied.
     /// </summary>
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled
+    {
+        get;
+        set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            OnIsEnabledChanged();
+        }
+    }
+
+        = true;
 
     /// <summary>
     /// Gets the date and time when this sorting property was activated (enabled). This property is null if the sorting property is not currently active. When the sorting property is enabled, this property is set to the current date and time, indicating when it became active. This information can be used to determine the order in which sorting properties were activated, which can be relevant when multiple sorting properties are applied to a collection, as it may affect the overall sorting behavior.
     /// </summary>
-    public DateTime? ActivatedAt { get; private set; }
+    public DateTime? ActivatedAt { get; private set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Builds the core sorting property based on the current state of the view model. If the sorting property is active (enabled), this method returns an instance of <see cref="ISortingProperty{T}"/> that encapsulates the expression and direction defined in the view model. If the sorting property is not active, this method returns null, indicating that it should not be applied to the collection's sorting configuration.
@@ -78,5 +91,5 @@ public class SortingPropertyViewModel<T>(
     protected virtual void OnIsEnabledChanged() => ActivatedAt = IsEnabled ? DateTime.UtcNow : null;
 
     /// <inheritdoc />
-    public override string ToString() => DisplayName.Value ?? key;
+    public override string ToString() => DisplayName.Value.OrEmpty();
 }

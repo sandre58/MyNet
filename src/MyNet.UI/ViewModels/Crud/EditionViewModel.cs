@@ -4,12 +4,17 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FluentValidation;
+using MyNet.Observable;
+using MyNet.Observable.Behaviors;
+using MyNet.Observable.Validation.Validators;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.MessageBox;
@@ -23,8 +28,6 @@ using MyNet.UI.ViewModels.Workspace;
 
 namespace MyNet.UI.ViewModels.Crud;
 
-[CanBeValidatedForDeclaredClassOnly(false)]
-[CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
 public abstract class EditionViewModel : DialogViewModel<bool>
 {
     private readonly IDialogService _dialogService;
@@ -41,11 +44,12 @@ public abstract class EditionViewModel : DialogViewModel<bool>
         IDialogService dialogService,
         INotificationPublisher notificationPublisher,
         IBusyService? busyService = null,
-        ICommandFactory? commandFactory = null)
+        ICommandFactory? commandFactory = null,
+        IValidator? validator = null)
         : base(busyService, commandFactory)
     {
-        _dialogService = dialogService ?? throw new System.ArgumentNullException(nameof(dialogService));
-        _notificationPublisher = notificationPublisher ?? throw new System.ArgumentNullException(nameof(notificationPublisher));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
 
         var commands = commandFactory ?? RelayCommandFactory.Default;
 
@@ -54,9 +58,12 @@ public abstract class EditionViewModel : DialogViewModel<bool>
         SaveAndCloseCommand = commands.Create(async () => await SaveAndCloseAsync().ConfigureAwait(false), CanSave);
 
         Mode = ScreenMode.Creation;
+
+        this.UseTracking()
+            .UseValidation(validator ?? EmptyValidator.Instance);
     }
 
-    protected override string CreateTitle() => Mode == ScreenMode.Edition ? UiResources.Edition : UiResources.Creation;
+    protected override string? CreateTitle(CultureInfo culture) => Mode == ScreenMode.Edition ? UiResources.Edition : UiResources.Creation;
 
     public override Task OnOpenedAsync()
     {
@@ -69,7 +76,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>
 
     public override async Task<bool> CanCloseAsync()
     {
-        if (_closingByCommand || !IsModified())
+        if (_closingByCommand || !this.IsModified())
             return true;
 
         var result = await SavingRequestAsync().ConfigureAwait(false);
@@ -98,7 +105,6 @@ public abstract class EditionViewModel : DialogViewModel<bool>
         return isSaved;
     }
 
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     protected virtual void OnClosingWithNoResult(CancelEventArgs e) => SetResult(false);
 
     protected virtual void OnClosingWithCancelResult(CancelEventArgs e) => e.Cancel = true;
@@ -106,7 +112,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>
     #region Cancel
 
     protected virtual async Task<bool> CanCancelAsync(CancellationToken cancellationToken = default)
-        => !IsModified() || await _dialogService.ShowQuestionAsync(MessageResources.ItemModificationCancellingQuestion, UiResources.Edition).ConfigureAwait(false) == MessageBoxResult.Yes;
+        => !this.IsModified() || await _dialogService.ShowQuestionAsync(MessageResources.ItemModificationCancellingQuestion, UiResources.Edition).ConfigureAwait(false) == MessageBoxResult.Yes;
 
     protected virtual async Task CancelAsync(CancellationToken cancellationToken = default)
     {
@@ -126,10 +132,10 @@ public abstract class EditionViewModel : DialogViewModel<bool>
         try
         {
             await BusyService.RunAsync<IndeterminateBusy>(async (_, ct) => await SaveCoreAsync(ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
-            ResetIsModified();
+            this.ResetIsModified();
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             OnExecutionError(ex);
             return false;
@@ -147,7 +153,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>
         if (args.Cancel)
             return false;
 
-        if (!ValidateProperties())
+        if (!this.Validate())
             return HandleValidationErrors();
 
         var isSaved = await SaveInternalAsync(cancellationToken).ConfigureAwait(false);
@@ -162,7 +168,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>
 
     private bool HandleValidationErrors()
     {
-        var errors = GetValidationErrors().ToList();
+        var errors = Behaviors.Get<IValidationBehavior>().Errors;
         ShowValidationErrors(errors);
         OnSaveFailed(errors);
 
@@ -188,7 +194,6 @@ public abstract class EditionViewModel : DialogViewModel<bool>
 
     protected virtual void OnSaveFailed(IReadOnlyCollection<string> errors) { }
 
-    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Used by children classes")]
     protected virtual void OnSaveRequested(CancelEventArgs args)
     {
     }

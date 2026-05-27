@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -36,18 +37,18 @@ public class SelectedValuesFilterViewModel<T, TValue>(
     /// <summary>
     /// Gets or sets the binary operator used for matching (Is or IsNot).
     /// </summary>
-    public BinaryOperator Operator { get; set; } = operatorMode;
+    public BinaryOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the selected values to match against.
     /// When null or empty, the filter is considered empty.
     /// </summary>
-    public TValue[]? Values { get; set; }
+    public TValue[]? Values { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the available values for selection.
     /// </summary>
-    public IEnumerable<TValue> AvailableValues { get; set; } = availableValues;
+    public IEnumerable<TValue> AvailableValues { get; set => SetProperty(ref field, value); } = availableValues;
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.
@@ -65,7 +66,7 @@ public class SelectedValuesFilterViewModel<T, TValue>(
         // Simplified approach: use a captured HashSet for O(1) lookups
         var values = new HashSet<TValue>(Values ?? []);
         var valuesConstant = Expression.Constant(values, typeof(HashSet<TValue>));
-        var containsMethod = typeof(HashSet<TValue>).GetMethod(nameof(HashSet<TValue>.Contains))!;
+        var containsMethod = typeof(HashSet<TValue>).GetMethod(nameof(HashSet<>.Contains))!;
         var containsCall = Expression.Call(valuesConstant, containsMethod, Expression.Convert(propertyBody, typeof(TValue)));
 
         Expression body = Operator switch

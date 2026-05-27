@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -35,13 +36,13 @@ public class EnumFilterViewModel<T, TEnum>(
     /// <summary>
     /// Gets or sets the binary operator used for matching (Is or IsNot).
     /// </summary>
-    public BinaryOperator Operator { get; set; } = operatorMode;
+    public BinaryOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the enum value to match against.
     /// When null, the filter is considered empty.
     /// </summary>
-    public TEnum? Value { get; set; }
+    public TEnum? Value { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets the available enum values for selection.

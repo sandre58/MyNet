@@ -11,15 +11,12 @@ using System.Linq;
 using System.Windows.Input;
 using MyNet.UI.Commands;
 using MyNet.UI.Loading;
-using PropertyChanged;
 
 namespace MyNet.UI.ViewModels.Workspace;
 
 /// <summary>
 /// Provides a reusable base implementation for tabbed workspace view models.
 /// </summary>
-[CanBeValidatedForDeclaredClassOnly(false)]
-[CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
 public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceViewModel
 {
     private readonly ObservableCollection<IWorkspaceViewModel> _workspaces = [];
@@ -64,8 +61,18 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     /// <summary>
     /// Gets the currently selected workspace.
     /// </summary>
-    [AlsoNotifyFor(nameof(SelectedIndex))]
-    public IWorkspaceViewModel? SelectedWorkspace { get; private set; }
+    public IWorkspaceViewModel? SelectedWorkspace
+    {
+        get;
+        private set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            NotifyPropertyChanged(nameof(SelectedIndex));
+            RaiseTabNavigationCanExecuteChanged();
+        }
+    }
 
     /// <summary>
     /// Gets the selected workspace index.
@@ -109,9 +116,10 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
         _workspaces.Add(workspace);
 
         if (workspace.State != LoadState.Loaded)
-            _ = workspace.LoadAsync();
+            _ = ExecuteAsync(workspace.LoadAsync);
 
         SelectedWorkspace ??= workspace;
+        RaiseTabNavigationCanExecuteChanged();
     }
 
     /// <summary>
@@ -143,6 +151,7 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
         if (ReferenceEquals(SelectedWorkspace, workspace))
             SelectedWorkspace = _workspaces.FirstOrDefault();
 
+        RaiseTabNavigationCanExecuteChanged();
         return true;
     }
 
@@ -153,6 +162,7 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     {
         _workspaces.Clear();
         SelectedWorkspace = null;
+        RaiseTabNavigationCanExecuteChanged();
     }
 
     /// <summary>
@@ -204,4 +214,11 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     /// Determines whether navigation to the previous tab is allowed.
     /// </summary>
     protected virtual bool CanGoToPreviousTab() => SelectedWorkspace is not null && SelectedIndex > 0;
+
+    private void RaiseTabNavigationCanExecuteChanged()
+    {
+        (GoToTabCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        (GoToNextTabCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        (GoToPreviousTabCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+    }
 }

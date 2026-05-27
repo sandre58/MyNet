@@ -16,32 +16,66 @@ namespace MyNet.UI.ViewModels.List.Selection;
 /// Selection manager backed by <see cref="SelectableCollection{T}"/>.
 /// </summary>
 /// <typeparam name="T">The item type.</typeparam>
-/// <remarks>
-/// Initializes a new instance of the <see cref="SelectableCollectionSelectionManager{T}"/> class.
-/// </remarks>
-public sealed class SelectableCollectionSelectionManager<T>(ExtendedCollection<T> collection, SelectionMode mode = SelectionMode.Multiple) : ISelectionManager<T>
+public sealed class SelectableCollectionSelectionManager<T> : ISelectionManager<T>
     where T : notnull
 {
-    private readonly SelectableCollection<T> _selection = new(collection, mode);
+    private readonly SelectableCollection<T> _selection;
+    private readonly bool _ownsSelectable;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SelectableCollectionSelectionManager{T}"/> class.
+    /// Creates a new selection manager with its own internal selectable collection (caller owns disposal of the collection itself).
+    /// </summary>
+    /// <param name="collection">The extended collection to be managed.</param>
+    /// <param name="mode">The selection mode to be used.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the collection is null.</exception>
+    public SelectableCollectionSelectionManager(ExtendedCollection<T> collection, SelectionMode mode = SelectionMode.Multiple)
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+
+        _selection = new(collection, mode, disposeCollection: false);
+        _ownsSelectable = true;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SelectableCollectionSelectionManager{T}"/> class.
+    /// Uses an existing selectable collection (caller owns disposal of the collection itself).
+    /// </summary>
+    /// <param name="selectable">The existing selectable collection to be managed.</param>
+    /// <param name="disposeSelectable">A value indicating whether the selectable collection should be disposed when the selection manager is disposed.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the selectable collection is null.</exception>
+    public SelectableCollectionSelectionManager(SelectableCollection<T> selectable, bool disposeSelectable = true)
+    {
+        _selection = selectable ?? throw new ArgumentNullException(nameof(selectable));
+        _ownsSelectable = disposeSelectable;
+    }
 
     /// <inheritdoc />
     public event EventHandler? SelectionChanged;
 
-    /// <summary>
-    /// Gets the selection mode enforced by the selection engine. This property indicates whether the selection engine allows for single selection (only one item can be selected at a time) or multiple selection (multiple items can be selected simultaneously). The selection mode determines how the selection state is managed and updated when items are selected, deselected, or toggled, ensuring that the defined selection rules are consistently applied throughout the lifecycle of the selection engine.
-    /// </summary>
+    /// <inheritdoc />
     public SelectionMode Mode => _selection.Mode;
 
-    // <inheritdoc />
+    /// <inheritdoc />
     public IReadOnlyList<T> SelectedItems => [.. _selection.SelectedItems];
 
     /// <inheritdoc />
     public int SelectedCount => _selection.SelectedCount;
 
     /// <inheritdoc />
+    public bool IsSelected(T item) => _selection.IsSelected(item);
+
+    /// <inheritdoc />
     public void Select(T item)
     {
         _selection.Select(item);
+        SelectionChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <inheritdoc />
+    public void Unselect(T item)
+    {
+        _selection.Unselect(item);
         SelectionChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -70,5 +104,9 @@ public sealed class SelectableCollectionSelectionManager<T>(ExtendedCollection<T
     }
 
     /// <inheritdoc />
-    public void Dispose() => _selection.Dispose();
+    public void Dispose()
+    {
+        if (_ownsSelectable)
+            _selection.Dispose();
+    }
 }

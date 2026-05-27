@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -24,19 +25,19 @@ public class StringFilterViewModel<T>(
     /// <summary>
     /// Gets or sets the string comparison operator used for matching.
     /// </summary>
-    public StringOperator Operator { get; set; } = filterMode;
+    public StringOperator Operator { get; set => SetProperty(ref field, value); } = filterMode;
 
     /// <summary>
     /// Gets or sets the search value to match against.
     /// When null or empty, the filter matches all items (empty filter).
     /// </summary>
-    public string? Value { get; set; }
+    public string? Value { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating whether the string comparison should be case-sensitive.
     /// When false (default), comparisons are case-insensitive.
     /// </summary>
-    public bool CaseSensitive { get; set; } = caseSensitive;
+    public bool CaseSensitive { get; set => SetProperty(ref field, value); } = caseSensitive;
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.

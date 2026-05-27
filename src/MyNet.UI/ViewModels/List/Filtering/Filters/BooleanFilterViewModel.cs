@@ -32,13 +32,13 @@ public class BooleanFilterViewModel<T>(
     /// Gets or sets the boolean value to filter by.
     /// When null, the filter is considered empty (unless AllowNullValue is true).
     /// </summary>
-    public bool? Value { get; set; }
+    public bool? Value { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating whether null values are allowed in the filter.
     /// When true, <see cref="Reset"/> sets Value to null instead of false.
     /// </summary>
-    public bool AllowNullValue { get; set; } = allowNullValue;
+    public bool AllowNullValue { get; set => SetProperty(ref field, value); } = allowNullValue;
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.

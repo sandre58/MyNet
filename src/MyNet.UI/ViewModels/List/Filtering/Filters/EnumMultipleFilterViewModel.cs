@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -36,13 +37,13 @@ public class EnumMultipleFilterViewModel<T, TEnum>(
     /// <summary>
     /// Gets or sets the binary operator used for matching (Is or IsNot).
     /// </summary>
-    public BinaryOperator Operator { get; set; } = operatorMode;
+    public BinaryOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the selected enum values to match against.
     /// When null or empty, the filter is considered empty.
     /// </summary>
-    public TEnum[]? Values { get; set; }
+    public TEnum[]? Values { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets the available enum values for selection.
@@ -63,7 +64,7 @@ public class EnumMultipleFilterViewModel<T, TEnum>(
 
         // Build: Values.Contains(x.Property)
         var valuesConstant = Expression.Constant(Values, typeof(ICollection<TEnum>));
-        var containsMethod = typeof(ICollection<TEnum>).GetMethod(nameof(ICollection<TEnum>.Contains))!;
+        var containsMethod = typeof(ICollection<TEnum>).GetMethod(nameof(ICollection<>.Contains))!;
         var containsCall = Expression.Call(valuesConstant, containsMethod, propertyBody);
 
         Expression body = Operator switch

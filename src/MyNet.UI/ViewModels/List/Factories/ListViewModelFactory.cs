@@ -6,11 +6,11 @@
 
 using System;
 using System.Collections.Generic;
+using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Selection;
 using MyNet.Observable.Collections.Sources;
 using MyNet.UI.ViewModels.List.Selection;
 using MyNet.UI.ViewModels.List.Services;
-using MyNet.UI.ViewModels.List.Wrappers;
 
 namespace MyNet.UI.ViewModels.List.Factories;
 
@@ -133,30 +133,6 @@ public static class ListViewModelFactory
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="WrapperListViewModel{T, TWrapper}"/> with the specified items, factory function for wrappers, and optional configuration.
-    /// </summary>
-    /// <param name="items">The items to be displayed in the list view model.</param>
-    /// <param name="factory">The factory function to create wrappers for the items.</param>
-    /// <param name="options">Optional configuration for the list view model.</param>
-    /// <typeparam name="T">The type of items in the list view model.</typeparam>
-    /// <typeparam name="TWrapper">The type of wrappers for the items in the list view model.</typeparam>
-    /// <returns>A new instance of <see cref="WrapperListViewModel{T, TWrapper}"/>.</returns>
-    public static WrapperListViewModel<T, TWrapper> CreateWrapper<T, TWrapper>(
-        IEnumerable<T> items,
-        Func<T, TWrapper> factory,
-        ListViewModelOptions<T> options)
-        where T : notnull
-        where TWrapper : class, IWrapper<T>
-    {
-        ArgumentNullException.ThrowIfNull(items);
-        ArgumentNullException.ThrowIfNull(options);
-
-        var collection = ExtendedWrapperCollection.From(items, factory, options.Scheduler);
-
-        return new(collection, options);
-    }
-
-    /// <summary>
     /// Creates a new instance of <see cref="SelectableListViewModel{T}"/> with the specified items and optional configuration for selection mode and list view model options.
     /// </summary>
     /// <param name="items">The items to be displayed in the list view model.</param>
@@ -174,10 +150,22 @@ public static class ListViewModelFactory
 
         options ??= new();
 
-        var collection = ExtendedWrapperCollection.From<T, SelectedWrapper<T>>(
-            items,
-            x => new(x),
-            options.Scheduler);
+        var source = SourceEngine<T>.From(items, readOnly: false);
+        var collection = new ExtendedCollection<T>(source, options.Scheduler);
+
+        return new(collection, selectionMode, options);
+    }
+
+    /// <summary>
+    /// Creates a selectable list view model from an existing extended collection.
+    /// </summary>
+    public static SelectableListViewModel<T> CreateSelection<T>(
+        ExtendedCollection<T> collection,
+        ListViewModelOptions<T>? options = null,
+        SelectionMode selectionMode = SelectionMode.Multiple)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(collection);
 
         return new(collection, selectionMode, options);
     }

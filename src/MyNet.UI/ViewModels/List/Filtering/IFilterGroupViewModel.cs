@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 

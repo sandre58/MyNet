@@ -8,6 +8,8 @@ using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using MyNet.Observable;
+using MyNet.Primitives;
+using MyNet.UI.ViewModels.List.Grouping;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 
@@ -43,7 +45,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     /// <summary>
     /// Sets the display name using a resource key.
     /// </summary>
-    public SortingPropertyViewModelBuilder<T> WithDisplayName(string resourceKey) => WithDisplayName(new StringTranslatable(resourceKey));
+    public SortingPropertyViewModelBuilder<T> WithDisplayName(string displayName) => WithDisplayName(new CultureBoundValue<string>(() => displayName));
 
     /// <summary>
     /// Sets the default sorting direction to ascending. This means that when this sorting property is applied, it will sort in ascending order by default unless explicitly changed by the user. This method is a convenience method for setting the default direction without having to specify the enum value directly.
@@ -68,9 +70,9 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     }
 
     /// <summary>
-    /// Builds the sorting property configuration based on the current state of the builder. This method validates that a key has been provided and constructs a <see cref="SortingPropertyConfiguration{T}"/> instance that encapsulates all the configured properties, including the key, expression, display name, and default sorting direction. The resulting configuration can then be used to create instances of <see cref="SortingPropertyViewModel{T}"/> or to define sorting behavior in the UI.
+    /// Builds the sorting property configuration based on the current state of the builder. This method validates that a key has been provided and constructs a <see cref="GroupingPropertyDefinition{T}"/> instance that encapsulates all the configured properties, including the key, expression, display name, and default sorting direction. The resulting configuration can then be used to create instances of <see cref="SortingPropertyViewModel{T}"/> or to define sorting behavior in the UI.
     /// </summary>
-    /// <returns>The constructed <see cref="SortingPropertyConfiguration{T}"/> instance.</returns>
+    /// <returns>The constructed <see cref="GroupingPropertyDefinition{T}"/> instance.</returns>
     /// <exception cref="InvalidOperationException">Thrown if a sorting property key has not been provided.</exception>
     internal SortingPropertyDefinition<T> Build()
     {
@@ -90,7 +92,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
         if (!string.IsNullOrWhiteSpace(_key))
             return _key;
 
-        var inferredKey = expression.GetKey();
+        var inferredKey = expression.PropertyName();
 
         return string.IsNullOrWhiteSpace(inferredKey) ? throw new InvalidOperationException("A sorting property key must be provided.") : inferredKey;
     }

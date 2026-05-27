@@ -37,13 +37,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Observab
     /// <summary>
     /// Gets the current loading state of the workspace.
     /// </summary>
-    public LoadState State
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
-
-        = LoadState.NotLoaded;
+    public LoadState State { get; private set => SetProperty(ref field, value); } = LoadState.NotLoaded;
 
     /// <summary>
     /// Gets the busy service for indicating long-running operations.

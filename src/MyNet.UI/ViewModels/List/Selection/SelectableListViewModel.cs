@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Concurrency;
+using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Selection;
 using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;
@@ -16,22 +17,21 @@ using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
 using MyNet.UI.ViewModels.List.Paging;
 using MyNet.UI.ViewModels.List.Sorting;
-using MyNet.UI.ViewModels.List.Wrappers;
 
 namespace MyNet.UI.ViewModels.List.Selection;
 
 /// <summary>
-/// Provides a list view model that supports item selection, allowing for single or multiple selection modes.
+/// List view model with selection backed by <see cref="SelectableCollection{T}"/> (no UI wrappers).
 /// </summary>
-/// <typeparam name="T">The type of items in the list.</typeparam>
-public class SelectableListViewModel<T> : WrapperListViewModel<T, SelectedWrapper<T>>
+/// <typeparam name="T">The item type.</typeparam>
+public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollection<T>>, ISelectableListViewModel<T>
     where T : notnull
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectableListViewModel{T}"/> class.
     /// </summary>
     public SelectableListViewModel(
-        ExtendedWrapperCollection<T, SelectedWrapper<T>> collection,
+        ExtendedCollection<T> collection,
         SelectionMode mode = SelectionMode.Multiple,
         IFiltersViewModel<T>? filters = null,
         ISortingViewModel<T>? sorting = null,
@@ -52,18 +52,21 @@ public class SelectableListViewModel<T> : WrapperListViewModel<T, SelectedWrappe
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SelectableListViewModel{T}"/> class with options.
+    /// Initializes a new instance of the <see cref="SelectableListViewModel{T}"/> class.
     /// </summary>
-    public SelectableListViewModel(ExtendedWrapperCollection<T, SelectedWrapper<T>> collection, SelectionMode mode, ListViewModelOptions<T>? options)
+    public SelectableListViewModel(
+        ExtendedCollection<T> collection,
+        SelectionMode mode,
+        ListViewModelOptions<T>? options)
         : this(collection, mode, options?.Filters, options?.Sorting, options?.Grouping, options?.Paging, options?.BusyService, options?.Scheduler)
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SelectableListViewModel{T}"/> class with a custom selection manager.
+    /// Initializes a new instance of the <see cref="SelectableListViewModel{T}"/> class.
     /// </summary>
     public SelectableListViewModel(
-        ExtendedWrapperCollection<T, SelectedWrapper<T>> collection,
+        ExtendedCollection<T> collection,
         ISelectionManager<T> selectionManager,
         IFiltersViewModel<T>? filters = null,
         ISortingViewModel<T>? sorting = null,
@@ -80,60 +83,48 @@ public class SelectableListViewModel<T> : WrapperListViewModel<T, SelectedWrappe
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in Cleanup.")]
     private readonly ISelectionManager<T> _selection;
 
-    /// <summary>
-    /// Gets the selection mode enforced by the selection engine. This property indicates whether the selection engine allows for single selection (only one item can be selected at a time) or multiple selection (multiple items can be selected simultaneously). The selection mode determines how the selection state is managed and updated when items are selected, deselected, or toggled, ensuring that the defined selection rules are consistently applied throughout the lifecycle of the selection engine.
-    /// </summary>
+    /// <inheritdoc />
     public SelectionMode SelectionMode => _selection.Mode;
 
-    /// <summary>
-    /// Gets the list of selected items in the collection.
-    /// </summary>
+    /// <inheritdoc />
     public IReadOnlyList<T> SelectedItems => _selection.SelectedItems;
 
-    /// <summary>
-    /// Gets the count of selected items in the collection.
-    /// </summary>
+    /// <inheritdoc />
     public int SelectedCount => _selection.SelectedCount;
 
-    /// <summary>
-    /// Gets the currently selected item in the collection.
-    /// </summary>
+    /// <inheritdoc />
     public T? SelectedItem => SelectedItems.FirstOrDefault();
 
-    /// <summary>
-    /// Selects the specified item in the collection.
-    /// </summary>
+    /// <inheritdoc />
+    public bool IsSelected(T item) => _selection.IsSelected(item);
+
+    /// <inheritdoc />
     public void Select(T item) => _selection.Select(item);
 
-    /// <summary>
-    /// Toggles the selection state of the specified item in the collection.
-    /// </summary>
+    /// <inheritdoc />
+    public void Unselect(T item) => _selection.Unselect(item);
+
+    /// <inheritdoc />
     public void Toggle(T item) => _selection.Toggle(item);
 
-    /// <summary>
-    /// Clears the selection in the collection.
-    /// </summary>
+    /// <inheritdoc />
     public void ClearSelection() => _selection.ClearSelection();
 
-    /// <summary>
-    /// Sets the selection to the specified items in the collection.
-    /// </summary>
+    /// <inheritdoc />
     public void SetSelection(IEnumerable<T> items) => _selection.SetSelection(items);
 
     private void HandleSelectionChanged(object? sender, EventArgs e)
     {
-        OnPropertyChanged(nameof(SelectedItems));
-        OnPropertyChanged(nameof(SelectedCount));
-        OnPropertyChanged(nameof(SelectedItem));
+        NotifyPropertyChanged(nameof(SelectedItems));
+        NotifyPropertyChanged(nameof(SelectedCount));
+        NotifyPropertyChanged(nameof(SelectedItem));
     }
 
-    /// <summary>
-    /// Cleans up resources used by the view model.
-    /// </summary>
-    protected override void Cleanup()
+    /// <inheritdoc />
+    protected override void DisposeManagedResources()
     {
         _selection.SelectionChanged -= HandleSelectionChanged;
         _selection.Dispose();
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

@@ -1,31 +1,25 @@
 // -----------------------------------------------------------------------
-// <copyright file="ISelectionManager.cs" company="Stéphane ANDRE">
+// <copyright file="ISelectableListViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using MyNet.Observable.Collections.Selection;
 
 namespace MyNet.UI.ViewModels.List.Selection;
 
 /// <summary>
-/// Provides an abstraction for list selection management.
+/// Defines a list view model with item selection backed by <see cref="SelectableCollection{T}"/>.
 /// </summary>
 /// <typeparam name="T">The item type.</typeparam>
-public interface ISelectionManager<T> : IDisposable
+public interface ISelectableListViewModel<T> : IListViewModel<T>
     where T : notnull
 {
     /// <summary>
-    /// Occurs when the selection changes.
+    /// Gets the selection mode enforced by the selection engine.
     /// </summary>
-    event EventHandler? SelectionChanged;
-
-    /// <summary>
-    /// Gets the selection mode enforced by the selection engine. This property indicates whether the selection engine allows for single selection (only one item can be selected at a time) or multiple selection (multiple items can be selected simultaneously). The selection mode determines how the selection state is managed and updated when items are selected, deselected, or toggled, ensuring that the defined selection rules are consistently applied throughout the lifecycle of the selection engine.
-    /// </summary>
-    SelectionMode Mode { get; }
+    SelectionMode SelectionMode { get; }
 
     /// <summary>
     /// Gets the selected items.
@@ -33,9 +27,14 @@ public interface ISelectionManager<T> : IDisposable
     IReadOnlyList<T> SelectedItems { get; }
 
     /// <summary>
-    /// Gets the selected item count.
+    /// Gets the number of selected items.
     /// </summary>
     int SelectedCount { get; }
+
+    /// <summary>
+    /// Gets the first selected item, if any.
+    /// </summary>
+    T? SelectedItem { get; }
 
     /// <summary>
     /// Determines whether the specified item is selected.
@@ -43,17 +42,17 @@ public interface ISelectionManager<T> : IDisposable
     bool IsSelected(T item);
 
     /// <summary>
-    /// Selects an item.
+    /// Selects the specified item.
     /// </summary>
     void Select(T item);
 
     /// <summary>
-    /// Unselects an item.
+    /// Unselects the specified item.
     /// </summary>
     void Unselect(T item);
 
     /// <summary>
-    /// Toggles an item selection.
+    /// Toggles the selection state of the specified item.
     /// </summary>
     void Toggle(T item);
 
@@ -63,7 +62,7 @@ public interface ISelectionManager<T> : IDisposable
     void ClearSelection();
 
     /// <summary>
-    /// Replaces the selection.
+    /// Replaces the current selection.
     /// </summary>
     void SetSelection(IEnumerable<T> items);
 }

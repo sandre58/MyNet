@@ -19,8 +19,6 @@ namespace MyNet.UI.ViewModels.Dialog;
 /// Provides a reusable base implementation for dialog view models.
 /// Implements <see cref="IDialog"/> including the <see cref="IDialogAware"/> lifecycle callbacks.
 /// </summary>
-[CanBeValidatedForDeclaredClassOnly(false)]
-[CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
 public class DialogViewModel : WorkspaceViewModel, IDialog
 {
     /// <summary>

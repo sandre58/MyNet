@@ -19,5 +19,16 @@ public static class ModificationExtensions
         /// </summary>
         /// <returns>True if the object has been modified; otherwise, false.</returns>
         public bool IsModified() => owner is IModificationAware { IsModified: true } || (owner.Behaviors.TryGet<IModificationTrackingBehavior>(out var behavior) && behavior.IsModified);
+
+        /// <summary>
+        /// Resets the modification state when a <see cref="ModificationTrackingBehavior"/> is registered.
+        /// </summary>
+        public void ResetIsModified()
+        {
+            if (owner.Behaviors.TryGet<IModificationTrackingBehavior>(out var behavior))
+                behavior.ResetModified();
+            else if (owner is IModificationAware modificationAware)
+                modificationAware.ResetModified();
+        }
     }
 }

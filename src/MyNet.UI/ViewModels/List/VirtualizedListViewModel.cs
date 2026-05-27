@@ -19,9 +19,6 @@ namespace MyNet.UI.ViewModels.List;
 public class VirtualizedListViewModel<T> : ListViewModel<T>, IVirtualizedListViewModel<T>
     where T : notnull
 {
-    private int _visibleStartIndex;
-    private int _visibleCount = 50;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="VirtualizedListViewModel{T}"/> class.
     /// </summary>
@@ -34,41 +31,37 @@ public class VirtualizedListViewModel<T> : ListViewModel<T>, IVirtualizedListVie
                 System.Reactive.Linq.Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
                         h => itemsNotify.CollectionChanged += h,
                         h => itemsNotify.CollectionChanged -= h)
-                    .Subscribe(_ => OnPropertyChanged(nameof(VisibleItems))));
+                    .Subscribe(_ => NotifyPropertyChanged(nameof(VisibleItems))));
         }
     }
 
     /// <inheritdoc />
     public int VisibleStartIndex
     {
-        get => _visibleStartIndex;
+        get;
         set
         {
-            var clamped = Math.Max(0, value);
-            if (_visibleStartIndex == clamped)
+            if (!SetProperty(ref field, Math.Max(0, value)))
                 return;
 
-            _visibleStartIndex = clamped;
-            OnPropertyChanged(nameof(VisibleStartIndex));
-            OnPropertyChanged(nameof(VisibleItems));
+            NotifyPropertyChanged(nameof(VisibleItems));
         }
     }
 
     /// <inheritdoc />
     public int VisibleCount
     {
-        get => _visibleCount;
+        get;
         set
         {
-            var clamped = Math.Max(1, value);
-            if (_visibleCount == clamped)
+            if (!SetProperty(ref field, Math.Max(1, value)))
                 return;
 
-            _visibleCount = clamped;
-            OnPropertyChanged(nameof(VisibleCount));
-            OnPropertyChanged(nameof(VisibleItems));
+            NotifyPropertyChanged(nameof(VisibleItems));
         }
     }
+
+        = 50;
 
     /// <inheritdoc />
     public IReadOnlyList<T> VisibleItems
@@ -81,9 +74,12 @@ public class VirtualizedListViewModel<T> : ListViewModel<T>, IVirtualizedListVie
             var start = Math.Min(VisibleStartIndex, Items.Count - 1);
             var count = Math.Min(VisibleCount, Items.Count - start);
 
-            return [.. Items
-                .Skip(start)
-                .Take(count)];
+            return
+            [
+                .. Items
+                    .Skip(start)
+                    .Take(count)
+            ];
         }
     }
 }

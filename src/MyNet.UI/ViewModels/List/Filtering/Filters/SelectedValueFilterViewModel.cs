@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -35,18 +36,18 @@ public class SelectedValueFilterViewModel<T, TValue>(
     /// <summary>
     /// Gets or sets the binary operator used for matching (Is or IsNot).
     /// </summary>
-    public BinaryOperator Operator { get; set; } = operatorMode;
+    public BinaryOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the selected value to match against.
     /// When null, the filter is considered empty.
     /// </summary>
-    public TValue? Value { get; set; }
+    public TValue? Value { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the available values for selection.
     /// </summary>
-    public IEnumerable<TValue> AvailableValues { get; set; } = availableValues;
+    public IEnumerable<TValue> AvailableValues { get; set => SetProperty(ref field, value); } = availableValues;
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.
@@ -61,11 +62,11 @@ public class SelectedValueFilterViewModel<T, TValue>(
         var propertyBody = Property.Body;
 
         // Use EqualityComparer<TValue>.Default.Equals for robust comparison
-        var equalsMethod = typeof(EqualityComparer<TValue>).GetProperty(nameof(EqualityComparer<TValue>.Default))!;
+        var equalsMethod = typeof(EqualityComparer<TValue>).GetProperty(nameof(EqualityComparer<>.Default))!;
         var defaultComparer = Expression.Property(null, equalsMethod);
         var equalsCall = Expression.Call(
             defaultComparer,
-            typeof(EqualityComparer<TValue>).GetMethod(nameof(EqualityComparer<TValue>.Equals), [typeof(TValue), typeof(TValue)])!,
+            typeof(EqualityComparer<TValue>).GetMethod(nameof(EqualityComparer<>.Equals), [typeof(TValue), typeof(TValue)])!,
             Expression.Convert(propertyBody, typeof(TValue)),
             Expression.Constant(Value, typeof(TValue)));
 

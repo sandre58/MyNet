@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -31,13 +32,17 @@ public class GuidFilterViewModel<T>(
     /// <summary>
     /// Gets or sets the binary operator used for matching (Is or IsNot).
     /// </summary>
-    public BinaryOperator Operator { get; set; } = operatorMode;
+    public BinaryOperator Operator { get; set => SetProperty(ref field, value); } = operatorMode;
 
     /// <summary>
     /// Gets or sets the Guid value to match against.
     /// When null, the filter is considered empty.
     /// </summary>
-    public Guid? Value { get; set; }
+    public Guid? Value
+    {
+        get;
+        set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.

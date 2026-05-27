@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq.Expressions;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 
@@ -33,29 +34,29 @@ public class ComparableFilterViewModel<T, TValue>(
     /// <summary>
     /// Gets or sets the comparison operator used for matching.
     /// </summary>
-    public ComplexComparableOperator Operator { get; set; } = comparableOperator;
+    public ComplexComparableOperator Operator { get; set => SetProperty(ref field, value); } = comparableOperator;
 
     /// <summary>
     /// Gets or sets the lower bound value for comparison.
     /// Used as the primary value for single-value operators (EqualsTo, LessThan, etc.).
     /// </summary>
-    public TValue? From { get; set; }
+    public TValue? From { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the upper bound value for comparison.
     /// Used together with <see cref="From"/> for range operators (IsBetween, IsNotBetween).
     /// </summary>
-    public TValue? To { get; set; }
+    public TValue? To { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the minimum allowed value for the filter range.
     /// </summary>
-    public TValue? Minimum { get; set; }
+    public TValue? Minimum { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the maximum allowed value for the filter range.
     /// </summary>
-    public TValue? Maximum { get; set; }
+    public TValue? Maximum { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets a value indicating whether this filter is in an empty state.

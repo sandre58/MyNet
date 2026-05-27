@@ -6,16 +6,16 @@
 
 using System;
 using System.Windows.Input;
+using MyNet.Observable;
 using MyNet.UI.Commands;
 using MyNet.Utilities.Deferring;
-using PropertyChanged;
 
 namespace MyNet.UI.ViewModels.List.Paging;
 
 /// <summary>
 /// ViewModel for managing paging state and navigation in a paginated list or collection.
 /// </summary>
-public class PagingViewModel : EditableObject, IPagingViewModel
+public class PagingViewModel : ObservableObject, IPagingViewModel
 {
     private readonly DeferredAction _deferredAction;
 
@@ -42,27 +42,64 @@ public class PagingViewModel : EditableObject, IPagingViewModel
     /// Gets or sets the number of items per page.
     /// Changing this property triggers a <see cref="PagingChanged"/> event.
     /// </summary>
-    public int PageSize { get; set; }
+    public int PageSize
+    {
+        get;
+        set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            OnPageSizeChanged();
+        }
+    }
 
     /// <summary>
     /// Gets the current page number (1-based index).
     /// Updated via <see cref="Update"/> method or navigation commands.
     /// </summary>
-    [AlsoNotifyFor(nameof(HasNextPage), nameof(HasPreviousPage))]
-    public int CurrentPage { get; private set; } = 1;
+    public int CurrentPage
+    {
+        get;
+        private set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            NotifyPropertyChanged(nameof(HasNextPage));
+            NotifyPropertyChanged(nameof(HasPreviousPage));
+            RaiseNavigationCommandsCanExecuteChanged();
+        }
+    }
+
+        = 1;
 
     /// <summary>
     /// Gets the total number of pages based on <see cref="TotalItems"/> and <see cref="PageSize"/>.
     /// Updated via <see cref="Update"/> method.
     /// </summary>
-    [AlsoNotifyFor(nameof(HasNextPage))]
-    public int TotalPages { get; private set; }
+    public int TotalPages
+    {
+        get;
+        private set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            NotifyPropertyChanged(nameof(HasNextPage));
+            RaiseNavigationCommandsCanExecuteChanged();
+        }
+    }
 
     /// <summary>
     /// Gets the total number of items across all pages.
     /// Updated via <see cref="Update"/> method.
     /// </summary>
-    public int TotalItems { get; private set; }
+    public int TotalItems
+    {
+        get;
+        private set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Gets a value indicating whether there is a next page available.
@@ -150,6 +187,14 @@ public class PagingViewModel : EditableObject, IPagingViewModel
     /// Invoked when the paging configuration has changed (page number or page size).
     /// </summary>
     private void RaisePagingChanged() => PagingChanged?.Invoke(this, new(CurrentPage, PageSize));
+
+    private void RaiseNavigationCommandsCanExecuteChanged()
+    {
+        (MoveNextCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        (MovePreviousCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        (MoveFirstCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        (MoveLastCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+    }
 
     /// <summary>
     /// Invoked when the page size has changed.

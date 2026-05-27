@@ -4,7 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.ComponentModel;
 using System.Windows.Input;
+using MyNet.Observable;
 using MyNet.Observable.Collections.Selection;
 using MyNet.UI.Commands;
 using MyNet.UI.Loading;
@@ -16,7 +18,7 @@ namespace MyNet.UI.ViewModels.Dialog;
 /// ViewModel for a dialog allowing to select one or more items from a list. The selected items are returned when the dialog is closed with the Validate command.
 /// </summary>
 /// <typeparam name="T">The type of the items in the list.</typeparam>
-public class SelectionDialogViewModel<T> : ListDialogViewModel<T, SelectableListViewModel<T>>
+public class SelectionDialogViewModel<T> : ListDialogViewModel<T, ISelectableListViewModel<T>>
     where T : notnull
 {
     /// <summary>
@@ -30,11 +32,14 @@ public class SelectionDialogViewModel<T> : ListDialogViewModel<T, SelectableList
     /// <param name="list">The selectable list to be displayed in the dialog.</param>
     /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">An optional command factory to create commands.</param>
-    public SelectionDialogViewModel(SelectableListViewModel<T> list, IBusyService? busyService = null, ICommandFactory? commandFactory = null)
+    public SelectionDialogViewModel(ISelectableListViewModel<T> list, IBusyService? busyService = null, ICommandFactory? commandFactory = null)
         : base(list, busyService, commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
         DoubleClickCommand = commands.Create(Validate, () => List is { SelectedCount: > 0, SelectionMode: SelectionMode.Single });
+
+        if (List is ObservableObject observableList)
+            observableList.PropertyChanged += HandleListPropertyChanged;
     }
 
     /// <summary>
@@ -47,4 +52,22 @@ public class SelectionDialogViewModel<T> : ListDialogViewModel<T, SelectableList
     /// </summary>
     /// <returns>True if the Validate command can execute; otherwise, false.</returns>
     protected override bool CanValidate() => List.SelectedCount > 0;
+
+    private void HandleListPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(ISelectableListViewModel<T>.SelectedCount) && e.PropertyName != nameof(ISelectableListViewModel<T>.SelectionMode))
+            return;
+
+        (DoubleClickCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
+        RaiseValidateCanExecuteChanged();
+    }
+
+    /// <inheritdoc />
+    protected override void DisposeManagedResources()
+    {
+        if (List is ObservableObject observableList)
+            observableList.PropertyChanged -= HandleListPropertyChanged;
+
+        base.DisposeManagedResources();
+    }
 }

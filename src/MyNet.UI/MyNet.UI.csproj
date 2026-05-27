@@ -9,7 +9,7 @@
     </PropertyGroup>
 
         <ItemGroup Condition="'$(ExcludeLegacy)' == 'true'">
-<!--            <Compile Remove="Legacy\**\*.cs" />-->
+            <Compile Remove="Legacy\**\*.cs" />
             <Compile Remove="Services\AppBusyManager.cs" />
             <Compile Remove="Services\RecentFilesManager.cs" />
             <Compile Remove="Services\Handlers\**\*.cs" />
@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
         <ProjectReference Include="..\MyNet.Observable\MyNet.Observable.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />
     </ItemGroup>

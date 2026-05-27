@@ -8,6 +8,7 @@ using System;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Grouping;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
 
@@ -22,7 +23,7 @@ public class GroupingPropertyViewModel<T>(
     Expression<Func<T, object?>> expression,
     string key,
     IObservableValue<string> displayName)
-    : IGroupingPropertyViewModel<T>
+    : ObservableObject, IGroupingPropertyViewModel<T>
 {
     /// <summary>
     /// Gets the localized display name for this grouping property.
@@ -44,12 +45,28 @@ public class GroupingPropertyViewModel<T>(
     /// When true, this property contributes to the collection's grouping.
     /// When false, this property is available but not applied.
     /// </summary>
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled
+    {
+        get;
+        set
+        {
+            if (!SetProperty(ref field, value))
+                return;
+
+            OnIsEnabledChanged();
+        }
+    }
+
+        = true;
 
     /// <summary>
     /// Gets the date and time when this grouping property was activated (enabled). This property is null if the grouping property is not currently active. When the grouping property is enabled, this property is set to the current date and time, indicating when it became active. This information can be used to determine the order in which grouping properties were activated, which can be relevant when multiple grouping properties are applied to a collection, as it may affect the overall grouping behavior.
     /// </summary>
-    public DateTime? ActivatedAt { get; private set; }
+    public DateTime? ActivatedAt
+    {
+        get;
+        private set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Builds the core grouping property based on the current state of the view model. If the grouping property is active (enabled), this method returns an instance of <see cref="IGroupingProperty{T}"/> that encapsulates the expression defined in the view model. If the grouping property is not active, this method returns null, indicating that it should not be applied to the collection's grouping configuration.
@@ -70,5 +87,5 @@ public class GroupingPropertyViewModel<T>(
     protected virtual void OnIsEnabledChanged() => ActivatedAt = IsEnabled ? DateTime.UtcNow : null;
 
     /// <inheritdoc />
-    public override string ToString() => DisplayName.Value ?? key;
+    public override string ToString() => DisplayName.Value.OrEmpty();
 }

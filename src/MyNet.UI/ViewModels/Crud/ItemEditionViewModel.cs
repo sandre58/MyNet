@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FluentValidation;
+using MyNet.Observable;
+using MyNet.Observable.Validation.Validators;
 using MyNet.UI.Commands;
 using MyNet.UI.Loading;
 
@@ -25,12 +28,16 @@ public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionVi
     /// </summary>
     /// <param name="busyService">Optional busy service used to manage loading state.</param>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
-    protected ItemEditionViewModel(IBusyService? busyService = null, ICommandFactory? commandFactory = null)
+    /// <param name="validator">Optional validator used to validate the item edition view model.</param>
+    protected ItemEditionViewModel(IBusyService? busyService = null, ICommandFactory? commandFactory = null, IValidator<ItemEditionViewModel<T>>? validator = null)
         : base(busyService, commandFactory)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 
         ApplyCommand = commands.Create(() => ApplyAsync(), CanApply);
+
+        this.UseTracking()
+            .UseValidation((IValidator?)validator ?? EmptyValidator.Instance);
     }
 
     /// <summary>
@@ -41,12 +48,20 @@ public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionVi
     /// <summary>
     /// Gets the original item snapshot.
     /// </summary>
-    public T? OriginalItem { get; private set; }
+    public T? OriginalItem
+    {
+        get;
+        private set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Gets a value indicating whether the edited item differs from the original snapshot.
     /// </summary>
-    public bool IsDirty { get; private set; }
+    public bool IsDirty
+    {
+        get;
+        private set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Sets the original item and initializes the current editable item from it.

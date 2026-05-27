@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using MyNet.UI.Commands;
 using MyNet.UI.Loading;
@@ -15,13 +16,13 @@ namespace MyNet.UI.ViewModels.Crud;
 /// <summary>
 /// Provides a reusable base implementation for item view models.
 /// </summary>
-/// <typeparam name="T">The wrapped item type.</typeparam>
+/// <typeparam name="T">The item type.</typeparam>
 public abstract class ItemViewModel<T>(IBusyService? busyService = null, ICommandFactory? commandFactory = null) : WorkspaceViewModel(busyService, commandFactory), IItemViewModel<T>
 {
     /// <summary>
     /// Gets or sets the current item.
     /// </summary>
-    public T? Item { get; protected set; }
+    public T? Item { get; protected set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Event raised when the current item changes, providing the old and new values of the item.
@@ -29,10 +30,18 @@ public abstract class ItemViewModel<T>(IBusyService? busyService = null, IComman
     public event EventHandler<ItemChangedEventArgs<T>>? ItemChanged;
 
     /// <summary>
-    /// Sets the current item.
+    /// Sets the current item and raises <see cref="ItemChanged"/> when the value changes.
     /// </summary>
     /// <param name="item">The item to expose.</param>
-    public virtual void SetItem(T? item) => Item = item;
+    public virtual void SetItem(T? item)
+    {
+        if (EqualityComparer<T?>.Default.Equals(Item, item))
+            return;
+
+        var previous = Item;
+        Item = item;
+        OnItemChanged(previous, item);
+    }
 
     /// <summary>
     /// Called when the current item changes.
@@ -78,9 +87,9 @@ public abstract class ItemViewModel<T>(IBusyService? busyService = null, IComman
     }
 
     /// <inheritdoc />
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
         UnsubscribeFromItem(Item);
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

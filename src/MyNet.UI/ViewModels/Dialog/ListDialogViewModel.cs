@@ -75,4 +75,9 @@ public class ListDialogViewModel<T, TList> : DialogViewModel<IReadOnlyCollection
     /// </summary>
     /// <returns>True if the Validate command can execute; otherwise, false.</returns>
     protected virtual bool CanValidate() => true;
+
+    /// <summary>
+    /// Raises <see cref="ICommand.CanExecuteChanged"/> for <see cref="ValidateCommand"/>.
+    /// </summary>
+    protected void RaiseValidateCanExecuteChanged() => (ValidateCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();
 }

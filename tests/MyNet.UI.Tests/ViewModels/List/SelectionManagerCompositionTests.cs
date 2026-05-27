@@ -9,21 +9,18 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using MyNet.Observable;
-using MyNet.Observable.Collections.Wrappers;
+using MyNet.Observable.Collections;
+using MyNet.Observable.Collections.Sources;
 using MyNet.UI.ViewModels.List.Selection;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.List;
 
 /// <summary>
-/// P0 Test 2 – ISelectionManager composition.
-/// Validates that SelectableListViewModel delegates all selection operations
-/// to the injected ISelectionManager.
+/// Validates that <see cref="SelectableListViewModel{T}"/> delegates selection to <see cref="ISelectionManager{T}"/>.
 /// </summary>
 public sealed class SelectionManagerCompositionTests : IDisposable
 {
-    private readonly List<string> _items = ["Alpha", "Beta", "Gamma"];
     private readonly Mock<ISelectionManager<string>> _managerMock;
     private readonly SelectableListViewModel<string> _vm;
 
@@ -32,15 +29,12 @@ public sealed class SelectionManagerCompositionTests : IDisposable
         _managerMock = new();
         _managerMock.Setup(m => m.SelectedItems).Returns([]);
         _managerMock.Setup(m => m.SelectedCount).Returns(0);
+        _managerMock.Setup(m => m.IsSelected(It.IsAny<string>())).Returns(false);
 
-        var collection = ExtendedWrapperCollection.From<string, SelectedWrapper<string>>(
-            _items,
-            x => new(x),
-            scheduler: null);
+        var source = SourceEngine<string>.From(["Alpha", "Beta", "Gamma"], readOnly: false);
+        var collection = new ExtendedCollection<string>(source);
 
-        _vm = new(
-            collection,
-            _managerMock.Object);
+        _vm = new(collection, _managerMock.Object);
     }
 
     [Fact]
@@ -49,6 +43,14 @@ public sealed class SelectionManagerCompositionTests : IDisposable
         _vm.Select("Alpha");
 
         _managerMock.Verify(m => m.Select("Alpha"), Times.Once);
+    }
+
+    [Fact]
+    public void Unselect_Should_Delegate_To_Manager()
+    {
+        _vm.Unselect("Beta");
+
+        _managerMock.Verify(m => m.Unselect("Beta"), Times.Once);
     }
 
     [Fact]
@@ -75,6 +77,14 @@ public sealed class SelectionManagerCompositionTests : IDisposable
         _vm.SetSelection(items);
 
         _managerMock.Verify(m => m.SetSelection(It.Is<IEnumerable<string>>(e => e.SequenceEqual(items))), Times.Once);
+    }
+
+    [Fact]
+    public void IsSelected_Should_Delegate_To_Manager()
+    {
+        _managerMock.Setup(m => m.IsSelected("Alpha")).Returns(true);
+
+        _vm.IsSelected("Alpha").Should().BeTrue();
     }
 
     [Fact]

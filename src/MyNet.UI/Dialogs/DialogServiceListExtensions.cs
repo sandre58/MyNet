@@ -38,7 +38,7 @@ public static class DialogServiceListExtensions
             ArgumentNullException.ThrowIfNull(dialogService);
             ArgumentNullException.ThrowIfNull(list);
 
-            return dialogService.Create(new ListDialogViewModel<T, TList>(list, commandFactory));
+            return dialogService.Create(new ListDialogViewModel<T, TList>(list, commandFactory: commandFactory));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ public static class DialogServiceListExtensions
             ArgumentNullException.ThrowIfNull(items);
 
             var list = ListViewModelFactory.Create(items, listOptions);
-            return dialogService.Create(new ListDialogViewModel<T, ListViewModel<T>>(list, commandFactory));
+            return dialogService.Create(new ListDialogViewModel<T, ListViewModel<T>>(list, commandFactory: commandFactory));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ public static class DialogServiceListExtensions
             ArgumentNullException.ThrowIfNull(dialogService);
             ArgumentNullException.ThrowIfNull(list);
 
-            return dialogService.Create(new SelectionDialogViewModel<T>(list, commandFactory));
+            return dialogService.Create(new SelectionDialogViewModel<T>(list, commandFactory: commandFactory));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ public static class DialogServiceListExtensions
             ArgumentNullException.ThrowIfNull(items);
 
             var list = ListViewModelFactory.CreateSelection(items, listOptions, selectionMode);
-            return dialogService.Create(new SelectionDialogViewModel<T>(list, commandFactory));
+            return dialogService.Create(new SelectionDialogViewModel<T>(list, commandFactory: commandFactory));
         }
     }
 }

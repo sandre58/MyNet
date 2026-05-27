@@ -124,19 +124,19 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     public IFiltersViewModel<T>? Filters { get; }
 
     /// <inheritdoc />
-    public IFilter<T>? CurrentFilter { get; private set; }
+    public IFilter<T>? CurrentFilter { get; private set => SetProperty(ref field, value); }
 
     /// <inheritdoc />
     public ISortingViewModel<T>? Sorting { get; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; private set; }
+    public IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; private set => SetProperty(ref field, value); }
 
     /// <inheritdoc />
     public IGroupingViewModel<T>? Grouping { get; }
 
     /// <inheritdoc />
-    public IReadOnlyList<IGroupingProperty<T>> CurrentGrouping { get; private set; }
+    public IReadOnlyList<IGroupingProperty<T>> CurrentGrouping { get; private set => SetProperty(ref field, value); }
 
     /// <inheritdoc />
     public IPagingViewModel? Paging { get; }
@@ -283,16 +283,16 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     }
 
     /// <inheritdoc />
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
         UnsubscribeFromConfigurationEvents();
         DataProvider.Dispose();
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }
 
 /// <summary>
-/// Compatibility list view model base class that keeps the collection type accessible for wrapper-based scenarios.
+/// List view model base that exposes the underlying <see cref="ExtendedCollection{T}"/> for advanced scenarios (e.g. selection).
 /// </summary>
 /// <typeparam name="T">The item type.</typeparam>
 /// <typeparam name="TCollection">The collection type.</typeparam>
@@ -323,7 +323,7 @@ public class ListViewModelBase<T, TCollection> : ListViewModelBase<T>
         => Collection = collection;
 
     /// <summary>
-    /// Gets the underlying collection of items. This property is exposed for compatibility with wrapper-based scenarios, allowing derived classes to access the specific collection type used in the view model pipeline.
+    /// Gets the underlying extended collection used by the list pipeline.
     /// </summary>
     [field: SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed by the shared data provider in the base class.")]
     protected TCollection Collection { get; }

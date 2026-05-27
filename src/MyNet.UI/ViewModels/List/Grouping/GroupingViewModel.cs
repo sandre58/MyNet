@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using MyNet.Collections;
+using MyNet.Observable;
 using MyNet.Observable.Collections.Grouping;
 using MyNet.Utilities.Deferring;
 
@@ -18,7 +20,7 @@ namespace MyNet.UI.ViewModels.List.Grouping;
 /// Represents a view model for managing grouping configuration of a collection.
 /// </summary>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
-public class GroupingViewModel<T> : EditableObject, IGroupingViewModel<T>
+public class GroupingViewModel<T> : ObservableObject, IGroupingViewModel<T>
 {
     private readonly DeferredAction _deferredAction;
 
@@ -53,7 +55,7 @@ public class GroupingViewModel<T> : EditableObject, IGroupingViewModel<T>
     /// <summary>
     /// Gets the current grouping configuration built from the UI. This collection is read-only and represents the active grouping properties based on the user's configuration. It is computed from the enabled properties in the Properties collection and ordered by their activation time to reflect the order in which grouping options were applied. Subscribers can use this collection to apply the grouping configuration to their collections when the GroupingChanged event is raised.
     /// </summary>
-    public IReadOnlyList<IGroupingProperty<T>> CurrentGrouping { get; private set; } = [];
+    public IReadOnlyList<IGroupingProperty<T>> CurrentGrouping { get; private set => SetProperty(ref field, value); } = [];
 
     /// <summary>
     /// Gets the default grouping configuration for the collection. This collection is read-only and represents the initial grouping properties that are applied when the view model is first created or when the Reset method is called.
@@ -162,11 +164,11 @@ public class GroupingViewModel<T> : EditableObject, IGroupingViewModel<T>
         => Properties.FirstOrDefault(p => p.Matches(property));
 
     /// <inheritdoc />
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
         foreach (var property in Properties)
             property.PropertyChanged -= HandlePropertyChanged;
 
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

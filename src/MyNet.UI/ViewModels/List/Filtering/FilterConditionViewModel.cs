@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq.Expressions;
+using MyNet.Observable;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 
@@ -15,7 +16,7 @@ namespace MyNet.UI.ViewModels.List.Filtering;
 /// <param name="key">The key that identifies this filter condition.</param>
 /// <param name="isReadOnly">A value indicating whether this filter condition is read-only.</param>
 /// <typeparam name="T">The type of the items being filtered.</typeparam>
-public abstract class FilterConditionViewModel<T>(string key, bool isReadOnly = false) : EditableObject, IFilterConditionViewModel<T>
+public abstract class FilterConditionViewModel<T>(string key, bool isReadOnly = false) : ObservableObject, IFilterConditionViewModel<T>
 {
     /// <summary>
     /// Gets the key that identifies this filter condition.
@@ -30,7 +31,11 @@ public abstract class FilterConditionViewModel<T>(string key, bool isReadOnly = 
     /// <summary>
     /// Gets or sets a value indicating whether this filter condition is enabled. When disabled, the condition is ignored in the filtering logic.
     /// </summary>
-    public bool IsEnabled { get; set; }
+    public bool IsEnabled
+    {
+        get;
+        set => SetProperty(ref field, value);
+    }
 
     /// <summary>
     /// Gets a value indicating whether this filter condition is empty, meaning it has no criteria defined and should not affect the filtering results. An empty condition is typically ignored in the filtering logic.

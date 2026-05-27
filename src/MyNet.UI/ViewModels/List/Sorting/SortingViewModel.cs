@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using MyNet.Collections;
+using MyNet.Observable;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Utilities.Deferring;
 
@@ -18,7 +20,7 @@ namespace MyNet.UI.ViewModels.List.Sorting;
 /// Represents a view model for managing sorting configuration of a collection.
 /// </summary>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
-public class SortingViewModel<T> : EditableObject, ISortingViewModel<T>
+public class SortingViewModel<T> : ObservableObject, ISortingViewModel<T>
 {
     private readonly DeferredAction _deferredAction;
 
@@ -53,7 +55,7 @@ public class SortingViewModel<T> : EditableObject, ISortingViewModel<T>
     /// <summary>
     /// Gets the current sorting configuration built from the UI. This collection is read-only and represents the active sorting properties based on the user's configuration. It is computed from the enabled properties in the Properties collection and ordered by their activation time to reflect the order in which sorting options were applied. Subscribers can use this collection to apply the sorting configuration to their collections when the SortingChanged event is raised.
     /// </summary>
-    public IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; private set; } = [];
+    public IReadOnlyList<ISortingProperty<T>> CurrentSorting { get; private set => SetProperty(ref field, value); } = [];
 
     /// <summary>
     /// Gets the default sorting configuration for the collection. This collection is read-only and represents the initial sorting properties that are applied when the view model is first created or when the Reset method is called.
@@ -210,11 +212,11 @@ public class SortingViewModel<T> : EditableObject, ISortingViewModel<T>
         => Properties.FirstOrDefault(p => p.Matches(property));
 
     /// <inheritdoc />
-    protected override void Cleanup()
+    protected override void DisposeManagedResources()
     {
         foreach (var property in Properties)
             property.PropertyChanged -= HandlePropertyChanged;
 
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

@@ -8,6 +8,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using MyNet.Collections;
+using MyNet.Observable;
+using MyNet.Primitives;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 
@@ -15,14 +18,14 @@ namespace MyNet.UI.ViewModels.List.Filtering;
 /// Implements a view model for a group of filter nodes, which can contain child filter nodes and a logical operator (AND/OR) to combine them.
 /// </summary>
 /// <typeparam name="T">The type of the items being filtered.</typeparam>
-public class FilterGroupViewModel<T> : EditableObject, IFilterGroupViewModel<T>
+public class FilterGroupViewModel<T> : ObservableObject, IFilterGroupViewModel<T>
 {
     private readonly ObservableCollection<IFilterNodeViewModel<T>> _children = [];
 
     /// <summary>
     /// Gets or sets the logical operator used to combine the child filters. The default operator is AND.
     /// </summary>
-    public LogicalOperator Operator { get; set; } = LogicalOperator.And;
+    public LogicalOperator Operator { get; set => SetProperty(ref field, value); } = LogicalOperator.And;
 
     /// <summary>
     /// Gets a value indicating whether this filter condition is read-only.
@@ -32,7 +35,7 @@ public class FilterGroupViewModel<T> : EditableObject, IFilterGroupViewModel<T>
     /// <summary>
     /// Gets or sets a value indicating whether the filter group is enabled.
     /// </summary>
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled { get; set => SetProperty(ref field, value); } = true;
 
     /// <summary>
     /// Gets a read-only collection of child filter nodes contained in this group. The children can be either simple filters or other groups of filters.
@@ -90,10 +93,7 @@ public class FilterGroupViewModel<T> : EditableObject, IFilterGroupViewModel<T>
             return null;
 
         var param = Expression.Parameter(typeof(T), "x");
-
-        var bodies = expressions.ConvertAll(e => ReplaceParameter(e, param))
-            ;
-
+        var bodies = expressions.ConvertAll(e => ReplaceParameter(e!, param));
         var body = bodies[0];
 
         for (var i = 1; i < bodies.Count; i++)

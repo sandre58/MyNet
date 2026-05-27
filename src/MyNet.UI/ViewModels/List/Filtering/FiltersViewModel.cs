@@ -49,7 +49,7 @@ public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
     /// <summary>
     /// Gets the current filter built from the UI configuration. This property returns an instance of <see cref="IFilter{T}"/> that represents the composite filter constructed based on the active conditions defined in the filter tree. If no filters are active or if the filter tree is empty, this property returns null. The CurrentFilter property allows clients to retrieve the effective filter that can be applied to a collection of items of type T, based on the current configuration of filters in the UI.
     /// </summary>
-    public IFilter<T>? CurrentFilter { get; private set; }
+    public IFilter<T>? CurrentFilter { get; private set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets a value indicating whether there are any active filters in the current configuration. This property returns true if the CurrentFilter property is not null, indicating that there are active filter conditions defined in the filter tree. If CurrentFilter is null, it means that there are no active filters, and this property will return false. The HasActiveFilters property provides a convenient way for clients to check if any filters are currently applied without needing to directly inspect the CurrentFilter property.
@@ -59,12 +59,12 @@ public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
     /// <summary>
     /// Gets or sets a value indicating whether the filters should be automatically applied when they change. If set to true, the filters will be applied automatically whenever a change occurs in the filter configuration. If set to false, the filters will need to be applied manually by calling the Apply method.
     /// </summary>
-    public bool AutoApply { get; set; } = true;
+    public bool AutoApply { get; set => SetProperty(ref field, value); } = true;
 
     /// <summary>
     /// Gets a value indicating whether the filter configuration has been modified since the last application. This property returns true if there are unsaved changes in the filter configuration, allowing clients to determine if the filters need to be reapplied.
     /// </summary>
-    public bool IsDirty { get; private set; }
+    public bool IsDirty { get; private set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Occurs when the filter configuration changes and a new filter is produced. This event is raised whenever the filters are applied, either automatically or manually, and provides subscribers with the new filter that has been generated based on the current configuration of the filter tree. The FiltersChanged event allows clients to react to changes in the filter configuration, such as updating the displayed data or performing other actions based on the new filter criteria.
