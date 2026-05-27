@@ -1,20 +1,13 @@
 // -----------------------------------------------------------------------
-// <copyright file="ImportDialogViewModel.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="ImportDialogViewModel.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DynamicData;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Collections.Providers;
-using MyNet.UI.Legacy.Selection;
-using MyNet.UI.Legacy.ViewModels.Dialogs;
-using MyNet.UI.Legacy.ViewModels.List;
 using MyNet.UI.Resources;
-using MyNet.UI.Toasting;
 using MyNet.Primitives.Providers;
 
 namespace MyNet.UI.Legacy.ViewModels.Import;

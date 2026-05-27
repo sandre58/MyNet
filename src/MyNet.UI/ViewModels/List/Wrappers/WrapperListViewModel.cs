@@ -10,15 +10,12 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Concurrency;
-using MyNet.Observable;
-using MyNet.Observable.Collections.Wrappers;
 using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;
 using MyNet.UI.ViewModels.List.Paging;
 using MyNet.UI.ViewModels.List.Sorting;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Wrappers;
 

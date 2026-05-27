@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Sorting;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 

@@ -1,16 +1,16 @@
 // -----------------------------------------------------------------------
-// <copyright file="NotificationPublisherExtensions.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="NotificationPublisherExtensions.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Globalization;
+using MyNet.Globalization.Facade;
+using MyNet.Primitives;
+using MyNet.Primitives.Exceptions;
 using MyNet.UI.Messages;
 using MyNet.UI.Notifications.Models;
-using MyNet.Utilities;
-using MyNet.Primitives.Exceptions;
-using MyNet.Utilities.Logging;
 
 namespace MyNet.UI.Notifications;
 
@@ -32,13 +32,13 @@ public static class NotificationPublisherExtensions
         Action<INotification>? onClick = null)
     {
         var innerException = exception.InnerException ?? exception;
-        LogManager.Error(innerException);
+        //LogManager.Error(innerException);
 
         if (showInTaskBar)
             reportTaskBar?.Invoke(new(TaskbarProgressState.Error, 1));
 
         var message = innerException is TranslatableException translatableException
-            ? translatableException.Parameters is not null
+            ? translatableException.Parameters.Count > 0
                 ? translatableException.ResourceKey.Translate().FormatWith(CultureInfo.CurrentCulture, translatableException.Parameters)
                 : translatableException.ResourceKey.Translate()
             : innerException.Message;

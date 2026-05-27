@@ -10,17 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MyNet.Observable;
 using MyNet.UI.Commands;
-using MyNet.UI.Extensions;
 using MyNet.UI.Helpers;
-using MyNet.UI.Legacy.Dialogs;
-using MyNet.UI.Legacy.Dialogs.MessageBox;
-using MyNet.UI.Legacy.Loading;
 using MyNet.UI.Resources;
 using MyNet.UI.Services;
-using MyNet.UI.Toasting;
-using MyNet.Utilities;
-using MyNet.Utilities.IO;
-using MyNet.Utilities.IO.FileHistory;
 
 namespace MyNet.UI.Legacy.ViewModels.FileHistory;
 

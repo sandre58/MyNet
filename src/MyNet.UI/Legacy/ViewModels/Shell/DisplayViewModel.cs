@@ -5,10 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using MyNet.UI.Legacy.ViewModels.Workspace;
 using MyNet.UI.Resources;
 using MyNet.UI.Theming;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

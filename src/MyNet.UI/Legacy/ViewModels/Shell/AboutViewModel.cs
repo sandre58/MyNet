@@ -5,9 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MyNet.UI.Helpers;
-using MyNet.UI.Legacy.ViewModels.Workspace;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

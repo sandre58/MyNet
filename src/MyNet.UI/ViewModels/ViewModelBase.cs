@@ -9,10 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using MyNet.Observable;
-using MyNet.Observable.Attributes;
+using MyNet.Primitives;
 using MyNet.UI.Loading;
 using MyNet.UI.Loading.Models;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels;
 
@@ -24,11 +23,9 @@ namespace MyNet.UI.ViewModels;
 /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
 /// </remarks>
 /// <param name="busyService">Optional busy service. If null, a new instance is created.</param>
-[CanBeValidatedForDeclaredClassOnly(false)]
-[CanSetIsModifiedAttributeForDeclaredClassOnly(false)]
-public abstract class ViewModelBase(IBusyService? busyService = null) : EditableObject, IIdentifiable<Guid>
+[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Fields is not disposable and does not require cleanup.")]
+public abstract class ViewModelBase(IBusyService? busyService = null) : ObservableObject, IIdentifiable<Guid>
 {
-    [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in Cleanup")]
     private readonly SemaphoreSlim _stateLock = new(1, 1);
 
     /// <summary>
@@ -40,7 +37,13 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Editable
     /// <summary>
     /// Gets the current loading state of the workspace.
     /// </summary>
-    public LoadState State { get; private set; } = LoadState.NotLoaded;
+    public LoadState State
+    {
+        get;
+        private set => SetProperty(ref field, value);
+    }
+
+        = LoadState.NotLoaded;
 
     /// <summary>
     /// Gets the busy service for indicating long-running operations.
@@ -73,7 +76,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Editable
     /// <param name="action">The asynchronous action to execute.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     protected async Task ExecuteStateAsync<TBusy>(Func<TBusy, CancellationToken, Task> action, CancellationToken cancellationToken = default)
-    where TBusy : class, IBusy, new()
+        where TBusy : class, IBusy, new()
     {
         await _stateLock.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -183,7 +186,7 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Editable
     /// }
     /// </code>
     /// </remarks>
-    protected virtual void OnExecutionError(Exception exception) => throw exception;
+    protected virtual void OnExecutionError(Exception exception) { }
 
     #endregion
 
@@ -200,12 +203,10 @@ public abstract class ViewModelBase(IBusyService? busyService = null) : Editable
     /// <returns>true if the specified object is a ViewModelBase with the same Id; otherwise, false.</returns>
     public override bool Equals(object? obj) => obj is ViewModelBase viewModel && Id == viewModel.Id;
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. Disposes the state lock and calls the base cleanup method.
-    /// </summary>
-    protected override void Cleanup()
+    /// <inheritdoc />
+    protected override void DisposeManagedResources()
     {
         _stateLock.Dispose();
-        base.Cleanup();
+        base.DisposeManagedResources();
     }
 }

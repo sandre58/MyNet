@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using MyNet.Observable;
 using MyNet.Observable.Collections.Grouping;
-using MyNet.Utilities;
 using MyNet.Utilities.Deferring;
 
 namespace MyNet.UI.ViewModels.List.Grouping;

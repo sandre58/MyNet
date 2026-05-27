@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="ImportBySourcesDialogViewModel.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="ImportBySourcesDialogViewModel.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -8,13 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyNet.Observable.Attributes;
-using MyNet.UI.Extensions;
-using MyNet.UI.Legacy.Selection;
-using MyNet.UI.Legacy.ViewModels.List;
-using MyNet.Utilities;
 using MyNet.Primitives.Exceptions;
-using MyNet.Utilities.Logging;
 
 namespace MyNet.UI.Legacy.ViewModels.Import;
 

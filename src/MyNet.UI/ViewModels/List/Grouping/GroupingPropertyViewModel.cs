@@ -8,7 +8,6 @@ using System;
 using System.Linq.Expressions;
 using MyNet.Observable;
 using MyNet.Observable.Collections.Grouping;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Grouping;
 

@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq.Expressions;
-using MyNet.Observable;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 

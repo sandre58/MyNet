@@ -68,7 +68,7 @@ public class Busy : ObservableObject, IBusy
     internal void Attach(CancellationTokenSource cts)
     {
         _cts = cts;
-        OnPropertyChanged(nameof(IsCancellable));
+        NotifyPropertyChanged(nameof(IsCancellable));
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class Busy : ObservableObject, IBusy
             return;
 
         IsCancelling = true;
-        OnPropertyChanged(nameof(IsCancelling));
+        NotifyPropertyChanged(nameof(IsCancelling));
 
         _cts?.Cancel();
     }

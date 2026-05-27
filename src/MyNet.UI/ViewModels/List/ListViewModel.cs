@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Reactive.Concurrency;
-using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Sources;
 using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;

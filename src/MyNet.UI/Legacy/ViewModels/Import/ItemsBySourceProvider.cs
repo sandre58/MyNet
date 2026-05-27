@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using DynamicData;
 using DynamicData.Binding;
-using MyNet.Observable.Collections.Providers;
 
 namespace MyNet.UI.Legacy.ViewModels.Import;
 

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="ExportViewModelBase.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="ExportViewModelBase.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -8,11 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MyNet.Humanizer;
 using MyNet.UI.Commands;
-using MyNet.UI.Legacy.ViewModels.Workspace;
 using MyNet.UI.Resources;
-using MyNet.UI.Toasting;
 using MyNet.Primitives.Exceptions;
 
 namespace MyNet.UI.Legacy.ViewModels.Export;

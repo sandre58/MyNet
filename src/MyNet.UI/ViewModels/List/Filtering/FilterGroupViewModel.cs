@@ -8,9 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using MyNet.Observable;
-using MyNet.Utilities;
-using MyNet.Utilities.Comparison;
 
 namespace MyNet.UI.ViewModels.List.Filtering;
 

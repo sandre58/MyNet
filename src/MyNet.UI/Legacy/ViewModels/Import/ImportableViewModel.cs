@@ -4,9 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Observable;
-using MyNet.Observable.Attributes;
-
 namespace MyNet.UI.Legacy.ViewModels.Import;
 
 public class ImportableViewModel(ImportMode mode = ImportMode.Add, bool import = false) : EditableObject

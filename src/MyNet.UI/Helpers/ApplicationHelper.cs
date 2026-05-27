@@ -6,8 +6,8 @@
 
 using System.Globalization;
 using System.Reflection;
+using MyNet.Primitives;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Helpers;
 

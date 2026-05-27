@@ -6,7 +6,7 @@
 
 using System;
 using System.ComponentModel;
-using MyNet.Utilities;
+using MyNet.Primitives;
 
 namespace MyNet.UI.Notifications.Models;
 

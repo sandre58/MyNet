@@ -8,7 +8,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Processors;
 using MyNet.UI.Threading;
 using MyNet.UI.Toasting.Filters;
 using MyNet.UI.Toasting.Settings;

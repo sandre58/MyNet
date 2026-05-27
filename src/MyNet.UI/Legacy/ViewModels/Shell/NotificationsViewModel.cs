@@ -1,23 +1,16 @@
 // -----------------------------------------------------------------------
-// <copyright file="NotificationsViewModel.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="NotificationsViewModel.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Linq;
 using System.Windows.Input;
-using DynamicData.Binding;
 using MyNet.Observable;
 using MyNet.Observable.Collections;
-using MyNet.Observable.Collections.Extensions;
 using MyNet.UI.Commands;
-using MyNet.UI.Legacy.Dialogs;
-using MyNet.UI.Legacy.Notifications;
-using MyNet.UI.Legacy.Threading;
 using MyNet.UI.Messages;
-using MyNet.Utilities;
-using MyNet.Messaging;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

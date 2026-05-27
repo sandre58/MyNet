@@ -7,13 +7,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
-using MyNet.Observable;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Resources;
 using MyNet.UI.Commands;
-using MyNet.UI.Legacy.Collections;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Legacy.ViewModels.Rules;
 

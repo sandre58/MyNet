@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Observable.Translatables;
 
 namespace MyNet.UI.Legacy.ViewModels.Rules;
 

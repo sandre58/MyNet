@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using MyNet.Observable;
 using MyNet.UI.ViewModels.List.Grouping;
 
 namespace MyNet.UI.ViewModels.List.Wrappers;

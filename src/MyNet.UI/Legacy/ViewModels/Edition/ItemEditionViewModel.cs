@@ -9,8 +9,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
-using MyNet.Observable.Attributes;
-using MyNet.Utilities;
 using PropertyChanged;
 
 namespace MyNet.UI.Legacy.ViewModels.Edition;

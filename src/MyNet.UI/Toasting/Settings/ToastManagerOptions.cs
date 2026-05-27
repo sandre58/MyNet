@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
+using MyNet.Primitives;
 using MyNet.UI.Notifications.Models;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Toasting.Settings;
 

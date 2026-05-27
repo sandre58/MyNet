@@ -6,7 +6,6 @@
 
 using System;
 using System.Windows.Input;
-using MyNet.Observable;
 using MyNet.UI.Commands;
 using MyNet.Utilities.Deferring;
 using PropertyChanged;

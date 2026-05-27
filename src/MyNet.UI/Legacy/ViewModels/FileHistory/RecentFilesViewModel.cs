@@ -7,8 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyNet.UI.Legacy.ViewModels.List;
-using MyNet.UI.Services.Providers;
 
 namespace MyNet.UI.Legacy.ViewModels.FileHistory;
 

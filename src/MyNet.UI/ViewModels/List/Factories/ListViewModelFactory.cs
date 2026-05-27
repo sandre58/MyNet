@@ -6,15 +6,11 @@
 
 using System;
 using System.Collections.Generic;
-using MyNet.Observable;
-using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Selection;
 using MyNet.Observable.Collections.Sources;
-using MyNet.Observable.Collections.Wrappers;
 using MyNet.UI.ViewModels.List.Selection;
 using MyNet.UI.ViewModels.List.Services;
 using MyNet.UI.ViewModels.List.Wrappers;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Factories;
 

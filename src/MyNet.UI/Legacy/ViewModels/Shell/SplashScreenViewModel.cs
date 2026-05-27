@@ -8,10 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyNet.UI.Helpers;
-using MyNet.UI.Legacy.ViewModels.Dialogs;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
-using MyNet.Utilities.Logging;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

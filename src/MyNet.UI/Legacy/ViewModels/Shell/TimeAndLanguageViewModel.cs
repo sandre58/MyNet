@@ -9,10 +9,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using DynamicData;
 using DynamicData.Binding;
-using MyNet.Observable.Globalization;
-using MyNet.UI.Legacy.ViewModels.Workspace;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 

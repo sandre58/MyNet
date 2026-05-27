@@ -9,10 +9,7 @@ using System.Linq;
 using System.Windows.Input;
 using DynamicData.Binding;
 using MyNet.Observable;
-using MyNet.Observable.Attributes;
-using MyNet.Observable.Extensions;
 using MyNet.UI.Commands;
-using MyNet.Utilities;
 
 namespace MyNet.UI.Legacy.ViewModels.Edition;
 

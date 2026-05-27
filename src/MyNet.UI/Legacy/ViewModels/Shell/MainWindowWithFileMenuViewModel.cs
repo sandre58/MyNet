@@ -4,9 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Observable.Globalization;
-using MyNet.UI.Legacy.Loading;
-using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Services;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;

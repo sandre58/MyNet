@@ -1,21 +1,15 @@
 // -----------------------------------------------------------------------
-// <copyright file="DisplayMode.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="DisplayMode.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using MyNet.Observable.Attributes;
 using MyNet.Observable;
 using MyNet.UI.Commands;
-using MyNet.UI.Layout;
-using MyNet.Utilities;
 using MyNet.Collections;
-using MyNet.Utilities.Conversion;
-using MyNet.Utilities.Conversion.Time;
-using MyNet.Utilities.Localization;
 
 namespace MyNet.UI.Legacy.ViewModels.Display;
 

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="FileExportByColumnsViewModelBase.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="FileExportByColumnsViewModelBase.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -13,15 +13,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
-using MyNet.Observable.Attributes;
 using MyNet.Observable;
-using MyNet.Observable.Translatables;
 using MyNet.UI.Commands;
-using MyNet.UI.Legacy.Selection.Models;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
 using MyNet.Primitives.Exceptions;
-using MyNet.Utilities.IO.FileExtensions;
 
 namespace MyNet.UI.Legacy.ViewModels.Export;
 

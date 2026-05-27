@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using MyNet.Utilities.Comparison;
 
 namespace MyNet.UI.ViewModels.List.Filtering.Filters;
 

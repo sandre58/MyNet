@@ -8,8 +8,6 @@ using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using MyNet.Observable;
-using MyNet.Observable.Translatables;
-using MyNet.Utilities;
 
 namespace MyNet.UI.ViewModels.List.Sorting;
 

@@ -10,13 +10,8 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MyNet.Observable.Attributes;
 using MyNet.UI.Commands;
-using MyNet.UI.Legacy.Dialogs;
-using MyNet.UI.Legacy.Dialogs.FileDialogs;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
-using MyNet.Utilities.IO.FileExtensions;
 
 namespace MyNet.UI.Legacy.ViewModels.Export;
 

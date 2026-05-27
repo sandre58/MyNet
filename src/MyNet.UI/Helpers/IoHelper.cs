@@ -6,11 +6,11 @@
 
 using System.Globalization;
 using System.IO;
+using MyNet.Primitives;
+using MyNet.Primitives.Helpers;
 using MyNet.UI.Notifications;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Resources;
-using MyNet.Utilities;
-using MyNet.Utilities.IO;
 
 namespace MyNet.UI.Helpers;
 

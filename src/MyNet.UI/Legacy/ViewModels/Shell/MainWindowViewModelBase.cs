@@ -1,28 +1,17 @@
 // -----------------------------------------------------------------------
-// <copyright file="MainWindowViewModelBase.cs" company="Stéphane ANDRE">
-// Copyright (c) Stéphane ANDRE. All rights reserved.
+// <copyright file="MainWindowViewModelBase.cs" company="Stï¿½phane ANDRE">
+// Copyright (c) Stï¿½phane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
-using DynamicData.Binding;
-using MyNet.Observable;
-using MyNet.Observable.Globalization;
 using MyNet.UI.Commands;
 using MyNet.UI.Helpers;
-using MyNet.UI.Legacy.Dialogs;
-using MyNet.UI.Legacy.Loading;
-using MyNet.UI.Legacy.Loading.Models;
-using MyNet.UI.Legacy.Notifications;
 using MyNet.UI.Messages;
 using MyNet.UI.Services;
 using MyNet.UI.Theming;
-using MyNet.Utilities;
-using MyNet.Utilities.Localization;
-using MyNet.Messaging;
 using PropertyChanged;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
