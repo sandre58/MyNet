@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using MyNet.Globalization.Culture;
 using MyNet.UI.Commands;
 using MyNet.UI.ViewModels.List;
 
@@ -41,9 +42,13 @@ public class ListDialogViewModel<T, TList> : DialogViewModel<IReadOnlyCollection
     /// </summary>
     /// <param name="list">The list view model containing the items to be displayed in the dialog.</param>
     /// <param name="commandFactory">An optional command factory to create commands.</param>
+    /// <param name="cultureService">Optional culture service used to manage culture changes.</param>
     /// <exception cref="ArgumentNullException">Thrown if the list parameter is null.</exception>
-    public ListDialogViewModel(TList list, ICommandFactory? commandFactory = null)
-        : base(commandFactory)
+    public ListDialogViewModel(
+        TList list,
+        ICommandFactory? commandFactory = null,
+        ICultureService? cultureService = null)
+        : base(commandFactory, cultureService)
     {
         ArgumentNullException.ThrowIfNull(list);
         var commands = commandFactory ?? RelayCommandFactory.Default;

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MyNet.Globalization.Culture;
 using MyNet.UI.Commands;
 using MyNet.UI.ViewModels.Workspace;
 
@@ -16,7 +17,12 @@ namespace MyNet.UI.ViewModels.Crud;
 /// Provides a reusable base implementation for item view models.
 /// </summary>
 /// <typeparam name="T">The item type.</typeparam>
-public abstract class ItemViewModel<T>(ICommandFactory? commandFactory = null) : WorkspaceViewModel(commandFactory), IItemViewModel<T>
+/// <param name="commandFactory">Optional command factory used to create commands.</param>
+/// <param name="cultureService">Optional culture service used to manage culture changes.</param>
+public abstract class ItemViewModel<T>(
+    ICommandFactory? commandFactory = null,
+    ICultureService? cultureService = null)
+    : WorkspaceViewModel(commandFactory, cultureService), IItemViewModel<T>
 {
     /// <summary>
     /// Gets or sets the current item.

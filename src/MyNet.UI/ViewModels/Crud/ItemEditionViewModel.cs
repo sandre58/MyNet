@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FluentValidation;
+using MyNet.Globalization.Culture;
 using MyNet.Observable;
 using MyNet.Observable.Validation.Validators;
 using MyNet.UI.Commands;
@@ -27,8 +28,12 @@ public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionVi
     /// </summary>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
     /// <param name="validator">Optional validator used to validate the item edition view model.</param>
-    protected ItemEditionViewModel(ICommandFactory? commandFactory = null, IValidator<ItemEditionViewModel<T>>? validator = null)
-        : base(commandFactory)
+    /// <param name="cultureService">Optional culture service used to manage culture changes.</param>
+    protected ItemEditionViewModel(
+        ICommandFactory? commandFactory = null,
+        IValidator<ItemEditionViewModel<T>>? validator = null,
+        ICultureService? cultureService = null)
+        : base(commandFactory, cultureService)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 

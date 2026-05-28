@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MyNet.Globalization.Culture;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.ContentDialogs;
@@ -29,8 +30,11 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
     /// Initializes a new instance of the <see cref="DialogViewModel"/> class.
     /// </summary>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
-    protected DialogViewModel(ICommandFactory? commandFactory = null)
-        : base(commandFactory)
+    /// <param name="cultureService">Optional culture service used to manage culture changes.</param>
+    protected DialogViewModel(
+        ICommandFactory? commandFactory = null,
+        ICultureService? cultureService = null)
+        : base(commandFactory, cultureService)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
         CloseCommand = commands.Create<bool?>(close => RequestClose(close == true), CanClose);
@@ -68,7 +72,12 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
 /// time <see cref="OnOpenedAsync"/> is called, so the instance may be reused.
 /// </summary>
 /// <typeparam name="TResult">The type of the dialog result.</typeparam>
-public abstract class DialogViewModel<TResult>(ICommandFactory? commandFactory = null) : DialogViewModel(commandFactory), IDialog<TResult>
+/// <param name="commandFactory">Optional command factory used to create commands.</param>
+/// <param name="cultureService">Optional culture service used to manage culture changes.</param>
+public abstract class DialogViewModel<TResult>(
+    ICommandFactory? commandFactory = null,
+    ICultureService? cultureService = null)
+    : DialogViewModel(commandFactory, cultureService), IDialog<TResult>
 {
     private TaskCompletionSource<DialogResult<TResult>> _tcs = new();
 

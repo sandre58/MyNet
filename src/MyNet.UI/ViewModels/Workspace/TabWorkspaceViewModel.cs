@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using MyNet.Globalization.Culture;
 using MyNet.UI.Commands;
 
 namespace MyNet.UI.ViewModels.Workspace;
@@ -24,8 +25,11 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     /// Initializes a new instance of the <see cref="TabWorkspaceViewModel"/> class.
     /// </summary>
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
-    protected TabWorkspaceViewModel(ICommandFactory? commandFactory = null)
-        : base(commandFactory)
+    /// <param name="cultureService">Optional culture service used to manage culture changes.</param>
+    protected TabWorkspaceViewModel(
+        ICommandFactory? commandFactory = null,
+        ICultureService? cultureService = null)
+        : base(commandFactory, cultureService)
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 
