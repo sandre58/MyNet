@@ -119,6 +119,38 @@ public abstract class CollectionEditionViewModel<TRow> : ViewModelBase, IEdition
     {
     }
 
+    /// <summary>
+    /// Adds the specified item to <see cref="Items"/>.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
+    /// <returns><see langword="true"/> when the item was added; otherwise <see langword="false"/>.</returns>
+    protected bool AddItem(TRow? item)
+    {
+        if (item is null)
+            return false;
+
+        Items.Add(item);
+        return true;
+    }
+
+    /// <summary>
+    /// Removes the specified item from <see cref="Items"/> when allowed.
+    /// </summary>
+    /// <param name="item">The item to remove.</param>
+    /// <returns><see langword="true"/> when the item was removed; otherwise <see langword="false"/>.</returns>
+    protected bool RemoveItem(TRow? item)
+    {
+        if (!CanRemove(item) || item is null)
+            return false;
+
+        var removed = Items.Remove(item);
+
+        if (removed)
+            EnsureEditableRow();
+
+        return removed;
+    }
+
     private void Add(TRow? item)
     {
         if (!CanAdd(item))
@@ -129,11 +161,7 @@ public abstract class CollectionEditionViewModel<TRow> : ViewModelBase, IEdition
 
     private void Remove(TRow? item)
     {
-        if (!CanRemove(item) || item is null)
-            return;
-
-        _ = Items.Remove(item);
-        EnsureEditableRow();
+        _ = RemoveItem(item);
     }
 
     private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
