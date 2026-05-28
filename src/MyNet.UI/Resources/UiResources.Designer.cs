@@ -736,6 +736,15 @@ namespace MyNet.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aucun élément à importer..
+        /// </summary>
+        public static string ImportNoItemsError {
+            get {
+                return ResourceManager.GetString("ImportNoItemsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export : # élément.
         /// </summary>
         public static string ExportXItems {

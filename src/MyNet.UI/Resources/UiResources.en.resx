@@ -784,6 +784,9 @@ Please select only one item.</value>
   <data name="ExportNoItemsError" xml:space="preserve">
     <value>Players list to exported is empty.</value>
   </data>
+  <data name="ImportNoItemsError" xml:space="preserve">
+    <value>No item to import.</value>
+  </data>
   <data name="SaveConfiguration" xml:space="preserve">
     <value>Save configuration</value>
   </data>
