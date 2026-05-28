@@ -12,6 +12,8 @@ namespace MyNet.UI.Legacy.ViewModels.Shell;
 
 public class DisplayViewModel : NavigableWorkspaceViewModel
 {
+    private readonly IThemeService _themeService;
+
     protected override string CreateTitle() => UiResources.Display;
 
     public ObservableCollection<IThemeBase> AvailableBases { get; } = [];
@@ -34,14 +36,12 @@ public class DisplayViewModel : NavigableWorkspaceViewModel
 
     public bool EnableContrast { get; set; }
 
-    public DisplayViewModel()
+    public DisplayViewModel(IThemeService themeService, IThemeBaseRegistry themeBaseRegistry)
     {
-        AvailableBases.AddRange(ThemeManager.AvailableBases ?? []);
-
-        if (ThemeManager.CurrentTheme is not null)
-            UpdateFromTheme(ThemeManager.CurrentTheme);
-
-        ThemeManager.ThemeChanged += ThemeService_ThemeChanged;
+        _themeService = themeService;
+        AvailableBases.AddRange(themeBaseRegistry.AvailableBases);
+        UpdateFromTheme(_themeService.CurrentTheme);
+        _themeService.ThemeChanged += ThemeService_ThemeChanged;
     }
 
     private void UpdateFromTheme(Theme theme)
@@ -55,28 +55,34 @@ public class DisplayViewModel : NavigableWorkspaceViewModel
 
     private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => UpdateFromTheme(e.CurrentTheme);
 
-    protected void OnThemeBaseChanged() => (ThemeBase is not null && ThemeBase != ThemeManager.CurrentTheme?.Base).IfTrue(() => ThemeManager.ApplyBase(ThemeBase!));
+    protected void OnThemeBaseChanged()
+        => (ThemeBase is not null && ThemeBase != _themeService.CurrentTheme.Base).IfTrue(() => _themeService.ApplyBaseTheme(ThemeBase!));
 
     protected void OnPrimaryColorChanged()
-        => (!string.IsNullOrEmpty(PrimaryColor) && PrimaryColor != ThemeManager.CurrentTheme?.PrimaryColor).IfTrue(() => ThemeManager.ApplyPrimaryColor(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor));
+        => (!string.IsNullOrEmpty(PrimaryColor) && PrimaryColor != _themeService.CurrentTheme.PrimaryColor)
+            .IfTrue(() => _themeService.ApplyPrimary(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor));
 
     protected void OnAccentColorChanged()
-        => (!string.IsNullOrEmpty(PrimaryColor) && AccentColor != ThemeManager.CurrentTheme?.AccentColor).IfTrue(() => ThemeManager.ApplyAccentColor(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor));
+        => (!string.IsNullOrEmpty(AccentColor) && AccentColor != _themeService.CurrentTheme.AccentColor)
+            .IfTrue(() => _themeService.ApplyAccent(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor));
 
     protected void OnPrimaryForegroundColorChanged()
-        => (!string.IsNullOrEmpty(PrimaryForegroundColor) && PrimaryForegroundColor != ThemeManager.CurrentTheme?.PrimaryForegroundColor).IfTrue(() => ThemeManager.ApplyPrimaryColor(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor));
+        => (!string.IsNullOrEmpty(PrimaryForegroundColor) && PrimaryForegroundColor != _themeService.CurrentTheme.PrimaryForegroundColor)
+            .IfTrue(() => _themeService.ApplyPrimary(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor));
 
     protected void OnAccentForegroundColorChanged()
-        => (!string.IsNullOrEmpty(AccentForegroundColor) && AccentForegroundColor != ThemeManager.CurrentTheme?.AccentForegroundColor).IfTrue(() => ThemeManager.ApplyAccentColor(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor));
+        => (!string.IsNullOrEmpty(AccentForegroundColor) && AccentForegroundColor != _themeService.CurrentTheme.AccentForegroundColor)
+            .IfTrue(() => _themeService.ApplyAccent(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor));
 
-    protected void OnAutoPrimaryForegroundColorChanged() => ThemeManager.ApplyPrimaryColor(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor);
+    protected void OnAutoPrimaryForegroundColorChanged()
+        => _themeService.ApplyPrimary(PrimaryColor!, AutoPrimaryForegroundColor ? null : PrimaryForegroundColor);
 
-    protected void OnAutoAccentForegroundColorChanged() => ThemeManager.ApplyAccentColor(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor);
+    protected void OnAutoAccentForegroundColorChanged()
+        => _themeService.ApplyAccent(AccentColor!, AutoAccentForegroundColor ? null : AccentForegroundColor);
 
     protected override void Cleanup()
     {
+        _themeService.ThemeChanged -= ThemeService_ThemeChanged;
         base.Cleanup();
-
-        ThemeManager.ThemeChanged -= ThemeService_ThemeChanged;
     }
 }

@@ -18,6 +18,13 @@
             <Compile Remove="Services\Handlers\**\*.cs" />
             <Compile Remove="Services\Providers\**\*.cs" />
             <Compile Remove="Layout\ColumnLayoutCollection.cs" />
+            <Compile Remove="Messages\FileExportedMessage.cs" />
+            <Compile Remove="Messages\RecentFilesChangedMessage.cs" />
+            <Compile Remove="Messages\UpdateFileMenuContentVisibilityRequestedMessage.cs" />
+            <Compile Remove="Messages\UpdateFileMenuVisibilityRequestedMessage.cs" />
+            <Compile Remove="Messages\UpdateNotificationsVisibilityRequestedMessage.cs" />
+            <Compile Remove="Layout\**" />
+            <Compile Remove="Services\**" />
         </ItemGroup>
 
     <ItemGroup>
@@ -70,5 +77,12 @@
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>UiResources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Remove="Layout\**" />
+        <EmbeddedResource Remove="Services\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Layout\**" />
+      <None Remove="Services\**" />
     </ItemGroup>
 </Project>

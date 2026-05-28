@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Globalization;
 using System.Reflection;
 using MyNet.Primitives;
@@ -13,14 +14,15 @@ namespace MyNet.UI.Helpers;
 
 public static class ApplicationHelper
 {
+    private static readonly Lazy<Assembly?> EntryAssembly = new(static () => Assembly.GetEntryAssembly());
+
     /// <summary>
     /// Gets the product name of the application from the assembly's product attribute. Returns an empty string if not found.
     /// </summary>
     /// <returns>The product name of the application.</returns>
     public static string GetProductName()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        var productAttr = assembly?.GetCustomAttribute<AssemblyProductAttribute>();
+        var productAttr = EntryAssembly.Value?.GetCustomAttribute<AssemblyProductAttribute>();
         return productAttr?.Product ?? string.Empty;
     }
 
@@ -29,10 +31,7 @@ public static class ApplicationHelper
     /// </summary>
     /// <returns>The version of the application.</returns>
     public static string GetVersion()
-    {
-        var assembly = Assembly.GetEntryAssembly();
-        return UiResources.VersionAbbrX.FormatWith(CultureInfo.CurrentCulture, assembly?.GetName().Version?.ToString() ?? string.Empty);
-    }
+        => UiResources.VersionAbbrX.FormatWith(CultureInfo.CurrentCulture, EntryAssembly.Value?.GetName().Version?.ToString() ?? string.Empty);
 
     /// <summary>
     /// Gets the copyright information of the application from the assembly's copyright attribute. Returns an empty string if not found.
@@ -40,8 +39,7 @@ public static class ApplicationHelper
     /// <returns>The copyright information of the application.</returns>
     public static string GetCopyright()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        var attr = assembly?.GetCustomAttribute<AssemblyCopyrightAttribute>();
+        var attr = EntryAssembly.Value?.GetCustomAttribute<AssemblyCopyrightAttribute>();
         return attr?.Copyright ?? string.Empty;
     }
 
@@ -51,8 +49,7 @@ public static class ApplicationHelper
     /// <returns>The company information of the application.</returns>
     public static string GetCompany()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        var attr = assembly?.GetCustomAttribute<AssemblyCompanyAttribute>();
+        var attr = EntryAssembly.Value?.GetCustomAttribute<AssemblyCompanyAttribute>();
         return attr?.Company ?? string.Empty;
     }
 
@@ -62,8 +59,7 @@ public static class ApplicationHelper
     /// <returns>The description of the application.</returns>
     public static string GetDescription()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        var attr = assembly?.GetCustomAttribute<AssemblyDescriptionAttribute>();
+        var attr = EntryAssembly.Value?.GetCustomAttribute<AssemblyDescriptionAttribute>();
         return attr?.Description ?? string.Empty;
     }
 }

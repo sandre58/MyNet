@@ -12,7 +12,9 @@ using MyNet.UI.Threading;
 using MyNet.UI.Toasting.Filters;
 using MyNet.UI.Toasting.Settings;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Toasting;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Extension methods for registering toast services.
@@ -32,7 +34,7 @@ public static class ServiceCollectionExtensions
         var options = new ToastManagerOptions();
         configureOptions?.Invoke(options);
 
-        services.TryAddSingleton<ISchedulerProvider, DefaultSchedulerProvider>();
+        services.AddSchedulerProvider();
         services.TryAddSingleton<INotificationService>(_ => new NotificationService([]));
         services.TryAddSingleton<IToastFilter, AllToastsFilter>();
         services.TryAddSingleton<IToastFactory, DefaultToastFactory>();

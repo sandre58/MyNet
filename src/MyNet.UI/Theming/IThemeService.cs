@@ -45,10 +45,10 @@ public interface IThemeService
     void ApplyAccent(string color, string? foreground = null);
 
     /// <summary>
-    /// Updates the current theme by applying the specified update action to it.
+    /// Updates the current theme by transforming it and applying the result.
     /// </summary>
-    /// <param name="update">The update action to apply.</param>
-    void UpdateTheme(Action<Theme> update);
+    /// <param name="update">Transforms the current theme into the theme to apply.</param>
+    void UpdateTheme(Func<Theme, Theme> update);
 
     /// <summary>
     /// Adds a base theme extension to the service.

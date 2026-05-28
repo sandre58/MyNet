@@ -47,8 +47,13 @@ NotificationService.Show("Hello, user!");
 // Show a MessageBox
 MessageBoxService.Show("Are you sure?", "Confirmation");
 
-// Change theme
-ThemeService.SetTheme("Dark");
+// Theming (register implementations in your WPF/Avalonia host, then):
+services.AddSingleton<IThemeBaseRegistry, ThemeVariantsRegistry>();
+services.AddSingleton<IThemeService, ThemeService>();
+// After BuildServiceProvider():
+serviceProvider.UseThemeManager();
+
+themeService.ApplyBaseTheme(themeBaseRegistry.Dark);
 ```
 
 ## License

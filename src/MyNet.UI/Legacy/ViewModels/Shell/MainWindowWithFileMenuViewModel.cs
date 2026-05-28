@@ -6,6 +6,7 @@
 
 using MyNet.UI.Loading;
 using MyNet.UI.Services;
+using MyNet.UI.Theming;
 
 namespace MyNet.UI.Legacy.ViewModels.Shell;
 
@@ -14,7 +15,10 @@ public class MainWindowWithFileMenuViewModel(
     INotificationsManager notificationsManager,
     IAppCommandsService appCommandsService,
     IBusyService applicationBusy,
-    IObservableGlobalization globalization) : MainWindowViewModelBase(notificationsManager, appCommandsService, applicationBusy, globalization)
+    IObservableGlobalization globalization,
+    IThemeService themeService,
+    IThemeBaseRegistry themeBaseRegistry)
+    : MainWindowViewModelBase(notificationsManager, appCommandsService, applicationBusy, globalization, themeService, themeBaseRegistry)
 {
     public FileMenuViewModelBase FileMenuViewModel { get; } = fileMenuViewModel;
 

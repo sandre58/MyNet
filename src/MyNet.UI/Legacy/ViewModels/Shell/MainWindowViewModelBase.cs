@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="MainWindowViewModelBase.cs" company="St�phane ANDRE">
-// Copyright (c) St�phane ANDRE. All rights reserved.
+// <copyright file="MainWindowViewModelBase.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -20,6 +20,9 @@ namespace MyNet.UI.Legacy.ViewModels.Shell;
 
 public class MainWindowViewModelBase : LocalizableObject
 {
+    private readonly IThemeService _themeService;
+    private readonly IThemeBaseRegistry _themeBaseRegistry;
+
     protected IObservableGlobalization Globalization { get; }
 
     public bool IsDebug { get; }
@@ -58,12 +61,16 @@ public class MainWindowViewModelBase : LocalizableObject
         INotificationsManager notificationsManager,
         IAppCommandsService appCommandsService,
         IBusyService applicationBusy,
-        IObservableGlobalization globalization)
+        IObservableGlobalization globalization,
+        IThemeService themeService,
+        IThemeBaseRegistry themeBaseRegistry)
     {
 #if DEBUG
         IsDebug = true;
 #endif
 
+        _themeService = themeService;
+        _themeBaseRegistry = themeBaseRegistry;
         Globalization = globalization;
         NotificationsViewModel = new(notificationsManager);
         ApplicationBusy = applicationBusy;
@@ -100,11 +107,11 @@ public class MainWindowViewModelBase : LocalizableObject
         using (PropertyChangedSuspender.Suspend())
         {
             Cultures.AddRange(Globalization.SupportedCultures);
-            IsDark = ThemeManager.CurrentTheme?.Base?.IsDark ?? false;
+            IsDark = _themeService.CurrentTheme.Base.IsDark;
             UpdateSelectedCulture();
         }
 
-        ThemeManager.ThemeChanged += ThemeService_ThemeChanged;
+        _themeService.ThemeChanged += ThemeService_ThemeChanged;
     }
 
     [SuppressPropertyChangedWarnings]
@@ -157,9 +164,10 @@ public class MainWindowViewModelBase : LocalizableObject
 
     #region Theme management
 
-    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base?.IsDark ?? false;
+    private void ThemeService_ThemeChanged(object? sender, ThemeChangedEventArgs e) => IsDark = e.CurrentTheme.Base.IsDark;
 
-    protected void OnIsDarkChanged() => ThemeManager.ApplyBase(IsDark ? ThemeManager.Dark! : ThemeManager.Light!);
+    protected void OnIsDarkChanged()
+        => _themeService.ApplyBaseTheme(IsDark ? _themeBaseRegistry.Dark : _themeBaseRegistry.Light);
 
     #endregion
 
@@ -167,7 +175,7 @@ public class MainWindowViewModelBase : LocalizableObject
     {
         Messenger.Default?.Unregister(this);
         NotificationsViewModel.Dispose();
-        ThemeManager.ThemeChanged -= ThemeService_ThemeChanged;
+        _themeService.ThemeChanged -= ThemeService_ThemeChanged;
         base.Cleanup();
     }
 }

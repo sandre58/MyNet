@@ -9,16 +9,13 @@ using System;
 namespace MyNet.UI.Theming;
 
 /// <summary>
-/// Provides data for the <see cref="ThemeManager.ThemeChanged"/> event.
+/// Provides data for the <see cref="IThemeService.ThemeChanged"/> event.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="ThemeChangedEventArgs"/> class.
-/// </remarks>
-/// <param name="theme">The current theme.</param>
-public class ThemeChangedEventArgs(Theme theme) : EventArgs
+/// <param name="currentTheme">The current theme after the change.</param>
+public sealed class ThemeChangedEventArgs(Theme currentTheme) : EventArgs
 {
     /// <summary>
     /// Gets the current theme after the change.
     /// </summary>
-    public Theme CurrentTheme { get; } = theme;
+    public Theme CurrentTheme { get; } = currentTheme;
 }

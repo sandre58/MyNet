@@ -33,7 +33,7 @@ public static class ServiceCollectionExtensions
         var processors = new List<INotificationProcessor>();
         configureProcessors?.Invoke(processors);
 
-        services.TryAddSingleton<ISchedulerProvider, DefaultSchedulerProvider>();
+        services.AddSchedulerProvider();
         services.TryAddSingleton<INotificationService>(_ => new NotificationService(processors));
         services.TryAddSingleton<INotificationsManager, NotificationsManager>();
 
