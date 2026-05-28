@@ -6,7 +6,9 @@
 
 using System;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Provides data for the CloseRequested event, including whether the close request should be forced.

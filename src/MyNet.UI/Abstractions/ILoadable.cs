@@ -7,7 +7,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Defines the contract for a loadable view model, which can be loaded, refreshed, and reset asynchronously. The load state is represented by the LoadState enum, which indicates whether the view model is not loaded, loading, loaded, or failed to load.

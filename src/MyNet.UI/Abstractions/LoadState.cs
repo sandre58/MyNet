@@ -4,7 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable IDE0130
 namespace MyNet.UI;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Defines the contract for an object that can be loaded asynchronously, refreshed, and reset, with a state indicating its loading status.

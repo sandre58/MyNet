@@ -25,6 +25,7 @@
             <Compile Remove="Messages\UpdateNotificationsVisibilityRequestedMessage.cs" />
             <Compile Remove="Layout\**" />
             <Compile Remove="Services\**" />
+            <Compile Remove="Messages\VisibilityAction.cs" />
         </ItemGroup>
 
     <ItemGroup>

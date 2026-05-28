@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace MyNet.UI;
+namespace MyNet.UI.Messages;
 
 // Summary:
 //     Specifies the state of the progress indicator in the Windows taskbar.

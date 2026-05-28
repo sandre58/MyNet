@@ -7,7 +7,9 @@
 using System;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Defines the contract for an object that can be closed, including close event and logic.
