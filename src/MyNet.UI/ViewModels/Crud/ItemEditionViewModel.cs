@@ -21,7 +21,7 @@ namespace MyNet.UI.ViewModels.Crud;
 /// Provides a reusable base implementation for editable item view models.
 /// </summary>
 /// <typeparam name="T">The edited item type.</typeparam>
-public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionViewModel<T>
+public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionViewModel<T>, IEditionStateViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemEditionViewModel{T}"/> class.

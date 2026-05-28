@@ -32,7 +32,7 @@ namespace MyNet.UI.ViewModels.Crud;
 /// Provides a reusable base implementation for create/edit dialog view models.
 /// It encapsulates save, save-and-close, cancel, validation and close-confirmation workflows.
 /// </summary>
-public abstract class EditionViewModel : DialogViewModel<bool>
+public abstract class EditionViewModel : DialogViewModel<bool>, IEditionStateViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly INotificationPublisher _notificationPublisher;
@@ -52,6 +52,9 @@ public abstract class EditionViewModel : DialogViewModel<bool>
     /// Gets the command that cancels edition and closes the dialog.
     /// </summary>
     public ICommand CancelCommand { get; }
+
+    /// <inheritdoc />
+    public bool IsDirty => this.IsModified();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EditionViewModel"/> class.

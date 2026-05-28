@@ -13,7 +13,6 @@
     </PropertyGroup>
 
         <ItemGroup Condition="'$(ExcludeLegacy)' == 'true'">
-            <Compile Remove="Legacy\**\*.cs" />
             <Compile Remove="Services\RecentFilesManager.cs" />
             <Compile Remove="Services\Handlers\**\*.cs" />
             <Compile Remove="Services\Providers\**\*.cs" />
@@ -26,6 +25,12 @@
             <Compile Remove="Layout\**" />
             <Compile Remove="Services\**" />
             <Compile Remove="Messages\VisibilityAction.cs" />
+            <Compile Remove="Legacy\ViewModels\Display\**" />
+            <Compile Remove="Legacy\ViewModels\Export\**" />
+            <Compile Remove="Legacy\ViewModels\FileHistory\**" />
+            <Compile Remove="Legacy\ViewModels\Import\**" />
+            <Compile Remove="Legacy\ViewModels\Rules\**" />
+            <Compile Remove="Legacy\ViewModels\Shell\**" />
         </ItemGroup>
 
     <ItemGroup>
@@ -80,10 +85,26 @@
         </EmbeddedResource>
         <EmbeddedResource Remove="Layout\**" />
         <EmbeddedResource Remove="Services\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\Display\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\Export\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\FileHistory\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\Import\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\Rules\**" />
+        <EmbeddedResource Remove="Legacy\ViewModels\Shell\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Layout\**" />
       <None Remove="Services\**" />
+      <None Remove="Legacy\ViewModels\Display\**" />
+      <None Remove="Legacy\ViewModels\Export\**" />
+      <None Remove="Legacy\ViewModels\FileHistory\**" />
+      <None Remove="Legacy\ViewModels\Import\**" />
+      <None Remove="Legacy\ViewModels\Rules\**" />
+      <None Remove="Legacy\ViewModels\Shell\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Legacy\ViewModels\" />
     </ItemGroup>
 </Project>
