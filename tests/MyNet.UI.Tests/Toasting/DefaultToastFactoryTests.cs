@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="DefaultToastFactoryTests.cs" company="Stephane ANDRE">
-// Copyright (c) Stephane ANDRE. All rights reserved.
+// <copyright file="DefaultToastFactoryTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 

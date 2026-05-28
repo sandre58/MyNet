@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using MyNet.UI.Commands;
-using MyNet.UI.Loading;
 
 namespace MyNet.UI.ViewModels.Workspace;
 

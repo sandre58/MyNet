@@ -45,7 +45,7 @@ internal static class NavigationParameterConversions
                 _ when targetType.IsEnum => ConvertToEnum(rawValue, targetType),
                 _ when targetType == typeof(Guid) && rawValue is string guidText => Guid.Parse(guidText),
                 _ when rawValue is string text => Convert.ChangeType(text, targetType, CultureInfo.InvariantCulture),
-                _ => Convert.ChangeType(rawValue, targetType, CultureInfo.InvariantCulture),
+                _ => Convert.ChangeType(rawValue, targetType, CultureInfo.InvariantCulture)
             };
 
             value = (T)converted;
@@ -71,6 +71,6 @@ internal static class NavigationParameterConversions
     private static object ConvertToEnum(object rawValue, Type enumType) => rawValue switch
     {
         string text => Enum.Parse(enumType, text, ignoreCase: true),
-        _ => Enum.ToObject(enumType, Convert.ChangeType(rawValue, Enum.GetUnderlyingType(enumType), CultureInfo.InvariantCulture)!),
+        _ => Enum.ToObject(enumType, Convert.ChangeType(rawValue, Enum.GetUnderlyingType(enumType), CultureInfo.InvariantCulture))
     };
 }

@@ -27,5 +27,5 @@ public enum SmtpSecurityMode
     StartTlsWhenAvailable = 3,
 
     /// <summary>Implicit TLS from the first byte (typical for port 465).</summary>
-    SslOnConnect = 4,
+    SslOnConnect = 4
 }

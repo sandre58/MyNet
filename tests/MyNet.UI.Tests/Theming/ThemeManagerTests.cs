@@ -13,7 +13,7 @@ using Xunit;
 
 namespace MyNet.UI.Tests.Theming;
 
-public class ThemeManagerTests : IDisposable
+public sealed class ThemeManagerTests : IDisposable
 {
     public ThemeManagerTests() => ThemeManager.ResetForTesting();
 
@@ -96,23 +96,21 @@ public class ThemeManagerTests : IDisposable
 
     private sealed class FakeThemeService : IThemeService
     {
-        private Theme _current = new(new FakeThemeBase("Light", false, false), "#000000", "#FFFFFF");
-
-        public Theme CurrentTheme => _current;
+        public Theme CurrentTheme { get; private set; } = new(new FakeThemeBase("Light", false, false), "#000000", "#FFFFFF");
 
         public event EventHandler<ThemeChangedEventArgs>? ThemeChanged;
 
-        public void ApplyTheme(Theme theme) => _current = theme;
+        public void ApplyTheme(Theme theme) => CurrentTheme = theme;
 
-        public void ApplyBaseTheme(IThemeBase baseTheme) => _current = _current with { Base = baseTheme };
+        public void ApplyBaseTheme(IThemeBase baseTheme) => CurrentTheme = CurrentTheme with { Base = baseTheme };
 
         public void ApplyPrimary(string color, string? foreground = null)
-            => _current = _current with { PrimaryColor = color, PrimaryForegroundColor = foreground };
+            => CurrentTheme = CurrentTheme with { PrimaryColor = color, PrimaryForegroundColor = foreground };
 
         public void ApplyAccent(string color, string? foreground = null)
-            => _current = _current with { AccentColor = color, AccentForegroundColor = foreground };
+            => CurrentTheme = CurrentTheme with { AccentColor = color, AccentForegroundColor = foreground };
 
-        public void UpdateTheme(Func<Theme, Theme> update) => _current = update(_current);
+        public void UpdateTheme(Func<Theme, Theme> update) => CurrentTheme = update(CurrentTheme);
 
         public IThemeService AddBaseExtension(IThemeExtension extension) => this;
 
@@ -120,6 +118,6 @@ public class ThemeManagerTests : IDisposable
 
         public IThemeService AddAccentExtension(IThemeExtension extension) => this;
 
-        public void RaiseThemeChanged() => ThemeChanged?.Invoke(this, new(_current));
+        public void RaiseThemeChanged() => ThemeChanged?.Invoke(this, new(CurrentTheme));
     }
 }

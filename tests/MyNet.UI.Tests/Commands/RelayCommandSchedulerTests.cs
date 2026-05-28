@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
+using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Commands;
 using MyNet.UI.Threading;
@@ -86,7 +87,7 @@ public sealed class RelayCommandSchedulerTests
     private sealed class DeferredScheduler : IScheduler
     {
         private readonly Queue<Action> _pending = new();
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
 
         public DateTimeOffset Now => DateTimeOffset.UtcNow;
 

@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using MyNet.UI.Loading.Models;
 

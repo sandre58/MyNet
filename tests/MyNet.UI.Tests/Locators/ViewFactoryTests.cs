@@ -47,7 +47,7 @@ public class ViewFactoryTests
         var act = () => factory.CreateView(typeof(PersonViewModel));
 
         act.Should().Throw<ViewResolutionException>()
-            .Which.ViewModelType.Should().Be(typeof(PersonViewModel));
+            .Which.ViewModelType.Should().Be<PersonViewModel>();
     }
 
     [Fact]
@@ -71,10 +71,10 @@ public class ViewFactoryTests
 
         var factory = BuildFactory(resolver);
 
-        var act = () => factory.CreateView<PersonViewModel, ItemView>();
+        var act = factory.CreateView<PersonViewModel, ItemView>;
 
         act.Should().Throw<ViewResolutionException>()
-            .Which.ViewModelType.Should().Be(typeof(PersonViewModel));
+            .Which.ViewModelType.Should().Be<PersonViewModel>();
     }
 
     [Fact]

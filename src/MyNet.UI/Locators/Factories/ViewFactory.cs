@@ -33,8 +33,6 @@ public sealed class ViewFactory(ITypeResolver resolver, IViewLocator viewLocator
         where TView : class
     {
         var view = CreateView(typeof(TViewModel));
-        return view is TView typed
-            ? typed
-            : throw ViewResolutionException.ResolvedViewTypeMismatch(typeof(TViewModel), view.GetType(), typeof(TView));
+        return view as TView ?? throw ViewResolutionException.ResolvedViewTypeMismatch(typeof(TViewModel), view.GetType(), typeof(TView));
     }
 }

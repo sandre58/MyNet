@@ -34,7 +34,6 @@ public static class NotificationPublisherExtensions
         Action<INotification>? onClick = null)
     {
         var innerException = exception.InnerException ?? exception;
-        //LogManager.Error(innerException);
 
         if (showInTaskBar)
             reportTaskBar?.Invoke(new(TaskbarProgressState.Error, 1));

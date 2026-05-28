@@ -12,36 +12,29 @@ namespace MyNet.UI.Navigation;
 /// <summary>
 /// Provides data for <see cref="INavigationService.StateChanged"/>.
 /// </summary>
-public sealed class NavigationStateChangedEventArgs : EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="NavigationStateChangedEventArgs"/> class.
+/// </remarks>
+/// <param name="currentContext">The current navigation context.</param>
+/// <param name="canGoBack">Whether backward navigation is available.</param>
+/// <param name="canGoForward">Whether forward navigation is available.</param>
+public sealed class NavigationStateChangedEventArgs(
+    NavigationContext? currentContext,
+    bool canGoBack,
+    bool canGoForward) : EventArgs
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationStateChangedEventArgs"/> class.
-    /// </summary>
-    /// <param name="currentContext">The current navigation context.</param>
-    /// <param name="canGoBack">Whether backward navigation is available.</param>
-    /// <param name="canGoForward">Whether forward navigation is available.</param>
-    public NavigationStateChangedEventArgs(
-        NavigationContext? currentContext,
-        bool canGoBack,
-        bool canGoForward)
-    {
-        CurrentContext = currentContext;
-        CanGoBack = canGoBack;
-        CanGoForward = canGoForward;
-    }
-
     /// <summary>
     /// Gets the current navigation context after the state change.
     /// </summary>
-    public NavigationContext? CurrentContext { get; }
+    public NavigationContext? CurrentContext { get; } = currentContext;
 
     /// <summary>
     /// Gets a value indicating whether backward navigation is available.
     /// </summary>
-    public bool CanGoBack { get; }
+    public bool CanGoBack { get; } = canGoBack;
 
     /// <summary>
     /// Gets a value indicating whether forward navigation is available.
     /// </summary>
-    public bool CanGoForward { get; }
+    public bool CanGoForward { get; } = canGoForward;
 }

@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -196,7 +195,7 @@ public class NavigationServiceTests
         public Task OnNavigatingFromAsync(NavigationContext context, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
-    private sealed class BlockingGuard(System.Func<NavigationContext, bool> predicate) : INavigationGuard
+    private sealed class BlockingGuard(Func<NavigationContext, bool> predicate) : INavigationGuard
     {
         public Task<bool> CanNavigateAsync(NavigationContext? from, NavigationContext to, CancellationToken cancellationToken)
             => Task.FromResult(predicate(to));
@@ -210,7 +209,7 @@ public class NavigationServiceTests
 
         public CancellationToken CancellationToken { get; private set; }
 
-        public async Task<NavigationResult> InvokeAsync(NavigationContext? from, NavigationContext to, System.Func<Task<NavigationResult>> next, CancellationToken cancellationToken)
+        public async Task<NavigationResult> InvokeAsync(NavigationContext? from, NavigationContext to, Func<Task<NavigationResult>> next, CancellationToken cancellationToken)
         {
             From = from;
             To = to;

@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MyNet.UI.Commands;
-using MyNet.UI.Loading;
 
 namespace MyNet.UI.ViewModels.Crud;
 

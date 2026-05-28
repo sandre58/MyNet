@@ -254,7 +254,7 @@ public sealed class NavigationService(
     private void RaiseStateChanged()
         => StateChanged?.Invoke(
             this,
-            new NavigationStateChangedEventArgs(CurrentContext, CanGoBack, CanGoForward));
+            new(CurrentContext, CanGoBack, CanGoForward));
 
     /// <inheritdoc />
     public void Dispose() => _navigationLock.Dispose();

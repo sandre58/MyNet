@@ -236,17 +236,12 @@ public class GoogleLocationService(string apikey, bool useHttps, Func<string, XD
         return direction;
     }
 
-    private static Country? ResolveCountry(string? countryName, string? countryCode)
-    {
-        if (Country.TryFromValue(countryName.OrEmpty(), out var byName))
-            return byName;
-
-        if (string.IsNullOrEmpty(countryCode))
-            return null;
-
-        return Country.All.FirstOrDefault(c =>
-            string.Equals(c.Alpha2, countryCode, StringComparison.OrdinalIgnoreCase));
-    }
+    private static Country? ResolveCountry(string? countryName, string? countryCode) => Country.TryFromValue(countryName.OrEmpty(), out var byName)
+        ? byName
+        : string.IsNullOrEmpty(countryCode)
+            ? null
+            : Country.All.FirstOrDefault(c =>
+                string.Equals(c.Alpha2, countryCode, StringComparison.OrdinalIgnoreCase));
 
     private static double? ParseUs(string? value) => value is null ? null : double.Parse(value, new CultureInfo("en-US"));
 

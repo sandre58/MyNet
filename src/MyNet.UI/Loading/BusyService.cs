@@ -114,7 +114,7 @@ public sealed class BusyService : ObservableObject, IBusyService
 
         lock (_gate)
         {
-            _stack.Push(new BusyStackEntry(busy, linkedSource, scope));
+            _stack.Push(new(busy, linkedSource, scope));
             RaiseStateChanged();
         }
 

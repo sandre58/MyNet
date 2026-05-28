@@ -66,6 +66,6 @@ public sealed class NavigationRequestBuilder(Func<INavigationPage> pageFactory, 
         {
             null => null,
             INavigationParameters navigationParameters => navigationParameters,
-            _ => NavigationParameters.From(_parameters),
+            _ => NavigationParameters.From(_parameters)
         };
 }

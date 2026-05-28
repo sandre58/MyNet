@@ -14,7 +14,9 @@ using MyNet.UI.ViewModels.List;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Selection;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Dialogs;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Provides fluent helpers to create list-based dialogs from existing list view models or raw item sequences.

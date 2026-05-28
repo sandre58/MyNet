@@ -53,7 +53,7 @@ public class SelectionDialogViewModel<T> : ListDialogViewModel<T, ISelectableLis
 
     private void HandleListPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(ISelectableListViewModel<T>.SelectedCount) && e.PropertyName != nameof(ISelectableListViewModel<T>.SelectionMode))
+        if (e.PropertyName != nameof(ISelectableListViewModel<>.SelectedCount) && e.PropertyName != nameof(ISelectableListViewModel<>.SelectionMode))
             return;
 
         (DoubleClickCommand as IRaiseCanExecuteChanged)?.RaiseCanExecuteChanged();

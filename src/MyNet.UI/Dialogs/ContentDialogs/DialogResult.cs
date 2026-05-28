@@ -74,5 +74,5 @@ public enum DialogOutcome
     Cancelled,
 
     /// <summary>The dialog was closed without an explicit action (overlay click, Escape, forced close).</summary>
-    Dismissed,
+    Dismissed
 }

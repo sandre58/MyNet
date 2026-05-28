@@ -46,9 +46,6 @@ public class NamingConventionHelpersTests
     }
 
     [Fact]
-    public void ReplaceNamespaceSegment_ReturnsNull_WhenInputIsNull()
-    {
-        NamingConventionHelpers.ReplaceNamespaceSegment(null, "ViewModels", "Views")
-            .Should().BeNull();
-    }
+    public void ReplaceNamespaceSegment_ReturnsNull_WhenInputIsNull() => NamingConventionHelpers.ReplaceNamespaceSegment(null, "ViewModels", "Views")
+        .Should().BeNull();
 }

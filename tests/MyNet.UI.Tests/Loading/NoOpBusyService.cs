@@ -28,11 +28,11 @@ internal sealed class NoOpBusyService : IBusyService
 
     public Task RunAsync<TBusy>(Func<TBusy, CancellationToken, Task> action, CancellationToken cancellationToken = default)
         where TBusy : IBusy, new()
-        => action(new TBusy(), cancellationToken);
+        => action(new(), cancellationToken);
 
     public Task<TResult> RunAsync<TBusy, TResult>(Func<TBusy, CancellationToken, Task<TResult>> action, CancellationToken cancellationToken = default)
         where TBusy : IBusy, new()
-        => action(new TBusy(), cancellationToken);
+        => action(new(), cancellationToken);
 
     public IBusyScope Begin<TBusy>(CancellationToken cancellationToken = default)
         where TBusy : IBusy, new()

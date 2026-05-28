@@ -25,7 +25,7 @@ public sealed class NavigationParameters : INavigationParameters, IReadOnlyDicti
     /// Initializes a new instance of the <see cref="NavigationParameters"/> class.
     /// </summary>
     public NavigationParameters()
-        : this(Enumerable.Empty<KeyValuePair<string, object?>>())
+        : this([])
     {
     }
 

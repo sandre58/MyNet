@@ -14,7 +14,6 @@ using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Filters;
 using MyNet.Observable.Collections.Grouping;
 using MyNet.Observable.Collections.Sorting;
-using MyNet.UI.Loading;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Grouping;

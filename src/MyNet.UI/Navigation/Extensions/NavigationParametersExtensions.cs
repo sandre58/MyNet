@@ -27,7 +27,7 @@ public static class NavigationParametersExtensions
             NavigationParameters navigationParameters => new(navigationParameters),
             INavigationParameters typedParameters => typedParameters as NavigationParameters ?? NavigationParameters.From(typedParameters),
             IEnumerable<KeyValuePair<string, object?>> pairs => new(pairs),
-            _ => NavigationParameters.From(parameters),
+            _ => NavigationParameters.From(parameters)
         };
 
     extension(INavigationParameters? parameters)

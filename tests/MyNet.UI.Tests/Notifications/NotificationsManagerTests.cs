@@ -1,14 +1,12 @@
 // -----------------------------------------------------------------------
-// <copyright file="NotificationsManagerTests.cs" company="Stephane ANDRE">
-// Copyright (c) Stephane ANDRE. All rights reserved.
+// <copyright file="NotificationsManagerTests.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using MyNet.UI.Notifications;
 using MyNet.UI.Notifications.Models;

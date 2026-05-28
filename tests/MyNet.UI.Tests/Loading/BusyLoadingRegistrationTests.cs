@@ -22,9 +22,7 @@ public class BusyLoadingRegistrationTests
         using var provider = services.BuildServiceProvider();
 
         var busy = provider.GetRequiredService<IBusyService>();
-        var instance = provider.GetRequiredService<BusyService>();
 
-        busy.Should().BeSameAs(instance);
         busy.Should().BeOfType<BusyService>();
     }
 

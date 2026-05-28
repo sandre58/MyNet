@@ -15,15 +15,15 @@ namespace MyNet.UI.Tests.Loading;
 public class BusyServiceTests
 {
     [Fact]
-    public async Task RunAsync_SetsIsBusyDuringOperation()
+    public async Task RunAsync_SetsIsBusyDuringOperationAsync()
     {
         var service = new BusyService();
         var wasBusy = false;
 
-        await service.RunAsync<IndeterminateBusy>(async (_, _) =>
+        await service.RunAsync<IndeterminateBusy>((_, _) =>
         {
             wasBusy = service.IsBusy;
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         });
 
         wasBusy.Should().BeTrue();
@@ -31,22 +31,25 @@ public class BusyServiceTests
     }
 
     [Fact]
-    public async Task NestedScopes_KeepIsBusyUntilAllDisposed()
+    public async Task NestedScopes_KeepIsBusyUntilAllDisposedAsync()
     {
         var service = new BusyService();
 
-        await service.RunAsync<IndeterminateBusy>(async (_, _) =>
+        await service.RunAsync<IndeterminateBusy>(async (_, y) =>
         {
             service.IsBusy.Should().BeTrue();
 
-            await service.RunAsync<DeterminateBusy>(async (_, _) =>
-            {
-                service.IsBusy.Should().BeTrue();
-                service.GetCurrent<DeterminateBusy>().Should().NotBeNull();
-            });
+            await service.RunAsync<DeterminateBusy>((_, _) =>
+                {
+                    service.IsBusy.Should().BeTrue();
+                    service.GetCurrent<DeterminateBusy>().Should().NotBeNull();
+
+                    return Task.CompletedTask;
+                },
+                y).ConfigureAwait(false);
 
             service.IsBusy.Should().BeTrue();
-        });
+        }).ConfigureAwait(true);
 
         service.IsBusy.Should().BeFalse();
     }
@@ -83,7 +86,7 @@ public class BusyServiceTests
         {
             var progression = service.GetCurrent<ProgressionBusy>();
             progression.Should().NotBeNull();
-            progression!.Report(0.5, "Step 1");
+            progression.Report(0.5, "Step 1");
 
             progression.Value.Should().Be(0.5);
             progression.Title.Should().Be("Step 1");

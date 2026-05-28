@@ -33,7 +33,7 @@ public sealed class CommandInfrastructureTests
     }
 
     [Fact]
-    public async Task AsyncRelayCommand_ShouldPreventConcurrentExecution()
+    public async Task AsyncRelayCommand_ShouldPreventConcurrentExecutionAsync()
     {
         var started = 0;
         var completion = new TaskCompletionSource<object?>();

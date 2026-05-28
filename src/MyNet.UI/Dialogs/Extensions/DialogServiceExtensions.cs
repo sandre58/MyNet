@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Locators;
 
+#pragma warning disable IDE0130
 namespace MyNet.UI.Dialogs;
+#pragma warning restore IDE0130
 
 /// <summary>
 /// Extension methods that provide DI-friendly helpers around <see cref="IDialogService"/>.

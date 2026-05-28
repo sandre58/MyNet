@@ -60,7 +60,7 @@ public class Busy : ObservableObject, IBusy
     /// <summary>
     /// Gets or sets a value indicating whether cancellation can be triggered by the user.
     /// </summary>
-    public bool CanCancel { get => field; set => SetProperty(ref field, value); } = true;
+    public bool CanCancel { get; set => SetProperty(ref field, value); } = true;
 
     /// <summary>
     /// Binds a cancellation source to this busy indicator.

@@ -42,7 +42,7 @@ public sealed class SelectableListViewModelTests
     public void Dispose_Should_NotThrow()
     {
         var vm = ListViewModelFactory.CreateSelection(["A"]);
-        var act = () => vm.Dispose();
+        var act = vm.Dispose;
         act.Should().NotThrow();
     }
 }
