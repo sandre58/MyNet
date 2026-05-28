@@ -61,51 +61,91 @@ public class DialogService(
     public Task<MessageBoxResult> ShowMessageAsync(
         string message,
         string? caption = null,
-        MessageBoxResultOption button = MessageBoxResultOption.Ok,
         MessageSeverity severity = MessageSeverity.Information,
-        MessageBoxResult defaultResult = MessageBoxResult.None,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        MessageBoxResult defaultResult = MessageBoxResult.Ok,
         CancellationToken cancellationToken = default)
-        => _messageBoxService.ShowAsync(message, caption, severity, button, defaultResult, cancellationToken);
+        => _messageBoxService.ShowAsync(message, caption, severity, buttons, defaultResult, cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowSuccessAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Success, buttons);
+    public Task<MessageBoxResult> ShowSuccessAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Success, buttons, cancellationToken: cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Information, buttons);
+    public Task<MessageBoxResult> ShowInformationAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Information, buttons, cancellationToken: cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Error, buttons);
+    public Task<MessageBoxResult> ShowErrorAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Error, buttons, cancellationToken: cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Warning, buttons);
+    public Task<MessageBoxResult> ShowWarningAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Warning, buttons, cancellationToken: cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Question, MessageBoxResultOption.YesNo, MessageBoxResult.Yes);
+    public Task<MessageBoxResult> ShowQuestionAsync(
+        string message,
+        string? title = null,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(
+            message,
+            title,
+            MessageSeverity.Question,
+            MessageBoxResultOption.YesNo,
+            MessageBoxResult.Yes,
+            cancellationToken);
 
     /// <inheritdoc />
-    public Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null)
-        => _messageBoxService.ShowAsync(message, title, MessageSeverity.Question, MessageBoxResultOption.YesNoCancel, MessageBoxResult.Yes);
+    public Task<MessageBoxResult> ShowQuestionWithCancelAsync(
+        string message,
+        string? title = null,
+        CancellationToken cancellationToken = default)
+        => _messageBoxService.ShowAsync(
+            message,
+            title,
+            MessageSeverity.Question,
+            MessageBoxResultOption.YesNoCancel,
+            MessageBoxResult.Yes,
+            cancellationToken);
 
     #endregion
 
     #region File dialogs
 
     /// <inheritdoc />
-    public Task<FileDialogResult> ShowOpenFileDialogAsync(OpenFileDialogSettings? settings = null)
-        => _fileDialogService.ShowOpenFileDialogAsync(settings ?? new OpenFileDialogSettings());
+    public Task<FileDialogResult> ShowOpenFileDialogAsync(
+        OpenFileDialogSettings? settings = null,
+        CancellationToken cancellationToken = default)
+        => _fileDialogService.ShowOpenFileDialogAsync(settings ?? new OpenFileDialogSettings(), cancellationToken);
 
     /// <inheritdoc />
-    public Task<FileDialogResult> ShowSaveFileDialogAsync(SaveFileDialogSettings settings)
-        => _fileDialogService.ShowSaveFileDialogAsync(settings);
+    public Task<FileDialogResult> ShowSaveFileDialogAsync(
+        SaveFileDialogSettings settings,
+        CancellationToken cancellationToken = default)
+        => _fileDialogService.ShowSaveFileDialogAsync(settings, cancellationToken);
 
     /// <inheritdoc />
-    public Task<FileDialogResult> ShowFolderDialogAsync(OpenFolderDialogSettings settings)
-        => _fileDialogService.ShowFolderDialogAsync(settings);
+    public Task<FileDialogResult> ShowFolderDialogAsync(
+        OpenFolderDialogSettings settings,
+        CancellationToken cancellationToken = default)
+        => _fileDialogService.ShowFolderDialogAsync(settings, cancellationToken);
 
     #endregion
 }

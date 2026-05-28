@@ -6,28 +6,23 @@
 
 namespace MyNet.UI.Dialogs.MessageBox;
 
-// Summary:
-//     Specifies which message box button that a user clicks. System.Windows.MessageBoxResult
-//     is returned by the Overload:System.Windows.MessageBox.Show method.
+/// <summary>
+/// Specifies which message box button the user selected.
+/// </summary>
 public enum MessageBoxResult
 {
-    // Summary:
-    //     The message box returns no result.
+    /// <summary>No button was selected (e.g. programmatic close).</summary>
     None,
 
-    // Summary:
-    //     The result value of the message box is OK.
+    /// <summary>The user selected OK.</summary>
     Ok,
 
-    // Summary:
-    //     The result value of the message box is Cancel.
+    /// <summary>The user selected Cancel.</summary>
     Cancel,
 
-    // Summary:
-    //     The result value of the message box is Yes.
+    /// <summary>The user selected Yes.</summary>
     Yes,
 
-    // Summary:
-    //     The result value of the message box is No.
+    /// <summary>The user selected No.</summary>
     No
 }

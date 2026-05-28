@@ -51,41 +51,69 @@ public interface IDialogService
     Task<MessageBoxResult> ShowMessageAsync(
         string message,
         string? caption = null,
-        MessageBoxResultOption button = MessageBoxResultOption.Ok,
         MessageSeverity severity = MessageSeverity.Information,
-        MessageBoxResult defaultResult = MessageBoxResult.None,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        MessageBoxResult defaultResult = MessageBoxResult.Ok,
         CancellationToken cancellationToken = default);
 
     /// <summary>Displays a success message box.</summary>
-    Task<MessageBoxResult> ShowSuccessAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+    Task<MessageBoxResult> ShowSuccessAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays an information message box.</summary>
-    Task<MessageBoxResult> ShowInformationAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+    Task<MessageBoxResult> ShowInformationAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays an error message box.</summary>
-    Task<MessageBoxResult> ShowErrorAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+    Task<MessageBoxResult> ShowErrorAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays a warning message box.</summary>
-    Task<MessageBoxResult> ShowWarningAsync(string message, string? title = null, MessageBoxResultOption buttons = MessageBoxResultOption.Ok);
+    Task<MessageBoxResult> ShowWarningAsync(
+        string message,
+        string? title = null,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays a Yes/No question message box.</summary>
-    Task<MessageBoxResult> ShowQuestionAsync(string message, string? title = null);
+    Task<MessageBoxResult> ShowQuestionAsync(
+        string message,
+        string? title = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays a Yes/No/Cancel question message box.</summary>
-    Task<MessageBoxResult> ShowQuestionWithCancelAsync(string message, string? title = null);
+    Task<MessageBoxResult> ShowQuestionWithCancelAsync(
+        string message,
+        string? title = null,
+        CancellationToken cancellationToken = default);
 
     #endregion
 
     #region File dialogs
 
     /// <summary>Displays the open-file dialog. Pass <see langword="null"/> to use default settings.</summary>
-    Task<FileDialogResult> ShowOpenFileDialogAsync(OpenFileDialogSettings? settings = null);
+    Task<FileDialogResult> ShowOpenFileDialogAsync(
+        OpenFileDialogSettings? settings = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays the save-file dialog.</summary>
-    Task<FileDialogResult> ShowSaveFileDialogAsync(SaveFileDialogSettings settings);
+    Task<FileDialogResult> ShowSaveFileDialogAsync(
+        SaveFileDialogSettings settings,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Displays the folder-browser dialog.</summary>
-    Task<FileDialogResult> ShowFolderDialogAsync(OpenFolderDialogSettings settings);
+    Task<FileDialogResult> ShowFolderDialogAsync(
+        OpenFolderDialogSettings settings,
+        CancellationToken cancellationToken = default);
 
     #endregion
 }

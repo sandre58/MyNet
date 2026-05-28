@@ -9,7 +9,7 @@ namespace MyNet.UI.Dialogs.FileDialogs;
 /// <summary>
 /// Settings for configuring the OpenFolderDialog.
 /// </summary>
-public class OpenFolderDialogSettings
+public class OpenFolderDialogSettings : FileDialogSettings
 {
     /// <summary>
     /// Gets the default settings for the OpenFolderDialog.
@@ -17,22 +17,19 @@ public class OpenFolderDialogSettings
     public static OpenFolderDialogSettings Default => new();
 
     /// <summary>
-    /// Gets or sets a value indicating whether the dialog checks if the path exists.
+    /// Initializes a new instance of the <see cref="OpenFolderDialogSettings"/> class.
     /// </summary>
-    public bool CheckPathExists { get; set; } = true;
+    public OpenFolderDialogSettings()
+    {
+        CheckFileExists = false;
+    }
 
     /// <summary>
-    /// Gets or sets the folder to select or open.
+    /// Gets or sets the folder to select or open. Maps to <see cref="FileDialogSettings.InitialDirectory"/>.
     /// </summary>
-    public string Folder { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the initial directory displayed by the dialog.
-    /// </summary>
-    public string InitialDirectory { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the title of the dialog.
-    /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public string Folder
+    {
+        get => InitialDirectory;
+        set => InitialDirectory = value;
+    }
 }

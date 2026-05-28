@@ -14,7 +14,7 @@ namespace MyNet.UI.Dialogs.ContentDialogs;
 /// </summary>
 /// <param name="service">The content dialog service used to display the dialog.</param>
 /// <param name="dialog">The dialog view model to be displayed.</param>
-public class DialogBuilder(IContentDialogService service, IDialog dialog) : IDialogBuilder
+public sealed class DialogBuilder(IContentDialogService service, IDialog dialog) : IDialogBuilder
 {
     private readonly DialogOptions _options = new() { Dialog = dialog };
 
@@ -119,7 +119,6 @@ public sealed class DialogBuilder<TResult>(IContentDialogService service, IDialo
     IDialogBuilder IDialogBuilder.CloseOnOverlayClick(bool value) => CloseOnOverlayClick(value);
 
     /// <inheritdoc />
-    // Call the non-typed overload so the return type matches Task<DialogResult<bool>>.
     Task<DialogResult<bool>> IDialogBuilder.ShowAsync(CancellationToken cancellationToken)
         => service.ShowAsync((IDialog)dialog, _options, cancellationToken);
 

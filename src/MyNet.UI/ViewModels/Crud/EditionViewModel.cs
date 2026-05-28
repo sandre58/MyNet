@@ -70,14 +70,14 @@ public abstract class EditionViewModel : DialogViewModel<bool>
     }
 
     protected virtual Task<MessageBoxResult> SavingRequestAsync(CancellationToken cancellationToken = default)
-        => _dialogService.ShowQuestionWithCancelAsync(MessageResources.ItemSavingQuestion, UiResources.Edition);
+        => _dialogService.ShowQuestionWithCancelAsync(MessageResources.ItemSavingQuestion, UiResources.Edition, cancellationToken);
 
     public override async Task<bool> CanCloseAsync()
     {
         if (_closingByCommand || !this.IsModified())
             return true;
 
-        var result = await SavingRequestAsync().ConfigureAwait(false);
+        var result = await SavingRequestAsync(CancellationToken.None).ConfigureAwait(false);
 
         switch (result)
         {
@@ -110,7 +110,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>
     #region Cancel
 
     protected virtual async Task<bool> CanCancelAsync(CancellationToken cancellationToken = default)
-        => !this.IsModified() || await _dialogService.ShowQuestionAsync(MessageResources.ItemModificationCancellingQuestion, UiResources.Edition).ConfigureAwait(false) == MessageBoxResult.Yes;
+        => !this.IsModified() || await _dialogService.ShowQuestionAsync(MessageResources.ItemModificationCancellingQuestion, UiResources.Edition, cancellationToken).ConfigureAwait(false) == MessageBoxResult.Yes;
 
     protected virtual async Task CancelAsync(CancellationToken cancellationToken = default)
     {

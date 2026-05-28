@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MyNet.UI.Dialogs.ContentDialogs;
@@ -45,6 +46,8 @@ public sealed class MessageBoxService(IMessageBoxFactory factory, IContentDialog
         MessageBoxOptions options,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         var messageBox = factory.Create(options);
 
         var dialogOptions = new DialogOptions
@@ -53,11 +56,21 @@ public sealed class MessageBoxService(IMessageBoxFactory factory, IContentDialog
             IsModal = true
         };
 
-        var result = await contentDialogService.ShowAsync(messageBox, dialogOptions, cancellationToken).ConfigureAwait(false);
+        var result = await contentDialogService
+            .ShowAsync<MessageBoxResult>(messageBox, dialogOptions, cancellationToken)
+            .ConfigureAwait(false);
 
-        return result.IsSuccess ? result.Value : options.DefaultResult;
+        return MapResult(result, options.DefaultResult);
     }
 
     /// <inheritdoc />
     public IMessageBoxBuilder Create() => new MessageBoxBuilder(this);
+
+    private static MessageBoxResult MapResult(DialogResult<MessageBoxResult> result, MessageBoxResult defaultResult)
+        => result.Outcome switch
+        {
+            DialogOutcome.Success when result.Value is MessageBoxResult value => value,
+            DialogOutcome.Cancelled => MessageBoxResult.Cancel,
+            _ => defaultResult
+        };
 }

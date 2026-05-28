@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyNet.UI.Dialogs.FileDialogs;
@@ -17,29 +18,29 @@ public interface IFileDialogService
     /// Displays the OpenFileDialog.
     /// </summary>
     /// <param name="settings">The settings for the open file dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
-    Task<FileDialogResult> ShowOpenFileDialogAsync(OpenFileDialogSettings settings);
+    /// <param name="cancellationToken">A token to observe for cancellation requests.</param>
+    /// <returns>A <see cref="FileDialogResult"/> describing the user selection.</returns>
+    Task<FileDialogResult> ShowOpenFileDialogAsync(
+        OpenFileDialogSettings settings,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Displays the SaveFileDialog.
     /// </summary>
     /// <param name="settings">The settings for the save file dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
-    Task<FileDialogResult> ShowSaveFileDialogAsync(SaveFileDialogSettings settings);
+    /// <param name="cancellationToken">A token to observe for cancellation requests.</param>
+    /// <returns>A <see cref="FileDialogResult"/> describing the user selection.</returns>
+    Task<FileDialogResult> ShowSaveFileDialogAsync(
+        SaveFileDialogSettings settings,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Displays the OpenFolderDialog.
     /// </summary>
     /// <param name="settings">The settings for the folder browser dialog.</param>
-    /// <returns>
-    /// If the user clicks the OK button of the dialog that is displayed, true is returned;
-    /// otherwise false.
-    /// </returns>
-    Task<FileDialogResult> ShowFolderDialogAsync(OpenFolderDialogSettings settings);
+    /// <param name="cancellationToken">A token to observe for cancellation requests.</param>
+    /// <returns>A <see cref="FileDialogResult"/> describing the user selection.</returns>
+    Task<FileDialogResult> ShowFolderDialogAsync(
+        OpenFolderDialogSettings settings,
+        CancellationToken cancellationToken = default);
 }

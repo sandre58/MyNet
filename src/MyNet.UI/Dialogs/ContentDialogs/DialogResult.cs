@@ -25,7 +25,7 @@ public static class DialogResult
 /// Represents the result of a dialog operation, indicating whether the dialog was successful, canceled, dismissed, or returned a typed value.
 /// </summary>
 /// <typeparam name="T">The type of the value returned by the dialog.</typeparam>
-public class DialogResult<T>
+public sealed record DialogResult<T>
 {
     /// <summary>
     /// Gets the outcome of the dialog operation (Success, Canceled, or Dismissed).

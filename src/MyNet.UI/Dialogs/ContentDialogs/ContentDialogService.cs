@@ -19,56 +19,78 @@ namespace MyNet.UI.Dialogs.ContentDialogs;
 /// </summary>
 public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies) : IContentDialogService
 {
+    private readonly Lock _sync = new();
     private readonly List<IDialog> _openedDialogs = [];
+    private readonly Dictionary<IDialog, ActiveDialog> _activeDialogs = [];
 
     /// <inheritdoc />
-    public IReadOnlyList<IDialog> OpenedDialogs => _openedDialogs.AsReadOnly();
+    public IReadOnlyList<IDialog> OpenedDialogs
+    {
+        get
+        {
+            lock (_sync)
+            {
+                return _openedDialogs.ToList().AsReadOnly();
+            }
+        }
+    }
 
     /// <inheritdoc />
-    public bool HasOpenedDialogs => _openedDialogs.Count > 0;
+    public bool HasOpenedDialogs
+    {
+        get
+        {
+            lock (_sync)
+            {
+                return _openedDialogs.Count > 0;
+            }
+        }
+    }
 
     /// <inheritdoc />
     public async Task<DialogResult<bool>> ShowAsync(IDialog dialog, DialogOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var resolvedOptions = options ?? new DialogOptions { Dialog = dialog };
-        resolvedOptions.Dialog = dialog;
+        ArgumentNullException.ThrowIfNull(dialog);
+        cancellationToken.ThrowIfCancellationRequested();
 
+        var resolvedOptions = DialogOptions.Resolve(dialog, options);
         var strategy = GetStrategy(dialog, resolvedOptions);
+        BeginShow(dialog, strategy);
 
-        _openedDialogs.Add(dialog);
         await dialog.OnOpenedAsync().ConfigureAwait(false);
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await strategy.ShowAsync(dialog, resolvedOptions, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
-            _openedDialogs.Remove(dialog);
-            await dialog.OnClosedAsync().ConfigureAwait(false);
+            await CompleteLifecycleAsync(dialog).ConfigureAwait(false);
         }
     }
 
     /// <inheritdoc />
     public async Task<DialogResult<TResult>> ShowAsync<TResult>(IDialog<TResult> dialog, DialogOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var resolvedOptions = options ?? new DialogOptions { Dialog = dialog };
-        resolvedOptions.Dialog = dialog;
+        ArgumentNullException.ThrowIfNull(dialog);
+        cancellationToken.ThrowIfCancellationRequested();
 
+        var resolvedOptions = DialogOptions.Resolve(dialog, options);
         var strategy = GetStrategy(dialog, resolvedOptions);
+        BeginShow(dialog, strategy);
 
-        _openedDialogs.Add(dialog);
         await dialog.OnOpenedAsync().ConfigureAwait(false);
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             await strategy.ShowAsync(dialog, resolvedOptions, cancellationToken).ConfigureAwait(false);
             return await dialog.GetResultAsync().ConfigureAwait(false);
         }
         finally
         {
-            _openedDialogs.Remove(dialog);
-            await dialog.OnClosedAsync().ConfigureAwait(false);
+            await CompleteLifecycleAsync(dialog).ConfigureAwait(false);
         }
     }
 
@@ -81,21 +103,63 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
     /// <inheritdoc />
     public async Task CloseAsync(IDialog dialog)
     {
-        var strategy = GetStrategy(dialog, null);
+        ArgumentNullException.ThrowIfNull(dialog);
+
+        IDialogStrategy strategy;
+        lock (_sync)
+        {
+            strategy = _activeDialogs.TryGetValue(dialog, out var active)
+                ? active.Strategy
+                : GetStrategy(dialog, null);
+        }
+
         await strategy.CloseAsync(dialog).ConfigureAwait(false);
+        await CompleteLifecycleAsync(dialog).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Selects the appropriate dialog strategy based on the dialog type and options.
-    /// </summary>
-    /// <param name="dialog">The dialog for which to select a strategy.</param>
-    /// <param name="options">The dialog options to consider (may be null for close-only queries).</param>
-    /// <returns>The selected dialog strategy.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if no suitable dialog strategy is found.</exception>
+    private void BeginShow(IDialog dialog, IDialogStrategy strategy)
+    {
+        lock (_sync)
+        {
+            _openedDialogs.Add(dialog);
+            _activeDialogs[dialog] = new() { Strategy = strategy };
+        }
+    }
+
+    private async Task CompleteLifecycleAsync(IDialog dialog)
+    {
+        bool shouldNotifyClosed;
+        lock (_sync)
+        {
+            if (!_activeDialogs.TryGetValue(dialog, out var active) || active.LifecycleCompleted)
+            {
+                return;
+            }
+
+            active.LifecycleCompleted = true;
+            _openedDialogs.Remove(dialog);
+            _activeDialogs.Remove(dialog);
+            shouldNotifyClosed = true;
+        }
+
+        if (shouldNotifyClosed)
+        {
+            await dialog.OnClosedAsync().ConfigureAwait(false);
+        }
+    }
+
     private IDialogStrategy GetStrategy(IDialog dialog, DialogOptions? options)
         => strategies
             .Where(s => s.CanHandle(dialog, options))
             .OrderByDescending(s => s.Priority)
             .FirstOrDefault()
-           ?? throw new InvalidOperationException($"No dialog strategy found for '{dialog.GetType().Name}'. Register an IDialogStrategy implementation.");
+           ?? throw new InvalidOperationException(
+               $"No dialog strategy found for '{dialog.GetType().Name}'. Register an IDialogStrategy via AddDialogs() or AddDialogStrategy<T>().");
+
+    private sealed class ActiveDialog
+    {
+        public required IDialogStrategy Strategy { get; init; }
+
+        public bool LifecycleCompleted { get; set; }
+    }
 }

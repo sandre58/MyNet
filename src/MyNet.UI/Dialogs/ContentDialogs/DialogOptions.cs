@@ -37,4 +37,23 @@ public sealed class DialogOptions
     /// Defaults to <see langword="true"/>.
     /// </summary>
     public bool CloseOnOverlayClick { get; set; } = true;
+
+    /// <summary>
+    /// Creates a detached copy of <paramref name="options"/> bound to <paramref name="dialog"/>
+    /// without mutating the caller's instance.
+    /// </summary>
+    /// <param name="dialog">The dialog instance to associate with the resolved options.</param>
+    /// <param name="options">Optional source options; when <see langword="null"/>, defaults are used.</param>
+    /// <returns>A new <see cref="DialogOptions"/> instance.</returns>
+    public static DialogOptions Resolve(IDialog dialog, DialogOptions? options = null)
+        => options is null
+            ? new DialogOptions { Dialog = dialog }
+            : new DialogOptions
+            {
+                Dialog = dialog,
+                IsModal = options.IsModal,
+                Title = options.Title,
+                Owner = options.Owner,
+                CloseOnOverlayClick = options.CloseOnOverlayClick
+            };
 }
