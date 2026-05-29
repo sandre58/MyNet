@@ -54,6 +54,8 @@
     <File Path="build/coverage/Verify-CriticalCoverage.ps1" />
   </Folder>
   <Folder Name="/Solution Files/Docs/">
+    <File Path="docs/getting-started.md" />
+    <File Path="docs/index.md" />
     <File Path="docs/TODO.md" />
     <File Path="LICENSE" />
     <File Path="README.md" />
@@ -64,12 +66,25 @@
     <File Path="CONTRIBUTING.md" />
   </Folder>
   <Folder Name="/Solution Files/Docs/Guides/">
-    <File Path="docs/LOCATORS_GUIDE.md" />
-    <File Path="docs/METADATA_GENERATION_GUIDE.md" />
-    <File Path="docs/NAVIGATION_GUIDE.md" />
-    <File Path="docs/OBSERVABLE_USAGE.md" />
-    <File Path="docs/TRANSLATION_SYSTEM_GUIDE.md" />
-    <File Path="docs/UI_ARCHITECTURE.md" />
+    <File Path="docs/guides/collections-messaging.md" />
+    <File Path="docs/guides/dialogs.md" />
+    <File Path="docs/guides/fakers.md" />
+    <File Path="docs/guides/foundations.md" />
+    <File Path="docs/guides/geography.md" />
+    <File Path="docs/guides/globalization.md" />
+    <File Path="docs/guides/http.md" />
+    <File Path="docs/guides/humanizer.md" />
+    <File Path="docs/guides/io-platform.md" />
+    <File Path="docs/guides/mail.md" />
+    <File Path="docs/guides/notifications-and-toasts.md" />
+    <File Path="docs/guides/observable.md" />
+    <File Path="docs/guides/README.md" />
+    <File Path="docs/guides/shell.md" />
+    <File Path="docs/guides/theming.md" />
+    <File Path="docs/guides/ui.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Templates/">
+    <File Path="docs/templates/package-readme.md" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/MyNet.Collections.Tests/MyNet.Collections.Tests.csproj" />
@@ -94,6 +109,9 @@
     <Project Path="tests/MyNet.UI.Tests/MyNet.UI.Tests.csproj" />
     <Project Path="tests/MyNet.Utilities.Tests/MyNet.Utilities.Tests.csproj" />
     <Project Path="tests/MyNet.Mail.MailKit.Tests/MyNet.Mail.MailKit.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="tools/MyNet.Tools.PackageIconGenerator/MyNet.Tools.PackageIconGenerator.csproj" />
   </Folder>
   <Project Path="src/MyNet.Collections/MyNet.Collections.csproj" />
   <Project Path="src/MyNet.Generator/MyNet.Generator.csproj" />

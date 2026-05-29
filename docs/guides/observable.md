@@ -1,6 +1,10 @@
-# MyNet.Observable — Consumer guide
+# Observable models
 
-This guide describes how to use **MyNet.Observable** after the behavior/metadata refactor. For metadata internals, see [METADATA_GENERATION_GUIDE.md](METADATA_GENERATION_GUIDE.md).
+**Package:** [MyNet.Observable](../../src/MyNet.Observable/README.md)
+
+MVVM-oriented **observable**, **editable**, and **validatable** models with composable behaviors and a Roslyn source generator.
+
+The package references **MyNet.Observable.Metadata.Generator** as an analyzer (not a separate NuGet package): metadata bootstrap, `[ObservableProperty]`, and setter usage diagnostics.
 
 ## Installation
 
@@ -8,9 +12,9 @@ This guide describes how to use **MyNet.Observable** after the behavior/metadata
 dotnet add package MyNet.Observable
 ```
 
-The package references the **MyNet.Observable.Metadata.Generator** analyzer (metadata bootstrap, `[ObservableProperty]`, setter usage diagnostic).
+---
 
-## 1. Observable properties
+## Observable properties
 
 ### Recommended: `[ObservableProperty]`
 
@@ -62,7 +66,9 @@ set
 
 Avoid assigning a backing field and calling only `OnPropertyChanged` — analyzer **MNETOBS004** warns when assignment bypasses `SetProperty` or the changing pipeline.
 
-## 2. Behaviors (composition)
+---
+
+## Behaviors (composition)
 
 Register capabilities on **`Behaviors`** (not on `ObservableObject` directly):
 
@@ -91,7 +97,9 @@ public sealed class PersonViewModel : ObservableObject
 
 API: `vm.Behaviors.Register`, `Get`, `TryGet`, `GetAll`, `Unregister`.
 
-## 3. Property metadata (attributes)
+---
+
+## Property metadata (attributes)
 
 On **properties** of `ObservableObject` subclasses:
 
@@ -110,7 +118,11 @@ public AddressViewModel Address { get; set; } = null!;
 
 At compile time, the generator emits lazy bootstrap code. The first `MetadataRegistry.Get(typeof(YourType))` applies configuration. `ObservableObject` reads forwarding metadata in its constructor and registers `PropertyChangedForwardingBehavior`.
 
-## 4. Strict metadata mode (optional)
+See [Metadata generation](#metadata-generation) for the full pipeline.
+
+---
+
+## Strict metadata mode (optional)
 
 ```csharp
 using MyNet.Observable.Metadata;
@@ -120,7 +132,9 @@ using MyNet.Observable.Metadata;
 
 Types deriving from `ObservableObject` without metadata produce **MNETMETA001**. Opt out with `[ExemptFromGeneratedMetadata]` on intentional bare types.
 
-## 5. Notification suspension
+---
+
+## Notification suspension
 
 ```csharp
 using (SuspendNotifications()) // CoalesceOnResume (default)
@@ -135,7 +149,9 @@ using (SuspendNotifications(NotificationSuspensionMode.Drop))
 }
 ```
 
-## 6. Extended collections (filter, sort, group, selection)
+---
+
+## Extended collections (filter, sort, group, selection)
 
 `ExtendedCollection<T>` is the reactive list pipeline built on DynamicData. It exposes:
 
@@ -212,7 +228,9 @@ using MyNet.Utilities.Collections;
 var dispatched = new ObservableRangeCollection<Row>().Scheduled(Scheduler.CurrentThread);
 ```
 
-## 7. Relay / synthetic property names
+---
+
+## Relay / synthetic property names
 
 When old/new values are unknown (forwarded names):
 
@@ -221,6 +239,8 @@ NotifyPropertyChanged("Wrapper.Name");
 ```
 
 Prefer `NotifyPropertyChanged(name, before, after)` from setters when values are known.
+
+---
 
 ## Analyzer diagnostics
 
@@ -231,6 +251,8 @@ Prefer `NotifyPropertyChanged(name, before, after)` from setters when values are
 | MNETOBS002 | Error | Must derive from `ObservableObject` |
 | MNETOBS003 | Error | Nested types not supported for `[ObservableProperty]` |
 | MNETOBS004 | Warning | Setter assigns without `SetProperty` / changing pipeline |
+
+---
 
 ## Migration from the legacy API
 
@@ -244,7 +266,147 @@ Prefer `NotifyPropertyChanged(name, before, after)` from setters when values are
 | `owner.Use<TBehavior>()` (Activator) | `Behaviors.Register(new MyBehavior(owner))` |
 | `CountStatistics` / `RangeStatistics` on `ObservableCollection` | `collection.Statistics(...)` on `ExtendedCollection` |
 
-## Further reading
+---
 
-- [src/MyNet.Observable/README.md](../src/MyNet.Observable/README.md)
-- [METADATA_GENERATION_GUIDE.md](METADATA_GENERATION_GUIDE.md)
+## Metadata generation
+
+This section describes the **single supported pipeline** for configuring observable metadata.
+
+### Pipeline (authoring → application → runtime)
+
+```
+Property attributes on ObservableObject subclasses
+        ↓ compile time
+MyNet.Observable.Metadata.Generator
+        ↓ GeneratedMetadataProviders.g.cs (lazy bootstrap per type)
+MetadataRegistry.Get(type) → ObservableMetadataBootstrap.Ensure(type)
+        ↓ runtime
+MetadataBehaviorApplicator.Apply → behaviors
+```
+
+#### What you declare
+
+Put metadata attributes on **properties** of types that derive from `ObservableObject`:
+
+```csharp
+using MyNet.Observable;
+using MyNet.Observable.Behaviors.Metadata.Attributes;
+
+public sealed class Person : ObservableObject
+{
+    [UpdateOnCultureChanged]
+    public string Name { get; set; } = string.Empty;
+
+    [IgnoreModificationTracking]
+    public int InternalId { get; set; }
+
+    [AlsoValidate(nameof(Email))]
+    public string ConfirmEmail { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+
+    [ForwardProperty]
+    public AddressViewModel Address { get; set; } = null!;
+}
+```
+
+Declare observable properties with `[ObservableProperty]` on a **partial** backing field, or set values through `SetProperty` in explicit setters.
+
+#### What the generator does
+
+When at least one supported attribute is present on a property of a type that **derives from `ObservableObject`**, the generator emits `ObservableMetadataBootstrap` with one `Configure_{TypeName}()` method per type. Configuration runs **lazily** on the first `MetadataRegistry.Get(type)` for that type (no `[ModuleInitializer]`). Each configure method invokes `MetadataApplicators` on the relevant `PropertyMetadata` entries.
+
+Inspect generated code under `obj/` → `GeneratedMetadataProviders.g.cs`.
+
+Types that are not `ObservableObject` descendants are **not** generated (even if they carry metadata attributes).
+
+#### What consumes metadata at runtime
+
+- `MetadataRegistry.Get` — ensures generated configuration for the type, then returns `TypeMetadata`
+- Features: `ModificationTrackingFeature`, `EventReactionFeature`, `ValidationDependencyFeature`, `PropertyChangedForwardingFeature`, …
+- `MetadataBehaviorApplicator.Apply` — reads `PropertyChangedForwardingFeature` from metadata and registers `PropertyChangedForwardingBehavior` (called from `ObservableObject` constructor)
+
+No application startup call is required.
+
+### Supported metadata attributes
+
+| Attribute | Effect |
+|-----------|--------|
+| `[IgnoreModificationTracking]` | Property excluded from modification tracking |
+| `[UpdateOnCultureChanged]` | Refresh when culture changes |
+| `[UpdateOnTimeZoneChanged]` | Refresh when time zone changes |
+| `[AlsoValidate("OtherProperty")]` | Validation dependency |
+| `[ForwardProperty(concatenatePropertyName: true)]` | Relay child `INotifyPropertyChanged` to owner |
+
+### Strict mode (fail-fast)
+
+Add to any file in the assembly (e.g. `AssemblyInfo.cs`):
+
+```csharp
+using MyNet.Observable.Metadata;
+
+[assembly: EnforceGeneratedMetadata]
+```
+
+When enabled, types deriving from `ObservableObject` **without** any generated metadata configuration produce compile-time error `MNETMETA001`.
+
+Use `[ExemptFromGeneratedMetadata]` from `MyNet.Observable.Metadata` on types that intentionally have no metadata (abstract bases, markers, infrastructure VMs).
+
+### Manual fluent configuration (secondary)
+
+Use when attributes are not possible (third-party types, dynamic scenarios, tests).
+
+#### Per-property (preferred for manual setup)
+
+```csharp
+MetadataRegistry.For<MyType>()
+    .Property(x => x.DisplayName)
+    .UpdateOnCultureChanged();
+```
+
+#### Batch by property name
+
+```csharp
+MetadataRegistry.Get(typeof(MyType))
+    .UpdateOnCultureChanged(nameof(MyType.DisplayName), nameof(MyType.Subtitle));
+```
+
+#### API surfaces (do not duplicate)
+
+| Surface | Role |
+|---------|------|
+| `MetadataRegistry.For<T>().Property(expr).…` | **Authoring** — type-safe fluent configuration |
+| `TypeMetadata.UpdateOnCultureChanged(names…)` | **Batch authoring** on several properties |
+| `TypeMetadata.WithFeature<T>()` / `GetFeatureOrDefault<T>(name)` | **Runtime queries** (behaviors, forwarding) |
+| `PropertyMetadata.TryGetFeature<T>()` | **Low-level** feature access on a property instance |
+
+Do **not** duplicate the same rules with attributes and manual fluent configuration on the same type.
+
+### Metadata team rules
+
+1. **Author with attributes** on `ObservableObject` properties.
+2. **Rely on the metadata generator** for lazy bootstrap (`MetadataRegistry.Get` → `MetadataApplicators`).
+3. **Do not** configure the same property via attributes and manual fluent API.
+4. Use **`[assembly: EnforceGeneratedMetadata]`** when you want compile-time coverage.
+5. Imperative forwarding: `owner.ForwardProperty(...)` or `MetadataBehaviorApplicator.ApplyForwardProperty` — updates metadata and registers the behavior.
+6. Strict-mode opt-out: `[ExemptFromGeneratedMetadata]` on types without metadata attributes.
+
+### Metadata benefits
+
+1. **Type-safe** — mapping attribute → feature is generated at compile time
+2. **Performance** — no reflection at startup for normal types
+3. **Explicit** — attributes document intent on properties
+4. **Fail-fast** — optional strict mode (`MNETMETA001`)
+5. **Traceable** — generated initializer is readable in `GeneratedMetadataProviders.g.cs`
+
+---
+
+## Related packages
+
+- [UI presentation layer](ui.md)
+- [Globalization](globalization.md) — culture services for behaviors
+- [Foundations](foundations.md) — `MyNet.Metadata` registry primitives
+
+## Package README
+
+[MyNet.Observable README](../../src/MyNet.Observable/README.md)

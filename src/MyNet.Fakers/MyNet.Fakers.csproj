@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Product>My .NET Utilities - Fakers</Product>
-        <PackageIcon>MyNetUtilities.png</PackageIcon>
+        <PackageIcon>MyNetFakers.png</PackageIcon>
         <Description>Locale-aware fake data generators for names, addresses, emails, URLs, and related test fixtures built on MyNet.Generator and MyNet.Geography.</Description>
         <PackageTags>mynet fakers fake-data testing locale addresses names</PackageTags>
     </PropertyGroup>

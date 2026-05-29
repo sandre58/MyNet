@@ -1,0 +1,24 @@
+{
+  "icons": [
+    { "file": "MyNetPrimitives.png", "label": "PR", "svg": "box.svg", "base": "#1E1B4B", "accent": "#6366F1" },
+    { "file": "MyNetText.png", "label": "TX", "svg": "typography.svg", "base": "#1E1B4B", "accent": "#818CF8", "iconScale": 1.15 },
+    { "file": "MyNetUtilities.png", "label": "UT", "svg": "utilities.svg", "base": "#1E1B4B", "accent": "#4F46E5" },
+    { "file": "MyNetGenerator.png", "label": "GN", "svg": "bolt.svg", "base": "#2E1065", "accent": "#7C3AED" },
+    { "file": "MyNetReflection.png", "label": "RF", "svg": "flip.svg", "base": "#2E1065", "accent": "#8B5CF6" },
+    { "file": "MyNetMetadata.png", "label": "MD", "svg": "metadata.svg", "base": "#2E1065", "accent": "#A78BFA" },
+    { "file": "MyNetTemporal.png", "label": "TP", "svg": "clock.svg", "base": "#2E1065", "accent": "#C4B5FD" },
+    { "file": "MyNetCollections.png", "label": "CL", "svg": "stack.svg", "base": "#3B0764", "accent": "#A855F7" },
+    { "file": "MyNetMessaging.png", "label": "MS", "svg": "message.svg", "base": "#3B0764", "accent": "#D946EF" },
+    { "file": "MyNetObservable.png", "label": "OB", "svg": "observable.svg", "base": "#083344", "accent": "#22D3EE" },
+    { "file": "MyNetUI.png", "label": "UI", "svg": "window.svg", "base": "#083344", "accent": "#06B6D4" },
+    { "file": "MyNetGlobalization.png", "label": "GL", "svg": "world.svg", "base": "#064E3B", "accent": "#34D399" },
+    { "file": "MyNetHumanizer.png", "label": "HU", "svg": "user.svg", "base": "#064E3B", "accent": "#10B981" },
+    { "file": "MyNetGeography.png", "label": "GE", "svg": "map-pin.svg", "base": "#451A03", "accent": "#F59E0B" },
+    { "file": "MyNetGoogle.png", "label": "GO", "svg": "search.svg", "base": "#451A03", "accent": "#FB923C" },
+    { "file": "MyNetIO.png", "label": "IO", "svg": "folder.svg", "base": "#1E293B", "accent": "#94A3B8" },
+    { "file": "MyNetPlatformWindows.png", "label": "PW", "svg": "layout-grid.svg", "base": "#0C4A6E", "accent": "#38BDF8" },
+    { "file": "MyNetHttp.png", "label": "HT", "glyph": "HTTP", "base": "#450A0A", "accent": "#F87171" },
+    { "file": "MyNetMail.png", "label": "ML", "svg": "mail.svg", "base": "#450A0A", "accent": "#FB7185" },
+    { "file": "MyNetFakers.png", "label": "FK", "svg": "dice.svg", "base": "#500724", "accent": "#F472B6" }
+  ]
+}

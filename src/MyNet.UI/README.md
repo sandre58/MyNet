@@ -1,63 +1,58 @@
-<div id="top"></div>
+# MyNet.UI
 
-<!-- PROJECT INFO -->
-<br />
-<div align="center">
-  <img src="../../assets/MyNetUI.png" width="128" alt="MyNetUI">
-</div>
+UI-framework-agnostic presentation layer: view models, shell, dialogs, navigation, notifications, and toasts. You provide concrete UI (WPF, Avalonia, etc.).
 
-<h1 align="center">My .NET UI</h1>
+[![MIT License](https://img.shields.io/github/license/sandre58/MyNet2)](https://github.com/sandre58/MyNet2/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/MyNet.UI)](https://www.nuget.org/packages/MyNet.UI)
 
-[![MIT License](https://img.shields.io/github/license/sandre58/mynet?style=for-the-badge)](https://github.com/sandre58/mynet/blob/main/LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/MyNet.UI?style=for-the-badge)](https://www.nuget.org/packages/MyNet.UI)
-
-A comprehensive library for simplifying common GUI functionalities in .NET applications.
-
-[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](#)
-[![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple)](#)
-[![.NET 10.0](https://img.shields.io/badge/.NET-10.0-purple)](#)
-[![C#](https://img.shields.io/badge/language-C%23-blue)](#)
-
----
+**Target framework:** .NET 10
 
 ## Installation
-
-Install via NuGet:
 
 ```bash
 dotnet add package MyNet.UI
 ```
 
-## Features
-
-- **Notification System**: Real-time, customizable notifications.
-- **MessageBox Integration**: Standard and customizable dialog boxes.
-- **Navigation Framework**: Manage navigation and history between views/pages.
-- **Toaster Notifications**: Non-intrusive, interactive toast notifications.
-- **Theme Management**: Dynamic theming, light/dark mode, and theme persistence.
-
-## Example Usage
+## Quick start (DI)
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using MyNet.UI.Dialogs;
+using MyNet.UI.Locators;
+using MyNet.UI.Navigation;
 using MyNet.UI.Notifications;
+using MyNet.UI.Toasting;
+using MyNet.UI.ViewModels;
 
-// Show a notification
-NotificationService.Show("Hello, user!");
-
-// Show a MessageBox
-MessageBoxService.Show("Are you sure?", "Confirmation");
-
-// Theming (register implementations in your WPF/Avalonia host, then):
-services.AddSingleton<IThemeBaseRegistry, ThemeVariantsRegistry>();
-services.AddSingleton<IThemeService, ThemeService>();
-// After BuildServiceProvider():
-serviceProvider.UseThemeManager();
-
-themeService.ApplyBaseTheme(themeBaseRegistry.Dark);
+var services = new ServiceCollection();
+services.AddViewLocators();
+services.AddDialogs(b => b.AddPresenter<MyDialogPresenter>());
+services.AddNavigation();
+services.AddNotifications();
+services.AddToasting();
+services.AddShell();
 ```
+
+- **Dialogs:** implement `IDialogPresenter` — see [Dialogs guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/dialogs.md)
+- **Notifications / toasts:** bind UI to `INotificationsManager.Notifications` and `IToastManager.Toasts`
+- **Shell:** register `ShellHostViewModel` in your host
+- **Theming:** implement `IThemeService` + `IThemeBaseRegistry` in your host, then `UseThemeManager()` — see [Theming guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/theming.md)
+
+## Documentation
+
+- [UI presentation layer](https://github.com/sandre58/MyNet2/blob/main/docs/guides/ui.md) — locators, navigation
+- [Dialogs](https://github.com/sandre58/MyNet2/blob/main/docs/guides/dialogs.md)
+- [Notifications & toasts](https://github.com/sandre58/MyNet2/blob/main/docs/guides/notifications-and-toasts.md)
+- [Shell](https://github.com/sandre58/MyNet2/blob/main/docs/guides/shell.md)
+- [Theming](https://github.com/sandre58/MyNet2/blob/main/docs/guides/theming.md)
+- [Documentation index](https://github.com/sandre58/MyNet2/blob/main/docs/index.md)
+
+## Related packages
+
+- [MyNet.Observable](https://www.nuget.org/packages/MyNet.Observable)
+- [MyNet.Globalization](https://www.nuget.org/packages/MyNet.Globalization)
+- [MyNet.IO](https://www.nuget.org/packages/MyNet.IO)
 
 ## License
 
-Copyright © Stéphane ANDRE.
-
-Distributed under the MIT License. See [LICENSE](../../LICENSE) for details.
+MIT — see [LICENSE](https://github.com/sandre58/MyNet2/blob/main/LICENSE).

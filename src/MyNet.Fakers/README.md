@@ -1,60 +1,38 @@
-<div id="top"></div>
+# MyNet.Fakers
 
-<!-- PROJECT INFO -->
-<br />
-<div align="center">
-  <img src="../../assets/MyNetUtilities.png" width="128" alt="MyNetUtilities">
-</div>
+Locale-aware fake data for tests and demos: names, addresses, emails, URLs, and related patterns.
 
-<h1 align="center">My .NET Utilities Generator</h1>
+[![MIT License](https://img.shields.io/github/license/sandre58/MyNet)](https://github.com/sandre58/MyNet/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/MyNet.Fakers)](https://www.nuget.org/packages/MyNet.Fakers)
 
-[![MIT License](https://img.shields.io/github/license/sandre58/mynet?style=for-the-badge)](https://github.com/sandre58/mynet/blob/main/LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Generator.Extensions?style=for-the-badge)](https://www.nuget.org/packages/MyNet.Utilities.Generator.Extensions)
-
-A powerful extension library for generating random data in .NET applications. Useful for testing, simulations, and data-driven scenarios.
-
-[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](#)
-[![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple)](#)
-[![.NET 10.0](https://img.shields.io/badge/.NET-10.0-purple)](#)
-[![C#](https://img.shields.io/badge/language-C%23-blue)](#)
-
----
+**Target framework:** .NET 10
 
 ## Installation
 
-Install via NuGet:
-
 ```bash
-dotnet add package MyNet.Utilities.Generator.Extensions
+dotnet add package MyNet.Fakers
 ```
 
-## Features
-
-- Generate random names, addresses, internet data, and more.
-- Useful for unit tests, demo data, and simulations.
-- Extends the core MyNet.Utilities generator capabilities.
-
-## Example Usage
+## Quick start
 
 ```csharp
-using MyNet.Utilities.Generator.Extensions;
-
-var name = NameGenerator.FullName();
-var address = AddressGenerator.Street();
-var email = InternetGenerator.Email();
+// Explore MyNet.Fakers namespaces and tests/MyNet.Fakers.Tests
+// for culture-aware person, address, and internet generators.
 ```
 
-## Related Packages
+Pair with **MyNet.Globalization** culture settings for localized fake strings.
 
-| Package | Description | NuGet |
-|---|---|---|
-| [**MyNet.Utilities**](../MyNet.Utilities) | Core utilities for .NET development. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities) |
-| [**MyNet.Utilities.Geography.Extensions**](../MyNet.Utilities.Geography.Extensions) | Access detailed geography info. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Geography.Extensions) |
-| [**MyNet.Utilities.Logging.NLog**](../MyNet.Utilities.Logging.NLog) | Logging integration with NLog. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
-| [**MyNet.Utilities.Mail.MailKit**](../MyNet.Utilities.Mail.MailKit) | Email sending with MailKit. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit) |
+## Related packages
+
+- [MyNet.Generator](https://www.nuget.org/packages/MyNet.Generator)
+- [MyNet.Geography](https://www.nuget.org/packages/MyNet.Geography)
+- [MyNet.Globalization](https://www.nuget.org/packages/MyNet.Globalization)
+
+## Documentation
+
+- [Fakers guide](https://github.com/sandre58/MyNet/blob/main/docs/guides/fakers.md)
+- [Documentation index](https://github.com/sandre58/MyNet/blob/main/docs/index.md)
 
 ## License
 
-Copyright © Stéphane ANDRE.
-
-Distributed under the MIT License. See [LICENSE](../../LICENSE) for details.
+MIT — see [LICENSE](https://github.com/sandre58/MyNet/blob/main/LICENSE).

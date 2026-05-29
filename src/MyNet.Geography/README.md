@@ -1,62 +1,40 @@
-<div id="top"></div>
+# MyNet.Geography
 
-<!-- PROJECT INFO -->
-<br />
-<div align="center">
-  <img src="../../assets/MyNetUtilities.png" width="128" alt="MyNetUtilities">
-</div>
+ISO 3166 countries and continents, postal addresses, coordinates, and a pluggable country-flag provider contract.
 
-<h1 align="center">My .NET Utilities Geography</h1>
+[![MIT License](https://img.shields.io/github/license/sandre58/MyNet)](https://github.com/sandre58/MyNet/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/MyNet.Geography)](https://www.nuget.org/packages/MyNet.Geography)
 
-[![MIT License](https://img.shields.io/github/license/sandre58/mynet?style=for-the-badge)](https://github.com/sandre58/mynet/blob/main/LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/MyNet.Utilities.Geography.Extensions?style=for-the-badge)](https://www.nuget.org/packages/MyNet.Utilities.Geography.Extensions)
-
-A comprehensive extension library for accessing detailed geography information in .NET applications.
-
-[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](#)
-[![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple)](#)
-[![.NET 10.0](https://img.shields.io/badge/.NET-10.0-purple)](#)
-[![C#](https://img.shields.io/badge/language-C%23-blue)](#)
-
----
+**Target framework:** .NET 10
 
 ## Installation
 
-Install via NuGet:
-
 ```bash
-dotnet add package MyNet.Utilities.Geography.Extensions
+dotnet add package MyNet.Geography
 ```
 
-## Features
-
-- Access country names, codes, flags, and demographics.
-- Utilities for working with country data and resources.
-- Flag image support and formatting.
-
-## Example Usage
+## Quick start
 
 ```csharp
-using MyNet.Utilities.Geography.Extensions;
+using MyNet.Geography;
 
-// Get country name by code
-var name = CountryExtensions.GetName("FR");
-
-// Get flag image
-var flag = CountryExtensions.GetFlag("US", FlagSize.Large);
+var france = Country.France;
+var isoAlpha2 = france.Alpha2; // "fr"
 ```
 
-## Related Packages
+For flag images, add **MyNet.Geography.Resources**. For localized display names, add **MyNet.Geography.Localization**.
 
-| Package | Description | NuGet |
-|---|---|---|
-| [**MyNet.Utilities**](../MyNet.Utilities) | Core utilities for .NET development. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities) |
-| [**MyNet.Utilities.Generator.Extensions**](../MyNet.Utilities.Generator.Extensions) | Generate random data for .NET apps. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Generator.Extensions) |
-| [**MyNet.Utilities.Logging.NLog**](../MyNet.Utilities.Logging.NLog) | Logging integration with NLog. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Logging.NLog) |
-| [**MyNet.Utilities.Mail.MailKit**](../MyNet.Utilities.Mail.MailKit) | Email sending with MailKit. | [NuGet](https://www.nuget.org/packages/MyNet.Utilities.Mail.MailKit) |
+## Related packages
+
+- [MyNet.Geography.Resources](https://www.nuget.org/packages/MyNet.Geography.Resources)
+- [MyNet.Geography.Localization](https://www.nuget.org/packages/MyNet.Geography.Localization)
+- [MyNet.Google](https://www.nuget.org/packages/MyNet.Google)
+
+## Documentation
+
+- [Geography guide](https://github.com/sandre58/MyNet/blob/main/docs/guides/geography.md)
+- [Documentation index](https://github.com/sandre58/MyNet/blob/main/docs/index.md)
 
 ## License
 
-Copyright © Stéphane ANDRE.
-
-Distributed under the MIT License. See [LICENSE](../../LICENSE) for details.
+MIT — see [LICENSE](https://github.com/sandre58/MyNet/blob/main/LICENSE).
