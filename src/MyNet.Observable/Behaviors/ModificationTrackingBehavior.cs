@@ -26,7 +26,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     private readonly HashSet<string> _attachedProperties = new(StringComparer.Ordinal);
     private readonly HashSet<IModificationAware> _trackedChildren = [];
     private readonly Dictionary<IModificationAware, INotifyPropertyChanged> _childNotifiers = [];
-    private int _initialAttachScheduled;
+    private readonly Lock _attachSync = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModificationTrackingBehavior"/> class with the specified owner. This constructor initializes the behavior and attaches it to the owner object, allowing it to track modifications to the owner and its nested properties. It also initializes a default collection tracking behavior to handle modifications to collections within the owner object, ensuring that changes to collections are properly tracked and reflected in the modification state of the owner.
@@ -56,7 +56,6 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
         _collections?.CollectionChanged += OnCollectionChanged;
 
         EnsureInitialStateAttached();
-        ScheduleDeferredInitialAttach();
     }
 
     /// <inheritdoc />
@@ -168,8 +167,11 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
         if (IsDisposed)
             return;
 
-        foreach (var property in Owner.GetType().GetPublicProperties())
-            TryAttachProperty(property);
+        lock (_attachSync)
+        {
+            foreach (var property in Owner.GetType().GetPublicProperties())
+                TryAttachProperty(property);
+        }
     }
 
     private static bool MayYieldModificationAwareValue(Type propertyType)
@@ -193,29 +195,6 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
 
         _attachedProperties.Add(property.Name);
         Attach(value);
-    }
-
-    private void ScheduleDeferredInitialAttach()
-    {
-        if (Interlocked.Exchange(ref _initialAttachScheduled, 1) != 0)
-            return;
-
-        var context = SynchronizationContext.Current;
-        if (context is not null)
-        {
-            context.Post(static state => ((ModificationTrackingBehavior)state!).DeferredInitialAttach(), this);
-            return;
-        }
-
-        ThreadPool.QueueUserWorkItem(static state => ((ModificationTrackingBehavior)state!).DeferredInitialAttach(), this);
-    }
-
-    private void DeferredInitialAttach()
-    {
-        if (IsDisposed)
-            return;
-
-        EnsureInitialStateAttached();
     }
 
     /// <summary>
