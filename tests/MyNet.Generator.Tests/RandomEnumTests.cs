@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using MyNet.Generator;
 using MyNet.Generator.Facade;
 using MyNet.Primitives;
 using Xunit;
@@ -14,6 +15,8 @@ namespace MyNet.Generator.Tests;
 
 public class RandomEnumTests
 {
+    private static readonly DefaultRandomGenerator Generator = new(new SystemRandomSource());
+
     private enum ThreeValues
     {
         Alpha,
@@ -64,7 +67,7 @@ public class RandomEnumTests
 
         for (var i = 0; i < 500; i++)
         {
-            seen.Add(RandomGenerator.Current.Enum<ThreeValues>());
+            seen.Add(Generator.Enum<ThreeValues>());
         }
 
         // With 500 draws from 3 values, all should appear
