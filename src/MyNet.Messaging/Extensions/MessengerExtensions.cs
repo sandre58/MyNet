@@ -115,14 +115,21 @@ public static class MessengerExtensions
         /// <param name="action">The action to execute when predicate matches.</param>
         public void RegisterWithFilter<TMessage>(object recipient,
             Func<TMessage, bool> predicate,
-            Action<TMessage> action) =>
-            messenger.Register<TMessage>(recipient, msg =>
+            Action<TMessage> action)
+        {
+            Action<TMessage> filteredAction = msg =>
             {
                 if (predicate(msg))
                 {
                     action(msg);
                 }
-            });
+            };
+
+            messenger.Register<TMessage>(
+                recipient,
+                filteredAction,
+                keepTargetAlive: true);
+        }
 
         /// <summary>
         /// Sends a broadcast message with optional filtering by target type.

@@ -175,7 +175,9 @@ public class ContentDialogServiceTests
 
         public string Title => "Test";
 
+#pragma warning disable CS0067
         public event EventHandler<CloseRequestedEventArgs>? CloseRequested;
+#pragma warning restore CS0067
 
         public Task<bool> CanCloseAsync() => Task.FromResult(true);
 

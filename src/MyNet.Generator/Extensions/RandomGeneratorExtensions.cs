@@ -52,7 +52,7 @@ public static class RandomGeneratorExtensions
         /// </summary>
         /// <param name="interval">The interval specifying the start and end DateTime values.</param>
         /// <returns>A random DateTime value within the specified interval.</returns>
-        public DateTime Date(IInterval<DateTime> interval) => random.Date(interval.Start?.Value, interval.End?.Value);
+        public DateTime Date(IInterval<DateTime> interval) => random.SafeDate(interval.Start?.Value, interval.End?.Value);
 
         /// <summary>
         /// Generates a random DateTime value that falls within the specified minimum and maximum range. If the minimum or maximum values are not provided, it defaults to DateTime.MinValue and DateTime.MaxValue respectively, ensuring that the generated date is valid and does not exceed the provided bounds.
@@ -60,7 +60,7 @@ public static class RandomGeneratorExtensions
         /// <param name="min">The minimum DateTime value.</param>
         /// <param name="max">The maximum DateTime value.</param>
         /// <returns>A random DateTime value within the specified range.</returns>
-        public DateTime Date(DateTime? min = null, DateTime? max = null) => random.SafeDate(min ?? DateTime.MinValue, max ?? DateTime.MaxValue);
+        public DateTime Date(DateTime? min = null, DateTime? max = null) => random.SafeDate(min, max);
 
         /// <summary>
         /// Generates a random DateTime value that falls within the specified minimum and maximum range, ensuring that the generated date is valid and does not exceed the provided bounds.
@@ -71,7 +71,13 @@ public static class RandomGeneratorExtensions
         public DateTime SafeDate(DateTime? min = null, DateTime? max = null)
         {
             var minMax = min.MinMax(max);
-            return random.Date(minMax.Min, minMax.Max);
+            return GenerateDate(
+                random,
+                minMax.Min ?? DateTime.MinValue,
+                minMax.Max ?? DateTime.MaxValue);
         }
     }
+
+    private static DateTime GenerateDate(IRandomGenerator generator, DateTime minimum, DateTime maximum)
+        => generator.Date(minimum, maximum);
 }
