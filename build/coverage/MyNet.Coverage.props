@@ -1,0 +1,23 @@
+<Project>
+
+  <PropertyGroup>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</RepoRoot>
+  </PropertyGroup>
+
+  <!--
+    Enable with: dotnet test -p:CollectCoverage=true
+    Or use: build/coverage/Run-SolutionCoverage.ps1
+  -->
+  <PropertyGroup Condition="'$(CollectCoverage)' == 'true'">
+    <CoverletOutput Condition="'$(CoverletOutput)' == ''">$([System.IO.Path]::Combine('$(RepoRoot)', 'TestResults', 'coverage', '$(MSBuildProjectName)'))\</CoverletOutput>
+    <CoverletOutputFormat Condition="'$(CoverletOutputFormat)' == ''">cobertura</CoverletOutputFormat>
+    <Include Condition="'$(Include)' == ''">[MyNet.*]*</Include>
+    <Exclude Condition="'$(Exclude)' == ''">[*.Tests]*,[*.UnitTests]*,[*.Demos]*,[xunit.*]*,[Microsoft.*]*,[System.*]*</Exclude>
+    <ExcludeByAttribute Condition="'$(ExcludeByAttribute)' == ''">Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
+    <ExcludeByFile Condition="'$(ExcludeByFile)' == ''">**/Migrations/**,**/obj/**,**/bin/**</ExcludeByFile>
+    <SkipAutoProps Condition="'$(SkipAutoProps)' == ''">true</SkipAutoProps>
+    <SingleHit Condition="'$(SingleHit)' == ''">false</SingleHit>
+    <IncludeTestAssembly Condition="'$(IncludeTestAssembly)' == ''">false</IncludeTestAssembly>
+  </PropertyGroup>
+
+</Project>

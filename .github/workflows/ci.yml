@@ -11,5 +11,26 @@ on:
 jobs:
   build:
     uses: sandre58/MyWorkflows/.github/workflows/ci.yml@main
+    with:
+      configuration: Release
+      test-args: '/p:CollectCoverage=true'
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  coverage-gate:
+    name: Coverage thresholds
+    needs: build
+    runs-on: windows-latest
+    if: ${{ success() }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+      - name: Verify coverage thresholds
+        shell: pwsh
+        run: ./build/coverage/Verify-CriticalCoverage.ps1 -CoverageRoot TestResults/coverage -FailOnMissingCoverage

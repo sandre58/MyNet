@@ -32,8 +32,11 @@
             <DataCollector friendlyName="XPlat Code Coverage">
                 <Configuration>
 
-                    <!-- Output formats: lcov (GitHub Actions), opencover (ReportGenerator), cobertura (SonarQube/Azure) -->
+                    <!-- Output format: cobertura (Codecov, ReportGenerator, CI thresholds) -->
                     <Format>cobertura</Format>
+
+                    <!-- Product assemblies only (aligned with build/coverage/MyNet.Coverage.props) -->
+                    <Include>[MyNet.*]*</Include>
 
                     <!-- Exclude unwanted assemblies (comma-separated, Coverlet syntax) -->
                     <Exclude>[*.Tests]*,[*.UnitTests]*,[*.Demos]*,[xunit.*]*,[Microsoft.*]*,[System.*]*</Exclude>

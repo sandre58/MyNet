@@ -46,6 +46,13 @@
     <File Path=".editorconfig" />
     <File Path="stylecop.json" />
   </Folder>
+  <Folder Name="/Solution Files/Coverage/">
+    <File Path="build/coverage/assembly-thresholds.json" />
+    <File Path="build/coverage/Merge-SolutionCoverageReports.ps1" />
+    <File Path="build/coverage/MyNet.Coverage.props" />
+    <File Path="build/coverage/Run-SolutionCoverage.ps1" />
+    <File Path="build/coverage/Verify-CriticalCoverage.ps1" />
+  </Folder>
   <Folder Name="/Solution Files/Docs/">
     <File Path="docs/TODO.md" />
     <File Path="LICENSE" />

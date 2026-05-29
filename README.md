@@ -184,7 +184,16 @@ npm install
 # Build all projects (with automatic versioning)
 dotnet build
 
-# Run tests with coverage
+# Run all tests with coverage, threshold check, and merged HTML report
+.\build\coverage\Run-SolutionCoverage.ps1
+
+# Or manually (per-project Cobertura under TestResults/coverage/)
+dotnet test MyNet.slnx -p:CollectCoverage=true
+.\build\coverage\Verify-CriticalCoverage.ps1 -FailOnMissingCoverage
+
+# Thresholds: build/coverage/assembly-thresholds.json (default 40% line per tested assembly)
+
+# IDE / collector mode (uses .runsettings, outputs under TestResults/{guid}/)
 dotnet test --collect:"XPlat Code Coverage"
 
 # Create packages with semantic versions
