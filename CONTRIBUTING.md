@@ -95,6 +95,70 @@ Update documentation when you change public API or user-visible behavior:
 - You may be asked to adjust design, tests, or docs before merge.
 - Be responsive to feedback to keep the review cycle short.
 
+## Release process
+
+All **22 MyNet NuGet packages** share a **single version** (lockstep monorepo). Version numbers are **not** edited in `.csproj` files.
+
+### How versioning works
+
+| Component | Role |
+| --------- | ---- |
+| [`GitVersion.yml`](GitVersion.yml) | SemVer rules and branch labels (`alpha` on `main`, `beta` on `feature/*`) |
+| [`Directory.Build.props`](Directory.Build.props) | Maps `GitVersion_*` MSBuild properties to `Version` / `AssemblyVersion` |
+| [`build/package.props`](build/package.props) | Sets NuGet `PackageVersion` (with prerelease suffix when applicable) |
+| [MyWorkflows CI](https://github.com/sandre58/MyWorkflows/blob/main/.github/workflows/ci.yml) | Build, test, pack; publish only on git tags |
+
+CI runs [GitVersion](https://gitversion.net/) with `fetch-depth: 0`, then builds and packs every packable project under `src/` at the same version.
+
+### Conventional Commits → version bump
+
+Write commit messages so GitVersion can infer the next SemVer increment:
+
+| Commit prefix | Bump | Example |
+| ------------- | ---- | ------- |
+| `feat:` | **MINOR** | `feat(observable): add localized validation messages` |
+| `fix:`, `docs:`, `refactor:`, `chore:`, … | **PATCH** | `fix(ui): null ref when closing dialog` |
+| `feat!:`, `fix!:`, or footer `BREAKING CHANGE:` | **MAJOR** | `feat(primitives)!: rename SmartEnum helper` |
+
+Skip a bump for a commit: append `+semver: none` or `+semver: skip` to the message body.
+
+### What gets published when
+
+| Trigger | NuGet package version | Published to NuGet.org | GitHub Release |
+| ------- | --------------------- | ---------------------- | -------------- |
+| Push to `main` | `X.Y.Z-alpha.N` | No (CI artifacts only) | No |
+| Push to `feature/*` | `X.Y.Z-beta.N` | No | No |
+| Push tag `v18.1.0` | `18.1.0` (stable) | **Yes** | **Yes** |
+| Push tag `v18.1.0-beta.1` | `18.1.0-beta.1` | **Yes** (prerelease) | **Yes** (prerelease) |
+
+NuGet push runs only when the workflow is triggered by a **`v*` tag** (see MyNet [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
+### Cutting a release (maintainers)
+
+1. Merge changes to `main` with CI green.
+2. Confirm commit history reflects the intended bump (especially after breaking changes).
+3. Create and push an annotated tag:
+
+   ```bash
+   git tag -a v18.1.0 -m "v18.1.0"
+   git push origin v18.1.0
+   ```
+
+4. CI will build, pack all MyNet packages, push to NuGet.org, create a [GitHub Release](https://github.com/sandre58/MyNet/releases), and update [`CHANGELOG.md`](CHANGELOG.md) on `main`.
+
+For a prerelease while .NET 10 is still in preview, use a prerelease tag instead (e.g. `v18.1.0-beta.1`).
+
+### Local version inspection
+
+With [GitVersion CLI](https://gitversion.net/docs/usage/cli) installed:
+
+```bash
+git fetch --tags
+dotnet gitversion
+```
+
+Without GitVersion locally, rely on CI logs (`Determine Version` step) after push.
+
 ## Code of conduct
 
 By contributing, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
