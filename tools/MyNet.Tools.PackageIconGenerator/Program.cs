@@ -81,8 +81,8 @@ static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
     using (var bgPaint = new SKPaint())
     {
         bgPaint.Shader = SKShader.CreateLinearGradient(
-            new SKPoint(card.Left, card.Top),
-            new SKPoint(card.Right, card.Bottom),
+            new(card.Left, card.Top),
+            new(card.Right, card.Bottom),
             [baseColor, accentColor],
             null,
             SKShaderTileMode.Clamp);
@@ -94,12 +94,12 @@ static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
 
     using (var footerPaint = new SKPaint())
     {
-        footerPaint.Color = new SKColor(0, 0, 0, 100);
+        footerPaint.Color = new(0, 0, 0, 100);
         footerPaint.IsAntialias = true;
         canvas.Save();
-        var clip = new SKPath();
+        var clip = new SKPathBuilder();
         clip.AddRoundRect(card, cornerRadius, cornerRadius);
-        canvas.ClipPath(clip, antialias: true);
+        canvas.ClipPath(clip.Snapshot(), antialias: true);
         canvas.DrawRect(footerRect, footerPaint);
         canvas.Restore();
     }
@@ -143,12 +143,10 @@ static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
     using var textPaint = new SKPaint();
     textPaint.Color = SKColors.White.WithAlpha(220);
     textPaint.IsAntialias = true;
-    textPaint.TextSize = 11f;
-    textPaint.Typeface = typeface;
-    textPaint.TextAlign = SKTextAlign.Center;
+    var font = new SKFont(typeface, 11f) { Edging = SKFontEdging.Alias };
 
     var labelY = footerTop + (footerHeight / 2f) + 4f;
-    canvas.DrawText(icon.Label, size / 2f, labelY, textPaint);
+    canvas.DrawText(icon.Label, size / 2f, labelY, SKTextAlign.Center, font, textPaint);
 
     using var image = surface.Snapshot();
     using var data = image.Encode(SKEncodedImageFormat.Png, 100);
@@ -167,12 +165,9 @@ static void drawGlyph(SKCanvas canvas, string glyph, float centerY, float scale)
     using var textPaint = new SKPaint();
     textPaint.Color = SKColors.White;
     textPaint.IsAntialias = true;
-    textPaint.TextSize = textSize;
-    textPaint.Typeface = typeface;
-    textPaint.TextAlign = SKTextAlign.Center;
-    textPaint.FakeBoldText = true;
+    var font = new SKFont(typeface, textSize) { Edging = SKFontEdging.Alias, Embolden = true };
 
-    canvas.DrawText(glyph.ToUpperInvariant(), size / 2f, centerY + (textSize * 0.35f), textPaint);
+    canvas.DrawText(glyph.ToUpperInvariant(), size / 2f, centerY + (textSize * 0.35f), SKTextAlign.Center, font,  textPaint);
 }
 
 static string findToolsDirectory()

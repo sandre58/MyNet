@@ -12,16 +12,16 @@ internal sealed class IconDefinition
 
     public required string Label { get; init; }
 
-    /// <summary>SVG file under icon-svgs/ (omit when <see cref="Glyph"/> is set).</summary>
+    /// <summary>Gets sVG file under icon-svgs/ (omit when <see cref="Glyph"/> is set).</summary>
     public string? Svg { get; init; }
 
-    /// <summary>Bold text drawn as the pictogram (e.g. HTTP) when SVG is not clear enough.</summary>
+    /// <summary>Gets bold text drawn as the pictogram (e.g. HTTP) when SVG is not clear enough.</summary>
     public string? Glyph { get; init; }
 
     public required string Base { get; init; }
 
     public required string Accent { get; init; }
 
-    /// <summary>Optional scale multiplier for the pictogram (default 1).</summary>
+    /// <summary>Gets optional scale multiplier for the pictogram (default 1).</summary>
     public float? IconScale { get; init; }
 }

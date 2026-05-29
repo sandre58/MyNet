@@ -14,26 +14,26 @@ namespace MyNet.UI.Tests.ViewModels
 #pragma warning restore IDE0130
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "These types are in specific namespaces so that assembly.GetType(fullName) can resolve them during convention-based resolution tests.")]
-    internal class PersonViewModel;
+    internal sealed class PersonViewModel;
 
-    internal class ItemViewModel;
+    internal sealed class ItemViewModel;
 
-    internal class DashboardViewModel;
+    internal sealed class DashboardViewModel;
 }
 
 #pragma warning disable SA1403, IDE0130
 namespace MyNet.UI.Tests.Views
 #pragma warning restore IDE0130, SA1403
 {
-    internal class PersonView;
+    internal sealed class PersonView;
 
-    internal class ItemView;
+    internal sealed class ItemView;
 
-    internal class DashboardControl;
+    internal sealed class DashboardControl;
 
-    internal class DashboardWindow;
+    internal sealed class DashboardWindow;
 
-    internal class DashboardPage;
+    internal sealed class DashboardPage;
 
-    internal class DashboardFragment;
+    internal sealed class DashboardFragment;
 }

@@ -119,4 +119,37 @@ public class EmailTests
         Assert.Contains("to@test.com", text, StringComparison.Ordinal);
         Assert.Contains("Subject", text, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void SetFrom_UpdatesSender()
+    {
+        var email = Email.From("old@test.com").SetFrom("new@test.com", "New");
+
+        Assert.Equal("new@test.com", email.Data.From.Address);
+        Assert.Equal("New", email.Data.From.Name);
+    }
+
+    [Fact]
+    public void To_WithEmailAddressList_AddsRecipients()
+    {
+        var email = Email.From("from@test.com")
+            .To([new("a@test.com"), new("b@test.com", "Bob")]);
+
+        Assert.Equal(2, email.Data.To.Count);
+        Assert.Equal("Bob", email.Data.To[1].Name);
+    }
+
+    [Fact]
+    public void Attach_WithList_AddsAllAttachments()
+    {
+        var attachments = new[]
+        {
+            new Attachment { Filename = "a.txt" },
+            new Attachment { Filename = "b.txt" }
+        };
+
+        var email = Email.From("from@test.com").Attach(attachments);
+
+        Assert.Equal(2, email.Data.Attachments.Count);
+    }
 }

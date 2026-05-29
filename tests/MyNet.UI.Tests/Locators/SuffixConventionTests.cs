@@ -81,4 +81,4 @@ public class SuffixConventionTests
 }
 
 /// <summary>Type at global namespace to test null-namespace path.</summary>
-internal class NoNamespaceType;
+internal sealed class NoNamespaceType;

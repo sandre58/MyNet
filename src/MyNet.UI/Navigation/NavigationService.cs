@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -114,10 +113,6 @@ public sealed class NavigationService(
 
     #region Core Navigation Pipeline
 
-    [SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "Reserved for UI host integration in client projects.")]
-    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Reserved for UI host integration in client projects.")]
-    private static Task<NavigationResult> ExecuteCoreAsync(NavigationContext context, CancellationToken cancellationToken) => Task.FromResult(new NavigationResult(NavigationStatus.Succeeded));
-
     private async Task<NavigationResult> NavigateInternalAsync(
         INavigationPage to,
         NavigationMode mode,
@@ -177,7 +172,7 @@ public sealed class NavigationService(
             return new(NavigationStatus.Failed, exception.Message, exception);
         }
 
-        Task<NavigationResult> core() => ExecuteCoreAsync(context, cancellationToken);
+        static Task<NavigationResult> core() => Task.FromResult(new NavigationResult(NavigationStatus.Succeeded));
     }
 
     #endregion
