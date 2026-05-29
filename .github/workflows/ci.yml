@@ -13,7 +13,7 @@ jobs:
     uses: sandre58/MyWorkflows/.github/workflows/ci.yml@main
     with:
       configuration: Release
-      test-args: '/p:CollectCoverage=true'
+      test-args: '-p:CollectCoverage=true'
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
