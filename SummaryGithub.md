@@ -3,48 +3,48 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/29/2026 - 15:13:39 |
-| Coverage date: | 05/29/2026 - 15:10:44 - 05/29/2026 - 15:11:33 |
-| Parser: | MultiReport (65x Cobertura) |
+| Generated on: | 05/29/2026 - 20:27:58 |
+| Coverage date: | 05/29/2026 - 20:25:15 - 05/29/2026 - 20:26:10 |
+| Parser: | MultiReport (64x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 666 |
 | Files: | 621 |
-| **Line coverage:** | 67.3% (9400 of 13957) |
-| Covered lines: | 9400 |
-| Uncovered lines: | 4557 |
-| Coverable lines: | 13957 |
-| Total lines: | 57363 |
-| **Branch coverage:** | 58.4% (3792 of 6488) |
-| Covered branches: | 3792 |
+| **Line coverage:** | 71.3% (9961 of 13965) |
+| Covered lines: | 9961 |
+| Uncovered lines: | 4004 |
+| Coverable lines: | 13965 |
+| Total lines: | 56585 |
+| **Branch coverage:** | 58.9% (3826 of 6488) |
+| Covered branches: | 3826 |
 | Total branches: | 6488 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 255_26645115857 |
+| Tag: | 263_26660271979 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Collections - 55.2%</summary>
+<details><summary>MyNet.Collections - 88.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Collections**|**55.2%**|**53.1%**|
+|**MyNet.Collections**|**88.2%**|**72.3%**|
 |MyNet.Collections.CollectionExtensions|100%|100%|
 |MyNet.Collections.DefaultCollectionSorter`1|91.6%|80%|
 |MyNet.Collections.DictionaryExtensions|100%|100%|
 |MyNet.Collections.DispatchedObservableCollection`1|70%|83.3%|
-|MyNet.Collections.EnumerableExtensions|0%|0%|
-|MyNet.Collections.ImmediateCollectionEventDispatcher|50%||
-|MyNet.Collections.ImmediateCollectionSynchronizer|0%||
-|MyNet.Collections.ListExtensions|22.2%|5.8%|
+|MyNet.Collections.EnumerableExtensions|97.8%|87%|
+|MyNet.Collections.ImmediateCollectionEventDispatcher|100%||
+|MyNet.Collections.ImmediateCollectionSynchronizer|100%||
+|MyNet.Collections.ListExtensions|94.4%|91.1%|
 |MyNet.Collections.LockCollectionSynchronizer|56%||
-|MyNet.Collections.ObservableCollectionDecorator`1|25%|40%|
-|MyNet.Collections.ObservableKeyedCollection`2|75%|65.7%|
-|MyNet.Collections.ObservableRangeCollection`1|96.3%|83.3%|
-|MyNet.Collections.ObservableRangeCollectionExtensions|70%|100%|
-|MyNet.Collections.ReadOnlyObservableKeyedCollection`2|0%||
+|MyNet.Collections.ObservableCollectionDecorator`1|79.5%|80%|
+|MyNet.Collections.ObservableKeyedCollection`2|76.5%|52.7%|
+|MyNet.Collections.ObservableRangeCollection`1|97.2%|68.1%|
+|MyNet.Collections.ObservableRangeCollectionExtensions|100%|100%|
+|MyNet.Collections.ReadOnlyObservableKeyedCollection`2|100%||
 |MyNet.Collections.StackExtensions|100%|100%|
-|MyNet.Collections.SynchronizationContextCollectionEventDispatcher|0%|0%|
-|MyNet.Collections.SynchronizedObservableCollection`1|33.3%|100%|
+|MyNet.Collections.SynchronizationContextCollectionEventDispatcher|100%|83.3%|
+|MyNet.Collections.SynchronizedObservableCollection`1|87.5%|100%|
 
 </details>
 <details><summary>MyNet.Fakers - 81.3%</summary>
@@ -74,15 +74,15 @@
 |MyNet.Fakers.Text.TextFaker|97%|85%|
 
 </details>
-<details><summary>MyNet.Generator - 62.6%</summary>
+<details><summary>MyNet.Generator - 92.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Generator**|**62.6%**|**47.4%**|
-|MyNet.Generator.DefaultRandomGenerator|67.6%|54.5%|
-|MyNet.Generator.Facade.RandomGenerator|66.6%|50%|
-|MyNet.Generator.RandomGeneratorExtensions|0%|0%|
-|MyNet.Generator.SystemRandomSource|66.6%||
+|**MyNet.Generator**|**92.9%**|**74.3%**|
+|MyNet.Generator.DefaultRandomGenerator|93.3%|77.2%|
+|MyNet.Generator.Facade.RandomGenerator|83.3%|50%|
+|MyNet.Generator.RandomGeneratorExtensions|92.3%|60%|
+|MyNet.Generator.SystemRandomSource|100%||
 
 </details>
 <details><summary>MyNet.Geography - 99.2%</summary>
@@ -118,7 +118,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Globalization**|**85.6%**|**80.7%**|
+|**MyNet.Globalization**|**85.6%**|**80.2%**|
 |MyNet.Globalization.Culture.CultureChangedEventArgs|100%||
 |MyNet.Globalization.Culture.CultureService|100%|100%|
 |MyNet.Globalization.Culture.SupportedCultures|100%||
@@ -158,7 +158,7 @@
 |MyNet.Globalization.Localization.Translation.TranslationOptionsBuilder|78.2%|100%|
 |MyNet.Globalization.Localization.Translation.TranslationOptionsPresets|100%||
 |MyNet.Globalization.Localization.Translation.TranslationService|100%|75%|
-|MyNet.Globalization.Localization.Translation.Translator|94.5%|95.8%|
+|MyNet.Globalization.Localization.Translation.Translator|94.5%|91.6%|
 |MyNet.Globalization.ServiceCollectionExtensions|98.6%|80%|
 
 </details>
@@ -166,9 +166,9 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Google**|**78.1%**|**66.6%**|
+|**MyNet.Google**|**78.1%**|**64.4%**|
 |MyNet.Google.Maps.AddressExtensions|0%|0%|
-|MyNet.Google.Maps.GoogleLocationService|85.5%|66.6%|
+|MyNet.Google.Maps.GoogleLocationService|85.5%|64.2%|
 |MyNet.Google.Maps.GoogleMapsHelper|92.8%|100%|
 |MyNet.Google.Maps.QueryLimitExceededException|14.2%||
 |MyNet.Google.Maps.RequestDeniedException|25%||
@@ -178,11 +178,11 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Http**|**53%**|**51.2%**|
+|**MyNet.Http**|**53%**|**50%**|
 |MyNet.Http.ApiParameter|50%||
 |MyNet.Http.Exceptions.HttpError|100%||
 |MyNet.Http.Exceptions.HttpException|0%||
-|MyNet.Http.Exceptions.MultipleHttpException|66.6%|100%|
+|MyNet.Http.Exceptions.MultipleHttpException|66.6%|75%|
 |MyNet.Http.Exceptions.ProblemDetailsParser|88.4%|40%|
 |MyNet.Http.Exceptions.WebApiException|45.4%|25%|
 |MyNet.Http.HttpRequestExtensions|100%|100%|
@@ -193,22 +193,22 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.3%**|**78.2%**|
+|**MyNet.Humanizer**|**88.3%**|**74.8%**|
 |MyNet.Humanizer.Display.DisplayTextOptions|100%||
 |MyNet.Humanizer.Display.DisplayTextService|100%|100%|
 |MyNet.Humanizer.Display.DisplayTextStrategyResolver|73.6%|35.7%|
 |MyNet.Humanizer.Display.Registration.DisplayTextStrategyRegistration`1|100%||
 |MyNet.Humanizer.Display.Registration.DisplayTextStrategyRegistry|100%||
-|MyNet.Humanizer.Display.Strategies.DisplayTextStrategyBase`1|96.1%|83.3%|
+|MyNet.Humanizer.Display.Strategies.DisplayTextStrategyBase`1|96.1%|77.7%|
 |MyNet.Humanizer.Display.Strategies.EnumDisplayTextStrategy|75%|100%|
 |MyNet.Humanizer.Display.Strategies.SmartEnumDisplayTextStrategy|75%||
 |MyNet.Humanizer.Display.TypedDisplayTextStrategyAdapter`1|50%||
 |MyNet.Humanizer.EnumExtensions|25%|50%|
 |MyNet.Humanizer.Facade.EnumExtensions|100%|100%|
-|MyNet.Humanizer.Facade.ListFormatterExtensions|100%|78.5%|
+|MyNet.Humanizer.Facade.ListFormatterExtensions|100%|64.2%|
 |MyNet.Humanizer.Facade.OrdinalizeExtensions|60%||
 |MyNet.Humanizer.Facade.QuantifyExtensions|100%||
-|MyNet.Humanizer.Facade.SmartEnumExtensions|100%|85.7%|
+|MyNet.Humanizer.Facade.SmartEnumExtensions|100%|78.5%|
 |MyNet.Humanizer.Facade.TextHumanizer|88.8%|50%|
 |MyNet.Humanizer.Facade.TimeHumanizerExtensions|92.8%|83.3%|
 |MyNet.Humanizer.Formatting.Addresses.AddressFormatter|100%||
@@ -217,7 +217,7 @@
 |MyNet.Humanizer.Formatting.Addresses.Cultures.EnglishAddressFormatter|100%||
 |MyNet.Humanizer.Formatting.Addresses.Cultures.FrenchAddressFormatter|100%||
 |MyNet.Humanizer.Formatting.Collections.ListFormatter|100%||
-|MyNet.Humanizer.Formatting.Collections.ListFormatterBase|93.1%|94.7%|
+|MyNet.Humanizer.Formatting.Collections.ListFormatterBase|93.1%|89.4%|
 |MyNet.Humanizer.Formatting.Collections.ListFormattingOptions|100%||
 |MyNet.Humanizer.Formatting.Collections.ListFormattingOptionsBuilder|83.3%|50%|
 |MyNet.Humanizer.Formatting.Collections.ListFormattingOptionsPresets|100%||
@@ -229,7 +229,7 @@
 |MyNet.Humanizer.QuantifyExtensions|66.6%||
 |MyNet.Humanizer.ServiceCollectionExtensions|100%|75%|
 |MyNet.Humanizer.SmartEnumExtensions|0%||
-|MyNet.Humanizer.Temporal.HumanFriendlyTimeSpanQuantizer|77.7%|66.6%|
+|MyNet.Humanizer.Temporal.HumanFriendlyTimeSpanQuantizer|77.7%|61.1%|
 |MyNet.Humanizer.Temporal.TimeHumanizationBuilder|67.2%||
 |MyNet.Humanizer.Temporal.TimeHumanizationPresets|100%||
 |MyNet.Humanizer.Temporal.TimeHumanizer|100%||
@@ -241,14 +241,14 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84%**|**80.4%**|
+|**MyNet.IO**|**84%**|**77.2%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|65%|62.5%|
+|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
-|MyNet.IO.DirectoryService|74.1%|75%|
+|MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
-|MyNet.IO.FileExtensionExtensions|100%|75%|
+|MyNet.IO.FileExtensionExtensions|100%|58.3%|
 |MyNet.IO.FileExtensions.CommonFileFilters|100%||
 |MyNet.IO.FileExtensions.FileExtension|88.8%|66.6%|
 |MyNet.IO.FileExtensions.FileExtensionFilter|100%||
@@ -264,53 +264,53 @@
 |MyNet.IO.Registry.RegistryPath|100%||
 
 </details>
-<details><summary>MyNet.Mail - 31.1%</summary>
+<details><summary>MyNet.Mail - 71.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Mail**|**31.1%**|**26%**|
-|MyNet.Mail.Email|64.9%|68.1%|
+|**MyNet.Mail**|**71.6%**|**57.6%**|
+|MyNet.Mail.Email|80.7%|77.2%|
 |MyNet.Mail.EmailFactory|100%||
 |MyNet.Mail.MailToHelper|35.2%|12.5%|
 |MyNet.Mail.Mock.MockMailService|63.6%|0%|
 |MyNet.Mail.Models.EmailAddress|50%||
-|MyNet.Mail.Models.SendResponse|0%||
-|MyNet.Mail.Smtp.MailSmtpService|0%|0%|
-|MyNet.Mail.Smtp.MailSmtpServiceFactory|0%||
+|MyNet.Mail.Models.SendResponse|100%||
+|MyNet.Mail.Smtp.MailSmtpService|89.4%|79.4%|
+|MyNet.Mail.Smtp.MailSmtpServiceFactory|100%||
 |MyNet.Mail.Smtp.SmtpHelper|27.5%|33.3%|
 
 </details>
-<details><summary>MyNet.Mail.MailKit - 36.7%</summary>
+<details><summary>MyNet.Mail.MailKit - 69.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Mail.MailKit**|**36.7%**|**49.5%**|
-|MyNet.Mail.MailKit.Exceptions.EmptySenderAddressesException|0%||
+|**MyNet.Mail.MailKit**|**69.9%**|**72.3%**|
+|MyNet.Mail.MailKit.Exceptions.EmptySenderAddressesException|66.6%||
 |MyNet.Mail.MailKit.Exceptions.UndefinedServerException|66.6%||
 |MyNet.Mail.MailKit.MailEncodingResolver|100%|100%|
-|MyNet.Mail.MailKit.MailKitService|28.8%|39.2%|
-|MyNet.Mail.MailKit.MailKitServiceFactory|0%|0%|
-|MyNet.Mail.MailKit.MailKitSmtpConnectionManager|0%|0%|
-|MyNet.Mail.MailKit.MailKitSmtpOptionsValidator|100%|100%|
-|MyNet.Mail.MailKit.ServiceCollectionExtensions|0%||
+|MyNet.Mail.MailKit.MailKitService|77.4%|80.3%|
+|MyNet.Mail.MailKit.MailKitServiceFactory|100%|50%|
+|MyNet.Mail.MailKit.MailKitSmtpConnectionManager|14.2%|6.2%|
+|MyNet.Mail.MailKit.MailKitSmtpOptionsValidator|100%|94.4%|
+|MyNet.Mail.MailKit.ServiceCollectionExtensions|100%||
 |MyNet.Mail.MailKit.SmtpSecureSocketOptionsResolver|93.7%|90.9%|
 
 </details>
-<details><summary>MyNet.Messaging - 86.5%</summary>
+<details><summary>MyNet.Messaging - 86.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Messaging**|**86.5%**|**75.9%**|
+|**MyNet.Messaging**|**86.7%**|**71.7%**|
 |MyNet.Messaging.MessageBase|0%||
-|MyNet.Messaging.Messenger|97%|94.8%|
+|MyNet.Messaging.Messenger|97%|91.8%|
 |MyNet.Messaging.MessengerExtensions|100%||
 |MyNet.Messaging.PropertyChangedMessage`1|0%||
 |MyNet.Messaging.PropertyChangedMessageBase|0%||
-|MyNet.Messaging.WeakAction|82%|67.5%|
-|MyNet.Messaging.WeakAction`1|82.9%|75%|
-|MyNet.Messaging.WeakCallable`1|86.9%|62%|
-|MyNet.Messaging.WeakFunc`1|85.2%|65%|
-|MyNet.Messaging.WeakFunc`2|86.8%|67.5%|
+|MyNet.Messaging.WeakAction|82%|65%|
+|MyNet.Messaging.WeakAction`1|82.9%|70%|
+|MyNet.Messaging.WeakCallable`1|86.9%|60%|
+|MyNet.Messaging.WeakFunc`1|85.2%|57.5%|
+|MyNet.Messaging.WeakFunc`2|86.8%|60%|
 
 </details>
 <details><summary>MyNet.Metadata - 100%</summary>
@@ -332,38 +332,38 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**82.1%**|**67.1%**|
-|MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|100%|
+|**MyNet.Observable**|**82.1%**|**63.6%**|
+|MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|56.2%||
-|MyNet.Observable.Behaviors.BehaviorKey|100%|85.7%|
-|MyNet.Observable.Behaviors.BehaviorRegistry|91.4%|77.2%|
+|MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
+|MyNet.Observable.Behaviors.BehaviorRegistry|91.4%|75%|
 |MyNet.Observable.Behaviors.CollectionTrackingBehavior|80.9%|58.8%|
 |MyNet.Observable.Behaviors.CultureChangedBehavior|63.6%|50%|
 |MyNet.Observable.Behaviors.EventBehavior`2|90.9%|75%|
 |MyNet.Observable.Behaviors.Metadata.Attributes.AlsoValidateAttribute|0%||
 |MyNet.Observable.Behaviors.Metadata.Features.ValidationDependencyFeature|100%||
 |MyNet.Observable.Behaviors.Metadata.MetadataApplicators|100%||
-|MyNet.Observable.Behaviors.MetadataBehaviorApplicator|95.2%|90%|
-|MyNet.Observable.Behaviors.ModificationTrackingBehavior|78.8%|70.2%|
+|MyNet.Observable.Behaviors.MetadataBehaviorApplicator|95.2%|70%|
+|MyNet.Observable.Behaviors.ModificationTrackingBehavior|78.8%|61.9%|
 |MyNet.Observable.Behaviors.NotifyPropertyChangedSourceSnapshot|100%||
-|MyNet.Observable.Behaviors.ObservableBehavior`1|90.9%|66.6%|
+|MyNet.Observable.Behaviors.ObservableBehavior`1|90.9%|50%|
 |MyNet.Observable.Behaviors.ObservableBehaviors|100%||
-|MyNet.Observable.Behaviors.PropertyChangedForwardingBehavior|85.7%|65.7%|
-|MyNet.Observable.Behaviors.PropertyValueAccess|100%|80%|
-|MyNet.Observable.Behaviors.SelectionBehavior|80%|68.7%|
+|MyNet.Observable.Behaviors.PropertyChangedForwardingBehavior|85.7%|60.5%|
+|MyNet.Observable.Behaviors.PropertyValueAccess|100%|70%|
+|MyNet.Observable.Behaviors.SelectionBehavior|80%|56.2%|
 |MyNet.Observable.Behaviors.SuspendableBehavior`1|100%|50%|
 |MyNet.Observable.Behaviors.TimeZoneChangedBehavior|63.6%|50%|
 |MyNet.Observable.Behaviors.ValidationBehavior`1|75.9%|59.6%|
-|MyNet.Observable.Behaviors.ValidationGraphVisitor|91.6%|91.6%|
+|MyNet.Observable.Behaviors.ValidationGraphVisitor|91.6%|83.3%|
 |MyNet.Observable.BoundedUnitValue`2|71.4%|33.3%|
 |MyNet.Observable.BoundedValue`1|56%|25%|
 |MyNet.Observable.CollectionExtensions|0%||
 |MyNet.Observable.Collections.ExtendedCollection|75%||
 |MyNet.Observable.Collections.ExtendedCollection`1|87.6%|87.5%|
-|MyNet.Observable.Collections.ExtendedCollectionBuilder`1|51.7%|70%|
+|MyNet.Observable.Collections.ExtendedCollectionBuilder`1|51.7%|60%|
 |MyNet.Observable.Collections.ExtendedObservableCollection`1|50%||
 |MyNet.Observable.Collections.Filters.ExpressionFilter`1|100%||
-|MyNet.Observable.Collections.Filters.FilterBuilder`1|92.5%|100%|
+|MyNet.Observable.Collections.Filters.FilterBuilder`1|92.5%|87.5%|
 |MyNet.Observable.Collections.Filters.FilterEngine`1|100%|90%|
 |MyNet.Observable.Collections.Filters.FilterGroup`1|95.2%|75%|
 |MyNet.Observable.Collections.Grouping.ExpressionGroupingProperty`1|100%||
@@ -374,13 +374,13 @@
 |MyNet.Observable.Collections.SchedulerCollectionEventDispatcher|100%|75%|
 |MyNet.Observable.Collections.Selection.SelectableCollection|50%||
 |MyNet.Observable.Collections.Selection.SelectableCollection`1|68.4%|100%|
-|MyNet.Observable.Collections.Selection.SelectionEngine`1|83.3%|82.2%|
+|MyNet.Observable.Collections.Selection.SelectionEngine`1|83.3%|80%|
 |MyNet.Observable.Collections.Sorting.ExpressionSortingProperty`1|100%||
 |MyNet.Observable.Collections.Sorting.SortEngine`1|95.2%|100%|
 |MyNet.Observable.Collections.Sorting.SortingBuilder`1|100%||
 |MyNet.Observable.Collections.Sorting.SortingComparer`1|93.7%|81.2%|
 |MyNet.Observable.Collections.Sources.SourceEngine`1|71.9%|60.4%|
-|MyNet.Observable.Collections.Statistics.CollectionStatistics`2|100%|62.5%|
+|MyNet.Observable.Collections.Statistics.CollectionStatistics`2|100%|43.7%|
 |MyNet.Observable.Collections.Statistics.DoubleStatisticsComputer|66.6%||
 |MyNet.Observable.Collections.Statistics.TimeSpanStatisticsComputer|87.5%||
 |MyNet.Observable.CultureBoundValue`1|94.4%|60%|
@@ -405,8 +405,8 @@
 |MyNet.Observable.MassValue|0%||
 |MyNet.Observable.MergeManyEx`2|100%|50%|
 |MyNet.Observable.MergeManyEx`4|100%|50%|
-|MyNet.Observable.ModificationExtensions|33.3%|41.6%|
-|MyNet.Observable.ObservableObject|95.2%|86.8%|
+|MyNet.Observable.ModificationExtensions|33.3%|33.3%|
+|MyNet.Observable.ObservableObject|95.2%|84.2%|
 |MyNet.Observable.ObservableObjectPropertyAccess|92.8%|50%|
 |MyNet.Observable.PropertyNotificationSuspension|93.4%|77.7%|
 |MyNet.Observable.StatisticsExtensions|100%||
@@ -425,34 +425,34 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable.Metadata.Generator**|**86%**|**69.8%**|
-|MyNet.Observable.Metadata.Generator.MetadataProviderGenerator|86.1%|75.9%|
-|MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer|81.5%|59.6%|
-|MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator|89%|69.2%|
+|**MyNet.Observable.Metadata.Generator**|**86%**|**65.3%**|
+|MyNet.Observable.Metadata.Generator.MetadataProviderGenerator|86.1%|70.3%|
+|MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer|81.5%|58%|
+|MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator|89%|63.4%|
 
 </details>
 <details><summary>MyNet.Platform.Windows - 41.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Platform.Windows**|**41.4%**|**53.5%**|
+|**MyNet.Platform.Windows**|**41.4%**|**50%**|
 |MyNet.Platform.Windows.Authentication.WindowsAuthenticationService|0%||
 |MyNet.Platform.Windows.Authentication.WindowsAuthenticationService`1|90.9%|90%|
 |MyNet.Platform.Windows.Authentication.WindowsUserPrincipal|0%|0%|
 |MyNet.Platform.Windows.Mail.NativeMethods|0%|0%|
 |MyNet.Platform.Windows.Registry.FileHistory.RegistryRecentFileRepository|0%|0%|
-|MyNet.Platform.Windows.Registry.RegistryValueConverter|100%|92.8%|
+|MyNet.Platform.Windows.Registry.RegistryValueConverter|100%|82.1%|
 |MyNet.Platform.Windows.Registry.WindowsRegistryNavigator|100%|50%|
 |MyNet.Platform.Windows.Registry.WindowsRegistryQuery|78.5%|60%|
-|MyNet.Platform.Windows.Registry.WindowsRegistryService|90%|93.7%|
+|MyNet.Platform.Windows.Registry.WindowsRegistryService|90%|87.5%|
 |MyNet.Platform.Windows.Registry.WindowsRegistryStore|100%|50%|
 
 </details>
-<details><summary>MyNet.Primitives - 59.9%</summary>
+<details><summary>MyNet.Primitives - 70.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Primitives**|**59.9%**|**53.8%**|
+|**MyNet.Primitives**|**70.6%**|**60%**|
 |MyNet.Primitives.BooleanExtensions|100%|100%|
 |MyNet.Primitives.ComparableExtensions|100%|92%|
 |MyNet.Primitives.ComparerExtensions|100%||
@@ -468,69 +468,69 @@
 |MyNet.Primitives.Conversion.Quantity|100%||
 |MyNet.Primitives.Conversion.Quantity`1|61.1%|0%|
 |MyNet.Primitives.Conversion.TemperatureConverter|87.5%|75%|
-|MyNet.Primitives.Conversion.TimeConverter|66.6%|44.4%|
+|MyNet.Primitives.Conversion.TimeConverter|73.3%|55.5%|
 |MyNet.Primitives.Conversion.UnitConverterRegistry|78.5%|50%|
 |MyNet.Primitives.ConversionExtensions|33.3%||
-|MyNet.Primitives.CultureExtensions|33.3%|0%|
-|MyNet.Primitives.DateOnlyExtensions|76.8%|78.2%|
-|MyNet.Primitives.DateRangeExtensions|0%|0%|
-|MyNet.Primitives.DateTimeExtensions|54.9%|38.2%|
-|MyNet.Primitives.DateTimeOffsetExtensions|0%|0%|
-|MyNet.Primitives.DelegateDisposable|0%|0%|
+|MyNet.Primitives.CultureExtensions|100%|50%|
+|MyNet.Primitives.DateOnlyExtensions|76.8%|76.8%|
+|MyNet.Primitives.DateRangeExtensions|79.1%|64.2%|
+|MyNet.Primitives.DateTimeExtensions|54.9%|37.2%|
+|MyNet.Primitives.DateTimeOffsetExtensions|57.2%|62.2%|
+|MyNet.Primitives.DelegateDisposable|100%|100%|
 |MyNet.Primitives.EnumExtensions|100%||
 |MyNet.Primitives.Events.WeakEventSource`1|100%|85.7%|
 |MyNet.Primitives.Exceptions.TranslatableException|45.4%||
-|MyNet.Primitives.ExpressionExtensions|53.8%|31.8%|
+|MyNet.Primitives.ExpressionExtensions|92.3%|63.6%|
 |MyNet.Primitives.FallbackValue`1|100%|100%|
-|MyNet.Primitives.Helpers.CharHelper|0%||
+|MyNet.Primitives.Helpers.CharHelper|100%||
 |MyNet.Primitives.Helpers.ProcessHelper|39.1%|0%|
 |MyNet.Primitives.Helpers.ResourcesHelper|91.6%|87.5%|
-|MyNet.Primitives.IntervalExtensions|50%|40%|
+|MyNet.Primitives.IntervalExtensions|50%|28%|
 |MyNet.Primitives.Intervals.ClosedInterval`1|75%|50%|
-|MyNet.Primitives.Intervals.DateRange|0%|0%|
-|MyNet.Primitives.Intervals.DateTimeRange|100%|100%|
+|MyNet.Primitives.Intervals.DateRange|50%|20%|
+|MyNet.Primitives.Intervals.DateTimeRange|100%|75%|
 |MyNet.Primitives.Intervals.Interval`1|75%|100%|
-|MyNet.Primitives.Intervals.Interval`2|38.9%|37.7%|
-|MyNet.Primitives.Intervals.NumericInterval`2|100%|85%|
+|MyNet.Primitives.Intervals.Interval`2|39.4%|39.2%|
+|MyNet.Primitives.Intervals.NumericInterval`2|100%|75%|
 |MyNet.Primitives.Intervals.NumericRange`1|100%|75%|
 |MyNet.Primitives.Intervals.OpenInterval`1|100%|75%|
 |MyNet.Primitives.Intervals.Period|100%|75%|
 |MyNet.Primitives.Intervals.TemporalInterval`1|61.5%|36.3%|
 |MyNet.Primitives.Intervals.TimeRange|54.5%|28.5%|
-|MyNet.Primitives.Intervals.ValueRange`1|100%|87.5%|
-|MyNet.Primitives.MathExtensions|95%|80%|
-|MyNet.Primitives.Metadata.SymbolAttribute|0%||
+|MyNet.Primitives.Intervals.ValueRange`1|100%|81.2%|
+|MyNet.Primitives.MathExtensions|95%|78.5%|
+|MyNet.Primitives.Metadata.SymbolAttribute|100%||
 |MyNet.Primitives.NumberExtensions|75%||
 |MyNet.Primitives.NumberToTimeSpanExtensions|44.4%|33.3%|
-|MyNet.Primitives.ObjectExtensions|5.8%|16.6%|
+|MyNet.Primitives.ObjectExtensions|100%|66.6%|
 |MyNet.Primitives.PeriodExtensions|50%|50%|
 |MyNet.Primitives.Providers.ItemsProvider`1|100%|100%|
 |MyNet.Primitives.Providers.ItemsProviderBase`1|100%||
 |MyNet.Primitives.Providers.PredicateItemsProvider`1|100%|100%|
-|MyNet.Primitives.QuantityExtensions|33.3%||
-|MyNet.Primitives.Sequences.IntegerSequence|0%||
+|MyNet.Primitives.QuantityExtensions|100%||
+|MyNet.Primitives.Sequences.IntegerSequence|100%||
 |MyNet.Primitives.SimplificationExtensions|100%|96.1%|
-|MyNet.Primitives.SmartEnum`2|100%|79.1%|
-|MyNet.Primitives.StringExtensions|6.8%|10%|
+|MyNet.Primitives.SmartEnum`2|100%|66.6%|
+|MyNet.Primitives.StringExtensions|75.8%|100%|
 |MyNet.Primitives.Temporal.DateTimeHelper|14.2%|16.6%|
 |MyNet.Primitives.Temporal.FluentTimeSpan|93.7%|75%|
 |MyNet.Primitives.TimeOnlyExtensions|87%|66.6%|
 |MyNet.Primitives.TimeRangeExtensions|81.8%|100%|
-|MyNet.Primitives.TimeSpanExtensions|12.5%|0%|
+|MyNet.Primitives.TimeSpanExtensions|31.2%|27.2%|
 
 </details>
 <details><summary>MyNet.Reflection - 69.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Reflection**|**69.3%**|**70.4%**|
+|**MyNet.Reflection**|**69.3%**|**68.8%**|
 |MyNet.Reflection.ObjectGraphExtensions|100%||
-|MyNet.Reflection.ObjectGraphMapper|84.4%|78.2%|
+|MyNet.Reflection.ObjectGraphMapper|84.4%|73.9%|
 |MyNet.Reflection.PropertyAccessorCache`1|100%|100%|
 |MyNet.Reflection.PropertyCache|0%|0%|
 |MyNet.Reflection.PropertyQuery|0%|0%|
 |MyNet.Reflection.ReflectionComparer`1|93.3%|77.2%|
-|MyNet.Reflection.ReflectionExtensions|86.1%|67.5%|
+|MyNet.Reflection.ReflectionExtensions|86.1%|65%|
 |MyNet.Reflection.TypeHelper|76.3%|67.1%|
 
 </details>
@@ -538,9 +538,9 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Temporal**|**86.4%**|**81.2%**|
-|MyNet.Temporal.Decomposition.TimeSpanDecomposer|95.1%|85.2%|
-|MyNet.Temporal.Decomposition.TimeSpanDecompositionBuilder|68.7%|100%|
+|**MyNet.Temporal**|**86.4%**|**78.1%**|
+|MyNet.Temporal.Decomposition.TimeSpanDecomposer|95.1%|82.3%|
+|MyNet.Temporal.Decomposition.TimeSpanDecompositionBuilder|68.7%|50%|
 |MyNet.Temporal.Decomposition.TimeSpanDecompositionExtensions|50%|25%|
 |MyNet.Temporal.Decomposition.TimeSpanDecompositionOptions|0%||
 |MyNet.Temporal.Decomposition.TimeSpanDecompositionPresets|100%||
@@ -551,7 +551,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Text**|**73.3%**|**62.9%**|
+|**MyNet.Text**|**73.3%**|**60.5%**|
 |MyNet.Text.Formatting.Formatter|100%||
 |MyNet.Text.Formatting.IncrementTransform|72.9%|90%|
 |MyNet.Text.Formatting.InitialsFormatterTransform|93.3%|87.5%|
@@ -559,7 +559,7 @@
 |MyNet.Text.Normalization.DiacriticsRemovalTransform|88.8%|75%|
 |MyNet.Text.Normalization.TextNormalization|100%||
 |MyNet.Text.Normalization.UnicodeNormalizationTransform|100%||
-|MyNet.Text.Normalization.WhitespaceNormalizationTransform|93.7%|78.5%|
+|MyNet.Text.Normalization.WhitespaceNormalizationTransform|93.7%|71.4%|
 |MyNet.Text.Randomize.TextRandomGenerator|28.3%|20.9%|
 |MyNet.Text.Redaction.FixedMaskTextRedactor|83.3%|50%|
 |MyNet.Text.Redaction.Redactor|100%||
@@ -571,8 +571,8 @@
 |MyNet.Text.Sanitization.FileNameTextSanitizer|88.8%|83.3%|
 |MyNet.Text.Sanitization.Sanitizer|100%||
 |MyNet.Text.Slugification.Slugifier|100%||
-|MyNet.Text.Slugification.SlugifyTransform|94.7%|87.5%|
-|MyNet.Text.StringExtensions|96.8%|87.5%|
+|MyNet.Text.Slugification.SlugifyTransform|94.7%|70.8%|
+|MyNet.Text.StringExtensions|96.8%|81.2%|
 |MyNet.Text.Templating.TemplateTransform|97.6%|93.7%|
 |MyNet.Text.Templating.TextTemplateOptionsBuilder|87%|0%|
 |MyNet.Text.Templating.TextTemplating|75%||
@@ -599,7 +599,7 @@
 |MyNet.Text.TransformExtensions|83.3%||
 |MyNet.Text.Truncation.FixedLengthTextTruncator|100%|100%|
 |MyNet.Text.Truncation.FixedNumberOfCharactersTextTruncator|93.3%|90.9%|
-|MyNet.Text.Truncation.FixedNumberOfWordsTextTruncator|95.8%|93.7%|
+|MyNet.Text.Truncation.FixedNumberOfWordsTextTruncator|95.8%|90.6%|
 |MyNet.Text.Truncation.TextTruncationOptions|100%|100%|
 |MyNet.Text.Truncation.TextTruncatorBase|100%||
 |MyNet.Text.Truncation.Truncator|0%||
@@ -609,10 +609,10 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**49.5%**|**41.8%**|
+|**MyNet.UI**|**49.5%**|**37.8%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
-|MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|20%|
+|MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
 |MyNet.UI.Commands.CommandFactoryExtensions|86.6%||
 |MyNet.UI.Commands.RelayCommand|100%|90%|
 |MyNet.UI.Commands.RelayCommand`1|87.5%|87.5%|
@@ -638,9 +638,9 @@
 |MyNet.UI.Dialogs.MessageBox.DefaultMessageBoxFactory|100%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxBuilder|0%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxService|89.2%|25%|
-|MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|13.3%|
+|MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|6.6%|
 |MyNet.UI.Dialogs.ServiceCollectionExtensions|46.6%|100%|
-|MyNet.UI.Helpers.ApplicationHelper|100%|53.3%|
+|MyNet.UI.Helpers.ApplicationHelper|100%|50%|
 |MyNet.UI.Helpers.IoHelper|0%|0%|
 |MyNet.UI.Loading.BusyExtensions|4%||
 |MyNet.UI.Loading.BusyScope|83.3%|50%|
@@ -648,7 +648,7 @@
 |MyNet.UI.Loading.Models.Busy|85%|37.5%|
 |MyNet.UI.Loading.Models.DeterminateBusy|0%||
 |MyNet.UI.Loading.Models.IndeterminateBusy|0%||
-|MyNet.UI.Loading.Models.ProgressionBusy|100%|100%|
+|MyNet.UI.Loading.Models.ProgressionBusy|100%|50%|
 |MyNet.UI.Loading.ServiceCollectionExtensions|100%||
 |MyNet.UI.Locators.Conventions.AssemblyRootConvention|81.8%|50%|
 |MyNet.UI.Locators.Conventions.NamespaceConvention|80%|50%|
@@ -670,7 +670,7 @@
 |MyNet.UI.Navigation.NavigationJournal|100%|66.6%|
 |MyNet.UI.Navigation.NavigationLifecycle|100%|100%|
 |MyNet.UI.Navigation.NavigationRequestBuilder|40%|37.5%|
-|MyNet.UI.Navigation.NavigationService|95.3%|90%|
+|MyNet.UI.Navigation.NavigationService|95.2%|83.3%|
 |MyNet.UI.Navigation.NavigationStateChangedEventArgs|100%||
 |MyNet.UI.Navigation.ServiceCollectionExtensions|53.3%||
 |MyNet.UI.Notifications.Models.ActionNotification|0%||
@@ -690,34 +690,34 @@
 |MyNet.UI.Theming.ThemeChangedEventArgs|100%||
 |MyNet.UI.Theming.ThemeManager|54.5%|44.4%|
 |MyNet.UI.Threading.ServiceCollectionExtensions|100%||
-|MyNet.UI.Toasting.DefaultToastFactory|100%|100%|
+|MyNet.UI.Toasting.DefaultToastFactory|100%|66.6%|
 |MyNet.UI.Toasting.Filters.AllToastsFilter|100%||
 |MyNet.UI.Toasting.Filters.CompositeToastFilter|0%||
 |MyNet.UI.Toasting.Models.Toast|100%|50%|
 |MyNet.UI.Toasting.ServiceCollectionExtensions|100%|50%|
 |MyNet.UI.Toasting.Settings.ToastManagerOptions|100%||
 |MyNet.UI.Toasting.Settings.ToastSettings|100%||
-|MyNet.UI.Toasting.ToastManager|70.2%|71%|
+|MyNet.UI.Toasting.ToastManager|70.2%|65.7%|
 |MyNet.UI.ViewModels.Crud.ChildItemViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|80.7%|
-|MyNet.UI.ViewModels.Crud.EditionViewModel|11.5%|15.7%|
+|MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|73%|
+|MyNet.UI.ViewModels.Crud.EditionViewModel|11.5%|10.5%|
 |MyNet.UI.ViewModels.Crud.ItemChangedEventArgs`1|0%||
-|MyNet.UI.ViewModels.Crud.ItemEditionViewModel`1|84.8%|75%|
+|MyNet.UI.ViewModels.Crud.ItemEditionViewModel`1|84.8%|50%|
 |MyNet.UI.ViewModels.Crud.ItemViewModel`1|64%|50%|
 |MyNet.UI.ViewModels.Crud.StringListEditionViewModel|95.2%|55.5%|
-|MyNet.UI.ViewModels.Dialog.DialogViewModel|75%|66.6%|
+|MyNet.UI.ViewModels.Dialog.DialogViewModel|75%|50%|
 |MyNet.UI.ViewModels.Dialog.DialogViewModel`1|100%||
 |MyNet.UI.ViewModels.Dialog.ListDialogViewModel`2|0%|0%|
 |MyNet.UI.ViewModels.Dialog.SelectionDialogViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Display.CalendarDisplayModeViewModel|73.6%|100%|
+|MyNet.UI.ViewModels.Display.CalendarDisplayModeViewModel|73.6%|50%|
 |MyNet.UI.ViewModels.Display.ChartDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.DayDisplayModeViewModel|75%|50%|
 |MyNet.UI.ViewModels.Display.DetailedDisplayModeViewModel|100%||
-|MyNet.UI.ViewModels.Display.DisplayModeViewModel|57.1%|100%|
-|MyNet.UI.ViewModels.Display.DisplaySelectorViewModel|65.5%|80%|
+|MyNet.UI.ViewModels.Display.DisplayModeViewModel|57.1%|50%|
+|MyNet.UI.ViewModels.Display.DisplaySelectorViewModel|65.5%|55%|
 |MyNet.UI.ViewModels.Display.GridDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.HourDisplayModeViewModel|100%||
-|MyNet.UI.ViewModels.Display.ListDisplayModeViewModel|71.4%|100%|
+|MyNet.UI.ViewModels.Display.ListDisplayModeViewModel|71.4%|50%|
 |MyNet.UI.ViewModels.Display.MonthDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.Options.ColumnOptionsViewModel|46.6%|33.3%|
 |MyNet.UI.ViewModels.Display.Options.DisplayColumnOptionViewModel|82.6%||
@@ -725,7 +725,7 @@
 |MyNet.UI.ViewModels.Display.YearDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Export.ExportColumnViewModel`1|0%||
 |MyNet.UI.ViewModels.Export.ExportFileType|0%|0%|
-|MyNet.UI.ViewModels.Export.ExportViewModelBase`1|97%|86.3%|
+|MyNet.UI.ViewModels.Export.ExportViewModelBase`1|97%|72.7%|
 |MyNet.UI.ViewModels.Export.ExportViewModelValidator`1|100%|100%|
 |MyNet.UI.ViewModels.Export.FileExportByColumnsViewModelBase`2|0%|0%|
 |MyNet.UI.ViewModels.Export.FileExportByColumnsViewModelValidator`2|0%|0%|
@@ -735,14 +735,14 @@
 |MyNet.UI.ViewModels.FileHistory.RecentFilesViewModel|0%|0%|
 |MyNet.UI.ViewModels.FileHistory.RecentFileViewModel|0%|0%|
 |MyNet.UI.ViewModels.Import.ImportBySourcesDialogViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Import.ImportDialogViewModel`1|96.2%|87.5%|
+|MyNet.UI.ViewModels.Import.ImportDialogViewModel`1|96.2%|68.7%|
 |MyNet.UI.ViewModels.Import.ImportDialogViewModelValidator`1|100%|100%|
 |MyNet.UI.ViewModels.Import.ImportItemsProvider`1|0%|0%|
 |MyNet.UI.ViewModels.Import.ImportItemViewModel|66.6%||
-|MyNet.UI.ViewModels.Import.ImportListViewModel`1|95.2%|80%|
-|MyNet.UI.ViewModels.List.CrudListViewModel`1|72.4%|77.7%|
+|MyNet.UI.ViewModels.Import.ImportListViewModel`1|95.2%|60%|
+|MyNet.UI.ViewModels.List.CrudListViewModel`1|72.4%|72.2%|
 |MyNet.UI.ViewModels.List.ExtendedCollectionDataProvider`1|66.6%|50%|
-|MyNet.UI.ViewModels.List.Factories.ListViewModelFactory|73%|66.6%|
+|MyNet.UI.ViewModels.List.Factories.ListViewModelFactory|73%|50%|
 |MyNet.UI.ViewModels.List.Filtering.Catalog.FilterDefinition`2|0%||
 |MyNet.UI.ViewModels.List.Filtering.FilterConditionViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.List.Filtering.FilterGroupViewModel`1|0%|0%|
@@ -770,11 +770,11 @@
 |MyNet.UI.ViewModels.List.Grouping.GroupingViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.List.Grouping.GroupingViewModelBuilder`1|0%|0%|
 |MyNet.UI.ViewModels.List.ListViewModel`1|42.8%|41.6%|
-|MyNet.UI.ViewModels.List.ListViewModelBase`1|80.2%|65.5%|
+|MyNet.UI.ViewModels.List.ListViewModelBase`1|80.2%|60.3%|
 |MyNet.UI.ViewModels.List.ListViewModelBase`2|50%|0%|
 |MyNet.UI.ViewModels.List.Paging.PagingChangedEventArgs|100%||
-|MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|67.8%|
-|MyNet.UI.ViewModels.List.Selection.SelectableCollectionSelectionManager`1|41.9%|18.7%|
+|MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|64.2%|
+|MyNet.UI.ViewModels.List.Selection.SelectableCollectionSelectionManager`1|41.9%|12.5%|
 |MyNet.UI.ViewModels.List.Selection.SelectableListViewModel`1|96.9%|50%|
 |MyNet.UI.ViewModels.List.Services.NoOpCrudService`1|0%||
 |MyNet.UI.ViewModels.List.Sorting.SortingChangedEventArgs`1|100%||
@@ -782,44 +782,44 @@
 |MyNet.UI.ViewModels.List.Sorting.SortingPropertyViewModelBuilder`1|0%|0%|
 |MyNet.UI.ViewModels.List.Sorting.SortingViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.List.Sorting.SortingViewModelBuilder`1|0%|0%|
-|MyNet.UI.ViewModels.List.VirtualizedListViewModel`1|92.5%|75%|
-|MyNet.UI.ViewModels.Preferences.DisplayPreferencesViewModel|52.4%|38.8%|
+|MyNet.UI.ViewModels.List.VirtualizedListViewModel`1|92.5%|62.5%|
+|MyNet.UI.ViewModels.Preferences.DisplayPreferencesViewModel|52.4%|33.3%|
 |MyNet.UI.ViewModels.Preferences.PreferencesTabWorkspace|100%||
 |MyNet.UI.ViewModels.Preferences.PreferencesViewModel|92.5%|83.3%|
 |MyNet.UI.ViewModels.Preferences.TimeAndLanguagePreferencesViewModel|0%|0%|
 |MyNet.UI.ViewModels.ServiceCollectionExtensions|0%||
 |MyNet.UI.ViewModels.Shell.About.AboutViewModel|0%|0%|
 |MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|83.3%|55.5%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|71.4%|75%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|71.4%|58.3%|
 |MyNet.UI.ViewModels.Shell.Drawers.ShellDrawerCoordinator|85.7%||
 |MyNet.UI.ViewModels.Shell.Drawers.ShellNotificationsHost|93.3%|50%|
-|MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|80%|
+|MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|60%|
 |MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModelFactory|0%||
-|MyNet.UI.ViewModels.Shell.FileMenu.ShellFileMenuHost|68.5%|61.1%|
-|MyNet.UI.ViewModels.Shell.Host.ShellHostProvider|100%|100%|
-|MyNet.UI.ViewModels.Shell.Host.ShellHostViewModel|79.2%|54.1%|
-|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsDrawerCoordinator|94.7%|80%|
-|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsViewModel|87.7%|50%|
+|MyNet.UI.ViewModels.Shell.FileMenu.ShellFileMenuHost|68.5%|50%|
+|MyNet.UI.ViewModels.Shell.Host.ShellHostProvider|100%|50%|
+|MyNet.UI.ViewModels.Shell.Host.ShellHostViewModel|79.2%|45.8%|
+|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsDrawerCoordinator|94.7%|70%|
+|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsViewModel|87.7%|31.2%|
 |MyNet.UI.ViewModels.Shell.Services.ShellService|72.7%|83.3%|
 |MyNet.UI.ViewModels.Shell.ShellOptions|100%||
 |MyNet.UI.ViewModels.Shell.Startup.SplashScreenViewModel|59.1%|40.9%|
-|MyNet.UI.ViewModels.Shell.Taskbar.BusyTaskbarCoordinator|95%|75%|
+|MyNet.UI.ViewModels.Shell.Taskbar.BusyTaskbarCoordinator|95%|71.4%|
 |MyNet.UI.ViewModels.Shell.Taskbar.TaskbarProgressSource|100%|100%|
 |MyNet.UI.ViewModels.ShellDrawerActionExtensions|71.4%|50%|
 |MyNet.UI.ViewModels.ViewModelBase|45.4%|30%|
 |MyNet.UI.ViewModels.ViewModelExtensions|0%||
-|MyNet.UI.ViewModels.Workspace.TabWorkspaceViewModel|42.8%|30%|
-|MyNet.UI.ViewModels.Workspace.WorkspaceViewModel|77.4%|75%|
+|MyNet.UI.ViewModels.Workspace.TabWorkspaceViewModel|42.8%|22.5%|
+|MyNet.UI.ViewModels.Workspace.WorkspaceViewModel|77.4%|58.3%|
 
 </details>
 <details><summary>MyNet.Utilities - 81.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**69.3%**|
+|**MyNet.Utilities**|**81.9%**|**64.9%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
-|MyNet.Utilities.Caching.CacheStorage`2|76.7%|71.8%|
+|MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
 |MyNet.Utilities.Caching.CacheStorageValueInfo`1|45.4%|58.3%|
 |MyNet.Utilities.Caching.ExpiredEventArgs`2|100%||
 |MyNet.Utilities.Caching.ExpiringEventArgs`2|100%||
@@ -832,13 +832,13 @@
 |MyNet.Utilities.Deferring.DeferredOperations|100%|100%|
 |MyNet.Utilities.Encryption.AesEncryptionService|100%|75%|
 |MyNet.Utilities.Execution.ScopedActionRunner|88.5%|72.2%|
-|MyNet.Utilities.Execution.ScopedActionRunner`2|61.7%|70.8%|
-|MyNet.Utilities.Execution.SubscriberLists|100%|100%|
+|MyNet.Utilities.Execution.ScopedActionRunner`2|61.7%|62.5%|
+|MyNet.Utilities.Execution.SubscriberLists|100%|50%|
 |MyNet.Utilities.IdentityExtensions|100%||
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|77.7%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
@@ -849,10 +849,10 @@
 |MyNet.Utilities.Progress.ProgressReport`1|100%||
 |MyNet.Utilities.Progress.ProgressStep`1|100%|85%|
 |MyNet.Utilities.ProgresserExtensions|100%||
-|MyNet.Utilities.StreamExtensions|93.5%|70%|
-|MyNet.Utilities.Suspending.Suspender|100%|100%|
+|MyNet.Utilities.StreamExtensions|93.5%|63.3%|
+|MyNet.Utilities.Suspending.Suspender|100%|83.3%|
 |MyNet.Utilities.Suspending.SuspendScope|100%|100%|
-|MyNet.Utilities.Threading.Debouncer|96%|75%|
+|MyNet.Utilities.Threading.Debouncer|96%|50%|
 |MyNet.Utilities.Threading.SingleTaskDeferrer|69.6%|85%|
 |MyNet.Utilities.Threading.SingleTaskRunner|87.6%|70%|
 
