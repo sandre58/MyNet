@@ -26,7 +26,7 @@ public static class ShellDrawerActionExtensions
                 ShellDrawerAction.Show => true,
                 ShellDrawerAction.Hide => false,
                 ShellDrawerAction.Toggle => !isOpen,
-                _ => false,
+                _ => false
             };
 
         /// <summary>
@@ -38,7 +38,7 @@ public static class ShellDrawerActionExtensions
                 ShellDrawerAction.Show => true,
                 ShellDrawerAction.Hide => false,
                 ShellDrawerAction.Toggle => !isOpen,
-                _ => isOpen,
+                _ => isOpen
             };
     }
 }

@@ -4,9 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -30,26 +28,26 @@ public class PreferencesViewModelTests
     }
 
     [Fact]
-    public async Task ResetAsync_CallsPreferencesServiceAndChildWorkspaces()
+    public async Task ResetAsync_CallsPreferencesServiceAndChildWorkspacesAsync()
     {
         var preferences = new Mock<IPersistentPreferencesService>();
         var child = new TestPageViewModel();
 
         var sut = CreateSut(preferences.Object, child);
 
-        await sut.ResetAsync().ConfigureAwait(false);
+        await sut.ResetAsync().ConfigureAwait(true);
 
         preferences.Verify(x => x.Reset(), Times.Once);
         preferences.Verify(x => x.Reset(), Times.Once);
     }
 
     [Fact]
-    public async Task RefreshAsync_CallsPreferencesServiceAndChildWorkspaces()
+    public async Task RefreshAsync_CallsPreferencesServiceAndChildWorkspacesAsync()
     {
         var preferences = new Mock<IPersistentPreferencesService>();
         var sut = CreateSut(preferences.Object, new TestPageViewModel());
 
-        await sut.RefreshAsync().ConfigureAwait(false);
+        await sut.RefreshAsync().ConfigureAwait(true);
 
         preferences.Verify(x => x.Reload(), Times.Once);
     }

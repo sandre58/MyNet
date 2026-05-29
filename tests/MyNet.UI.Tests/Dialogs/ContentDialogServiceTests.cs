@@ -8,8 +8,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyNet.UI;
-using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.ContentDialogs;
 using Xunit;
 
@@ -25,7 +23,7 @@ public class ContentDialogServiceTests
         var service = new ContentDialogService([low, high]);
         var dialog = new TestDialog();
 
-        var result = await service.ShowAsync(dialog).ConfigureAwait(false);
+        var result = await service.ShowAsync(dialog).ConfigureAwait(true);
 
         result.IsSuccess.Should().BeTrue();
         high.ShowCount.Should().Be(1);
@@ -40,17 +38,17 @@ public class ContentDialogServiceTests
         var dialog = new TestTypedDialog();
 
         var showTask = service.ShowAsync(dialog);
-        await strategy.WaitUntilShowingAsync().ConfigureAwait(false);
+        await strategy.WaitUntilShowingAsync().ConfigureAwait(true);
         dialog.Complete("payload");
         strategy.Release();
-        var result = await showTask.ConfigureAwait(false);
+        var result = await showTask.ConfigureAwait(true);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be("payload");
     }
 
     [Fact]
-    public async Task ShowAsync_RaisesDialogOpened()
+    public async Task ShowAsync_RaisesDialogOpenedAsync()
     {
         var strategy = new BlockingDialogStrategy();
         var service = new ContentDialogService([strategy]);
@@ -59,13 +57,13 @@ public class ContentDialogServiceTests
         service.DialogOpened += (_, e) => opened = e;
 
         var showTask = service.ShowAsync(dialog);
-        await strategy.WaitUntilShowingAsync().ConfigureAwait(false);
+        await strategy.WaitUntilShowingAsync().ConfigureAwait(true);
 
         opened.Should().NotBeNull();
         opened!.Dialog.Should().BeSameAs(dialog);
 
         strategy.Release();
-        await showTask.ConfigureAwait(false);
+        await showTask.ConfigureAwait(true);
     }
 
     [Fact]
@@ -76,13 +74,13 @@ public class ContentDialogServiceTests
         var dialog = new TestDialog();
 
         var showTask = service.ShowAsync(dialog);
-        await strategy.WaitUntilShowingAsync().ConfigureAwait(false);
+        await strategy.WaitUntilShowingAsync().ConfigureAwait(true);
 
         service.OpenedDialogs.Should().Contain(dialog);
         service.HasOpenedDialogs.Should().BeTrue();
 
         strategy.Release();
-        await showTask.ConfigureAwait(false);
+        await showTask.ConfigureAwait(true);
 
         service.HasOpenedDialogs.Should().BeFalse();
     }
@@ -95,10 +93,10 @@ public class ContentDialogServiceTests
         var dialog = new TestDialog();
 
         var showTask = service.ShowAsync(dialog);
-        await strategy.WaitUntilShowingAsync().ConfigureAwait(false);
+        await strategy.WaitUntilShowingAsync().ConfigureAwait(true);
 
-        await service.CloseAsync(dialog).ConfigureAwait(false);
-        await showTask.ConfigureAwait(false);
+        await service.CloseAsync(dialog).ConfigureAwait(true);
+        await showTask.ConfigureAwait(true);
 
         dialog.ClosedCount.Should().Be(1);
         service.HasOpenedDialogs.Should().BeFalse();
@@ -121,7 +119,7 @@ public class ContentDialogServiceTests
         var dialog = new TestDialog();
         var options = new DialogOptions { Dialog = new TestDialog(), IsModal = true, Title = "Original" };
 
-        await service.ShowAsync(dialog, options).ConfigureAwait(false);
+        await service.ShowAsync(dialog, options).ConfigureAwait(true);
 
         options.Dialog.Should().NotBeSameAs(dialog);
         options.Title.Should().Be("Original");
@@ -175,7 +173,7 @@ public class ContentDialogServiceTests
     {
         public int ClosedCount { get; private set; }
 
-        public string? Title => "Test";
+        public string Title => "Test";
 
         public event EventHandler<CloseRequestedEventArgs>? CloseRequested;
 

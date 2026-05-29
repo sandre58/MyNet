@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Notifications;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.ViewModels.Import;
@@ -22,7 +21,7 @@ public class ImportDialogViewModelTests
     public void ValidateCommand_CannotExecute_WhenNoItemsMarkedForImport()
     {
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new TestImportItem { Import = false }]);
+        list.Load([new() { Import = false }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list);
 
@@ -43,11 +42,11 @@ public class ImportDialogViewModelTests
     }
 
     [Fact]
-    public async Task ValidateCommand_WhenInvalid_PublishesErrors_AndDoesNotClose()
+    public async Task ValidateCommand_WhenInvalid_PublishesErrors_AndDoesNotCloseAsync()
     {
         var publisher = new Mock<INotificationPublisher>();
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new TestImportItem { Import = true, FailValidation = true }]);
+        list.Load([new() { Import = true, FailValidation = true }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list, publisher.Object);
         await sut.OnOpenedAsync();
@@ -64,7 +63,7 @@ public class ImportDialogViewModelTests
     }
 
     [Fact]
-    public async Task ValidateCommand_WhenValid_ClosesWithImportItems()
+    public async Task ValidateCommand_WhenValid_ClosesWithImportItemsAsync()
     {
         var list = new ImportListViewModel<TestImportItem>();
         var expected = new TestImportItem { Import = true };
@@ -81,10 +80,10 @@ public class ImportDialogViewModelTests
     }
 
     [Fact]
-    public async Task CancelCommand_SetsCancelledResult()
+    public async Task CancelCommand_SetsCancelledResultAsync()
     {
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new TestImportItem { Import = true }]);
+        list.Load([new() { Import = true }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list);
         await sut.OnOpenedAsync();

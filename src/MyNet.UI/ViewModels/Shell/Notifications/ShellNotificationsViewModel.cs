@@ -39,11 +39,9 @@ public sealed class ShellNotificationsViewModel : ViewModelBase
 
         Notifications = ExtendedCollection.Create<IClosableNotification>(schedulerProvider.Ui);
 
-        foreach (var notification in notificationsManager.Notifications.OfType<IClosableNotification>())
-            Notifications.Add(notification);
+        Notifications.AddRange(notificationsManager.Notifications.OfType<IClosableNotification>());
 
-        var collection = (INotifyCollectionChanged)notificationsManager.Notifications;
-        NotifyCollectionChangedEventHandler collectionChanged = (_, e) => ApplyCollectionChange(e);
+        INotifyCollectionChanged collection = notificationsManager.Notifications;
         collection.CollectionChanged += collectionChanged;
         Disposables.Add(Disposable.Create(() => collection.CollectionChanged -= collectionChanged));
 
@@ -69,6 +67,8 @@ public sealed class ShellNotificationsViewModel : ViewModelBase
             }));
 
         RefreshNotificationState();
+        return;
+        void collectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => ApplyCollectionChange(e);
     }
 
     /// <summary>
@@ -111,8 +111,7 @@ public sealed class ShellNotificationsViewModel : ViewModelBase
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                foreach (var added in e.NewItems!.Cast<INotification>().OfType<IClosableNotification>())
-                    Notifications.Add(added);
+                Notifications.AddRange(e.NewItems!.Cast<INotification>().OfType<IClosableNotification>());
                 break;
 
             case NotifyCollectionChangedAction.Remove:

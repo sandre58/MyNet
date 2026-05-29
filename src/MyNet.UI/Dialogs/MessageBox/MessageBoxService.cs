@@ -57,7 +57,7 @@ public sealed class MessageBoxService(IMessageBoxFactory factory, IContentDialog
         };
 
         var result = await contentDialogService
-            .ShowAsync<MessageBoxResult>(messageBox, dialogOptions, cancellationToken)
+            .ShowAsync(messageBox, dialogOptions, cancellationToken)
             .ConfigureAwait(false);
 
         return MapResult(result, options.DefaultResult);
@@ -69,7 +69,7 @@ public sealed class MessageBoxService(IMessageBoxFactory factory, IContentDialog
     private static MessageBoxResult MapResult(DialogResult<MessageBoxResult> result, MessageBoxResult defaultResult)
         => result.Outcome switch
         {
-            DialogOutcome.Success when result.Value is MessageBoxResult value => value,
+            DialogOutcome.Success when result.Value is var value => value,
             DialogOutcome.Cancelled => MessageBoxResult.Cancel,
             _ => defaultResult
         };

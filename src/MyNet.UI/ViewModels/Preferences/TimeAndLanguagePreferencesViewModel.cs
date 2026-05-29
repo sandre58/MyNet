@@ -43,7 +43,7 @@ public sealed class TimeAndLanguagePreferencesViewModel : WorkspaceViewModel
         foreach (var culture in supportedCultures ?? [SupportedCultures.French, SupportedCultures.English])
             Cultures.Add(culture);
 
-        foreach (var timeZone in supportedTimeZones ?? TimeZoneInfo.GetSystemTimeZones().Cast<TimeZoneInfo>())
+        foreach (var timeZone in supportedTimeZones ?? TimeZoneInfo.GetSystemTimeZones())
             TimeZones.Add(timeZone);
 
         _globalization.CultureChanged += OnGlobalizationCultureChanged;

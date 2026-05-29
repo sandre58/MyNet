@@ -76,22 +76,4 @@ public static class DialogServiceExtensions
 
         return dialog ?? throw new InvalidOperationException($"Dialog type '{typeof(TDialog).FullName}' could not be resolved by IViewModelLocator.");
     }
-
-    /// <summary>
-    /// Resolves a dialog instance of type <typeparamref name="TDialog"/> from the provided <paramref name="serviceProvider"/>.
-    /// </summary>
-    /// <param name="dialogService">The dialog service.</param>
-    /// <param name="serviceProvider">The service provider.</param>
-    /// <typeparam name="TDialog">The type of the dialog to resolve.</typeparam>
-    /// <returns>The resolved dialog instance.</returns>
-    private static TDialog ResolveFromServiceProvider<TDialog>(IDialogService dialogService, IServiceProvider serviceProvider)
-        where TDialog : class
-    {
-        ArgumentNullException.ThrowIfNull(dialogService);
-        ArgumentNullException.ThrowIfNull(serviceProvider);
-
-        var dialog = serviceProvider.GetService(typeof(TDialog)) as TDialog;
-
-        return dialog ?? throw new InvalidOperationException($"Dialog type '{typeof(TDialog).FullName}' is not registered in the service provider.");
-    }
 }

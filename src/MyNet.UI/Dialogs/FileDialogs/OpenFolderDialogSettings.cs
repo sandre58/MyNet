@@ -19,10 +19,7 @@ public class OpenFolderDialogSettings : FileDialogSettings
     /// <summary>
     /// Initializes a new instance of the <see cref="OpenFolderDialogSettings"/> class.
     /// </summary>
-    public OpenFolderDialogSettings()
-    {
-        CheckFileExists = false;
-    }
+    public OpenFolderDialogSettings() => CheckFileExists = false;
 
     /// <summary>
     /// Gets or sets the folder to select or open. Maps to <see cref="FileDialogSettings.InitialDirectory"/>.

@@ -8,7 +8,6 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using MyNet.UI.ViewModels.Display;
-using MyNet.UI.ViewModels.Display.Options;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Display;
@@ -19,8 +18,8 @@ public class DisplayModeViewModelTests
     public void ListDisplayMode_SetDisplayedColumns_UpdatesColumnVisibility()
     {
         var sut = new ListDisplayModeViewModel();
-        sut.ColumnOptions.Add(new DisplayColumnOptionViewModel("A"));
-        sut.ColumnOptions.Add(new DisplayColumnOptionViewModel("B"));
+        sut.ColumnOptions.Add(new("A"));
+        sut.ColumnOptions.Add(new("B"));
 
         sut.SetDisplayedColumns(["B"]);
 

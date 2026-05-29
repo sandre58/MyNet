@@ -24,5 +24,5 @@ public enum TaskbarProgressState
     Error = 3,
 
     /// <summary>A yellow progress indicator is displayed in the taskbar button.</summary>
-    Paused = 4,
+    Paused = 4
 }

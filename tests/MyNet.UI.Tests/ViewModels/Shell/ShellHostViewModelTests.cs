@@ -17,7 +17,6 @@ using MyNet.UI.Tests.Loading;
 using MyNet.UI.Theming;
 using MyNet.UI.Threading;
 using MyNet.UI.ViewModels.Shell;
-using MyNet.UI.ViewModels.Shell.Chrome;
 using MyNet.UI.ViewModels.Shell.FileMenu;
 using MyNet.UI.ViewModels.Shell.Host;
 using MyNet.UI.ViewModels.Shell.Notifications;
@@ -43,7 +42,7 @@ public class ShellHostViewModelTests
     {
         var sut = CreateSut(fileMenuContent: null);
 
-        var act = () => sut.OpenFileMenuContent<TestWorkspaceViewModel>();
+        var act = sut.OpenFileMenuContent<TestWorkspaceViewModel>;
 
         act.Should().Throw<InvalidOperationException>();
     }
@@ -63,7 +62,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void CloseFileMenuContent_ClearsDrawerAndContent()
     {
-        var sut = CreateSut([new TestWorkspaceViewModel()]);
+        var sut = CreateSut([new()]);
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         sut.CloseFileMenuContent();
@@ -75,7 +74,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void SetFileMenuContentVisibility_ToggleWhenOpenWithSameContent_ClosesDrawer()
     {
-        var sut = CreateSut([new TestWorkspaceViewModel()]);
+        var sut = CreateSut([new()]);
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         sut.SetFileMenuContentVisibility<TestWorkspaceViewModel>(ShellDrawerAction.Toggle);
@@ -87,7 +86,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void SetNotificationsDrawer_Toggle_FlipsState()
     {
-        var sut = CreateSut([new TestWorkspaceViewModel()]);
+        var sut = CreateSut([new()]);
 
         sut.SetNotificationsDrawer(ShellDrawerAction.Show);
         sut.IsNotificationsOpen.Should().BeTrue();
@@ -99,7 +98,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void OpenFileMenu_WithMutuallyExclusiveDrawers_ClosesNotifications()
     {
-        var sut = CreateSut([new TestWorkspaceViewModel()]);
+        var sut = CreateSut([new()]);
         sut.SetNotificationsDrawer(ShellDrawerAction.Show);
 
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
@@ -112,7 +111,7 @@ public class ShellHostViewModelTests
     public void Attach_RegistersShellHostProvider()
     {
         var provider = new ShellHostProvider();
-        var sut = CreateSut([new TestWorkspaceViewModel()], provider);
+        var sut = CreateSut([new()], provider);
 
         provider.Current.Should().BeSameAs(sut);
 
@@ -148,23 +147,23 @@ public class ShellHostViewModelTests
             notificationsManager.Object,
             new DefaultSchedulerProvider());
 
-        FileMenuViewModel? fileMenu = fileMenuContent is null
+        var fileMenu = fileMenuContent is null
             ? null
             : new FileMenuViewModel(fileMenuContent);
 
         var cultureService = new CultureService(SupportedCultures.English);
         var applicationInfo = new ApplicationInfo();
 
-        return new ShellHostViewModel(
+        return new(
             applicationInfo,
             notificationsVm,
-            new ShellCultureViewModel(cultureService, [SupportedCultures.English]),
-            new ShellThemeViewModel(theme.Object, registry.Object),
+            new(cultureService, [SupportedCultures.English]),
+            new(theme.Object, registry.Object),
             Mock.Of<IAppCommandsService>(),
             new NoOpBusyService(),
             new TaskbarProgressSource(),
             dialogService.Object,
-            new ShellNotificationsDrawerCoordinator(),
+            new(),
             fileMenu,
             shellHostProvider,
             options);

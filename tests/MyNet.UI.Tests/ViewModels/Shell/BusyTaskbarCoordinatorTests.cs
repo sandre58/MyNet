@@ -16,7 +16,7 @@ namespace MyNet.UI.Tests.ViewModels.Shell;
 public class BusyTaskbarCoordinatorTests
 {
     [Fact]
-    public async Task WhenApplicationBusyStarts_SetsIndeterminateDuringOperation()
+    public async Task WhenApplicationBusyStarts_SetsIndeterminateDuringOperationAsync()
     {
         var busy = new BusyService();
         var taskbar = new TaskbarProgressSource();
@@ -35,14 +35,14 @@ public class BusyTaskbarCoordinatorTests
     }
 
     [Fact]
-    public async Task WhenProgressionBusyReportsValue_SetsNormalProgress()
+    public async Task WhenProgressionBusyReportsValue_SetsNormalProgressAsync()
     {
         var busy = new BusyService();
         var taskbar = new TaskbarProgressSource();
         using var coordinator = new BusyTaskbarCoordinator(busy, taskbar);
 
         TaskbarProgressState stateDuringOperation = default;
-        double valueDuringOperation = default;
+        double valueDuringOperation = 0;
 
         await busy.RunAsync<ProgressionBusy>((progression, _) =>
         {
@@ -71,7 +71,7 @@ public class BusyTaskbarCoordinatorTests
     }
 
     [Fact]
-    public async Task WhenProgressionBusyCancels_SetsPaused()
+    public async Task WhenProgressionBusyCancels_SetsPausedAsync()
     {
         var busy = new BusyService();
         var taskbar = new TaskbarProgressSource();

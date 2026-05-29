@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -127,7 +126,7 @@ public class ImportBySourcesDialogViewModel<T> : ImportDialogViewModel<T>
     private void ClearLoadedItems()
     {
         _itemsProvider.Clear();
-        List.Load(Array.Empty<T>());
+        List.Load([]);
         CurrentSource = null;
         ShowList = false;
     }

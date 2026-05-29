@@ -14,16 +14,11 @@ namespace MyNet.UI.ViewModels.Preferences;
 /// <summary>
 /// Tab host used by <see cref="PreferencesViewModel"/>.
 /// </summary>
-internal sealed class PreferencesTabWorkspace : TabWorkspaceViewModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="PreferencesTabWorkspace"/> class.
+/// </remarks>
+internal sealed class PreferencesTabWorkspace(ICommandFactory? commandFactory, ICultureService? cultureService) : TabWorkspaceViewModel(commandFactory, cultureService)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PreferencesTabWorkspace"/> class.
-    /// </summary>
-    public PreferencesTabWorkspace(ICommandFactory? commandFactory, ICultureService? cultureService)
-        : base(commandFactory, cultureService)
-    {
-    }
-
     /// <summary>
     /// Adds pages to the tab host.
     /// </summary>

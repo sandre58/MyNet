@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using FluentAssertions;
 using Moq;
 using MyNet.UI.Theming;
 using MyNet.UI.ViewModels.Shell.Chrome;

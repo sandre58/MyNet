@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ public sealed class PreferencesViewModel : EditionViewModel, ITabWorkspaceViewMo
         _preferencesService = preferencesService ?? throw new ArgumentNullException(nameof(preferencesService));
         ArgumentNullException.ThrowIfNull(pages);
 
-        _tabs = new PreferencesTabWorkspace(commandFactory, cultureService);
+        _tabs = new(commandFactory, cultureService);
         _tabs.AddPages(pages);
     }
 

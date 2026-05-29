@@ -12,32 +12,23 @@ namespace MyNet.UI.ViewModels.Shell.FileMenu;
 /// <summary>
 /// Coordinates file menu content navigation and drawer visibility for the shell host.
 /// </summary>
-public sealed class ShellFileMenuHost
+/// <remarks>
+/// Initializes a new instance of the <see cref="ShellFileMenuHost"/> class.
+/// </remarks>
+public sealed class ShellFileMenuHost(
+    FileMenuViewModel fileMenuViewModel,
+    IShellFileMenuDrawer drawer,
+    Action? onDrawerOpening = null)
 {
-    private readonly Action? _onDrawerOpening;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ShellFileMenuHost"/> class.
-    /// </summary>
-    public ShellFileMenuHost(
-        FileMenuViewModel fileMenuViewModel,
-        IShellFileMenuDrawer drawer,
-        Action? onDrawerOpening = null)
-    {
-        FileMenuViewModel = fileMenuViewModel ?? throw new ArgumentNullException(nameof(fileMenuViewModel));
-        Drawer = drawer ?? throw new ArgumentNullException(nameof(drawer));
-        _onDrawerOpening = onDrawerOpening;
-    }
-
     /// <summary>
     /// Gets the file menu content view model.
     /// </summary>
-    public FileMenuViewModel FileMenuViewModel { get; }
+    public FileMenuViewModel FileMenuViewModel { get; } = fileMenuViewModel ?? throw new ArgumentNullException(nameof(fileMenuViewModel));
 
     /// <summary>
     /// Gets the shell drawer state surface.
     /// </summary>
-    public IShellFileMenuDrawer Drawer { get; }
+    public IShellFileMenuDrawer Drawer { get; } = drawer ?? throw new ArgumentNullException(nameof(drawer));
 
     /// <summary>
     /// Hides file menu content when the shell closes all drawers.
@@ -134,6 +125,6 @@ public sealed class ShellFileMenuHost
     private void NotifyDrawerOpening()
     {
         if (!Drawer.IsFileMenuOpen)
-            _onDrawerOpening?.Invoke();
+            onDrawerOpening?.Invoke();
     }
 }

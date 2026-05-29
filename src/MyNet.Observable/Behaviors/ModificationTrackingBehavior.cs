@@ -172,12 +172,23 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
             TryAttachProperty(property);
     }
 
+    private static bool MayYieldModificationAwareValue(Type propertyType)
+    {
+        propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+
+        return typeof(IModificationAware).IsAssignableFrom(propertyType) || (typeof(System.Collections.IEnumerable).IsAssignableFrom(propertyType)
+                                                                             && propertyType != typeof(string));
+    }
+
     private void TryAttachProperty(PropertyInfo property)
     {
         if (!ShouldTrack(property.Name) || _attachedProperties.Contains(property.Name))
             return;
 
         if (!PropertyValueAccess.TryGetValue(Owner, property, out var value))
+            return;
+
+        if (value is null && MayYieldModificationAwareValue(property.PropertyType))
             return;
 
         _attachedProperties.Add(property.Name);

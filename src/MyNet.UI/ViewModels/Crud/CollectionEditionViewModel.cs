@@ -159,10 +159,7 @@ public abstract class CollectionEditionViewModel<TRow> : ViewModelBase, IEdition
         Items.Add(CreateNewItem());
     }
 
-    private void Remove(TRow? item)
-    {
-        _ = RemoveItem(item);
-    }
+    private void Remove(TRow? item) => _ = RemoveItem(item);
 
     private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

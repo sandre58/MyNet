@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Moq;
 using MyNet.UI.ViewModels.Shell;
@@ -30,7 +31,7 @@ public class ShellServiceTests
     {
         var service = new ShellService(new ShellHostProvider());
 
-        var act = () => service.CloseDrawers();
+        var act = service.CloseDrawers;
 
         act.Should().Throw<InvalidOperationException>();
     }
@@ -42,7 +43,7 @@ public class ShellServiceTests
         provider.Attach(Mock.Of<IShellHost>());
         var service = new ShellService(provider);
 
-        var act = () => service.OpenFileMenuContent<TestWorkspaceViewModel>();
+        var act = service.OpenFileMenuContent<TestWorkspaceViewModel>;
 
         act.Should().Throw<InvalidOperationException>();
     }
@@ -61,5 +62,6 @@ public class ShellServiceTests
         host.Verify(x => x.SetFileMenuContentVisibility<TestWorkspaceViewModel>(ShellDrawerAction.Show), Times.Once);
     }
 
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local", Justification = "Used as a type parameter for testing.")]
     private sealed class TestWorkspaceViewModel : WorkspaceViewModel;
 }

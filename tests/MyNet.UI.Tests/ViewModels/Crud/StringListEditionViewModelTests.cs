@@ -48,7 +48,7 @@ public class StringListEditionViewModelTests
         sut.RemoveCommand.Execute(toRemove);
 
         sut.Items.Should().NotContain(toRemove);
-        sut.GetValues().Should().BeEquivalentTo(["keep"]);
+        sut.GetValues().Should().BeEquivalentTo("keep");
     }
 
     [Fact]

@@ -79,9 +79,11 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
         if (notification is not IClosableNotification closableNotification)
             return;
 
-        EventHandler<CloseRequestedEventArgs> handler = (_, _) => Remove(notification);
         _closeHandlers[notification.Id] = handler;
         closableNotification.CloseRequested += handler;
+        return;
+
+        void handler(object? sender, CloseRequestedEventArgs e) => Remove(notification);
     }
 
     private void UnhookLifecycle(INotification notification)

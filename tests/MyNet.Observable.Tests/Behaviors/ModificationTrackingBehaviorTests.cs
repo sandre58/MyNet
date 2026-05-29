@@ -82,6 +82,19 @@ public sealed class ModificationTrackingBehaviorTests
 
         Assert.False(behavior.IsModified);
 
+        sut.Child.MarkModified();
+
+        Assert.True(behavior.IsModified);
+    }
+
+    [Fact]
+    public void EnsureInitialStateAttached_WhenGetterReturnsNullUntilHostReady_PropagatesChildModification()
+    {
+        var sut = new NullConditionalChildOwner();
+        var behavior = sut.Behaviors.Get<ModificationTrackingBehavior>();
+
+        Assert.False(behavior.IsModified);
+
         sut.Child!.MarkModified();
 
         Assert.True(behavior.IsModified);
@@ -143,10 +156,23 @@ public sealed class ModificationTrackingBehaviorTests
         public DeferredChildOwner()
         {
             Behaviors.Register(new ModificationTrackingBehavior(this));
-            _host = new ChildHost();
+            _host = new();
         }
 
-        public TrackableChild? Child => _host.Child;
+        public TrackableChild Child => _host.Child;
+    }
+
+    private sealed class NullConditionalChildOwner : ObservableObject
+    {
+        private readonly ChildHost? _host;
+
+        public NullConditionalChildOwner()
+        {
+            Behaviors.Register(new ModificationTrackingBehavior(this));
+            _host = new();
+        }
+
+        public TrackableChild? Child => _host?.Child;
     }
 
     private sealed class ChildHost

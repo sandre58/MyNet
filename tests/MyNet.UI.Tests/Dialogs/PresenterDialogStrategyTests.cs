@@ -8,8 +8,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyNet.UI;
-using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.ContentDialogs;
 using Xunit;
 
@@ -33,7 +31,7 @@ public class PresenterDialogStrategyTests
         var strategy = new PresenterDialogStrategy([low, high]);
         var dialog = new SimpleDialog();
 
-        await strategy.ShowAsync(dialog, new DialogOptions { Dialog = dialog }).ConfigureAwait(false);
+        await strategy.ShowAsync(dialog, new() { Dialog = dialog }).ConfigureAwait(true);
 
         high.PresentCount.Should().Be(1);
         low.PresentCount.Should().Be(0);

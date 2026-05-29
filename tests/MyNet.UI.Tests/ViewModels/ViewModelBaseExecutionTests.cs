@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MyNet.UI.ViewModels;
@@ -16,17 +15,17 @@ namespace MyNet.UI.Tests.ViewModels;
 public class ViewModelBaseExecutionTests
 {
     [Fact]
-    public async Task ExecuteAsync_Rethrows_WhenOnExecutionErrorReturnsFalse()
+    public async Task ExecuteAsync_Rethrows_WhenOnExecutionErrorReturnsFalseAsync()
     {
         var sut = new TestViewModel { HandleErrors = false };
 
-        var act = () => sut.RunExecuteAsync();
+        var act = sut.RunExecuteAsync;
 
         await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
-    public async Task ExecuteSafeAsync_DoesNotRethrow_WhenOnExecutionErrorReturnsFalse()
+    public async Task ExecuteSafeAsync_DoesNotRethrow_WhenOnExecutionErrorReturnsFalseAsync()
     {
         var sut = new TestViewModel { HandleErrors = false };
 
@@ -36,7 +35,7 @@ public class ViewModelBaseExecutionTests
     }
 
     [Fact]
-    public async Task ExecuteAsync_Swallows_WhenOnExecutionErrorReturnsTrue()
+    public async Task ExecuteAsync_Swallows_WhenOnExecutionErrorReturnsTrueAsync()
     {
         var sut = new TestViewModel { HandleErrors = true };
 

@@ -57,11 +57,11 @@ public sealed class RecentFileViewModel : ViewModelBase
         Update(recentFile);
 
         var commands = commandFactory ?? RelayCommandFactory.Default;
-        OpenCommand = commands.Create(() => OpenAsync(), FileExists);
-        OpenCopyCommand = commands.Create(() => OpenCopyAsync(), () => !IsRecoveredFile && FileExists());
+        OpenCommand = commands.Create(OpenAsync, FileExists);
+        OpenCopyCommand = commands.Create(OpenCopyAsync, () => !IsRecoveredFile && FileExists());
         OpenFolderLocationCommand = commands.Create(() => IoHelper.OpenFolderLocation(Path, _notificationPublisher), () => !IsRecoveredFile);
-        RemoveFromListCommand = commands.Create(() => RemoveFromListAsync(), () => !IsRecoveredFile);
-        RemoveFileCommand = commands.Create(() => RemoveFileAsync(), FileExists);
+        RemoveFromListCommand = commands.Create(RemoveFromListAsync, () => !IsRecoveredFile);
+        RemoveFileCommand = commands.Create(RemoveFileAsync, FileExists);
         PinCommand = commands.Create(() => SetPinnedAsync(true), () => !IsPinned && !IsRecoveredFile);
         PinOffCommand = commands.Create(() => SetPinnedAsync(false), () => IsPinned && !IsRecoveredFile);
     }

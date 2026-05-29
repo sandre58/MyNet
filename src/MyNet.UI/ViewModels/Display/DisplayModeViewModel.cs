@@ -243,16 +243,10 @@ public class CalendarDisplayModeViewModel : DisplayModeViewModel, IDateNavigable
 /// <summary>
 /// Represents an hour-based calendar display mode.
 /// </summary>
-public sealed class HourDisplayModeViewModel : CalendarDisplayModeViewModel
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HourDisplayModeViewModel"/> class.
-    /// </summary>
-    public HourDisplayModeViewModel(ICommandFactory? commandFactory = null)
-        : base(TimeUnit.Hour, 1, HourKey, commandFactory)
-    {
-    }
-}
+/// <remarks>
+/// Initializes a new instance of the <see cref="HourDisplayModeViewModel"/> class.
+/// </remarks>
+public sealed class HourDisplayModeViewModel(ICommandFactory? commandFactory = null) : CalendarDisplayModeViewModel(TimeUnit.Hour, 1, HourKey, commandFactory);
 
 /// <summary>
 /// Represents a day-based calendar display mode.
@@ -307,41 +301,23 @@ public sealed class DayDisplayModeViewModel : CalendarDisplayModeViewModel
 /// <summary>
 /// Represents a week-based calendar display mode.
 /// </summary>
-public sealed class WeekDisplayModeViewModel : CalendarDisplayModeViewModel
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WeekDisplayModeViewModel"/> class.
-    /// </summary>
-    public WeekDisplayModeViewModel(ICommandFactory? commandFactory = null)
-        : base(TimeUnit.Week, 1, WeekKey, commandFactory)
-    {
-    }
-}
+/// <remarks>
+/// Initializes a new instance of the <see cref="WeekDisplayModeViewModel"/> class.
+/// </remarks>
+public sealed class WeekDisplayModeViewModel(ICommandFactory? commandFactory = null) : CalendarDisplayModeViewModel(TimeUnit.Week, 1, WeekKey, commandFactory);
 
 /// <summary>
 /// Represents a month-based calendar display mode.
 /// </summary>
-public sealed class MonthDisplayModeViewModel : CalendarDisplayModeViewModel
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MonthDisplayModeViewModel"/> class.
-    /// </summary>
-    public MonthDisplayModeViewModel(ICommandFactory? commandFactory = null)
-        : base(TimeUnit.Month, 1, MonthKey, commandFactory)
-    {
-    }
-}
+/// <remarks>
+/// Initializes a new instance of the <see cref="MonthDisplayModeViewModel"/> class.
+/// </remarks>
+public sealed class MonthDisplayModeViewModel(ICommandFactory? commandFactory = null) : CalendarDisplayModeViewModel(TimeUnit.Month, 1, MonthKey, commandFactory);
 
 /// <summary>
 /// Represents a year-based calendar display mode.
 /// </summary>
-public sealed class YearDisplayModeViewModel : CalendarDisplayModeViewModel
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="YearDisplayModeViewModel"/> class.
-    /// </summary>
-    public YearDisplayModeViewModel(ICommandFactory? commandFactory = null)
-        : base(TimeUnit.Year, 1, YearKey, commandFactory)
-    {
-    }
-}
+/// <remarks>
+/// Initializes a new instance of the <see cref="YearDisplayModeViewModel"/> class.
+/// </remarks>
+public sealed class YearDisplayModeViewModel(ICommandFactory? commandFactory = null) : CalendarDisplayModeViewModel(TimeUnit.Year, 1, YearKey, commandFactory);

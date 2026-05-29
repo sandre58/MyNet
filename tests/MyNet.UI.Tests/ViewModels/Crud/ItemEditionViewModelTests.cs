@@ -27,7 +27,7 @@ public class ItemEditionViewModelTests
     }
 
     [Fact]
-    public async Task ApplyAsync_UpdatesOriginal_AndClearsDirty()
+    public async Task ApplyAsync_UpdatesOriginal_AndClearsDirtyAsync()
     {
         var sut = new TestItemEditionViewModel();
         sut.SetOriginalItem(1);
@@ -41,7 +41,7 @@ public class ItemEditionViewModelTests
     }
 
     [Fact]
-    public async Task ResetAsync_RestoresOriginalItem()
+    public async Task ResetAsync_RestoresOriginalItemAsync()
     {
         var sut = new TestItemEditionViewModel();
         sut.SetOriginalItem(5);

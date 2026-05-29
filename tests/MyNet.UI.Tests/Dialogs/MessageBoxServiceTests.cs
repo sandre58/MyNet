@@ -4,12 +4,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyNet.UI.Dialogs.ContentDialogs;
 using Microsoft.Extensions.DependencyInjection;
 using MyNet.UI.Dialogs;
+using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Dialogs.MessageBox;
 using Xunit;
 
@@ -22,16 +23,14 @@ public class MessageBoxServiceTests
     {
         var services = new ServiceCollection();
         services.AddDialogs();
-        using var provider = services.BuildServiceProvider();
+        await using var provider = services.BuildServiceProvider();
 
         var messageBox = provider.GetRequiredService<IMessageBoxService>();
 
         var result = await messageBox.ShowAsync(
             "Hello",
             "Title",
-            MessageSeverity.Warning,
-            MessageBoxResultOption.Ok,
-            MessageBoxResult.Ok).ConfigureAwait(false);
+            MessageSeverity.Warning).ConfigureAwait(true);
 
         result.Should().Be(MessageBoxResult.Ok);
     }
@@ -41,14 +40,14 @@ public class MessageBoxServiceTests
     {
         var services = new ServiceCollection();
         services.AddDialogs();
-        using var provider = services.BuildServiceProvider();
+        await using var provider = services.BuildServiceProvider();
 
         var messageBox = provider.GetRequiredService<IMessageBoxService>();
 
         var result = await messageBox.ShowAsync(
             "Continue?",
             buttons: MessageBoxResultOption.YesNo,
-            defaultResult: MessageBoxResult.Yes).ConfigureAwait(false);
+            defaultResult: MessageBoxResult.Yes).ConfigureAwait(true);
 
         result.Should().Be(MessageBoxResult.Yes);
     }
@@ -58,15 +57,16 @@ public class MessageBoxServiceTests
     {
         var services = new ServiceCollection();
         services.AddDialogs(b => b.AddPresenter<StubMessageBoxPresenter>());
-        using var provider = services.BuildServiceProvider();
+        await using var provider = services.BuildServiceProvider();
 
         var messageBox = provider.GetRequiredService<IMessageBoxService>();
 
-        var result = await messageBox.ShowAsync("Confirm", buttons: MessageBoxResultOption.YesNo).ConfigureAwait(false);
+        var result = await messageBox.ShowAsync("Confirm", buttons: MessageBoxResultOption.YesNo).ConfigureAwait(true);
 
         result.Should().Be(MessageBoxResult.No);
     }
 
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local", Justification = "Used as a type parameter for testing.")]
     private sealed class StubMessageBoxPresenter : IDialogPresenter
     {
         public int Priority => 100;

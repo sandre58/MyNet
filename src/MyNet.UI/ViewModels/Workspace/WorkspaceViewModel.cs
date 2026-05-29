@@ -94,7 +94,7 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task RefreshAsync(CancellationToken cancellationToken = default)
-        => ExecuteSafeAsync(ct => OnRefreshAsync(ct), cancellationToken);
+        => ExecuteSafeAsync(OnRefreshAsync, cancellationToken);
 
     /// <summary>
     /// Resets the workspace state and content.
@@ -102,7 +102,7 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task ResetAsync(CancellationToken cancellationToken = default)
-        => ExecuteSafeAsync(ct => OnResetAsync(ct), cancellationToken);
+        => ExecuteSafeAsync(OnResetAsync, cancellationToken);
 
     /// <summary>
     /// Performs the asynchronous refresh logic.

@@ -38,8 +38,7 @@ public sealed class ShellNotificationsDrawerCoordinator
     /// </summary>
     public void Unbind()
     {
-        if (_notifications is not null)
-            _notifications.NotificationsChanged -= OnNotificationsChanged;
+        _notifications?.NotificationsChanged -= OnNotificationsChanged;
 
         _host = null;
         _notifications = null;

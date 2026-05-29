@@ -26,5 +26,5 @@ public enum ShellDrawerAction
     /// <summary>
     /// Toggles the drawer or content.
     /// </summary>
-    Toggle,
+    Toggle
 }

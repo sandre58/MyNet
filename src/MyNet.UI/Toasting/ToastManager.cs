@@ -137,9 +137,11 @@ public sealed class ToastManager : IToastManager
         if (toast.Notification is not IClosableNotification closableNotification)
             return;
 
-        EventHandler<CloseRequestedEventArgs> handler = (_, _) => Remove(toast);
         _closeHandlers[toast.Notification.Id] = handler;
         closableNotification.CloseRequested += handler;
+        return;
+
+        void handler(object? sender, CloseRequestedEventArgs e) => Remove(toast);
     }
 
     private void UnhookLifecycle(IToast toast)

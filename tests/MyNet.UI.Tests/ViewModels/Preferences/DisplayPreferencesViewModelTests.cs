@@ -24,7 +24,7 @@ public class DisplayPreferencesViewModelTests
 
         var currentBase = light.Object;
         var theme = new Mock<IThemeService>();
-        theme.Setup(x => x.CurrentTheme).Returns(() => new Theme(currentBase, "#111111", "#222222"));
+        theme.Setup(x => x.CurrentTheme).Returns(() => new(currentBase, "#111111", "#222222"));
 
         var registry = new Mock<IThemeBaseRegistry>();
         registry.Setup(x => x.AvailableBases).Returns([light.Object, dark.Object]);

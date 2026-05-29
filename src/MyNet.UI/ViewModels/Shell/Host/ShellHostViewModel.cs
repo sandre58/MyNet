@@ -70,7 +70,7 @@ public class ShellHostViewModel : ViewModelBase, IShellCapabilities, IShellHostW
         TaskbarProgress = taskbarProgress;
 
         if (fileMenuViewModel is not null)
-            FileMenuHost = new ShellFileMenuHost(fileMenuViewModel, this, OnFileMenuDrawerOpening);
+            FileMenuHost = new(fileMenuViewModel, this, OnFileMenuDrawerOpening);
 
         var commands = commandFactory ?? RelayCommandFactory.Default;
 

@@ -47,7 +47,7 @@ public sealed class DialogOptions
     /// <returns>A new <see cref="DialogOptions"/> instance.</returns>
     public static DialogOptions Resolve(IDialog dialog, DialogOptions? options = null)
         => options is null
-            ? new DialogOptions { Dialog = dialog }
+            ? new() { Dialog = dialog }
             : new DialogOptions
             {
                 Dialog = dialog,

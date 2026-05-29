@@ -32,7 +32,7 @@ public class ShellDrawerCoordinatorTests
         _ = new ShellDrawerCoordinator(contentDialogs.Object, provider);
 
         opened.Should().NotBeNull();
-        opened!.Invoke(contentDialogs.Object, new ContentDialogLifecycleEventArgs(Mock.Of<IDialog>()));
+        opened!.Invoke(contentDialogs.Object, new(Mock.Of<IDialog>()));
 
         host.Verify(x => x.CloseDrawers(), Times.Once);
     }

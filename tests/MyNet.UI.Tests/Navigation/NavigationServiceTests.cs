@@ -273,7 +273,7 @@ public class NavigationClientTests
     }
 
     [Fact]
-    public async Task NavigateToAsync_UsesServiceProviderResolution()
+    public async Task NavigateToAsync_UsesServiceProviderResolutionAsync()
     {
         var services = new ServiceCollection();
         services.AddNavigation();
@@ -288,7 +288,7 @@ public class NavigationClientTests
     }
 
     [Fact]
-    public async Task GoBackForwardAndReset_DelegateToNavigationService()
+    public async Task GoBackForwardAndReset_DelegateToNavigationServiceAsync()
     {
         var services = new ServiceCollection();
         services.AddNavigation();
@@ -315,7 +315,7 @@ public class NavigationClientTests
     }
 
     [Fact]
-    public async Task StateChanged_ForwardsNavigationServiceEvents()
+    public async Task StateChanged_ForwardsNavigationServiceEventsAsync()
     {
         var services = new ServiceCollection();
         services.AddNavigation();
