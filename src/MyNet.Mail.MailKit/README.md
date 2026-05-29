@@ -1,11 +1,33 @@
+<div align="center">
+
 # MyNet.Mail.MailKit
 
-MailKit SMTP implementation of `IMailService` with TLS options, connection reuse, and dependency injection support.
+<img src="../../assets/MyNetMail.png" alt="MyNet.Mail.MailKit" width="96" height="96" />
+
+*MailKit implementation of MyNet.Mail IMailService with TLS configuration, connection reuse, and Microsoft.Extensions.DependencyInjection registration.*
+
+</div>
+
+<div align="center">
 
 [![MIT License](https://img.shields.io/github/license/sandre58/MyNet)](https://github.com/sandre58/MyNet/blob/main/LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/MyNet.Mail.MailKit)](https://www.nuget.org/packages/MyNet.Mail.MailKit)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
 
-**Target framework:** .NET 10
+</div>
+
+---
+
+## Features
+
+| Feature | Description |
+| :------ | :---------- |
+| **MailKit** | IMailService implementation for SMTP |
+| **TLS** | Configuration and connection reuse |
+| **DI** | AddMailKit() registration extensions |
+| **Production** | Ready transport for MyNet.Mail models |
+
+---
 
 ## Installation
 
@@ -44,15 +66,32 @@ var email = Email.From("sender@example.com", "Sender")
 var response = await mail.SendAsync(email);
 ```
 
+
+
+---
 ## Related packages
 
 - [MyNet.Mail](https://www.nuget.org/packages/MyNet.Mail)
 - [MyNet.Utilities](https://www.nuget.org/packages/MyNet.Utilities)
 
+
+
+---
 ## Documentation
 
 - [Mail guide](https://github.com/sandre58/MyNet/blob/main/docs/guides/mail.md)
+---
 
-## License
+<div align="center">
 
-MIT — see [LICENSE](https://github.com/sandre58/MyNet/blob/main/LICENSE).
+<sub>
+
+Copyright © 2016-2026 - Stéphane ANDRE. All Rights Reserved.
+
+<br/>
+
+Released under the [MIT License](https://github.com/sandre58/MyNet/blob/main/LICENSE).
+
+</sub>
+
+</div>

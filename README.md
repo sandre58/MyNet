@@ -2,7 +2,7 @@
 
 Modular **.NET 10** libraries for MVVM desktop applications: observable models, UI shell, globalization, geography, mail, HTTP, and shared primitives.
 
-[![MIT License](https://img.shields.io/github/license/sandre58/MyNet2)](https://github.com/sandre58/MyNet2/blob/main/LICENSE)
+[![MIT License](https://img.shields.io/github/license/sandre58/MyNet)](https://github.com/sandre58/MyNet/blob/main/LICENSE)
 
 ## Documentation
 

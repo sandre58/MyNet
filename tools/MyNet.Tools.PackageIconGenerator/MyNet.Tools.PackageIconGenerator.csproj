@@ -8,9 +8,4 @@
         <PackageReference Include="SkiaSharp.NativeAssets.Win32"/>
         <PackageReference Include="Svg.Skia"/>
     </ItemGroup>
-    <ItemGroup>
-      <Content Include="..\generate-package-icons.ps1">
-        <Link>generate-package-icons.ps1</Link>
-      </Content>
-    </ItemGroup>
 </Project>

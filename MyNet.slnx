@@ -22,14 +22,27 @@
     <File Path=".cursor/rules/my-net.mdc" />
   </Folder>
   <Folder Name="/Solution Files/Assets/">
-    <File Path="assets/MyNetAutoMapper.png" />
-    <File Path="assets/MyNetCsvHelper.png" />
-    <File Path="assets/MyNetDynamicData.png" />
+    <File Path="assets/MyNetCollections.png" />
+    <File Path="assets/MyNetFakers.png" />
+    <File Path="assets/MyNetGenerator.png" />
+    <File Path="assets/MyNetGeography.png" />
+    <File Path="assets/MyNetGlobalization.png" />
+    <File Path="assets/MyNetGoogle.png" />
     <File Path="assets/MyNetHttp.png" />
     <File Path="assets/MyNetHumanizer.png" />
+    <File Path="assets/MyNetIO.png" />
+    <File Path="assets/MyNetMail.png" />
+    <File Path="assets/MyNetMessaging.png" />
+    <File Path="assets/MyNetMetadata.png" />
     <File Path="assets/MyNetObservable.png" />
+    <File Path="assets/MyNetPlatformWindows.png" />
+    <File Path="assets/MyNetPrimitives.png" />
+    <File Path="assets/MyNetReflection.png" />
+    <File Path="assets/MyNetTemporal.png" />
+    <File Path="assets/MyNetText.png" />
     <File Path="assets/MyNetUI.png" />
     <File Path="assets/MyNetUtilities.png" />
+    <File Path="assets/README.md" />
   </Folder>
   <Folder Name="/Solution Files/Build/">
     <File Path=".runsettings" />
@@ -111,6 +124,9 @@
     <Project Path="tests/MyNet.Mail.MailKit.Tests/MyNet.Mail.MailKit.Tests.csproj" />
   </Folder>
   <Folder Name="/Tools/">
+    <File Path="tools/generate-package-icons.ps1" />
+    <File Path="tools/package-icons.json" />
+    <File Path="tools/update-package-readmes.ps1" />
     <Project Path="tools/MyNet.Tools.PackageIconGenerator/MyNet.Tools.PackageIconGenerator.csproj" />
   </Folder>
   <Project Path="src/MyNet.Collections/MyNet.Collections.csproj" />
