@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/29/2026 - 21:17:45 |
-| Coverage date: | 05/29/2026 - 21:14:46 - 05/29/2026 - 21:15:35 |
-| Parser: | MultiReport (65x Cobertura) |
+| Generated on: | 05/29/2026 - 21:53:23 |
+| Coverage date: | 05/29/2026 - 21:49:49 - 05/29/2026 - 21:50:27 |
+| Parser: | MultiReport (61x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 666 |
 | Files: | 621 |
-| **Line coverage:** | 72.6% (10137 of 13958) |
-| Covered lines: | 10137 |
+| **Line coverage:** | 72.6% (10139 of 13960) |
+| Covered lines: | 10139 |
 | Uncovered lines: | 3821 |
-| Coverable lines: | 13958 |
-| Total lines: | 57489 |
-| **Branch coverage:** | 60.1% (3905 of 6488) |
-| Covered branches: | 3905 |
+| Coverable lines: | 13960 |
+| Total lines: | 57467 |
+| **Branch coverage:** | 60.1% (3904 of 6488) |
+| Covered branches: | 3904 |
 | Total branches: | 6488 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 265_26662459980 |
+| Tag: | 269_26663890868 |
 
 </details>
 
@@ -74,13 +74,13 @@
 |MyNet.Fakers.Text.TextFaker|97%|85%|
 
 </details>
-<details><summary>MyNet.Generator - 92.9%</summary>
+<details><summary>MyNet.Generator - 93%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Generator**|**92.9%**|**74.3%**|
+|**MyNet.Generator**|**93%**|**74.3%**|
 |MyNet.Generator.DefaultRandomGenerator|93.3%|77.2%|
-|MyNet.Generator.Facade.RandomGenerator|83.3%|50%|
+|MyNet.Generator.Facade.RandomGenerator|87.5%|50%|
 |MyNet.Generator.RandomGeneratorExtensions|92.3%|60%|
 |MyNet.Generator.SystemRandomSource|100%||
 
@@ -816,7 +816,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.9%**|
+|**MyNet.Utilities**|**81.9%**|**64.7%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -838,7 +838,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
