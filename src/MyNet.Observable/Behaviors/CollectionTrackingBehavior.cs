@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Threading;
 using MyNet.Reflection;
 
@@ -15,10 +16,12 @@ namespace MyNet.Observable.Behaviors;
 /// <summary>
 /// Tracks changes on collections of an ObservableObject. This behavior allows you to track changes on collections that implement INotifyCollectionChanged, such as <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/>. It automatically tracks all observable collections on the owner object, and raises a CollectionChanged event whenever any of the tracked collections change. You can also manually track or untrack specific collections using the Track and Untrack methods. This behavior is useful for scenarios where you want to react to changes in collections, such as updating the UI or performing additional logic when items are added, removed, or modified in a collection. By implementing this behavior, you can easily track changes on collections without having to manually subscribe to each collection's events, making it easier to manage and maintain your code.
 /// </summary>
-public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservableObject>
+public sealed class CollectionTrackingBehavior : SuspendableBehavior<ObservableObject>
 {
+    private readonly HashSet<string> _trackedProperties = new(StringComparer.Ordinal);
     private readonly HashSet<INotifyCollectionChanged> _trackedCollections = [];
     private readonly Lock _gate = new();
+    private int _initialTrackScheduled;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionTrackingBehavior"/> class, which tracks changes on collections of the specified ObservableObject. This constructor takes an ObservableObject as a parameter and initializes the behavior to track changes on collections of that object. It also sets up tracking for any collections that implement INotifyCollectionChanged, allowing it to track changes to those collections as well. If the owner parameter is null, an ArgumentNullException will be thrown. The optional changed parameter allows you to specify a callback that will be invoked whenever a tracked collection changes, providing you with the ability to react to collection changes in a custom way.
@@ -27,7 +30,10 @@ public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservable
     /// <exception cref="ArgumentNullException">Thrown if the owner parameter is null.</exception>
     public CollectionTrackingBehavior(ObservableObject owner)
         : base(owner)
-        => TrackExistingCollections();
+    {
+        TrackExistingCollections();
+        ScheduleDeferredInitialTrack();
+    }
 
     /// <summary>
     /// Occurs when a tracked collection changes.
@@ -71,22 +77,56 @@ public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservable
     }
 
     /// <summary>
-    /// Tracks all existing collections on the owner object that implement INotifyCollectionChanged. This method is called during the initialization of the behavior to automatically track any collections that are already present on the owner object. It uses reflection to find all public properties of the owner object, checks if they implement INotifyCollectionChanged, and if so, it registers them for tracking by subscribing to their CollectionChanged events. This allows the behavior to automatically track changes on any collections that are already defined on the owner object without requiring manual registration for each collection.
+    /// Tracks observable collections exposed by readable owner properties that are already initialized.
     /// </summary>
-    private void TrackExistingCollections()
+    internal void TrackExistingCollections()
     {
-        var properties = Owner.GetType().GetPublicProperties();
+        if (IsDisposed)
+            return;
 
-        foreach (var property in properties)
+        foreach (var property in Owner.GetType().GetPublicProperties())
+            TryTrackProperty(property);
+    }
+
+    private void TryTrackProperty(PropertyInfo property)
+    {
+        if (!typeof(INotifyCollectionChanged).IsAssignableFrom(property.PropertyType))
+            return;
+
+        if (_trackedProperties.Contains(property.Name))
+            return;
+
+        if (!PropertyValueAccess.TryGetValue(Owner, property, out var value))
+            return;
+
+        if (value is not INotifyCollectionChanged collection)
+            return;
+
+        _trackedProperties.Add(property.Name);
+        Track(collection);
+    }
+
+    private void ScheduleDeferredInitialTrack()
+    {
+        if (Interlocked.Exchange(ref _initialTrackScheduled, 1) != 0)
+            return;
+
+        var context = SynchronizationContext.Current;
+        if (context is not null)
         {
-            if (!typeof(INotifyCollectionChanged).IsAssignableFrom(property.PropertyType))
-                continue;
-
-            if (property.GetValue(Owner) is not INotifyCollectionChanged collection)
-                continue;
-
-            Track(collection);
+            context.Post(static state => ((CollectionTrackingBehavior)state!).DeferredInitialTrack(), this);
+            return;
         }
+
+        ThreadPool.QueueUserWorkItem(static state => ((CollectionTrackingBehavior)state!).DeferredInitialTrack(), this);
+    }
+
+    private void DeferredInitialTrack()
+    {
+        if (IsDisposed)
+            return;
+
+        TrackExistingCollections();
     }
 
     #endregion
@@ -103,6 +143,7 @@ public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservable
         if (IsDisposed || IsSuspended)
             return;
 
+        TrackExistingCollections();
         CollectionChanged?.Invoke(sender, e);
     }
 
@@ -116,11 +157,10 @@ public sealed class CollectionTrackingBehavior : SuspendableBehavior<IObservable
         lock (_gate)
         {
             foreach (var collection in _trackedCollections)
-            {
                 collection.CollectionChanged -= OnCollectionChanged;
-            }
 
             _trackedCollections.Clear();
+            _trackedProperties.Clear();
         }
 
         base.DisposeManagedResources();

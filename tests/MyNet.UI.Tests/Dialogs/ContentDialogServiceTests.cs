@@ -50,6 +50,25 @@ public class ContentDialogServiceTests
     }
 
     [Fact]
+    public async Task ShowAsync_RaisesDialogOpened()
+    {
+        var strategy = new BlockingDialogStrategy();
+        var service = new ContentDialogService([strategy]);
+        var dialog = new TestDialog();
+        ContentDialogLifecycleEventArgs? opened = null;
+        service.DialogOpened += (_, e) => opened = e;
+
+        var showTask = service.ShowAsync(dialog);
+        await strategy.WaitUntilShowingAsync().ConfigureAwait(false);
+
+        opened.Should().NotBeNull();
+        opened!.Dialog.Should().BeSameAs(dialog);
+
+        strategy.Release();
+        await showTask.ConfigureAwait(false);
+    }
+
+    [Fact]
     public async Task ShowAsync_TracksOpenedDialogsDuringDisplayAsync()
     {
         var strategy = new BlockingDialogStrategy();

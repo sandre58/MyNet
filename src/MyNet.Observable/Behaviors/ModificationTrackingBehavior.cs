@@ -4,9 +4,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Reflection;
+using System.Threading;
 using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
 using MyNet.Reflection;
@@ -20,8 +23,10 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
 {
     private readonly CollectionTrackingBehavior? _collections;
     private readonly bool _ownsCollections;
+    private readonly HashSet<string> _attachedProperties = new(StringComparer.Ordinal);
     private readonly HashSet<IModificationAware> _trackedChildren = [];
     private readonly Dictionary<IModificationAware, INotifyPropertyChanged> _childNotifiers = [];
+    private int _initialAttachScheduled;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModificationTrackingBehavior"/> class with the specified owner. This constructor initializes the behavior and attaches it to the owner object, allowing it to track modifications to the owner and its nested properties. It also initializes a default collection tracking behavior to handle modifications to collections within the owner object, ensuring that changes to collections are properly tracked and reflected in the modification state of the owner.
@@ -50,11 +55,21 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
 
         _collections?.CollectionChanged += OnCollectionChanged;
 
-        AttachExistingProperties();
+        EnsureInitialStateAttached();
+        ScheduleDeferredInitialAttach();
     }
 
     /// <inheritdoc />
-    public bool IsModified { get; private set; }
+    public bool IsModified
+    {
+        get
+        {
+            EnsureInitialStateAttached();
+            return field;
+        }
+
+        private set;
+    }
 
     /// <summary>
     /// Determines whether the specified property should be tracked for modifications, using metadata from <see cref="MetadataRegistry"/> (no reflection on the mutation path).
@@ -87,6 +102,8 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     /// </param>
     public void ResetModified(bool recursive = true)
     {
+        EnsureInitialStateAttached();
+
         if (recursive)
         {
             foreach (var child in _trackedChildren)
@@ -107,6 +124,8 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     /// <inheritdoc />
     public void OnPropertyChanged(PropertyMutationContext context)
     {
+        EnsureInitialStateAttached();
+
         if (IsDisposed || IsSuspended)
             return;
 
@@ -129,6 +148,8 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        EnsureInitialStateAttached();
+
         if (IsDisposed || IsSuspended)
             return;
 
@@ -140,17 +161,50 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     #region Attach / Detach
 
     /// <summary>
-    /// Attaches to existing properties of the owner object that are modification-aware or collections. This method is called during initialization to ensure that the behavior is aware of any existing nested properties that may affect the modification state. It uses reflection to find all readable properties of the owner object and attaches to them if they implement the appropriate interfaces. This allows the behavior to track modifications to nested properties and collections from the moment it is attached, ensuring accurate modification tracking even for pre-existing data structures.
+    /// Attaches to readable owner properties that are already initialized. Properties whose getters fail (for example when a derived constructor has not assigned backing fields yet) are retried on later passes.
     /// </summary>
-    private void AttachExistingProperties()
+    internal void EnsureInitialStateAttached()
     {
-        foreach (var property in Owner.GetType().GetPublicProperties())
-        {
-            if (!ShouldTrack(property.Name))
-                continue;
+        if (IsDisposed)
+            return;
 
-            Attach(property.GetValue(Owner));
+        foreach (var property in Owner.GetType().GetPublicProperties())
+            TryAttachProperty(property);
+    }
+
+    private void TryAttachProperty(PropertyInfo property)
+    {
+        if (!ShouldTrack(property.Name) || _attachedProperties.Contains(property.Name))
+            return;
+
+        if (!PropertyValueAccess.TryGetValue(Owner, property, out var value))
+            return;
+
+        _attachedProperties.Add(property.Name);
+        Attach(value);
+    }
+
+    private void ScheduleDeferredInitialAttach()
+    {
+        if (Interlocked.Exchange(ref _initialAttachScheduled, 1) != 0)
+            return;
+
+        var context = SynchronizationContext.Current;
+        if (context is not null)
+        {
+            context.Post(static state => ((ModificationTrackingBehavior)state!).DeferredInitialAttach(), this);
+            return;
         }
+
+        ThreadPool.QueueUserWorkItem(static state => ((ModificationTrackingBehavior)state!).DeferredInitialAttach(), this);
+    }
+
+    private void DeferredInitialAttach()
+    {
+        if (IsDisposed)
+            return;
+
+        EnsureInitialStateAttached();
     }
 
     /// <summary>
@@ -200,9 +254,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
             return;
 
         if (sender is IModificationAware { IsModified: true })
-        {
             MarkAsModified();
-        }
     }
 
     #endregion
@@ -227,12 +279,11 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
             _collections?.Dispose();
 
         foreach (var notifier in _childNotifiers.Values)
-        {
             notifier.PropertyChanged -= OnChildChanged;
-        }
 
         _childNotifiers.Clear();
         _trackedChildren.Clear();
+        _attachedProperties.Clear();
 
         base.DisposeManagedResources();
     }

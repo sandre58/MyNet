@@ -18,7 +18,14 @@ public static class ModificationExtensions
         /// Determines whether the observable object has been modified since it was last marked as clean. This method checks if the object implements the IModificationTrackingBehavior interface and returns its IsModified property. If the object does not implement IModificationTrackingBehavior, it returns false, indicating that the object is not considered modified.
         /// </summary>
         /// <returns>True if the object has been modified; otherwise, false.</returns>
-        public bool IsModified() => owner is IModificationAware { IsModified: true } || (owner.Behaviors.TryGet<IModificationTrackingBehavior>(out var behavior) && behavior.IsModified);
+        public bool IsModified()
+        {
+            if (owner.Behaviors.TryGet<ModificationTrackingBehavior>(out var tracking))
+                tracking.EnsureInitialStateAttached();
+
+            return owner is IModificationAware { IsModified: true }
+                || (owner.Behaviors.TryGet<IModificationTrackingBehavior>(out var behavior) && behavior.IsModified);
+        }
 
         /// <summary>
         /// Resets the modification state when a <see cref="ModificationTrackingBehavior"/> is registered.

@@ -23,12 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="Legacy/**" />
-        <Compile Remove="Services\Handlers\FileNotification.cs" />
-        <Compile Remove="Services\Handlers\FileNotificationHandler.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Update="Resources\FormatResources.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>

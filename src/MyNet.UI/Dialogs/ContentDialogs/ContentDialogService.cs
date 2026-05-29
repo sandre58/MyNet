@@ -24,6 +24,12 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
     private readonly Dictionary<IDialog, ActiveDialog> _activeDialogs = [];
 
     /// <inheritdoc />
+    public event EventHandler<ContentDialogLifecycleEventArgs>? DialogOpened;
+
+    /// <inheritdoc />
+    public event EventHandler<ContentDialogLifecycleEventArgs>? DialogClosed;
+
+    /// <inheritdoc />
     public IReadOnlyList<IDialog> OpenedDialogs
     {
         get
@@ -124,6 +130,8 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
             _openedDialogs.Add(dialog);
             _activeDialogs[dialog] = new() { Strategy = strategy };
         }
+
+        DialogOpened?.Invoke(this, new ContentDialogLifecycleEventArgs(dialog));
     }
 
     private async Task CompleteLifecycleAsync(IDialog dialog)
@@ -145,6 +153,7 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
         if (shouldNotifyClosed)
         {
             await dialog.OnClosedAsync().ConfigureAwait(false);
+            DialogClosed?.Invoke(this, new ContentDialogLifecycleEventArgs(dialog));
         }
     }
 

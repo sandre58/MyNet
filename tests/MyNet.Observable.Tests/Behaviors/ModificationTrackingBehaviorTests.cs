@@ -66,6 +66,27 @@ public sealed class ModificationTrackingBehaviorTests
         Assert.False(sut.IsModified());
     }
 
+    [Fact]
+    public void Constructor_WhenGetterDependsOnDerivedField_DoesNotThrow()
+    {
+        var exception = Record.Exception(static () => _ = new DeferredChildOwner());
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void EnsureInitialStateAttached_WhenGetterDependsOnDerivedField_PropagatesChildModification()
+    {
+        var sut = new DeferredChildOwner();
+        var behavior = sut.Behaviors.Get<ModificationTrackingBehavior>();
+
+        Assert.False(behavior.IsModified);
+
+        sut.Child!.MarkModified();
+
+        Assert.True(behavior.IsModified);
+    }
+
     private sealed class ObservableModificationAware : ObservableObject, IModificationAware
     {
         public bool IsModified { get; private set; }
@@ -113,6 +134,24 @@ public sealed class ModificationTrackingBehaviorTests
                 OnPropertyChanged(nameof(Child), before, value);
             }
         }
+    }
+
+    private sealed class DeferredChildOwner : ObservableObject
+    {
+        private readonly ChildHost _host;
+
+        public DeferredChildOwner()
+        {
+            Behaviors.Register(new ModificationTrackingBehavior(this));
+            _host = new ChildHost();
+        }
+
+        public TrackableChild? Child => _host.Child;
+    }
+
+    private sealed class ChildHost
+    {
+        public TrackableChild Child { get; } = new();
     }
 
     private sealed class TrackableChild : IModificationAware, INotifyPropertyChanged

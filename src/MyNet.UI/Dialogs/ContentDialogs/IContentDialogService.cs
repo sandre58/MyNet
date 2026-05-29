@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,16 @@ namespace MyNet.UI.Dialogs.ContentDialogs;
 /// </summary>
 public interface IContentDialogService
 {
+    /// <summary>
+    /// Raised after a content dialog is registered as open.
+    /// </summary>
+    event EventHandler<ContentDialogLifecycleEventArgs>? DialogOpened;
+
+    /// <summary>
+    /// Raised after a content dialog is removed from the open set.
+    /// </summary>
+    event EventHandler<ContentDialogLifecycleEventArgs>? DialogClosed;
+
     /// <summary>
     /// Gets the collection of currently opened dialogs.
     /// </summary>
