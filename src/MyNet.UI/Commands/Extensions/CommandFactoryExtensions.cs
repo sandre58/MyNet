@@ -76,13 +76,8 @@ public static class CommandFactoryExtensions
             ArgumentNullException.ThrowIfNull(factory);
             ArgumentNullException.ThrowIfNull(execute);
 
-            return factory.Create<T>(async x =>
-            {
-                if (x is null)
-                    return;
-
-                await execute.Invoke(x).ConfigureAwait(false);
-            });
+            return factory.Create<T>(
+                x => x is null ? Task.CompletedTask : execute(x));
         }
 
         /// <summary>
@@ -99,13 +94,8 @@ public static class CommandFactoryExtensions
             ArgumentNullException.ThrowIfNull(execute);
             ArgumentNullException.ThrowIfNull(canExecute);
 
-            return factory.Create<T>(async x =>
-                {
-                    if (x is null)
-                        return;
-
-                    await execute.Invoke(x).ConfigureAwait(false);
-                },
+            return factory.Create<T>(
+                x => x is null ? Task.CompletedTask : execute(x),
                 x => x is not null && canExecute.Invoke(x));
         }
     }

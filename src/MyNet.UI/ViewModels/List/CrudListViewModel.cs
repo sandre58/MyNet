@@ -35,9 +35,9 @@ public class CrudListViewModel<T> : ListViewModel<T>
         _crudService = crudService ?? throw new ArgumentNullException(nameof(crudService));
         var commands = options?.CommandFactory ?? RelayCommandFactory.Default;
 
-        AddCommand = commands.Create(async () => await AddAsync().ConfigureAwait(false), CanAdd);
-        EditCommand = commands.CreateRequired<T>(async item => await EditAsync(item).ConfigureAwait(false), CanEdit);
-        DeleteCommand = commands.CreateRequired<T>(async item => await DeleteAsync(item).ConfigureAwait(false), CanDelete);
+        AddCommand = commands.Create(() => AddAsync(), CanAdd);
+        EditCommand = commands.CreateRequired<T>(item => EditAsync(item), CanEdit);
+        DeleteCommand = commands.CreateRequired<T>(item => DeleteAsync(item), CanDelete);
     }
 
     /// <summary>

@@ -56,7 +56,7 @@ public abstract class FileExportViewModelBase<T> : ExportViewModelBase<T>
             : defaultFolder;
 
         var commands = commandFactory ?? RelayCommandFactory.Default;
-        SetFilePathCommand = commands.Create(async () => await SetFilePathAsync().ConfigureAwait(false));
+        SetFilePathCommand = commands.Create(() => SetFilePathAsync());
     }
 
     /// <summary>

@@ -42,7 +42,7 @@ public abstract class ExportViewModelBase<T> : DialogViewModel<bool>
     {
         _notificationPublisher = notificationPublisher;
         var commands = commandFactory ?? RelayCommandFactory.Default;
-        ExportAndCloseCommand = commands.Create(async () => await ExportAndCloseAsync().ConfigureAwait(false));
+        ExportAndCloseCommand = commands.Create(() => ExportAndCloseAsync());
         CancelCommand = commands.Create(Cancel);
 
         this.UseTracking()

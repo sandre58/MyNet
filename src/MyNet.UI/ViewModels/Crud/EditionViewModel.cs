@@ -77,9 +77,9 @@ public abstract class EditionViewModel : DialogViewModel<bool>, IEditionStateVie
 
         var commands = commandFactory ?? RelayCommandFactory.Default;
 
-        CancelCommand = commands.Create(async () => await CancelAsync().ConfigureAwait(false));
-        SaveCommand = commands.Create(async () => await SaveAsync().ConfigureAwait(false), CanSave);
-        SaveAndCloseCommand = commands.Create(async () => await SaveAndCloseAsync().ConfigureAwait(false), CanSave);
+        CancelCommand = commands.Create(() => CancelAsync());
+        SaveCommand = commands.Create(() => SaveAsync(), CanSave);
+        SaveAndCloseCommand = commands.Create(() => SaveAndCloseAsync(), CanSave);
 
         Mode = ScreenMode.Creation;
 

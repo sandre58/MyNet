@@ -17,6 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MyNet.Collections\MyNet.Collections.csproj" />
+        <ProjectReference Include="..\MyNet.Globalization\MyNet.Globalization.csproj" />
         <ProjectReference Include="..\MyNet.IO\MyNet.IO.csproj" />
         <ProjectReference Include="..\MyNet.Observable\MyNet.Observable.csproj" />
         <ProjectReference Include="..\MyNet.Utilities\MyNet.Utilities.csproj" />

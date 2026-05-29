@@ -272,6 +272,64 @@ public class NavigationClientTests
         provider.GetService<INavigationClient>().Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task NavigateToAsync_UsesServiceProviderResolution()
+    {
+        var services = new ServiceCollection();
+        services.AddNavigation();
+        services.AddTransient<TrackingNavigationPage>();
+        await using var provider = services.BuildServiceProvider();
+
+        var sut = provider.GetRequiredService<INavigationClient>();
+        var result = await sut.NavigateToAsync<TrackingNavigationPage>(new PlayerParameters(7));
+
+        result.Status.Should().Be(NavigationStatus.Succeeded);
+        sut.CurrentContext!.To.Should().BeOfType<TrackingNavigationPage>();
+    }
+
+    [Fact]
+    public async Task GoBackForwardAndReset_DelegateToNavigationService()
+    {
+        var services = new ServiceCollection();
+        services.AddNavigation();
+        services.AddTransient<TrackingNavigationPage>();
+        await using var provider = services.BuildServiceProvider();
+
+        var sut = provider.GetRequiredService<INavigationClient>();
+        await sut.NavigateToAsync<TrackingNavigationPage>();
+        await sut.NavigateToAsync<TrackingNavigationPage>();
+
+        sut.CanGoBack.Should().BeTrue();
+
+        var back = await sut.GoBackAsync();
+        back.Status.Should().Be(NavigationStatus.Succeeded);
+        sut.CanGoForward.Should().BeTrue();
+
+        var forward = await sut.GoForwardAsync();
+        forward.Status.Should().Be(NavigationStatus.Succeeded);
+
+        await sut.ResetAsync();
+        sut.CurrentContext.Should().BeNull();
+        sut.CanGoBack.Should().BeFalse();
+        sut.CanGoForward.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task StateChanged_ForwardsNavigationServiceEvents()
+    {
+        var services = new ServiceCollection();
+        services.AddNavigation();
+        await using var provider = services.BuildServiceProvider();
+
+        var sut = provider.GetRequiredService<INavigationClient>();
+        var raised = false;
+        sut.StateChanged += (_, _) => raised = true;
+
+        await provider.GetRequiredService<INavigationService>().NavigateToAsync(new TrackingNavigationPage());
+
+        raised.Should().BeTrue();
+    }
+
     [SuppressMessage("ReSharper", "NotAccessedPositionalProperty.Local",  Justification = "Test")]
     private sealed record PlayerParameters(int PlayerId);
 

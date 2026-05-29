@@ -65,7 +65,7 @@ public sealed class RecentFilesViewModel : ListViewModelBase<RecentFileViewModel
                 await _recentFilesOperations.RemoveAsync(item.Path).ConfigureAwait(false);
         });
 
-        ReloadCommand = commands.Create(async () => await ReloadAsync().ConfigureAwait(false));
+        ReloadCommand = commands.Create(() => ReloadAsync());
 
         _recentFilesOperations.Changed += OnRecentFilesChanged;
         Disposables.Add(Disposable.Create(() => _recentFilesOperations.Changed -= OnRecentFilesChanged));
@@ -100,7 +100,7 @@ public sealed class RecentFilesViewModel : ListViewModelBase<RecentFileViewModel
     /// <summary>
     /// Reloads items from the recent-files service.
     /// </summary>
-    public async Task ReloadAsync(CancellationToken cancellationToken = default) => await ExecuteAsync(async ct =>
+    public async Task ReloadAsync(CancellationToken cancellationToken = default) => await ExecuteSafeAsync(async ct =>
     {
         var files = await _recentFilesOperations.GetAllAsync(ct).ConfigureAwait(false);
         var items = new List<RecentFileViewModel>(files.Count);

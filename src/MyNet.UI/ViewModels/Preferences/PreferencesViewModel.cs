@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading;
@@ -26,6 +27,7 @@ namespace MyNet.UI.ViewModels.Preferences;
 /// <summary>
 /// Preferences dialog with tabbed pages and persistent settings save/reset/reload.
 /// </summary>
+[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in DisposeManagedResources.")]
 public sealed class PreferencesViewModel : EditionViewModel, ITabWorkspaceViewModel
 {
     private readonly IPersistentPreferencesService _preferencesService;
@@ -103,5 +105,12 @@ public sealed class PreferencesViewModel : EditionViewModel, ITabWorkspaceViewMo
 
         foreach (var workspace in Workspaces)
             await workspace.RefreshAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    protected override void DisposeManagedResources()
+    {
+        _tabs.Dispose();
+        base.DisposeManagedResources();
     }
 }

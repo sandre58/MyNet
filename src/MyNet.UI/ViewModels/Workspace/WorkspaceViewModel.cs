@@ -32,8 +32,8 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
     {
         var commands = commandFactory ?? RelayCommandFactory.Default;
 
-        RefreshCommand = commands.Create(async () => await RefreshAsync().ConfigureAwait(false), CanRefresh);
-        ResetCommand = commands.Create(async () => await ResetAsync().ConfigureAwait(false), CanReset);
+        RefreshCommand = commands.Create(() => RefreshAsync(), CanRefresh);
+        ResetCommand = commands.Create(() => ResetAsync(), CanReset);
 
         if (cultureService is not null)
         {
@@ -93,14 +93,16 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public Task RefreshAsync(CancellationToken cancellationToken = default) => ExecuteAsync(async ct => await OnRefreshAsync(ct).ConfigureAwait(false), cancellationToken);
+    public Task RefreshAsync(CancellationToken cancellationToken = default)
+        => ExecuteSafeAsync(ct => OnRefreshAsync(ct), cancellationToken);
 
     /// <summary>
     /// Resets the workspace state and content.
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public Task ResetAsync(CancellationToken cancellationToken = default) => ExecuteAsync(async ct => await OnResetAsync(ct).ConfigureAwait(false), cancellationToken);
+    public Task ResetAsync(CancellationToken cancellationToken = default)
+        => ExecuteSafeAsync(ct => OnResetAsync(ct), cancellationToken);
 
     /// <summary>
     /// Performs the asynchronous refresh logic.

@@ -22,6 +22,15 @@ namespace MyNet.UI.ViewModels;
 /// <remarks>
 /// <see cref="BusyService"/> is scoped to this view model (bind <see cref="BusyService"/> in the view).
 /// For application-wide busy, inject <see cref="IBusyService"/> on the operation or service that needs it.
+/// <para>
+/// Async execution helpers differ by error propagation:
+/// <list type="bullet">
+/// <item><see cref="ExecuteStateAsync{TBusy}"/> — updates <see cref="State"/> and always rethrows after <see cref="OnExecutionError"/> unless it reports the exception as handled.</item>
+/// <item><see cref="ExecuteAsync(Func{CancellationToken, Task}, CancellationToken)"/> — local busy only; rethrows when <see cref="OnExecutionError"/> returns <see langword="false"/>.</item>
+/// <item><see cref="ExecuteSafeAsync(Func{CancellationToken, Task}, CancellationToken)"/> — local busy only; never rethrows (exceptions are always swallowed after <see cref="OnExecutionError"/>).</item>
+/// </list>
+/// Override <see cref="OnExecutionError"/> and return <see langword="false"/> to propagate an exception to callers or <see cref="Commands.IAsyncCommand"/> hosts.
+/// </para>
 /// </remarks>
 [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Fields is not disposable and does not require cleanup.")]
 public abstract class ViewModelBase : ObservableObject, IIdentifiable<Guid>
@@ -87,10 +96,13 @@ public abstract class ViewModelBase : ObservableObject, IIdentifiable<Guid>
             State = LoadState.NotLoaded;
             throw;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             State = LoadState.Error;
-            OnExecutionError(ex);
+
+            if (OnExecutionError(ex))
+                return;
+
             throw;
         }
         finally
@@ -101,61 +113,126 @@ public abstract class ViewModelBase : ObservableObject, IIdentifiable<Guid>
 
     /// <summary>
     /// Executes an asynchronous action with the local busy service.
+    /// When <see cref="OnExecutionError"/> returns <see langword="false"/>, the exception is rethrown to the caller.
     /// </summary>
-    /// <param name="action">The asynchronous action to execute during the state transition.</param>
+    /// <param name="action">The asynchronous action to execute.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    protected async Task ExecuteAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
+    protected Task ExecuteAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
+        => ExecuteCoreAsync(action, rethrowOnUnhandledError: true, cancellationToken);
+
+    /// <summary>
+    /// Executes an asynchronous action with the local busy service and never rethrows after <see cref="OnExecutionError"/>.
+    /// </summary>
+    /// <param name="action">The asynchronous action to execute.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    protected Task ExecuteSafeAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
+        => ExecuteCoreAsync(action, rethrowOnUnhandledError: false, cancellationToken);
+
+    /// <summary>
+    /// Executes an asynchronous function that returns a result with automatic error handling.
+    /// When <see cref="OnExecutionError"/> returns <see langword="false"/>, the exception is rethrown.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="func">The asynchronous function to execute.</param>
+    /// <param name="defaultValue">The default value to return when the exception is handled by <see cref="OnExecutionError"/>.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation with the result, or <paramref name="defaultValue"/> when the error is handled.</returns>
+    protected Task<TResult> ExecuteAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> func,
+        TResult defaultValue = default!,
+        CancellationToken cancellationToken = default)
+        => ExecuteCoreAsync(func, defaultValue, rethrowOnUnhandledError: true, cancellationToken);
+
+    /// <summary>
+    /// Executes an asynchronous function with automatic error handling and never rethrows after <see cref="OnExecutionError"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="func">The asynchronous function to execute.</param>
+    /// <param name="defaultValue">The default value to return when an error occurs.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation with the result, or <paramref name="defaultValue"/> when an error occurs.</returns>
+    protected Task<TResult> ExecuteSafeAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> func,
+        TResult defaultValue = default!,
+        CancellationToken cancellationToken = default)
+        => ExecuteCoreAsync(func, defaultValue, rethrowOnUnhandledError: false, cancellationToken);
+
+    /// <summary>
+    /// Executes an asynchronous function with progress tracking and cancellation support on the local busy service.
+    /// When <see cref="OnExecutionError"/> returns <see langword="false"/>, the exception is rethrown.
+    /// </summary>
+    /// <param name="action">The asynchronous function to execute. Receives a <see cref="ProgressionBusy"/> instance for progress reporting.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    protected Task ExecuteWithProgressAsync(
+        Func<ProgressionBusy, CancellationToken, Task> action,
+        CancellationToken cancellationToken = default)
+        => ExecuteProgressCoreAsync(action, rethrowOnUnhandledError: true, cancellationToken);
+
+    /// <summary>
+    /// Executes an asynchronous function with progress tracking and never rethrows after <see cref="OnExecutionError"/>.
+    /// </summary>
+    /// <param name="action">The asynchronous function to execute. Receives a <see cref="ProgressionBusy"/> instance for progress reporting.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    protected Task ExecuteSafeWithProgressAsync(
+        Func<ProgressionBusy, CancellationToken, Task> action,
+        CancellationToken cancellationToken = default)
+        => ExecuteProgressCoreAsync(action, rethrowOnUnhandledError: false, cancellationToken);
+
+    private async Task ExecuteCoreAsync(
+        Func<CancellationToken, Task> action,
+        bool rethrowOnUnhandledError,
+        CancellationToken cancellationToken)
     {
         try
         {
             await BusyService.RunIndeterminateAsync(action, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            OnExecutionError(ex);
+            if (!OnExecutionError(ex) && rethrowOnUnhandledError)
+                throw;
         }
     }
 
-    /// <summary>
-    /// Executes an asynchronous function that returns a result with automatic error handling.
-    /// Exceptions are caught and passed to <see cref="OnExecutionError"/>.
-    /// </summary>
-    /// <typeparam name="TResult">The type of the result.</typeparam>
-    /// <param name="func">The asynchronous function to execute.</param>
-    /// <param name="defaultValue">The default value to return if an error occurs.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation with the result, or the default value if an error occurs.</returns>
-    protected async Task<TResult> ExecuteAsync<TResult>(Func<CancellationToken, Task<TResult>> func, TResult defaultValue = default!, CancellationToken cancellationToken = default)
+    private async Task<TResult> ExecuteCoreAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> func,
+        TResult defaultValue,
+        bool rethrowOnUnhandledError,
+        CancellationToken cancellationToken)
     {
         try
         {
             TResult? result = default;
-            await BusyService.RunAsync<IndeterminateBusy>(async (_, ct) => result = await func(ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
+            await BusyService.RunAsync<IndeterminateBusy>(
+                async (_, ct) => result = await func(ct).ConfigureAwait(false),
+                cancellationToken).ConfigureAwait(false);
 
             return result!;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            OnExecutionError(ex);
+            if (!OnExecutionError(ex) && rethrowOnUnhandledError)
+                throw;
+
             return defaultValue;
         }
     }
 
-    /// <summary>
-    /// Executes an asynchronous function with progress tracking and cancellation support on the local busy service.
-    /// </summary>
-    /// <param name="action">The asynchronous function to execute. Receives a <see cref="ProgressionBusy"/> instance for progress reporting.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    protected async Task ExecuteWithProgressAsync(Func<ProgressionBusy, CancellationToken, Task> action, CancellationToken cancellationToken = default)
+    private async Task ExecuteProgressCoreAsync(
+        Func<ProgressionBusy, CancellationToken, Task> action,
+        bool rethrowOnUnhandledError,
+        CancellationToken cancellationToken)
     {
         try
         {
             await BusyService.RunProgressionAsync(action, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            OnExecutionError(ex);
+            if (!OnExecutionError(ex) && rethrowOnUnhandledError)
+                throw;
         }
     }
 
@@ -164,12 +241,14 @@ public abstract class ViewModelBase : ObservableObject, IIdentifiable<Guid>
     #region Error Handling
 
     /// <summary>
-    /// Called when an exception occurs during an async operation.
-    /// Override this method to provide custom error handling (logging, user notification, etc.).
-    /// The default implementation does nothing, allowing exceptions to propagate.
+    /// Called when an exception occurs during an async operation executed through the <see cref="ExecuteAsync"/> helpers.
     /// </summary>
     /// <param name="exception">The exception that occurred.</param>
-    protected virtual void OnExecutionError(Exception exception) { }
+    /// <returns>
+    /// <see langword="true"/> when the exception is handled and must not be rethrown;
+    /// <see langword="false"/> to propagate the exception to the caller (for methods that support rethrowing).
+    /// </returns>
+    protected virtual bool OnExecutionError(Exception exception) => true;
 
     #endregion
 

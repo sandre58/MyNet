@@ -96,7 +96,7 @@ public class ImportBySourcesDialogViewModel<T> : ImportDialogViewModel<T>
         if (source is null)
             return;
 
-        await ExecuteAsync(_ =>
+        await ExecuteSafeAsync(_ =>
         {
             _itemsProvider.LoadSource(source);
             List.Load(_itemsProvider.Items);

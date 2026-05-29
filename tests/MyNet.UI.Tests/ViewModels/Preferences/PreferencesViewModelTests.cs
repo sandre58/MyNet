@@ -67,6 +67,20 @@ public class PreferencesViewModelTests
         preferences.Verify(x => x.Save(), Times.Once);
     }
 
+    [Fact]
+    public void Dispose_CanBeCalledMultipleTimes()
+    {
+        var sut = CreateSut(Mock.Of<IPersistentPreferencesService>(), new TestPageViewModel());
+
+        var act = () =>
+        {
+            sut.Dispose();
+            sut.Dispose();
+        };
+
+        act.Should().NotThrow();
+    }
+
     private static PreferencesViewModel CreateSut(
         IPersistentPreferencesService preferencesService,
         IWorkspaceViewModel page)

@@ -21,32 +21,32 @@ namespace MyNet.UI.ViewModels.Display;
 /// </summary>
 public abstract class DisplayModeViewModel : ObservableObject, IDisplayModeViewModel
 {
-    /// <summary>Legacy-compatible key for grid mode.</summary>
-    public const string GridKey = "DisplayModeGrid";
+    /// <summary>Grid mode key. Prefer <see cref="DisplayModeWellKnownKeys.Grid"/> for new code.</summary>
+    public const string GridKey = DisplayModeWellKnownKeys.Grid;
 
-    /// <summary>Legacy-compatible key for detailed mode.</summary>
-    public const string DetailedKey = "DisplayModeDetailled";
+    /// <summary>Detailed mode key. Prefer <see cref="DisplayModeWellKnownKeys.Detailed"/> for new code.</summary>
+    public const string DetailedKey = DisplayModeWellKnownKeys.Detailed;
 
-    /// <summary>Legacy-compatible key for chart mode.</summary>
-    public const string ChartKey = "DisplayModeChart";
+    /// <summary>Chart mode key. Prefer <see cref="DisplayModeWellKnownKeys.Chart"/> for new code.</summary>
+    public const string ChartKey = DisplayModeWellKnownKeys.Chart;
 
-    /// <summary>Legacy-compatible key for list mode.</summary>
-    public const string ListKey = "DisplayModeList";
+    /// <summary>List mode key. Prefer <see cref="DisplayModeWellKnownKeys.List"/> for new code.</summary>
+    public const string ListKey = DisplayModeWellKnownKeys.List;
 
-    /// <summary>Legacy-compatible key for hour mode.</summary>
-    public const string HourKey = "DisplayModeHour";
+    /// <summary>Hour mode key. Prefer <see cref="DisplayModeWellKnownKeys.Hour"/> for new code.</summary>
+    public const string HourKey = DisplayModeWellKnownKeys.Hour;
 
-    /// <summary>Legacy-compatible key for day mode.</summary>
-    public const string DayKey = "DisplayModeDay";
+    /// <summary>Day mode key. Prefer <see cref="DisplayModeWellKnownKeys.Day"/> for new code.</summary>
+    public const string DayKey = DisplayModeWellKnownKeys.Day;
 
-    /// <summary>Legacy-compatible key for week mode.</summary>
-    public const string WeekKey = "DisplayModeWeek";
+    /// <summary>Week mode key. Prefer <see cref="DisplayModeWellKnownKeys.Week"/> for new code.</summary>
+    public const string WeekKey = DisplayModeWellKnownKeys.Week;
 
-    /// <summary>Legacy-compatible key for month mode.</summary>
-    public const string MonthKey = "DisplayModeMonth";
+    /// <summary>Month mode key. Prefer <see cref="DisplayModeWellKnownKeys.Month"/> for new code.</summary>
+    public const string MonthKey = DisplayModeWellKnownKeys.Month;
 
-    /// <summary>Legacy-compatible key for year mode.</summary>
-    public const string YearKey = "DisplayModeYear";
+    /// <summary>Year mode key. Prefer <see cref="DisplayModeWellKnownKeys.Year"/> for new code.</summary>
+    public const string YearKey = DisplayModeWellKnownKeys.Year;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DisplayModeViewModel"/> class.

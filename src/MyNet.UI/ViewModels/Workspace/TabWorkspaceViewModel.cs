@@ -118,7 +118,7 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
         _workspaces.Add(workspace);
 
         if (workspace.State != LoadState.Loaded)
-            _ = ExecuteAsync(workspace.LoadAsync);
+            _ = ExecuteSafeAsync(workspace.LoadAsync);
 
         SelectedWorkspace ??= workspace;
         RaiseTabNavigationCanExecuteChanged();

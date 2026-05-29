@@ -61,13 +61,6 @@ public static class ThemeManager
     }
 
     /// <summary>
-    /// Configures the static bridge. Prefer <see cref="Configure"/>.
-    /// </summary>
-    [Obsolete("Use Configure(IThemeService, IThemeBaseRegistry) or IServiceProvider.UseThemeManager().")]
-    public static void Initialize(IThemeService themeService, IThemeBaseRegistry themeBaseRegistry)
-        => Configure(themeService, themeBaseRegistry);
-
-    /// <summary>
     /// Occurs when the theme is changed.
     /// </summary>
     public static event EventHandler<ThemeChangedEventArgs>? ThemeChanged

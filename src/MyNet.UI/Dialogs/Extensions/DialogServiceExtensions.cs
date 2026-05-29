@@ -64,42 +64,6 @@ public static class DialogServiceExtensions
         public IDialogBuilder<TResult> Create<TDialog, TResult>(IViewModelLocator viewModelLocator)
             where TDialog : class, IDialog<TResult>
             => dialogService.Create(ResolveFromLocator<TDialog>(dialogService, viewModelLocator));
-
-        /// <summary>
-        /// Resolves a dialog instance from <paramref name="serviceProvider"/> and shows it.
-        /// </summary>
-        [Obsolete("Prefer overloads that take IViewModelLocator. IServiceProvider-based overloads are kept for compatibility.")]
-        public Task<DialogResult<bool>> ShowAsync<TDialog>(IServiceProvider serviceProvider,
-            DialogOptions? options = null,
-            CancellationToken cancellationToken = default)
-            where TDialog : class, IDialog
-            => dialogService.ShowAsync(ResolveFromServiceProvider<TDialog>(dialogService, serviceProvider), options, cancellationToken);
-
-        /// <summary>
-        /// Resolves a typed dialog instance from <paramref name="serviceProvider"/> and shows it.
-        /// </summary>
-        [Obsolete("Prefer overloads that take IViewModelLocator. IServiceProvider-based overloads are kept for compatibility.")]
-        public Task<DialogResult<TResult>> ShowAsync<TDialog, TResult>(IServiceProvider serviceProvider,
-            DialogOptions? options = null,
-            CancellationToken cancellationToken = default)
-            where TDialog : class, IDialog<TResult>
-            => dialogService.ShowAsync(ResolveFromServiceProvider<TDialog>(dialogService, serviceProvider), options, cancellationToken);
-
-        /// <summary>
-        /// Creates a non-typed dialog builder after resolving the dialog from the service provider.
-        /// </summary>
-        [Obsolete("Prefer overloads that take IViewModelLocator. IServiceProvider-based overloads are kept for compatibility.")]
-        public IDialogBuilder Create<TDialog>(IServiceProvider serviceProvider)
-            where TDialog : class, IDialog
-            => dialogService.Create(ResolveFromServiceProvider<TDialog>(dialogService, serviceProvider));
-
-        /// <summary>
-        /// Creates a typed dialog builder after resolving the dialog from the service provider.
-        /// </summary>
-        [Obsolete("Prefer overloads that take IViewModelLocator. IServiceProvider-based overloads are kept for compatibility.")]
-        public IDialogBuilder<TResult> Create<TDialog, TResult>(IServiceProvider serviceProvider)
-            where TDialog : class, IDialog<TResult>
-            => dialogService.Create(ResolveFromServiceProvider<TDialog>(dialogService, serviceProvider));
     }
 
     private static TDialog ResolveFromLocator<TDialog>(IDialogService dialogService, IViewModelLocator viewModelLocator)
