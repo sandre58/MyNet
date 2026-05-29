@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/29/2026 - 21:01:54 |
-| Coverage date: | 05/29/2026 - 20:59:05 - 05/29/2026 - 20:59:52 |
-| Parser: | MultiReport (64x Cobertura) |
+| Generated on: | 05/29/2026 - 21:17:45 |
+| Coverage date: | 05/29/2026 - 21:14:46 - 05/29/2026 - 21:15:35 |
+| Parser: | MultiReport (65x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 666 |
 | Files: | 621 |
-| **Line coverage:** | 72.1% (10064 of 13958) |
-| Covered lines: | 10064 |
-| Uncovered lines: | 3894 |
+| **Line coverage:** | 72.6% (10137 of 13958) |
+| Covered lines: | 10137 |
+| Uncovered lines: | 3821 |
 | Coverable lines: | 13958 |
-| Total lines: | 56686 |
-| **Branch coverage:** | 59.5% (3865 of 6488) |
-| Covered branches: | 3865 |
+| Total lines: | 57489 |
+| **Branch coverage:** | 60.1% (3905 of 6488) |
+| Covered branches: | 3905 |
 | Total branches: | 6488 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 264_26661769178 |
+| Tag: | 265_26662459980 |
 
 </details>
 
@@ -237,14 +237,14 @@
 |MyNet.Humanizer.TimeHumanizerExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.IO - 84.2%</summary>
+<details><summary>MyNet.IO - 84%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84.2%**|**76.4%**|
+|**MyNet.IO**|**84%**|**77.2%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|66.6%|54.1%|
+|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
 |MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
@@ -448,11 +448,11 @@
 |MyNet.Platform.Windows.Registry.WindowsRegistryStore|100%|50%|
 
 </details>
-<details><summary>MyNet.Primitives - 71.3%</summary>
+<details><summary>MyNet.Primitives - 71.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Primitives**|**71.3%**|**60.6%**|
+|**MyNet.Primitives**|**71.7%**|**60.8%**|
 |MyNet.Primitives.BooleanExtensions|100%|100%|
 |MyNet.Primitives.ComparableExtensions|100%|92%|
 |MyNet.Primitives.ComparerExtensions|100%||
@@ -483,7 +483,7 @@
 |MyNet.Primitives.ExpressionExtensions|92.3%|63.6%|
 |MyNet.Primitives.FallbackValue`1|100%|100%|
 |MyNet.Primitives.Helpers.CharHelper|100%||
-|MyNet.Primitives.Helpers.ProcessHelper|39.1%|0%|
+|MyNet.Primitives.Helpers.ProcessHelper|69.5%|100%|
 |MyNet.Primitives.Helpers.ResourcesHelper|91.6%|87.5%|
 |MyNet.Primitives.IntervalExtensions|53.5%|28%|
 |MyNet.Primitives.Intervals.ClosedInterval`1|75%|50%|
@@ -605,11 +605,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 49.8%</summary>
+<details><summary>MyNet.UI - 51.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**49.8%**|**37.9%**|
+|**MyNet.UI**|**51.6%**|**40.2%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -630,24 +630,24 @@
 |MyNet.UI.Dialogs.DialogServiceBuilder|100%|50%|
 |MyNet.UI.Dialogs.DialogServiceExtensions|100%|50%|
 |MyNet.UI.Dialogs.DialogServiceListExtensions|0%||
-|MyNet.UI.Dialogs.FileDialogs.CancelledFileDialogService|0%||
-|MyNet.UI.Dialogs.FileDialogs.FileDialogResult|0%|0%|
-|MyNet.UI.Dialogs.FileDialogs.OpenFileDialogSettings|0%||
-|MyNet.UI.Dialogs.FileDialogs.OpenFolderDialogSettings|0%||
-|MyNet.UI.Dialogs.FileDialogs.SaveFileDialogSettings|0%||
+|MyNet.UI.Dialogs.FileDialogs.CancelledFileDialogService|100%||
+|MyNet.UI.Dialogs.FileDialogs.FileDialogResult|100%|100%|
+|MyNet.UI.Dialogs.FileDialogs.OpenFileDialogSettings|100%||
+|MyNet.UI.Dialogs.FileDialogs.OpenFolderDialogSettings|50%||
+|MyNet.UI.Dialogs.FileDialogs.SaveFileDialogSettings|100%||
 |MyNet.UI.Dialogs.MessageBox.DefaultMessageBoxFactory|100%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxBuilder|0%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxService|89.2%|25%|
 |MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|6.6%|
 |MyNet.UI.Dialogs.ServiceCollectionExtensions|46.6%|100%|
 |MyNet.UI.Helpers.ApplicationHelper|100%|50%|
-|MyNet.UI.Helpers.IoHelper|0%|0%|
+|MyNet.UI.Helpers.IoHelper|100%|83.3%|
 |MyNet.UI.Loading.BusyExtensions|4%||
 |MyNet.UI.Loading.BusyScope|83.3%|50%|
 |MyNet.UI.Loading.BusyService|84.7%|66.6%|
 |MyNet.UI.Loading.Models.Busy|85%|37.5%|
-|MyNet.UI.Loading.Models.DeterminateBusy|0%||
-|MyNet.UI.Loading.Models.IndeterminateBusy|0%||
+|MyNet.UI.Loading.Models.DeterminateBusy|100%||
+|MyNet.UI.Loading.Models.IndeterminateBusy|100%||
 |MyNet.UI.Loading.Models.ProgressionBusy|100%|50%|
 |MyNet.UI.Loading.ServiceCollectionExtensions|100%||
 |MyNet.UI.Locators.Conventions.AssemblyRootConvention|81.8%|50%|
@@ -664,8 +664,8 @@
 |MyNet.UI.Locators.ViewResolutionException|53.8%||
 |MyNet.UI.Navigation.Models.NavigationContext|100%||
 |MyNet.UI.Navigation.Models.NavigationParameterConversions|68.9%|81.2%|
-|MyNet.UI.Navigation.Models.NavigationParameters|50%|50%|
-|MyNet.UI.Navigation.Models.NavigationParametersExtensions|7.6%|7.1%|
+|MyNet.UI.Navigation.Models.NavigationParameters|55.5%|50%|
+|MyNet.UI.Navigation.Models.NavigationParametersExtensions|84.6%|71.4%|
 |MyNet.UI.Navigation.NavigationClient|91.6%||
 |MyNet.UI.Navigation.NavigationJournal|100%|66.6%|
 |MyNet.UI.Navigation.NavigationLifecycle|100%|100%|
@@ -673,15 +673,15 @@
 |MyNet.UI.Navigation.NavigationService|95.2%|83.3%|
 |MyNet.UI.Navigation.NavigationStateChangedEventArgs|100%||
 |MyNet.UI.Navigation.ServiceCollectionExtensions|53.3%||
-|MyNet.UI.Notifications.Models.ActionNotification|0%||
+|MyNet.UI.Notifications.Models.ActionNotification|100%||
 |MyNet.UI.Notifications.Models.ClosableNotification|66.6%|50%|
 |MyNet.UI.Notifications.Models.DeduplicableMessageNotification|100%|50%|
 |MyNet.UI.Notifications.Models.MessageNotification|100%||
 |MyNet.UI.Notifications.Models.NotificationBase|50%||
-|MyNet.UI.Notifications.NotificationPublisherExtensions|0%|0%|
+|MyNet.UI.Notifications.NotificationPublisherExtensions|100%|85.7%|
 |MyNet.UI.Notifications.NotificationService|78.9%|70%|
 |MyNet.UI.Notifications.NotificationsManager|90.3%|77.2%|
-|MyNet.UI.Notifications.Processors.EmptyNotificationFilter|0%|0%|
+|MyNet.UI.Notifications.Processors.EmptyNotificationFilter|100%|100%|
 |MyNet.UI.Notifications.ServiceCollectionExtensions|100%|50%|
 |MyNet.UI.Services.FileHistory.RecentFilesOperations|0%|0%|
 |MyNet.UI.Services.PreferencesService|0%|0%|
@@ -692,7 +692,7 @@
 |MyNet.UI.Threading.ServiceCollectionExtensions|100%||
 |MyNet.UI.Toasting.DefaultToastFactory|100%|66.6%|
 |MyNet.UI.Toasting.Filters.AllToastsFilter|100%||
-|MyNet.UI.Toasting.Filters.CompositeToastFilter|0%||
+|MyNet.UI.Toasting.Filters.CompositeToastFilter|100%||
 |MyNet.UI.Toasting.Models.Toast|100%|50%|
 |MyNet.UI.Toasting.ServiceCollectionExtensions|100%|50%|
 |MyNet.UI.Toasting.Settings.ToastManagerOptions|100%||
@@ -724,7 +724,7 @@
 |MyNet.UI.ViewModels.Display.WeekDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.YearDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Export.ExportColumnViewModel`1|0%||
-|MyNet.UI.ViewModels.Export.ExportFileType|0%|0%|
+|MyNet.UI.ViewModels.Export.ExportFileType|100%|87.5%|
 |MyNet.UI.ViewModels.Export.ExportViewModelBase`1|97%|72.7%|
 |MyNet.UI.ViewModels.Export.ExportViewModelValidator`1|100%|100%|
 |MyNet.UI.ViewModels.Export.FileExportByColumnsViewModelBase`2|0%|0%|
