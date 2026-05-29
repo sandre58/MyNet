@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using MyNet.Primitives;
 using MyNet.Primitives.Intervals;
 using Xunit;
 
@@ -99,6 +100,58 @@ public class PeriodExtensionsTests
         Assert.Equal(start.Date, days[0]);
         Assert.Equal(start.Date.AddDays(1), days[1]);
         Assert.Equal(start.Date.AddDays(2), days[2]);
+    }
+
+    #endregion
+
+    #region IsCurrent / IsPast / IsFuture
+
+    [Fact]
+    public void IsCurrent_WhenNowIsInsidePeriod_ReturnsTrue()
+    {
+        var period = MakePeriod(DateTime.Now.AddHours(-1), DateTime.Now.AddHours(1));
+
+        Assert.True(period.IsCurrent());
+    }
+
+    [Fact]
+    public void IsPast_WhenPeriodEndedBeforeNow_ReturnsTrue()
+    {
+        var period = MakePeriod(DateTime.Now.AddHours(-3), DateTime.Now.AddHours(-1));
+
+        Assert.True(period.IsPast());
+        Assert.False(period.IsFuture());
+    }
+
+    [Fact]
+    public void IsFuture_WhenPeriodStartsAfterNow_ReturnsTrue()
+    {
+        var period = MakePeriod(DateTime.Now.AddHours(1), DateTime.Now.AddHours(3));
+
+        Assert.True(period.IsFuture());
+        Assert.False(period.IsPast());
+    }
+
+    #endregion
+
+    #region Gap
+
+    [Fact]
+    public void Gap_WithNonOverlappingPeriods_ReturnsElapsedTimeBetweenThem()
+    {
+        var left = MakePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
+        var right = MakePeriod(new(2024, 1, 1, 12, 0, 0), new(2024, 1, 1, 14, 0, 0));
+
+        Assert.Equal(TimeSpan.FromHours(2), PeriodExtensions.Gap(left, right));
+    }
+
+    [Fact]
+    public void Gap_WithOverlappingPeriods_ReturnsZero()
+    {
+        var left = MakePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 12, 0, 0));
+        var right = MakePeriod(new(2024, 1, 1, 10, 0, 0), new(2024, 1, 1, 14, 0, 0));
+
+        Assert.Equal(TimeSpan.Zero, PeriodExtensions.Gap(left, right));
     }
 
     #endregion

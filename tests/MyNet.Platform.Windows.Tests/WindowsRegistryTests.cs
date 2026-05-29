@@ -95,6 +95,27 @@ public sealed class WindowsRegistryTests : IDisposable
     }
 
     [Fact]
+    public void WindowsRegistryQuery_FindByValue_WithMissingParent_ReturnsNull()
+    {
+        var missing = RegistryPath.Combine("Software", "MyNetMissing_" + Guid.NewGuid().ToString("N"));
+
+        var result = _query.FindByValue(missing, "Name", "Any");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void WindowsRegistryService_Remove_DeletesEntry()
+    {
+        var path = RegistryPath.Combine(_rootPath.ToString(), "ToRemove");
+        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(path, new() { Name = "RemoveMe", Count = 1, IsEnabled = true }));
+
+        _service.Remove(path);
+
+        Assert.Null(_service.Get<TestRegistryItem>(path));
+    }
+
+    [Fact]
     public void WindowsRegistryService_AddOrUpdate_Get_And_GetAll_WorkTogether()
     {
         var firstPath = RegistryPath.Combine(_rootPath.ToString(), "Entry1");

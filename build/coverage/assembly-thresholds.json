@@ -1,16 +1,16 @@
 {
   "defaultMinLineRate": 0.50,
   "assemblies": {
-    "MyNet.Collections": 0.70,
+    "MyNet.Reflection": 0.65,
     "MyNet.Primitives": 0.70,
-    "MyNet.Generator": 0.70,
-    "MyNet.Reflection": 0.60,
     "MyNet.Text": 0.70,
-    "MyNet.Observable": 0.70,
-    "MyNet.Fakers": 0.75,
+    "MyNet.Observable": 0.75,
+    "MyNet.Fakers": 0.80,
     "MyNet.Globalization": 0.80,
-    "MyNet.Humanizer": 0.80,
     "MyNet.IO": 0.80,
-    "MyNet.Utilities": 0.70
+    "MyNet.Utilities": 0.80,
+    "MyNet.Humanizer": 0.85,
+    "MyNet.Collections": 0.85,
+    "MyNet.Generator": 0.90
   }
 }

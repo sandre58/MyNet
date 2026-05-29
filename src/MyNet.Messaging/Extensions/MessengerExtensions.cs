@@ -117,18 +117,19 @@ public static class MessengerExtensions
             Func<TMessage, bool> predicate,
             Action<TMessage> action)
         {
-            Action<TMessage> filteredAction = msg =>
+            messenger.Register<TMessage>(
+                recipient,
+                filteredAction,
+                keepTargetAlive: true);
+            return;
+
+            void filteredAction(TMessage msg)
             {
                 if (predicate(msg))
                 {
                     action(msg);
                 }
-            };
-
-            messenger.Register<TMessage>(
-                recipient,
-                filteredAction,
-                keepTargetAlive: true);
+            }
         }
 
         /// <summary>
