@@ -36,5 +36,7 @@ public static class RandomGenerator
     /// <summary>
     /// Resets static random helpers to the default service implementation.
     /// </summary>
-    public static void Reset() => _current = new DefaultRandomGenerator(new SystemRandomSource());
+    public static void Reset() => Volatile.Write(
+        ref _current,
+        new DefaultRandomGenerator(new SystemRandomSource()));
 }

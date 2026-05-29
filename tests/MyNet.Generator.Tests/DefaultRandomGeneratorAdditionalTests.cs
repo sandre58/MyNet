@@ -10,6 +10,7 @@ using Xunit;
 
 namespace MyNet.Generator.Tests;
 
+[Collection(RandomGeneratorTestCollection.Name)]
 public sealed class DefaultRandomGeneratorAdditionalTests
 {
     [Fact]
@@ -90,18 +91,13 @@ public sealed class DefaultRandomGeneratorAdditionalTests
     [Fact]
     public void RandomGenerator_Reset_RestoresDefaultService()
     {
-        var previous = RandomGenerator.Current;
+        var custom = new DefaultRandomGenerator(new FixedRandomSource(0.5));
 
-        try
+        using (RandomGeneratorTestGate.Replace(custom))
         {
-            RandomGenerator.Current = new DefaultRandomGenerator(new FixedRandomSource(0.5));
             RandomGenerator.Reset();
 
-            Assert.NotSame(previous, RandomGenerator.Current);
-        }
-        finally
-        {
-            RandomGenerator.Current = previous;
+            Assert.NotSame(custom, RandomGenerator.Current);
         }
     }
 

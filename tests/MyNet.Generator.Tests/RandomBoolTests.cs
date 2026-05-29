@@ -10,6 +10,7 @@ using Xunit;
 
 namespace MyNet.Generator.Tests;
 
+[Collection(RandomGeneratorTestCollection.Name)]
 public class RandomBoolTests
 {
     [Fact]

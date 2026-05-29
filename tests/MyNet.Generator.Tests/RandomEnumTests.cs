@@ -13,6 +13,7 @@ using Xunit;
 
 namespace MyNet.Generator.Tests;
 
+[Collection(RandomGeneratorTestCollection.Name)]
 public class RandomEnumTests
 {
     private static readonly DefaultRandomGenerator Generator = new(new SystemRandomSource());

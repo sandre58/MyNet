@@ -4,32 +4,24 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Generator;
 using MyNet.Generator.Facade;
 using Xunit;
 
 namespace MyNet.Generator.Tests;
 
+[Collection(RandomGeneratorTestCollection.Name)]
 public class RandomGeneratorTests
 {
     [Fact]
     public void StaticApis_UseConfiguredService()
     {
-        var previous = RandomGenerator.Current;
+        var generator = new DefaultRandomGenerator(new FixedRandomSource(0.0d));
 
-        try
+        using (RandomGeneratorTestGate.Replace(generator))
         {
-            var fixedSource = new FixedRandomSource(0.0d);
-            RandomGenerator.Current = new DefaultRandomGenerator(fixedSource);
-
-            // Verify the current generator is the one we set
-            Assert.Same(RandomGenerator.Current, RandomGenerator.Current);
-
-            // Verify it produces deterministic output via FixedRandomSource
-            Assert.Equal(5, RandomGenerator.Current.Int(5, 10));
-        }
-        finally
-        {
-            RandomGenerator.Current = previous;
+            Assert.Same(generator, RandomGenerator.Current);
+            Assert.Equal(5, generator.Int(5, 10));
         }
     }
 
