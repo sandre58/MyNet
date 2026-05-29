@@ -6,9 +6,8 @@
 
 using FluentAssertions;
 using Moq;
-using MyNet.UI.Dialogs;
-using MyNet.UI.Services;
 using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.FileMenu;
 using MyNet.UI.ViewModels.Workspace;
 using Xunit;
 
@@ -69,13 +68,7 @@ public class ShellFileMenuHostTests
 
     private static ShellFileMenuHost CreateHost(TestWorkspaceViewModel[] content, IShellFileMenuDrawer drawer)
     {
-        var dialogService = new Mock<IDialogService>();
-        dialogService.Setup(x => x.HasOpenedDialogs).Returns(false);
-
-        var fileMenu = new FileMenuViewModel(
-            content,
-            Mock.Of<IAppCommandsService>(),
-            dialogService.Object);
+        var fileMenu = new FileMenuViewModel(content);
 
         return new ShellFileMenuHost(fileMenu, drawer);
     }

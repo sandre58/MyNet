@@ -6,7 +6,7 @@
 
 using FluentAssertions;
 using MyNet.Globalization.Culture;
-using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Chrome;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;

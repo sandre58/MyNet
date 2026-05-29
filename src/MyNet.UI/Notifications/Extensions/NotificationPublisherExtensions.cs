@@ -10,7 +10,7 @@ using MyNet.Globalization.Facade;
 using MyNet.Primitives;
 using MyNet.Primitives.Exceptions;
 using MyNet.UI.Notifications.Models;
-using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Taskbar;
 
 #pragma warning disable IDE0130
 namespace MyNet.UI.Notifications;

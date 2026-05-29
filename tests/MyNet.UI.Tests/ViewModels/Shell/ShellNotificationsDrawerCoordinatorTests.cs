@@ -13,6 +13,7 @@ using MyNet.UI.Notifications;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Threading;
 using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Notifications;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;

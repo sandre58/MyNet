@@ -7,7 +7,7 @@
 using FluentAssertions;
 using Moq;
 using MyNet.UI.Theming;
-using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Chrome;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;

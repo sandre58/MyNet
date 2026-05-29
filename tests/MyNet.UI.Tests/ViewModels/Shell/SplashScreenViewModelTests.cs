@@ -7,7 +7,8 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.Services;
+using MyNet.UI.ViewModels.Shell.Startup;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;
@@ -17,7 +18,7 @@ public class SplashScreenViewModelTests
     [Fact]
     public async Task ExecuteAsync_RunsTasksInOrder_AndInvokesCompletedCallback()
     {
-        var vm = new SplashScreenViewModel();
+        var vm = new SplashScreenViewModel(new ApplicationInfo());
         var order = 0;
         var first = 0;
         var second = 0;
@@ -45,7 +46,7 @@ public class SplashScreenViewModelTests
     [Fact]
     public async Task ExecuteAsync_SkipsTask_WhenCanExecuteReturnsFalse()
     {
-        var vm = new SplashScreenViewModel();
+        var vm = new SplashScreenViewModel(new ApplicationInfo());
         var executed = false;
 
         vm.AddTask("Skipped", () =>
@@ -62,7 +63,7 @@ public class SplashScreenViewModelTests
     [Fact]
     public async Task ExecuteAsync_OnFailure_InvokesFailedCallbackAndClearsBusy()
     {
-        var vm = new SplashScreenViewModel();
+        var vm = new SplashScreenViewModel(new ApplicationInfo());
         var expected = new InvalidOperationException("startup failed");
 
         vm.AddTask("Fail", () => throw expected);
@@ -77,7 +78,7 @@ public class SplashScreenViewModelTests
     [Fact]
     public async Task ExecuteAsync_UpdatesMessageWithEllipsis()
     {
-        var vm = new SplashScreenViewModel();
+        var vm = new SplashScreenViewModel(new ApplicationInfo());
         vm.AddTask("Loading", () => Task.CompletedTask);
 
         await vm.ExecuteAsync();

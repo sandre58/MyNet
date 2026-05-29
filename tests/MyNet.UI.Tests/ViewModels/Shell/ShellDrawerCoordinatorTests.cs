@@ -9,6 +9,8 @@ using FluentAssertions;
 using Moq;
 using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Drawers;
+using MyNet.UI.ViewModels.Shell.Host;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;

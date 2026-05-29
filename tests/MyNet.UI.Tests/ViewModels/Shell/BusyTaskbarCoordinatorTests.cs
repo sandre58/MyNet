@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MyNet.UI.Loading;
 using MyNet.UI.Loading.Models;
-using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Taskbar;
 using Xunit;
 
 namespace MyNet.UI.Tests.ViewModels.Shell;

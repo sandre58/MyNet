@@ -8,6 +8,8 @@ using System;
 using FluentAssertions;
 using Moq;
 using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Host;
+using MyNet.UI.ViewModels.Shell.Services;
 using MyNet.UI.ViewModels.Workspace;
 using Xunit;
 
@@ -49,6 +51,7 @@ public class ShellServiceTests
     public void SetFileMenuContentVisibility_DelegatesToHost()
     {
         var host = new Mock<IShellHostWithFileMenu>();
+        host.As<IShellCapabilities>().Setup(x => x.HasFileMenu).Returns(true);
         var provider = new ShellHostProvider();
         provider.Attach(host.Object);
         var service = new ShellService(provider);
