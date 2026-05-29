@@ -8,6 +8,7 @@
     <Project Path="src/MyNet.Observable.Metadata.Generator/MyNet.Observable.Metadata.Generator.csproj" />
   </Folder>
   <Folder Name="/Github Actions/">
+    <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/ci.yml" />
   </Folder>
   <Folder Name="/Solution Files/" />
@@ -67,6 +68,7 @@
     <File Path="build/coverage/Verify-CriticalCoverage.ps1" />
   </Folder>
   <Folder Name="/Solution Files/Docs/">
+    <File Path="CHANGELOG.md" />
     <File Path="docs/getting-started.md" />
     <File Path="docs/index.md" />
     <File Path="docs/TODO.md" />
@@ -75,8 +77,16 @@
   </Folder>
   <Folder Name="/Solution Files/Docs/Github/">
     <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
+    <File Path="CODEOWNERS" />
     <File Path="CODE_OF_CONDUCT.md" />
     <File Path="CONTRIBUTING.md" />
+    <File Path="SECURITY.md" />
+  </Folder>
+  <Folder Name="/Solution Files/Docs/Github/Issue_template/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.yml" />
+    <File Path=".github/ISSUE_TEMPLATE/config.yml" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.yml" />
+    <File Path=".github/ISSUE_TEMPLATE/question.yml" />
   </Folder>
   <Folder Name="/Solution Files/Docs/Guides/">
     <File Path="docs/guides/collections-messaging.md" />

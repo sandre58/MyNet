@@ -1,0 +1,45 @@
+# CODEOWNERS — default reviewers for pull requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @sandre58
+
+# Repository infrastructure
+/.github/ @sandre58
+/build/ @sandre58
+/docs/ @sandre58
+/tools/ @sandre58
+
+# Foundations & cross-cutting
+/src/MyNet.Primitives/ @sandre58
+/src/MyNet.Text/ @sandre58
+/src/MyNet.Utilities/ @sandre58
+/src/MyNet.Reflection/ @sandre58
+/src/MyNet.Metadata/ @sandre58
+/src/MyNet.Generator/ @sandre58
+/src/MyNet.Temporal/ @sandre58
+
+# MVVM & UI
+/src/MyNet.Observable/ @sandre58
+/src/MyNet.Observable.Metadata.Generator/ @sandre58
+/src/MyNet.Collections/ @sandre58
+/src/MyNet.Messaging/ @sandre58
+/src/MyNet.UI/ @sandre58
+
+# Globalization & geography
+/src/MyNet.Globalization/ @sandre58
+/src/MyNet.Humanizer/ @sandre58
+/src/MyNet.Geography/ @sandre58
+/src/MyNet.Geography.Resources/ @sandre58
+/src/MyNet.Geography.Localization/ @sandre58
+/src/MyNet.Google/ @sandre58
+
+# I/O, platform & integration
+/src/MyNet.IO/ @sandre58
+/src/MyNet.Platform.Windows/ @sandre58
+/src/MyNet.Http/ @sandre58
+/src/MyNet.Mail/ @sandre58
+/src/MyNet.Mail.MailKit/ @sandre58
+/src/MyNet.Fakers/ @sandre58
+
+# Tests mirror source ownership
+/tests/ @sandre58

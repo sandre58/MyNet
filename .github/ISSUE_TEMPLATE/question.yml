@@ -1,0 +1,40 @@
+name: Question
+description: Ask a usage or integration question
+title: "[Question]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For **bugs**, use the bug report template. For **security** issues, see [SECURITY.md](https://github.com/sandre58/MyNet/blob/main/SECURITY.md).
+
+        Check the [documentation](https://github.com/sandre58/MyNet/blob/main/docs/index.md) and [getting started guide](https://github.com/sandre58/MyNet/blob/main/docs/getting-started.md) first.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What you are building, which packages you reference, and what you have already tried
+      render: markdown
+    validations:
+      required: true
+
+  - type: input
+    id: packages
+    attributes:
+      label: MyNet package(s) and versions
+      placeholder: "MyNet.Observable 18.0.0, MyNet.UI 18.0.0"
+
+  - type: input
+    id: dotnet
+    attributes:
+      label: .NET SDK version
+      placeholder: "10.0.x"

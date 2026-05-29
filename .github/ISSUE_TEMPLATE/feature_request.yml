@@ -1,0 +1,86 @@
+name: Feature request
+description: Suggest an enhancement or new capability
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem you are trying to solve and how a change to MyNet would help.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Target package
+      description: Which package should this feature live in?
+      options:
+        - MyNet.Primitives
+        - MyNet.Text
+        - MyNet.Utilities
+        - MyNet.Reflection
+        - MyNet.Metadata
+        - MyNet.Generator
+        - MyNet.Temporal
+        - MyNet.Collections
+        - MyNet.Messaging
+        - MyNet.Observable
+        - MyNet.UI
+        - MyNet.Globalization
+        - MyNet.Humanizer
+        - MyNet.Geography
+        - MyNet.Geography.Resources
+        - MyNet.Geography.Localization
+        - MyNet.Google
+        - MyNet.IO
+        - MyNet.Platform.Windows
+        - MyNet.Http
+        - MyNet.Mail
+        - MyNet.Mail.MailKit
+        - MyNet.Fakers
+        - New package
+        - Unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What limitation or pain point does this address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: API sketch, behavior, or example usage if you have one
+      render: csharp
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds, other libraries, or different API shapes you evaluated
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Breaking change?
+      options:
+        - "No"
+        - "Yes — acceptable with major version bump"
+        - "Unsure"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a pull request for this feature
+          required: false

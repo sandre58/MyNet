@@ -1,0 +1,116 @@
+name: Bug report
+description: Report incorrect behavior in a MyNet library
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Search [existing issues](https://github.com/sandre58/MyNet/issues) first to avoid duplicates.
+
+        **Security vulnerabilities:** do not use this form — see [SECURITY.md](https://github.com/sandre58/MyNet/blob/main/SECURITY.md).
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected package
+      description: Which MyNet package is involved?
+      options:
+        - MyNet.Primitives
+        - MyNet.Text
+        - MyNet.Utilities
+        - MyNet.Reflection
+        - MyNet.Metadata
+        - MyNet.Generator
+        - MyNet.Temporal
+        - MyNet.Collections
+        - MyNet.Messaging
+        - MyNet.Observable
+        - MyNet.UI
+        - MyNet.Globalization
+        - MyNet.Humanizer
+        - MyNet.Geography
+        - MyNet.Geography.Resources
+        - MyNet.Geography.Localization
+        - MyNet.Google
+        - MyNet.IO
+        - MyNet.Platform.Windows
+        - MyNet.Http
+        - MyNet.Mail
+        - MyNet.Mail.MailKit
+        - MyNet.Fakers
+        - Other / multiple
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package or commit version
+      description: NuGet version (e.g. `18.0.0`) or git commit SHA if building from source
+      placeholder: "18.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal code sample or numbered steps
+      render: csharp
+    validations:
+      required: true
+
+  - type: input
+    id: dotnet
+    attributes:
+      label: .NET SDK version
+      description: Output of `dotnet --version`
+      placeholder: "10.0.x"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or stack trace
+      description: Paste relevant exception messages or logs inside a fenced code block
+      render: shell
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and did not find a duplicate
+          required: true
+        - label: I can reproduce this with the latest release or `main`
+          required: false

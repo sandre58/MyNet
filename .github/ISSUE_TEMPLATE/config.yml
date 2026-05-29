@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/sandre58/MyNet/security/policy
+    about: Report privately — do not open a public issue for security problems
+  - name: Documentation
+    url: https://github.com/sandre58/MyNet/blob/main/docs/index.md
+    about: Read the documentation index before asking a question
+  - name: NuGet packages
+    url: https://www.nuget.org/packages?q=MyNet
+    about: Browse published MyNet packages on NuGet.org
