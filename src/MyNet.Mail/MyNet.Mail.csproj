@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Mail</Product>
         <PackageIcon>MyNetMail.png</PackageIcon>
-        <Description>Email models, SMTP abstractions, and mail helpers for .NET applications.</Description>
-        <PackageTags>My;Mail;Email;Smtp</PackageTags>
+        <Description>Email message and attachment models, address parsing, and SMTP service abstractions independent of a specific mail transport.</Description>
+        <PackageTags>mynet mail email smtp mime attachments</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

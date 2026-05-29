@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Utilities</Product>
         <PackageIcon>MyNetUtilities.png</PackageIcon>
-        <Description>A powerful collection of utility classes and extension methods designed to extend the functionality of the .NET Framework.</Description>
-        <PackageTags>My;Utilities;Toolkit;Extensions;Authentication;Caching;Comparison;DateTime;Deffering;Encryption;Exceptions;IO;Localization;Logging;Mail;Messaging;Progress;Suspending;Threading</PackageTags>
+        <Description>Cross-cutting utilities for .NET apps: caching, encryption, authentication helpers, progress reporting, threading, deferral, and dependency-injection-friendly services.</Description>
+        <PackageTags>mynet utilities cache encryption authentication progress threading deferral</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

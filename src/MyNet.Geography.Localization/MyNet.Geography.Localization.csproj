@@ -1,1 +1,38 @@
-<Project Sdk="Microsoft.NET.Sdk">    <PropertyGroup>        <Product>My .NET Geography - Localization</Product>        <PackageIcon>MyNetGeography.png</PackageIcon>        <Description>Localized country display names and Humanizer integration for MyNet.Geography.</Description>        <PackageTags>My;Geography;Localization;Country</PackageTags>    </PropertyGroup>    <ItemGroup>        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />    </ItemGroup>    <ItemGroup>        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />        <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />    </ItemGroup>    <ItemGroup>        <EmbeddedResource Update="Localization\CountryResources.resx">            <Generator>PublicResXFileCodeGenerator</Generator>            <LastGenOutput>CountryResources.Designer.cs</LastGenOutput>        </EmbeddedResource>        <EmbeddedResource Update="Localization\CountryResources.en.resx">            <DependentUpon>CountryResources.resx</DependentUpon>        </EmbeddedResource>    </ItemGroup>    <ItemGroup>        <Compile Update="Localization\CountryResources.Designer.cs">            <DesignTime>True</DesignTime>            <AutoGen>True</AutoGen>            <DependentUpon>CountryResources.resx</DependentUpon>        </Compile>    </ItemGroup></Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Geography - Localization</Product>
+        <PackageIcon>MyNetGeography.png</PackageIcon>
+        <Description>Localized country display names (satellite resources) and MyNet.Humanizer formatters for geography types in MyNet.Geography.</Description>
+        <PackageTags>mynet geography localization country-names humanizer i18n</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />
+        <ProjectReference Include="..\MyNet.Humanizer\MyNet.Humanizer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Localization\CountryResources.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>CountryResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+
+        <EmbeddedResource Update="Localization\CountryResources.en.resx">
+            <DependentUpon>CountryResources.resx</DependentUpon>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Localization\CountryResources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>CountryResources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+</Project>

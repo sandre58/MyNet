@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Platform - Windows</Product>
         <PackageIcon>MyNetPlatformWindows.png</PackageIcon>
-        <Description>Windows-specific implementations: registry, authentication, and MAPI mail.</Description>
-        <PackageTags>My;Windows;Registry;Authentication;MAPI</PackageTags>
+        <Description>Windows platform adapters: registry access, authentication integrations, and MAPI mail support for MyNet.IO and MyNet.Utilities.</Description>
+        <PackageTags>mynet windows platform registry mapi authentication desktop</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,1 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">    <PropertyGroup>        <Product>My .NET HTTP</Product>        <PackageIcon>MyNetHttp.png</PackageIcon>        <Description>A versatile class library designed to simplify the consumption of Web APIs in .NET applications.</Description>        <PackageTags>My;Utilities;Web;Http</PackageTags>    </PropertyGroup>    <ItemGroup>      <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />    </ItemGroup>    </Project>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET HTTP</Product>
+        <PackageIcon>MyNetHttp.png</PackageIcon>
+        <Description>HTTP client helpers and Web API consumption utilities: request building, response handling, and typed REST patterns for .NET.</Description>
+        <PackageTags>mynet http rest api web client</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
+    </ItemGroup>
+
+</Project>

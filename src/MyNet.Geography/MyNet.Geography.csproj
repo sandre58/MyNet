@@ -1,1 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">    <PropertyGroup>        <Product>My .NET Geography</Product>        <PackageIcon>MyNetGeography.png</PackageIcon>        <Description>Core geography types: countries (ISO 3166), continents, addresses, and flag provider contract.</Description>        <PackageTags>My;Geography;Country;ISO3166</PackageTags>    </PropertyGroup>    <ItemGroup>        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />    </ItemGroup></Project>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Geography</Product>
+        <PackageIcon>MyNetGeography.png</PackageIcon>
+        <Description>Core geography model: ISO 3166 countries and continents, postal addresses, coordinates, and a pluggable country-flag provider contract.</Description>
+        <PackageTags>mynet geography country iso3166 address continent flags</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -7,8 +7,8 @@
     <PropertyGroup>
         <Product>My .NET UI</Product>
         <PackageIcon>MyNetUI.png</PackageIcon>
-        <Description>This library is a comprehensive class library designed to simplify the implementation of common GUI functionalities in .NET applications.</Description>
-        <PackageTags>My;UI;Notifications;Theming;Dialog;ViewModels;Toasting;Presentation;Navigation;Locators</PackageTags>
+        <Description>UI-agnostic presentation layer for desktop apps: view models, shell, dialogs, navigation, notifications, toasts, and workspace patterns (framework-independent).</Description>
+        <PackageTags>mynet ui mvvm viewmodels dialogs navigation notifications toast shell</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

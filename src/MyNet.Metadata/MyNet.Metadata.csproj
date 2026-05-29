@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Metadata</Product>
         <PackageIcon>MyNetMetadata.png</PackageIcon>
-        <Description>Type and property metadata registry with feature-based extensibility.</Description>
-        <PackageTags>My;Metadata;Registry</PackageTags>
+        <Description>Central metadata registry for types and members with pluggable feature providers for reflection-light, extensible APIs.</Description>
+        <PackageTags>mynet metadata registry features reflection extensibility</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

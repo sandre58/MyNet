@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Generator</Product>
         <PackageIcon>MyNetGenerator.png</PackageIcon>
-        <Description>Random data generation utilities for testing and prototyping.</Description>
-        <PackageTags>My;Generator;Random;Fakers</PackageTags>
+        <Description>Pseudo-random value generators, weighted sampling, and sequence helpers for unit tests, benchmarks, and prototyping.</Description>
+        <PackageTags>mynet generator random testing sampling prototyping</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

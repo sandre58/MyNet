@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Utilities - Fakers</Product>
         <PackageIcon>MyNetUtilities.png</PackageIcon>
-        <Description>A robust and flexible .NET library for generating random data, designed to simplify testing, prototyping, and data population in your applications. MyNet.Utilities.Fakers provides easy-to-use extensions for creating random addresses, names, internet information, and more.</Description>
-        <PackageTags>My;Utilities;Fakers</PackageTags>
+        <Description>Locale-aware fake data generators for names, addresses, emails, URLs, and related test fixtures built on MyNet.Generator and MyNet.Geography.</Description>
+        <PackageTags>mynet fakers fake-data testing locale addresses names</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

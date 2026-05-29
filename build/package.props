@@ -4,7 +4,7 @@
     <PropertyGroup>
         <PackageIcon>$(ProductName).png</PackageIcon>
         <Description></Description>
-        <PackageTags>utilities;dotnet;tools</PackageTags>
+        <PackageTags>mynet dotnet</PackageTags>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -17,7 +17,7 @@
         <PackageReleaseNotes>https://github.com/sandre58/MyNet/releases</PackageReleaseNotes>
         <PackageIconUrl>$(PackageIcon)</PackageIconUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile Condition="Exists('$(MSBuildProjectDirectory)\README.md')">README.md</PackageReadmeFile>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/sandre58/MyNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -35,8 +35,8 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-        <!-- Reproducible builds -->
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <!-- Reproducible builds (CI only — avoids polluting local debug PDBs) -->
+        <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
         <Deterministic>true</Deterministic>
     </PropertyGroup>
 
@@ -45,10 +45,10 @@
         <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Pack="true" PackagePath="">
             <Link>_package/LICENSE</Link>
         </None>
-        <None Include="$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)" Pack="true" PackagePath="">
+        <None Include="$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)" Pack="true" PackagePath="" Condition="Exists('$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)')">
             <Link>_package/$(PackageIcon)</Link>
         </None>
-        <None Include="$(MSBuildProjectDirectory)\README.md" Pack="true" PackagePath="">
+        <None Include="$(MSBuildProjectDirectory)\README.md" Pack="true" PackagePath="" Condition="Exists('$(MSBuildProjectDirectory)\README.md')">
             <Link>_package/README.md</Link>
         </None>
     </ItemGroup>

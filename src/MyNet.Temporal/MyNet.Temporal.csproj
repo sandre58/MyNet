@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Temporal</Product>
         <PackageIcon>MyNetTemporal.png</PackageIcon>
-        <Description>TimeSpan decomposition and temporal helpers built on MyNet.Primitives.</Description>
-        <PackageTags>My;Temporal;TimeSpan;Decomposition</PackageTags>
+        <Description>TimeSpan decomposition, duration breakdown, and temporal helpers built on MyNet.Primitives for readable time representations.</Description>
+        <PackageTags>mynet temporal timespan duration decomposition</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

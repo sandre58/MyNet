@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Observable</Product>
         <PackageIcon>MyNetObservable.png</PackageIcon>
-        <Description>This library is a comprehensive class library designed to simplify the creation and management of editable and validatable objects in .NET applications.</Description>
-        <PackageTags>My;Utilities;Observable;Models;PropertyChanged;Edition;Validation</PackageTags>
+        <Description>MVVM-oriented observable models with INotifyPropertyChanged, edition tracking, FluentValidation integration, metadata, and an included Roslyn source generator.</Description>
+        <PackageTags>mynet observable mvvm inotifypropertychanged validation fluentvalidation source-generator</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

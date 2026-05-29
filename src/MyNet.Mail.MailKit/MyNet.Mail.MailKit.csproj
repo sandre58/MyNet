@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Product>My .NET Mail - MailKit</Product>
     <PackageIcon>MyNetMail.png</PackageIcon>
-    <Description>MailKit implementation of MyNet.Mail IMailService with TLS configuration, connection reuse, and dependency injection support.</Description>
-    <PackageTags>My;Mail;Email;Smtp;MailKit</PackageTags>
+    <Description>MailKit implementation of MyNet.Mail IMailService with TLS configuration, connection reuse, and Microsoft.Extensions.DependencyInjection registration.</Description>
+    <PackageTags>mynet mail mailkit smtp email tls dependencyinjection</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

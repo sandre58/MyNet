@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Primitives</Product>
         <PackageIcon>MyNetPrimitives.png</PackageIcon>
-        <Description>A powerful collection of utility classes and extension methods designed to extend the functionality of the .NET Framework.</Description>
-        <PackageTags>My;Primitives;Toolkit;Extensions;Authentication;Caching;Comparison;DateTime;Deffering;Encryption;Exceptions;Geography;Google;IO;Localization;Logging;Mail;Messaging;Progress;Suspending;Threading</PackageTags>
+        <Description>Foundation library for the MyNet suite: SmartEnum, intervals, unit conversions, comparers, sequences, temporal primitives, and shared helpers with minimal dependencies.</Description>
+        <PackageTags>mynet primitives smartenum intervals comparers conversions extensions</PackageTags>
     </PropertyGroup>
 
 </Project>

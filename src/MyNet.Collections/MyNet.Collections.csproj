@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Collections</Product>
         <PackageIcon>MyNetCollections.png</PackageIcon>
-        <Description>Observable collections, synchronizers, and collection extensions for .NET applications.</Description>
-        <PackageTags>My;Collections;Observable;Toolkit</PackageTags>
+        <Description>Observable collections, batch synchronizers, range notifications, and collection extensions for MVVM and reactive UI scenarios.</Description>
+        <PackageTags>mynet collections observable list sync mvvm inotifycollectionchanged</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

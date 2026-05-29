@@ -1,1 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">    <PropertyGroup>        <Product>My .NET Google</Product>        <PackageIcon>MyNetGoogle.png</PackageIcon>        <Description>Google Maps geocoding, directions, and map URL helpers for .NET applications.</Description>        <PackageTags>My;Google;Maps;Geocoding;Directions</PackageTags>    </PropertyGroup>    <ItemGroup>        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />    </ItemGroup></Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Product>My .NET Google</Product>
+        <PackageIcon>MyNetGoogle.png</PackageIcon>
+        <Description>Google Maps integration: geocoding, directions, distance matrix queries, and map or Street View URL builders for .NET applications.</Description>
+        <PackageTags>mynet google maps geocoding directions distance-matrix urls</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MyNet.Geography\MyNet.Geography.csproj" />
+        <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+    </ItemGroup>
+
+</Project>

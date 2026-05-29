@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Text</Product>
         <PackageIcon>MyNetText.png</PackageIcon>
-        <Description>A powerful collection of utility classes and extension methods designed to extend the functionality of the .NET Framework.</Description>
-        <PackageTags>My;Text;Toolkit;Extensions;Authentication;Caching;Comparison;DateTime;Deffering;Encryption;Exceptions;Geography;Google;IO;Localization;Logging;Mail;Messaging;Progress;Suspending;Threading</PackageTags>
+        <Description>String processing toolkit: templating, slugification, sanitization, normalization, truncation, redaction, casing, and formatting pipelines for .NET applications.</Description>
+        <PackageTags>mynet text string templating sanitization slugify normalization formatting</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

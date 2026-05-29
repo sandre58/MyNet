@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Globalization</Product>
         <PackageIcon>MyNetGlobalization.png</PackageIcon>
-        <Description>A powerful globalization and localization library for .NET.</Description>
-        <PackageTags>My;Utilities;Globalization;Localization;</PackageTags>
+        <Description>Culture-aware formatting, translatable resources, and localization services with Microsoft.Extensions.DependencyInjection integration.</Description>
+        <PackageTags>mynet globalization localization i18n culture resources dependencyinjection</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

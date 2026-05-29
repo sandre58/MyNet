@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET Humanizer</Product>
         <PackageIcon>MyNetHumanizer.png</PackageIcon>
-        <Description>A versatile class library designed to simplify the process of converting objects into human-readable strings in .NET applications.</Description>
-        <PackageTags>My;Humanizer;Stringify</PackageTags>
+        <Description>Localized human-readable text for dates, enums, lists, geography, and common .NET types (display strings beyond raw ToString()).</Description>
+        <PackageTags>mynet humanizer stringify localization display formatting</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

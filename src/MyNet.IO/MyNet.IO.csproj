@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Product>My .NET IO</Product>
         <PackageIcon>MyNetIO.png</PackageIcon>
-        <Description>File system, extensions, auto-save, and registry abstractions for .NET applications.</Description>
-        <PackageTags>My;IO;Files;Registry;AutoSave</PackageTags>
+        <Description>File and path helpers, directory extensions, auto-save coordinators, and portable registry abstractions for desktop and cross-platform apps.</Description>
+        <PackageTags>mynet io filesystem paths autosave registry</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
