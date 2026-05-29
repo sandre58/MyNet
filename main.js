@@ -350,15 +350,15 @@ var assemblies = [
   {
     "name": "MyNet.Geography.Localization",
     "classes": [
-      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 30, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Geography.Resources",
     "classes": [
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 85, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 85, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 84, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Globalization",
@@ -408,11 +408,11 @@ var assemblies = [
   {
     "name": "MyNet.Google",
     "classes": [
-      { "name": "MyNet.Google.Maps.AddressExtensions", "rp": "MyNet.Google_AddressExtensions.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 26, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Google.Maps.GoogleLocationService", "rp": "MyNet.Google_GoogleLocationService.html", "cl": 89, "ucl": 15, "cal": 104, "tl": 253, "cb": 81, "tb": 126, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Google.Maps.GoogleMapsHelper", "rp": "MyNet.Google_GoogleMapsHelper.html", "cl": 13, "ucl": 1, "cal": 14, "tl": 52, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Google.Maps.QueryLimitExceededException", "rp": "MyNet.Google_QueryLimitExceededException.html", "cl": 1, "ucl": 6, "cal": 7, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Google.Maps.RequestDeniedException", "rp": "MyNet.Google_RequestDeniedException.html", "cl": 1, "ucl": 3, "cal": 4, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Google.Maps.AddressExtensions", "rp": "MyNet.Google_AddressExtensions.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 27, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Google.Maps.GoogleLocationService", "rp": "MyNet.Google_GoogleLocationService.html", "cl": 89, "ucl": 15, "cal": 104, "tl": 255, "cb": 81, "tb": 126, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Google.Maps.GoogleMapsHelper", "rp": "MyNet.Google_GoogleMapsHelper.html", "cl": 13, "ucl": 1, "cal": 14, "tl": 54, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Google.Maps.QueryLimitExceededException", "rp": "MyNet.Google_QueryLimitExceededException.html", "cl": 1, "ucl": 6, "cal": 7, "tl": 32, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Google.Maps.RequestDeniedException", "rp": "MyNet.Google_RequestDeniedException.html", "cl": 1, "ucl": 3, "cal": 4, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Http",
@@ -561,7 +561,7 @@ var assemblies = [
       { "name": "MyNet.Observable.Behaviors.Metadata.Features.ValidationDependencyFeature", "rp": "MyNet.Observable_ValidationDependencyFeature.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Observable.Behaviors.Metadata.MetadataApplicators", "rp": "MyNet.Observable_MetadataApplicators.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 49, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Observable.Behaviors.MetadataBehaviorApplicator", "rp": "MyNet.Observable_MetadataBehaviorApplicator.html", "cl": 20, "ucl": 1, "cal": 21, "tl": 65, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Observable.Behaviors.ModificationTrackingBehavior", "rp": "MyNet.Observable_ModificationTrackingBehavior.html", "cl": 86, "ucl": 23, "cal": 109, "tl": 304, "cb": 52, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Behaviors.ModificationTrackingBehavior", "rp": "MyNet.Observable_ModificationTrackingBehavior.html", "cl": 79, "ucl": 19, "cal": 98, "tl": 283, "cb": 49, "tb": 78, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Observable.Behaviors.NotifyPropertyChangedSourceSnapshot", "rp": "MyNet.Observable_NotifyPropertyChangedSourceSnapshot.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 68, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Observable.Behaviors.ObservableBehavior\u003CT\u003E", "rp": "MyNet.Observable_ObservableBehavior_1.html", "cl": 10, "ucl": 1, "cal": 11, "tl": 64, "cb": 3, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Observable.Behaviors.ObservableBehaviors", "rp": "MyNet.Observable_ObservableBehaviors.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 98, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -1031,7 +1031,7 @@ var assemblies = [
       { "name": "MyNet.Utilities.LoggerExtensions", "rp": "MyNet.Utilities_LoggerExtensions.html", "cl": 4, "ucl": 1, "cal": 5, "tl": 71, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.Log", "rp": "MyNet.Utilities_Log.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.Log\u003CT\u003E", "rp": "MyNet.Utilities_Log_1.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.Logging.PerformanceLogger", "rp": "MyNet.Utilities_PerformanceLogger.html", "cl": 63, "ucl": 6, "cal": 69, "tl": 226, "cb": 34, "tb": 54, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Logging.PerformanceLogger", "rp": "MyNet.Utilities_PerformanceLogger.html", "cl": 63, "ucl": 6, "cal": 69, "tl": 226, "cb": 35, "tb": 54, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.PerformanceLoggerMessages", "rp": "MyNet.Utilities_PerformanceLoggerMessages.html", "cl": 11, "ucl": 1, "cal": 12, "tl": 203, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Plugins.PluginLoadContext", "rp": "MyNet.Utilities_PluginLoadContext.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 47, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Plugins.PluginService", "rp": "MyNet.Utilities_PluginService.html", "cl": 0, "ucl": 32, "cal": 32, "tl": 151, "cb": 0, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },

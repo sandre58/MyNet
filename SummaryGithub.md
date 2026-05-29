@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/29/2026 - 21:53:23 |
-| Coverage date: | 05/29/2026 - 21:49:49 - 05/29/2026 - 21:50:27 |
-| Parser: | MultiReport (61x Cobertura) |
+| Generated on: | 05/29/2026 - 22:07:26 |
+| Coverage date: | 05/29/2026 - 22:04:30 - 05/29/2026 - 22:05:20 |
+| Parser: | MultiReport (63x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 666 |
 | Files: | 621 |
-| **Line coverage:** | 72.6% (10139 of 13960) |
-| Covered lines: | 10139 |
-| Uncovered lines: | 3821 |
-| Coverable lines: | 13960 |
-| Total lines: | 57467 |
-| **Branch coverage:** | 60.1% (3904 of 6488) |
-| Covered branches: | 3904 |
-| Total branches: | 6488 |
+| **Line coverage:** | 72.6% (10132 of 13949) |
+| Covered lines: | 10132 |
+| Uncovered lines: | 3817 |
+| Coverable lines: | 13949 |
+| Total lines: | 57380 |
+| **Branch coverage:** | 60.1% (3902 of 6482) |
+| Covered branches: | 3902 |
+| Total branches: | 6482 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 269_26663890868 |
+| Tag: | 271_26664445906 |
 
 </details>
 
@@ -328,11 +328,11 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 82.1%</summary>
+<details><summary>MyNet.Observable - 82.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**82.1%**|**63.6%**|
+|**MyNet.Observable**|**82.2%**|**63.7%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|56.2%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
@@ -344,7 +344,7 @@
 |MyNet.Observable.Behaviors.Metadata.Features.ValidationDependencyFeature|100%||
 |MyNet.Observable.Behaviors.Metadata.MetadataApplicators|100%||
 |MyNet.Observable.Behaviors.MetadataBehaviorApplicator|95.2%|70%|
-|MyNet.Observable.Behaviors.ModificationTrackingBehavior|78.8%|61.9%|
+|MyNet.Observable.Behaviors.ModificationTrackingBehavior|80.6%|62.8%|
 |MyNet.Observable.Behaviors.NotifyPropertyChangedSourceSnapshot|100%||
 |MyNet.Observable.Behaviors.ObservableBehavior`1|90.9%|50%|
 |MyNet.Observable.Behaviors.ObservableBehaviors|100%||
@@ -816,7 +816,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.7%**|
+|**MyNet.Utilities**|**81.9%**|**64.9%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -838,7 +838,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
