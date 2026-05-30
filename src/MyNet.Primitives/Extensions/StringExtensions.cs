@@ -29,6 +29,15 @@ public static class StringExtensions
         public string Or(string placeholder) => string.IsNullOrWhiteSpace(value) ? placeholder : value;
 
         /// <summary>
+        /// Add a prefix before value, separated by period.
+        /// </summary>
+        /// <param name="prefix">Prefix to add.</param>
+        /// <param name="separator">Separator to use between prefix and value.</param>
+        /// <returns>prefix.value.</returns>
+        public string? WithPrefix(string? prefix = null, string? separator = "-")
+            => !string.IsNullOrWhiteSpace(prefix) && !string.IsNullOrWhiteSpace(value) ? $"{prefix}{separator}{value}" : value;
+
+        /// <summary>
         /// Determines whether the original string contains any of the specified values, using a case-insensitive comparison. If the original string is null or empty, this method returns false.
         /// </summary>
         /// <param name="values">The values to check for in the original string.</param>
