@@ -9,7 +9,6 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using MyNet.Humanizer.Display;
 using MyNet.Primitives;
 
@@ -146,13 +145,8 @@ public static class SmartEnumExtensions
 
         var dictionary = new Dictionary<string, ISmartEnum>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var field in targetEnum.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy))
+        foreach (var value in SmartEnumSource.GetAll(targetEnum))
         {
-            if (field.GetValue(null) is not ISmartEnum value)
-            {
-                continue;
-            }
-
             dictionary.TryAdd(value.ToString()!, value);
 
             var humanized = value.Humanize(culture: culture);

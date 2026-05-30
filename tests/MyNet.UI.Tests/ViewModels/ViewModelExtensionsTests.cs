@@ -34,7 +34,9 @@ public sealed class ViewModelExtensionsTests
     {
         public string? Item { get; private set; }
 
+#pragma warning disable CS0067
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
 
         public event System.EventHandler<ItemChangedEventArgs<string>>? ItemChanged;
 

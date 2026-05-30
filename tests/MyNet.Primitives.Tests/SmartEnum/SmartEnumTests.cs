@@ -14,6 +14,46 @@ namespace MyNet.Primitives.Tests.SmartEnum;
 public class SmartEnumTests
 {
     [Fact]
+    [SuppressMessage("Performance", "CA2263:Prefer generic overload when type is known", Justification = "Tests the Type-based overload behavior.")]
+    public void GetAll_FromType_ReturnsDiscoveredStaticInstances()
+    {
+        var result = SmartEnumSource.GetAll(typeof(TestSmartEnum));
+
+        Assert.Contains(TestSmartEnum.One, result);
+        Assert.Contains(TestSmartEnum.Two, result);
+    }
+
+    [Fact]
+    public void GetAll_Generic_ReturnsDiscoveredStaticInstances()
+    {
+        var result = SmartEnumSource.GetAll<TestSmartEnum>();
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains(TestSmartEnum.One, result);
+        Assert.Contains(TestSmartEnum.Two, result);
+    }
+
+    [Fact]
+    [SuppressMessage("Performance", "CA2263:Prefer generic overload when type is known", Justification = "Tests the Type-based overload behavior.")]
+    public void GetAll_FromType_WhenNotSmartEnum_ThrowsArgumentException()
+        => Assert.Throws<ArgumentException>(() => SmartEnumSource.GetAll(typeof(string)));
+
+    [Fact]
+    public void GetAll_FromType_WhenTypeIsNull_ThrowsArgumentNullException()
+        => Assert.Throws<ArgumentNullException>(() => SmartEnumSource.GetAll(null!));
+
+    [Fact]
+    [SuppressMessage("Performance", "CA2263:Prefer generic overload when type is known", Justification = "Tests the Type-based overload behavior.")]
+    public void GetAll_FromType_ForCustomSmartEnum_DiscoversStaticFields()
+    {
+        var result = SmartEnumSource.GetAll(typeof(CustomSmartEnum));
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains(CustomSmartEnum.Alpha, result);
+        Assert.Contains(CustomSmartEnum.Beta, result);
+    }
+
+    [Fact]
     public void All_ReturnsDiscoveredStaticInstances()
     {
         Assert.Contains(TestSmartEnum.One, TestSmartEnum.All);
@@ -90,4 +130,13 @@ public class SmartEnumTests
     }
 
     private sealed class DuplicateSmartEnum(int value) : SmartEnum<DuplicateSmartEnum, int>(value);
+
+    private sealed class CustomSmartEnum(string name) : ISmartEnum
+    {
+        public static readonly CustomSmartEnum Alpha = new("Alpha");
+
+        public static readonly CustomSmartEnum Beta = new("Beta");
+
+        public string Name { get; } = name;
+    }
 }

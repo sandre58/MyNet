@@ -18,7 +18,7 @@ public sealed class ExportFileTypeTests
         var fileType = new ExportFileType("csv", "CSV files|*.csv", ["csv", ".txt"]);
 
         fileType.DefaultExtension.Should().Be(".csv");
-        fileType.AllowedExtensions.Should().BeEquivalentTo([".csv", ".txt"]);
+        fileType.AllowedExtensions.Should().BeEquivalentTo(".csv", ".txt");
     }
 
     [Theory]

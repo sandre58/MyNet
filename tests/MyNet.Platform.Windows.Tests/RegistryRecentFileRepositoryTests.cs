@@ -22,20 +22,17 @@ public sealed class RegistryRecentFileRepositoryTests
     private readonly InMemoryRegistryService _registry = new();
     private readonly RegistryRecentFileRepository _repository;
 
-    public RegistryRecentFileRepositoryTests()
-    {
-        _repository = new RegistryRecentFileRepository(
-            _registry,
-            new RecentFilesOptions
-            {
-                BasePath = "Software\\MyNetRecentFileTests",
-                MaxEntries = 2,
-                SupportedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "txt", ".docx" }
-            });
-    }
+    public RegistryRecentFileRepositoryTests() => _repository = new(
+        _registry,
+        new()
+        {
+            BasePath = "Software\\MyNetRecentFileTests",
+            MaxEntries = 2,
+            SupportedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "txt", ".docx" }
+        });
 
     [Fact]
-    public async Task AddAsync_StoresSupportedFileUnderExtensionKey()
+    public async Task AddAsync_StoresSupportedFileUnderExtensionKeyAsync()
     {
         var file = CreateFile(@"C:\temp\alpha.txt", "alpha.txt");
 
@@ -46,7 +43,7 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task AddAsync_WithUnsupportedExtension_ReturnsNull()
+    public async Task AddAsync_WithUnsupportedExtension_ReturnsNullAsync()
     {
         var result = await _repository.AddAsync(CreateFile(@"C:\temp\alpha.pdf", "alpha.pdf"));
 
@@ -55,9 +52,9 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task AddAsync_WithExistingPath_UpdatesLastAccess()
+    public async Task AddAsync_WithExistingPath_UpdatesLastAccessAsync()
     {
-        var path = @"C:\temp\existing.txt";
+        const string path = @"C:\temp\existing.txt";
         var firstAccess = DateTimeOffset.UtcNow.AddHours(-2);
         var secondAccess = DateTimeOffset.UtcNow;
 
@@ -65,12 +62,12 @@ public sealed class RegistryRecentFileRepositoryTests
         var updated = await _repository.AddAsync(CreateFile(path, "existing.txt", secondAccess));
 
         Assert.NotNull(updated);
-        Assert.True(updated!.LastAccessedAt > firstAccess);
+        Assert.True(updated.LastAccessedAt > firstAccess);
         Assert.Single(_registry.Entries);
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsStoredFiles()
+    public async Task GetAllAsync_ReturnsStoredFilesAsync()
     {
         await _repository.AddAsync(CreateFile(@"C:\temp\one.txt", "one.txt"));
         await _repository.AddAsync(CreateFile(@"C:\temp\two.docx", "two.docx"));
@@ -81,20 +78,20 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task UpdateAsync_UpdatesExistingEntry()
+    public async Task UpdateAsync_UpdatesExistingEntryAsync()
     {
-        var path = @"C:\temp\update.txt";
+        const string path = @"C:\temp\update.txt";
         await _repository.AddAsync(CreateFile(path, "before.txt"));
 
         var updated = await _repository.UpdateAsync(CreateFile(path, "after.txt", isPinned: true));
 
         Assert.NotNull(updated);
-        Assert.Equal("after.txt", updated!.Name, StringComparer.Ordinal);
+        Assert.Equal("after.txt", updated.Name, StringComparer.Ordinal);
         Assert.True(updated.IsPinned);
     }
 
     [Fact]
-    public async Task UpdateAsync_WithUnknownPath_ReturnsNull()
+    public async Task UpdateAsync_WithUnknownPath_ReturnsNullAsync()
     {
         var result = await _repository.UpdateAsync(CreateFile(@"C:\temp\missing.txt", "missing.txt"));
 
@@ -102,9 +99,9 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task RemoveAsync_RemovesExistingEntry()
+    public async Task RemoveAsync_RemovesExistingEntryAsync()
     {
-        var path = @"C:\temp\remove.txt";
+        const string path = @"C:\temp\remove.txt";
         await _repository.AddAsync(CreateFile(path, "remove.txt"));
 
         var removed = await _repository.RemoveAsync(path);
@@ -114,7 +111,7 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task RemoveAsync_WithUnknownPath_ReturnsFalse()
+    public async Task RemoveAsync_WithUnknownPath_ReturnsFalseAsync()
     {
         var removed = await _repository.RemoveAsync(@"C:\temp\unknown.txt");
 
@@ -122,7 +119,7 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task ClearAsync_RemovesAllEntries()
+    public async Task ClearAsync_RemovesAllEntriesAsync()
     {
         await _repository.AddAsync(CreateFile(@"C:\temp\clear-one.txt", "clear-one.txt"));
         await _repository.AddAsync(CreateFile(@"C:\temp\clear-two.txt", "clear-two.txt"));
@@ -133,7 +130,7 @@ public sealed class RegistryRecentFileRepositoryTests
     }
 
     [Fact]
-    public async Task AddAsync_EnforcesMaxEntriesByRemovingOldestUnpinnedFiles()
+    public async Task AddAsync_EnforcesMaxEntriesByRemovingOldestUnpinnedFilesAsync()
     {
         await _repository.AddAsync(CreateFile(@"C:\temp\oldest.txt", "oldest.txt", DateTimeOffset.UtcNow.AddHours(-3)));
         await _repository.AddAsync(CreateFile(@"C:\temp\middle.txt", "middle.txt", DateTimeOffset.UtcNow.AddHours(-2)));
@@ -183,20 +180,20 @@ public sealed class RegistryRecentFileRepositoryTests
             }
 
             var storagePath = RegistryPath.Combine(entry.Path.ToString(), Guid.NewGuid().ToString("N"));
-            _entries.Add(new RegistryEntry<RegistryRecentFileEntry>(storagePath, recentEntry));
+            _entries.Add(new(storagePath, recentEntry));
         }
 
         public RegistryEntry<T>? Get<T>(RegistryPath path)
             where T : new()
         {
             var match = _entries.FirstOrDefault(x => x.Path.ToString() == path.ToString());
-            return match is null ? null : new RegistryEntry<T>(match.Path, (T)(object)match.Item!);
+            return match is null ? null : new RegistryEntry<T>(match.Path, (T)(object)match.Item);
         }
 
         public IEnumerable<RegistryEntry<T>> GetAll<T>(RegistryPath parent)
             where T : new()
             => _entries
-                .Where(x => x.Path.ToString().StartsWith(parent.ToString() + "\\", StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.Path.ToString().StartsWith(parent + "\\", StringComparison.OrdinalIgnoreCase))
                 .Select(x => new RegistryEntry<T>(x.Path, (T)(object)x.Item))
                 .ToList();
 

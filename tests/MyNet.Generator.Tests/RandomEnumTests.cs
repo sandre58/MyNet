@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using MyNet.Generator;
 using MyNet.Generator.Facade;
 using MyNet.Primitives;
 using Xunit;

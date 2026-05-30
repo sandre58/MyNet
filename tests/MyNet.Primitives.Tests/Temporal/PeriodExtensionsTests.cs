@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using MyNet.Primitives;
 using MyNet.Primitives.Intervals;
 using Xunit;
 

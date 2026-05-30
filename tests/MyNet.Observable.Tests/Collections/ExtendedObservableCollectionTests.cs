@@ -19,7 +19,7 @@ public sealed class ExtendedObservableCollectionTests
         var sut = new ExtendedObservableCollection<int>([1, 2, 3]);
 
         Assert.Equal(3, sut.Count);
-        Assert.Equal([1, 2, 3], sut.ToArray());
+        Assert.Equal([1, 2, 3], [.. sut]);
     }
 
     [Fact]
@@ -35,6 +35,6 @@ public sealed class ExtendedObservableCollectionTests
         Assert.NotNull(last);
         Assert.Equal(NotifyCollectionChangedAction.Add, last!.Action);
         Assert.NotNull(last.NewItems);
-        Assert.Equal([42], last.NewItems.Cast<int>().ToArray());
+        Assert.Equal([42], [.. last.NewItems.Cast<int>()]);
     }
 }

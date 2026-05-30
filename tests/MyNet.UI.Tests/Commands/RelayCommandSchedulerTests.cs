@@ -112,7 +112,7 @@ public sealed class RelayCommandSchedulerTests
             Action[] batch;
             lock (_gate)
             {
-                batch = _pending.ToArray();
+                batch = [.. _pending];
                 _pending.Clear();
             }
 

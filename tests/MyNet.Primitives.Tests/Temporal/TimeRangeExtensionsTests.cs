@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using MyNet.Primitives;
 using MyNet.Primitives.Intervals;
 using Xunit;
 
@@ -21,8 +20,8 @@ public class TimeRangeExtensionsTests
 
         var shifted = range.Shift(TimeSpan.FromHours(1));
 
-        Assert.Equal(new TimeOnly(9, 0), shifted.Start!.Value.Value);
-        Assert.Equal(new TimeOnly(11, 0), shifted.End!.Value.Value);
+        Assert.Equal(new(9, 0), shifted.Start!.Value.Value);
+        Assert.Equal(new(11, 0), shifted.End!.Value.Value);
     }
 
     [Fact]
@@ -32,8 +31,8 @@ public class TimeRangeExtensionsTests
 
         var expanded = range.Expand(TimeSpan.FromMinutes(30));
 
-        Assert.Equal(new TimeOnly(7, 30), expanded.Start!.Value.Value);
-        Assert.Equal(new TimeOnly(10, 30), expanded.End!.Value.Value);
+        Assert.Equal(new(7, 30), expanded.Start!.Value.Value);
+        Assert.Equal(new(10, 30), expanded.End!.Value.Value);
     }
 
     [Fact]

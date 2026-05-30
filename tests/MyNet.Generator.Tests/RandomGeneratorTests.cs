@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Generator;
 using MyNet.Generator.Facade;
 using Xunit;
 
