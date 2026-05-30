@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/29/2026 - 22:07:26 |
-| Coverage date: | 05/29/2026 - 22:04:30 - 05/29/2026 - 22:05:20 |
-| Parser: | MultiReport (63x Cobertura) |
+| Generated on: | 05/30/2026 - 11:29:00 |
+| Coverage date: | 05/30/2026 - 11:25:39 - 05/30/2026 - 11:26:15 |
+| Parser: | MultiReport (61x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 666 |
-| Files: | 621 |
-| **Line coverage:** | 72.6% (10132 of 13949) |
-| Covered lines: | 10132 |
-| Uncovered lines: | 3817 |
-| Coverable lines: | 13949 |
-| Total lines: | 57380 |
-| **Branch coverage:** | 60.1% (3902 of 6482) |
-| Covered branches: | 3902 |
-| Total branches: | 6482 |
+| Classes: | 668 |
+| Files: | 623 |
+| **Line coverage:** | 72.7% (10191 of 14006) |
+| Covered lines: | 10191 |
+| Uncovered lines: | 3815 |
+| Coverable lines: | 14006 |
+| Total lines: | 57285 |
+| **Branch coverage:** | 60.4% (3937 of 6518) |
+| Covered branches: | 3937 |
+| Total branches: | 6518 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 271_26664445906 |
+| Tag: | 272_26682554386 |
 
 </details>
 
@@ -193,7 +193,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.3%**|**74.8%**|
+|**MyNet.Humanizer**|**88.3%**|**75.1%**|
 |MyNet.Humanizer.Display.DisplayTextOptions|100%||
 |MyNet.Humanizer.Display.DisplayTextService|100%|100%|
 |MyNet.Humanizer.Display.DisplayTextStrategyResolver|73.6%|35.7%|
@@ -208,7 +208,7 @@
 |MyNet.Humanizer.Facade.ListFormatterExtensions|100%|64.2%|
 |MyNet.Humanizer.Facade.OrdinalizeExtensions|60%||
 |MyNet.Humanizer.Facade.QuantifyExtensions|100%||
-|MyNet.Humanizer.Facade.SmartEnumExtensions|100%|78.5%|
+|MyNet.Humanizer.Facade.SmartEnumExtensions|100%|83.3%|
 |MyNet.Humanizer.Facade.TextHumanizer|88.8%|50%|
 |MyNet.Humanizer.Facade.TimeHumanizerExtensions|92.8%|83.3%|
 |MyNet.Humanizer.Formatting.Addresses.AddressFormatter|100%||
@@ -328,11 +328,11 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 82.2%</summary>
+<details><summary>MyNet.Observable - 82.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**82.2%**|**63.7%**|
+|**MyNet.Observable**|**82.8%**|**64.8%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|56.2%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
@@ -385,6 +385,7 @@
 |MyNet.Observable.Collections.Statistics.TimeSpanStatisticsComputer|87.5%||
 |MyNet.Observable.CultureBoundValue`1|94.4%|60%|
 |MyNet.Observable.DynamicDataExtensions|89.6%|70%|
+|MyNet.Observable.EnumExtensions|100%|100%|
 |MyNet.Observable.ExtendedCollectionExtensions|100%||
 |MyNet.Observable.Facade.StaticBehaviorExtensions|0%||
 |MyNet.Observable.FeaturesExtensions|87.5%|75%|
@@ -395,10 +396,10 @@
 |MyNet.Observable.LocalizedCollectionRuleBuilderExtensions|0%||
 |MyNet.Observable.LocalizedComparableRuleBuilderExtensions|33.3%||
 |MyNet.Observable.LocalizedDateRuleBuilderExtensions|0%||
-|MyNet.Observable.LocalizedEnum|0%||
-|MyNet.Observable.LocalizedEnum`1|80%|35.7%|
+|MyNet.Observable.LocalizedEnum|100%||
+|MyNet.Observable.LocalizedEnum`1|90%|50%|
 |MyNet.Observable.LocalizedRuleBuilderExtensions|19%||
-|MyNet.Observable.LocalizedSmartEnum|0%||
+|MyNet.Observable.LocalizedSmartEnum|100%||
 |MyNet.Observable.LocalizedSmartEnum`1|75%|30%|
 |MyNet.Observable.LocalizedString|100%|50%|
 |MyNet.Observable.LocalizedStringRuleBuilderExtensions|66.6%||
@@ -448,11 +449,11 @@
 |MyNet.Platform.Windows.Registry.WindowsRegistryStore|100%|50%|
 
 </details>
-<details><summary>MyNet.Primitives - 71.7%</summary>
+<details><summary>MyNet.Primitives - 72%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Primitives**|**71.7%**|**60.8%**|
+|**MyNet.Primitives**|**72%**|**61.2%**|
 |MyNet.Primitives.BooleanExtensions|100%|100%|
 |MyNet.Primitives.ComparableExtensions|100%|92%|
 |MyNet.Primitives.ComparerExtensions|100%||
@@ -510,8 +511,9 @@
 |MyNet.Primitives.QuantityExtensions|100%||
 |MyNet.Primitives.Sequences.IntegerSequence|100%||
 |MyNet.Primitives.SimplificationExtensions|100%|96.1%|
-|MyNet.Primitives.SmartEnum`2|100%|66.6%|
-|MyNet.Primitives.StringExtensions|75.8%|100%|
+|MyNet.Primitives.SmartEnum`2|100%|70.8%|
+|MyNet.Primitives.SmartEnumSource|100%|100%|
+|MyNet.Primitives.StringExtensions|73.3%|83.3%|
 |MyNet.Primitives.Temporal.DateTimeHelper|14.2%|16.6%|
 |MyNet.Primitives.Temporal.FluentTimeSpan|93.7%|75%|
 |MyNet.Primitives.TimeOnlyExtensions|87%|66.6%|
@@ -816,7 +818,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.9%**|
+|**MyNet.Utilities**|**81.9%**|**64.7%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -838,7 +840,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
