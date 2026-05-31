@@ -11,7 +11,7 @@ Code lives under [`src/MyNet.UI`](../../src/MyNet.UI).
 ```
 ┌─────────────────────────────────────────┐
 │  Your UI framework (WPF / Avalonia)     │
-│  Dialog presenter, Toast presenter,     │
+│  Dialog presenter, Toast overlay,        │
 │  Theme resources, Views                 │
 └─────────────────┬───────────────────────┘
                   │ implements abstractions

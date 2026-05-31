@@ -56,7 +56,7 @@ services.AddShell();
 ```
 
 - **Dialogs:** implement `IDialogPresenter` — see [Dialogs guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/dialogs.md)
-- **Notifications / toasts:** bind UI to `INotificationsManager.Notifications` and `IToastManager.Toasts`
+- **Notifications / toasts:** bind UI to `INotificationsManager.Notifications` and `IToastManager.Toasts` — see [Notifications & toasts guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/notifications-and-toasts.md#client-implementation-toast-overlay-control) for the toast overlay control
 - **Shell:** register `ShellHostViewModel` in your host
 - **Navigation:** implement `IViewHost` + middleware in your host — see [Navigation guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/navigation.md)
 - **Theming:** implement `IThemeService` + `IThemeBaseRegistry` in your host, then `UseThemeManager()` — see [Theming guide](https://github.com/sandre58/MyNet2/blob/main/docs/guides/theming.md)

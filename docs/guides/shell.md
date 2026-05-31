@@ -110,7 +110,7 @@ flowchart LR
     DI --> HostVM[ShellHostViewModel]
     HostVM --> Views[WPF/Avalonia views]
     Notif --> Drawer[Notifications drawer]
-    Toast --> ToastUI[Toast overlay]
+    Toast --> ToastUI[Toast overlay — host control]
 ```
 
 ## Testing
@@ -129,5 +129,5 @@ See `tests/MyNet.UI.Tests/ViewModels/Shell/`.
 - [UI overview](ui.md)
 - [Navigation](navigation.md)
 - [Dialogs](dialogs.md)
-- [Notifications & toasts](notifications-and-toasts.md)
+- [Notifications & toasts](notifications-and-toasts.md) — toast overlay control in host UI
 - [Locators](ui.md#locators-view--viewmodel) (in ui.md)

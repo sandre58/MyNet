@@ -10,7 +10,7 @@ Topic-oriented guides for MyNet subsystems. Each guide links to package READMEs 
 | [UI presentation layer](ui.md) | UI | Overview, locators |
 | [Navigation](navigation.md) | UI | Journal, guards, client view host |
 | [Dialogs](dialogs.md) | UI | Content dialogs, message box, file dialogs |
-| [Notifications & toasts](notifications-and-toasts.md) | UI | Notification center, toast overlay |
+| [Notifications & toasts](notifications-and-toasts.md) | UI | Notification center, toast overlay (host control) |
 | [Shell](shell.md) | UI | Host, drawers, taskbar, preferences |
 | [Theming](theming.md) | UI | `IThemeService`, light/dark, brand colors |
 | [Globalization](globalization.md) | Globalization | Cultures, full translation system |
