@@ -119,4 +119,20 @@ public static class IntervalExtensions
             return comparison == 0 && (!left.Start.Value.IsInclusive || !left.End.Value.IsInclusive);
         }
     }
+
+    extension<T>(IBoundedInterval<T> interval)
+        where T : struct, IComparable<T>
+    {
+        /// <summary>
+        /// Gets the start value of the bounded interval.
+        /// </summary>
+        /// <returns>The start value of the interval.</returns>
+        public T StartValue() => interval.Start.Value;
+
+        /// <summary>
+        /// Gets the end value of the bounded interval.
+        /// </summary>
+        /// <returns>The end value of the interval.</returns>
+        public T EndValue() => interval.End.Value;
+    }
 }

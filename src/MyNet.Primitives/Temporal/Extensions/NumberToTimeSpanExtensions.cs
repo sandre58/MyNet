@@ -14,6 +14,10 @@ namespace MyNet.Primitives;
 
 public static class NumberToTimeSpanExtensions
 {
+    private static int GetDecadeStart(int year) => year / 10 * 10;
+
+    private static int GetCenturyStart(int year) => year / 100 * 100;
+
     extension(int value)
     {
         /// <summary>
@@ -103,14 +107,38 @@ public static class NumberToTimeSpanExtensions
         };
 
         /// <summary>
+        /// Returns the first year of the decade containing the given year. For example, if the input year is 1995, this method returns 1990.
+        /// </summary>
+        /// <returns>The first year of the decade containing the given year.</returns>
+        public int DecadeStart() => GetDecadeStart(value);
+
+        /// <summary>
+        /// Returns the last year of the decade containing the given year. For example, if the input year is 1995, this method returns 1999.
+        /// </summary>
+        /// <returns>The last year of the decade containing the given year.</returns>
+        public int DecadeEnd() => GetDecadeStart(value) + 9;
+
+        /// <summary>
         /// Returns a ClosedInterval representing the decade of the given year. The start of the interval is calculated by dividing the year by 10, multiplying it back by 10 to get the first year of the decade, and the end of the interval is calculated by adding 9 to the start year to get the last year of the decade. For example, if the input year is 1995, the method will return a ClosedInterval with a start of 1990 and an end of 1999, representing the decade of the 1990s.
         /// </summary>
         /// <returns>A ClosedInterval representing the decade of the given year.</returns>
         public ClosedInterval<int> Decade()
         {
-            var start = value / 10 * 10;
+            var start = GetDecadeStart(value);
             return new(start, start + 9);
         }
+
+        /// <summary>
+        /// Returns the first year of the century containing the given year. For example, if the input year is 1995, this method returns 1900.
+        /// </summary>
+        /// <returns>The first year of the century containing the given year.</returns>
+        public int CenturyStart() => GetCenturyStart(value);
+
+        /// <summary>
+        /// Returns the last year of the century containing the given year. For example, if the input year is 1995, this method returns 1999.
+        /// </summary>
+        /// <returns>The last year of the century containing the given year.</returns>
+        public int CenturyEnd() => GetCenturyStart(value) + 99;
 
         /// <summary>
         /// Returns a ClosedInterval representing the century of the given year. The start of the interval is calculated by dividing the year by 100, multiplying it back by 100 to get the first year of the century, and the end of the interval is calculated by adding 99 to the start year to get the last year of the century. For example, if the input year is 1995, the method will return a ClosedInterval with a start of 1900 and an end of 1999, representing the 20th century.
@@ -118,7 +146,7 @@ public static class NumberToTimeSpanExtensions
         /// <returns>A ClosedInterval representing the century of the given year.</returns>
         public ClosedInterval<int> Century()
         {
-            var start = value / 100 * 100;
+            var start = GetCenturyStart(value);
             return new(start, start + 99);
         }
     }
