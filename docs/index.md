@@ -17,7 +17,8 @@ docs/
     ├── foundations.md
     ├── collections-messaging.md
     ├── observable.md             ★ MVVM + metadata
-    ├── ui.md                     ★ Locators + navigation
+    ├── ui.md                     ★ Locators overview
+    ├── navigation.md             ★ App navigation + client host
     ├── dialogs.md                ★ NEW
     ├── notifications-and-toasts.md ★ NEW
     ├── shell.md                  ★ NEW
@@ -66,7 +67,7 @@ docs/
 | Package | Guide |
 |---------|-------|
 | [MyNet.Observable](../src/MyNet.Observable/README.md) | [Observable models](guides/observable.md) |
-| [MyNet.UI](../src/MyNet.UI/README.md) | [UI](guides/ui.md) · [Dialogs](guides/dialogs.md) · [Notifications](guides/notifications-and-toasts.md) · [Shell](guides/shell.md) · [Theming](guides/theming.md) |
+| [MyNet.UI](../src/MyNet.UI/README.md) | [UI](guides/ui.md) · [Navigation](guides/navigation.md) · [Dialogs](guides/dialogs.md) · [Notifications](guides/notifications-and-toasts.md) · [Shell](guides/shell.md) · [Theming](guides/theming.md) |
 
 ### Localization & geography
 
@@ -95,7 +96,8 @@ docs/
 | Guide | Status |
 |-------|--------|
 | [observable.md](guides/observable.md) | Complete |
-| [ui.md](guides/ui.md) | Complete (locators, navigation) |
+| [ui.md](guides/ui.md) | Complete (locators) |
+| [navigation.md](guides/navigation.md) | Complete |
 | [dialogs.md](guides/dialogs.md) | Complete |
 | [notifications-and-toasts.md](guides/notifications-and-toasts.md) | Complete |
 | [shell.md](guides/shell.md) | Complete |

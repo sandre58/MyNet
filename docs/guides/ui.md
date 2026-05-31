@@ -40,6 +40,7 @@ Code lives under [`src/MyNet.UI`](../../src/MyNet.UI).
 
 | Topic | Guide |
 |-------|-------|
+| App navigation (journal, guards, client host) | [Navigation](navigation.md) |
 | Content dialogs, message boxes, file dialogs | [Dialogs](dialogs.md) |
 | Notification center & toasts | [Notifications & toasts](notifications-and-toasts.md) |
 | Shell, drawers, taskbar, preferences | [Shell](shell.md) |
@@ -161,176 +162,14 @@ See also [`src/MyNet.UI/Locators/README.md`](../../src/MyNet.UI/Locators/README.
 
 ## Navigation
 
-Application navigation stack **independent of the UI framework** (WPF, Avalonia, etc.): back/forward journal, guards, middleware, lifecycle, and typed parameters.
-
-Code: [`src/MyNet.UI/Navigation`](../../src/MyNet.UI/Navigation).
-
-### DI registration
+Journal-based app navigation (guards, middleware, back/forward) without tying to WPF or Avalonia. The host project wires views via middleware and locators — same idea as `IDialogPresenter` for dialogs.
 
 ```csharp
-services
-    .AddNavigation()
-    .AddNavigationGuard<UnsavedChangesGuard>()
-    .AddNavigationMiddleware<LoggingNavigationMiddleware>();
-
-services.AddTransient<SettingsPage>();
+services.AddViewLocators().AddNavigation().AddNavigationMiddleware<ViewHostNavigationMiddleware>();
 services.AddTransient<DashboardPage>();
 ```
 
-| Extension | Role |
-|-----------|------|
-| `AddNavigation()` | Journal, lifecycle, `INavigationService`, `INavigationClient` |
-| `AddNavigationGuard<T>()` | Authorization rule (order = registration order) |
-| `AddNavigationMiddleware<T>()` | Pipeline wrapper (first registered = outermost) |
-
-Pages (`INavigationPage`) are resolved via `ActivatorUtilities` in `INavigationClient` — register them as **Transient** (or Scoped) for the desired lifetime.
-
-### Components
-
-| Service | Role |
-|---------|------|
-| `INavigationClient` | Fluent API: `To<TPage>().With(...).GoAsync()` |
-| `INavigationService` | Low-level navigation, journal, `StateChanged` |
-| `INavigationJournal` | Back / forward stacks |
-| `INavigationLifecycle` | Delegates hooks to source / target pages |
-| `INavigationGuard` | Blocks navigation (`false` → `Cancelled`) |
-| `INavigationMiddleware` | Pipeline around the core (UI, logging, etc.) |
-
-### Pipeline (execution order)
-
-```mermaid
-flowchart TD
-    G[Guards] --> LF[OnNavigatingFrom source]
-    LF --> MW[Middleware + core]
-    MW -->|failure| X[Return without commit]
-    MW -->|success| LT[OnNavigatingTo target]
-    LT --> J[Journal + CurrentContext]
-    J --> NAV[OnNavigated target]
-    NAV --> E[StateChanged]
-```
-
-- **Guards**: first `false` cancels; journal is not modified.
-- **OnNavigatingTo**: only after successful middleware/core (target is not prepared on failure).
-- **OnNavigatingFrom**: may run before middleware failure; no automatic rollback on the source for now.
-- **Core** (`ExecuteCoreAsync`): stub in the library; the UI host (dedicated middleware) will show the view later.
-
-### Fluent API
-
-```csharp
-public class ShellViewModel(INavigationClient navigation)
-{
-    public Task OpenSettingsAsync() =>
-        navigation
-            .To<SettingsPage>()
-            .With(new { Tab = "General" })
-            .GoAsync();
-
-    public Task OpenPlayerAsync(int id) =>
-        navigation
-            .To<PlayerPage>()
-            .WithParameter(nameof(id), id)
-            .GoAsync();
-}
-```
-
-Shortcut: `navigation.NavigateToAsync<PlayerPage>(new { id })`.
-
-### Page lifecycle
-
-```csharp
-public sealed class SettingsPage : INavigationPage
-{
-    public Task OnNavigatingToAsync(NavigationContext context, CancellationToken cancellationToken)
-    {
-        var tab = context.Parameters?.Get<string>("Tab") ?? "General";
-        return Task.CompletedTask;
-    }
-
-    public Task OnNavigatedAsync(NavigationContext context, CancellationToken cancellationToken)
-        => Task.CompletedTask;
-
-    public Task OnNavigatingFromAsync(NavigationContext context, CancellationToken cancellationToken)
-        => Task.CompletedTask;
-}
-```
-
-### Parameters
-
-`NavigationParameters` accepts anonymous objects, dictionaries, records, etc.:
-
-```csharp
-parameters.Get<int>("PlayerId");
-parameters.TryGetValue("Count", out long count);
-```
-
-Optional conversion via `IConvertible`, enums, and nullable types (`long` → `int`, etc.).
-
-### Reacting to state (without WPF)
-
-```csharp
-navigation.StateChanged += (_, e) =>
-{
-    // e.CurrentContext, e.CanGoBack, e.CanGoForward
-};
-```
-
-Useful for `CanExecute` on Back/Forward in a ViewModel.
-
-### Guard example
-
-```csharp
-public sealed class UnsavedChangesGuard : INavigationGuard
-{
-    public Task<bool> CanNavigateAsync(
-        NavigationContext? from,
-        NavigationContext to,
-        CancellationToken cancellationToken)
-    {
-        if (from?.To is IHasUnsavedChanges page && page.IsDirty)
-            return ConfirmDiscardAsync(cancellationToken);
-
-        return Task.FromResult(true);
-    }
-}
-```
-
-### UI middleware (future WPF / Avalonia client)
-
-The core does not touch controls. Application middleware can:
-
-1. Resolve the view via `IViewFactory` (see [Locators](#locators-view--viewmodel)).
-2. Assign shell `Content` / `CurrentView`.
-3. Call `next()` so the pipeline completes.
-
-```csharp
-public sealed class ViewHostMiddleware(IViewHost host) : INavigationMiddleware
-{
-    public async Task<NavigationResult> InvokeAsync(
-        NavigationContext? from,
-        NavigationContext to,
-        Func<Task<NavigationResult>> next,
-        CancellationToken cancellationToken)
-    {
-        // host.Show(to.To) — implement in the client project
-        return await next().ConfigureAwait(false);
-    }
-}
-```
-
-### Back / forward
-
-- `GoBackAsync` / `GoForwardAsync`: reuse **page instances** stored in the journal.
-- `NavigateToAsync` to a new page: new DI instance on each `To<T>()`.
-- `ResetAsync()`: clears the journal and raises `StateChanged` (under the same lock as navigations).
-
-### Navigation source files
-
-| File / folder | Content |
-|---------------|---------|
-| `NavigationService.cs` | Orchestration, lock, pipeline |
-| `NavigationClient.cs` | Facade + DI resolution |
-| `Models/` | `NavigationContext`, `NavigationParameters`, statuses |
-| `ServiceCollectionExtensions.cs` | DI registration |
+Full API, pipeline, guards, and **client implementation** (`IViewHost`, view middleware, shell wiring): **[Navigation guide](navigation.md)**.
 
 ---
 
@@ -339,7 +178,7 @@ public sealed class ViewHostMiddleware(IViewHost host) : INavigationMiddleware
 - [Observable models](observable.md)
 - [Globalization](globalization.md)
 - [IO & platform](io-platform.md)
-- [Dialogs](dialogs.md) · [Notifications & toasts](notifications-and-toasts.md) · [Shell](shell.md)
+- [Dialogs](dialogs.md) · [Notifications & toasts](notifications-and-toasts.md) · [Navigation](navigation.md) · [Shell](shell.md)
 
 ## Package README
 

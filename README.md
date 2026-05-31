@@ -109,7 +109,7 @@ Each package ships with its own README (also embedded in the NuGet gallery). Ico
 | Icon | Package | Description | Docs |
 | :-: | :--- | :--- | :--- |
 | <img src="assets/MyNetObservable.png" width="32" height="32" alt="" /> | [**MyNet.Observable**](src/MyNet.Observable/README.md) | Observable models, edition tracking, FluentValidation, metadata, and a Roslyn source generator. | [Guide](docs/guides/observable.md) · [NuGet](https://www.nuget.org/packages/MyNet.Observable) |
-| <img src="assets/MyNetUI.png" width="32" height="32" alt="" /> | [**MyNet.UI**](src/MyNet.UI/README.md) | UI-agnostic shell, dialogs, navigation, notifications, toasts, and workspace patterns. | [UI](docs/guides/ui.md) · [Dialogs](docs/guides/dialogs.md) · [NuGet](https://www.nuget.org/packages/MyNet.UI) |
+| <img src="assets/MyNetUI.png" width="32" height="32" alt="" /> | [**MyNet.UI**](src/MyNet.UI/README.md) | UI-agnostic shell, dialogs, navigation, notifications, toasts, and workspace patterns. | [UI](docs/guides/ui.md) · [Navigation](docs/guides/navigation.md) · [Dialogs](docs/guides/dialogs.md) · [NuGet](https://www.nuget.org/packages/MyNet.UI) |
 
 > **Note:** `MyNet.Observable.Metadata.Generator` is a Roslyn analyzer shipped inside **MyNet.Observable** (not a separate NuGet package).
 

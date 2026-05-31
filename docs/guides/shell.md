@@ -127,7 +127,7 @@ See `tests/MyNet.UI.Tests/ViewModels/Shell/`.
 ## Related
 
 - [UI overview](ui.md)
-- [Navigation](ui.md#navigation) (in ui.md)
+- [Navigation](navigation.md)
 - [Dialogs](dialogs.md)
 - [Notifications & toasts](notifications-and-toasts.md)
 - [Locators](ui.md#locators-view--viewmodel) (in ui.md)

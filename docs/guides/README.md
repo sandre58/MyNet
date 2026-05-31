@@ -7,7 +7,8 @@ Topic-oriented guides for MyNet subsystems. Each guide links to package READMEs 
 | [Foundations](foundations.md) | Primitives, Text, Utilities, Generator, Reflection, Metadata, Temporal | Core types, strings, cache, crypto, random |
 | [Collections & messaging](collections-messaging.md) | Collections, Messaging | Observable range collections, weak messenger |
 | [Observable models](observable.md) | Observable | MVVM models, validation, metadata generator |
-| [UI presentation layer](ui.md) | UI | Overview, locators, navigation |
+| [UI presentation layer](ui.md) | UI | Overview, locators |
+| [Navigation](navigation.md) | UI | Journal, guards, client view host |
 | [Dialogs](dialogs.md) | UI | Content dialogs, message box, file dialogs |
 | [Notifications & toasts](notifications-and-toasts.md) | UI | Notification center, toast overlay |
 | [Shell](shell.md) | UI | Host, drawers, taskbar, preferences |

@@ -126,5 +126,6 @@ Packages are written to the `packages/` folder (see `build/package.props`). Icon
 |------|------|
 | Package list & links | [Documentation index](index.md) |
 | Observable / validation / MVVM models | [guides/observable.md](guides/observable.md) |
-| Shell, dialogs, navigation | [guides/ui.md](guides/ui.md) |
+| Shell, dialogs | [guides/ui.md](guides/ui.md) · [guides/dialogs.md](guides/dialogs.md) · [guides/shell.md](guides/shell.md) |
+| App navigation (client host) | [guides/navigation.md](guides/navigation.md) |
 | Cultures & translations | [guides/globalization.md](guides/globalization.md) |
