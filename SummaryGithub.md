@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/31/2026 - 19:23:02 |
-| Coverage date: | 05/31/2026 - 19:19:28 - 05/31/2026 - 19:20:14 |
+| Generated on: | 05/31/2026 - 20:31:17 |
+| Coverage date: | 05/31/2026 - 20:28:09 - 05/31/2026 - 20:28:56 |
 | Parser: | MultiReport (61x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 668 |
 | Files: | 623 |
-| **Line coverage:** | 72.8% (10206 of 14014) |
-| Covered lines: | 10206 |
-| Uncovered lines: | 3808 |
-| Coverable lines: | 14014 |
-| Total lines: | 57618 |
-| **Branch coverage:** | 60.4% (3938 of 6518) |
-| Covered branches: | 3938 |
-| Total branches: | 6518 |
+| **Line coverage:** | 72.8% (10209 of 14016) |
+| Covered lines: | 10209 |
+| Uncovered lines: | 3807 |
+| Coverable lines: | 14016 |
+| Total lines: | 56820 |
+| **Branch coverage:** | 60.4% (3942 of 6520) |
+| Covered branches: | 3942 |
+| Total branches: | 6520 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 276_26721991921 |
+| Tag: | 277_26723532517 |
 
 </details>
 
@@ -611,7 +611,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**51.6%**|**40.2%**|
+|**MyNet.UI**|**51.6%**|**40.4%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -699,7 +699,7 @@
 |MyNet.UI.Toasting.ServiceCollectionExtensions|100%|50%|
 |MyNet.UI.Toasting.Settings.ToastManagerOptions|100%||
 |MyNet.UI.Toasting.Settings.ToastSettings|100%||
-|MyNet.UI.Toasting.ToastManager|70.2%|65.7%|
+|MyNet.UI.Toasting.ToastManager|72%|72.5%|
 |MyNet.UI.ViewModels.Crud.ChildItemViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|73%|
 |MyNet.UI.ViewModels.Crud.EditionViewModel|11.5%|10.5%|
