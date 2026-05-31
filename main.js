@@ -350,15 +350,15 @@ var assemblies = [
   {
     "name": "MyNet.Geography.Localization",
     "classes": [
-      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 30, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Geography.Resources",
     "classes": [
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 85, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 85, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 84, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Globalization",
@@ -641,23 +641,23 @@ var assemblies = [
   {
     "name": "MyNet.Observable.Metadata.Generator",
     "classes": [
-      { "name": "MyNet.Observable.Metadata.Generator.MetadataProviderGenerator", "rp": "MyNet.Observable.Metadata.Generator_MetadataProviderGenerator.html", "cl": 180, "ucl": 29, "cal": 209, "tl": 425, "cb": 76, "tb": 108, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer", "rp": "MyNet.Observable.Metadata.Generator_ObservableObjectSetterAnalyzer.html", "cl": 62, "ucl": 14, "cal": 76, "tl": 154, "cb": 36, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator", "rp": "MyNet.Observable.Metadata.Generator_ObservablePropertyGenerator.html", "cl": 98, "ucl": 12, "cal": 110, "tl": 228, "cb": 33, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.MetadataProviderGenerator", "rp": "MyNet.Observable.Metadata.Generator_MetadataProviderGenerator.html", "cl": 180, "ucl": 29, "cal": 209, "tl": 400, "cb": 76, "tb": 108, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer", "rp": "MyNet.Observable.Metadata.Generator_ObservableObjectSetterAnalyzer.html", "cl": 62, "ucl": 14, "cal": 76, "tl": 153, "cb": 36, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator", "rp": "MyNet.Observable.Metadata.Generator_ObservablePropertyGenerator.html", "cl": 98, "ucl": 12, "cal": 110, "tl": 225, "cb": 33, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Platform.Windows",
     "classes": [
-      { "name": "MyNet.Platform.Windows.Authentication.WindowsAuthenticationService", "rp": "MyNet.Platform.Windows_WindowsAuthenticationService.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Authentication.WindowsAuthenticationService\u003CT\u003E", "rp": "MyNet.Platform.Windows_WindowsAuthenticationService_1.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 77, "cb": 9, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Authentication.WindowsUserPrincipal", "rp": "MyNet.Platform.Windows_WindowsUserPrincipal.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 33, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Mail.NativeMethods", "rp": "MyNet.Platform.Windows_NativeMethods.html", "cl": 0, "ucl": 58, "cal": 58, "tl": 153, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.FileHistory.RegistryRecentFileRepository", "rp": "MyNet.Platform.Windows_RegistryRecentFileRepository.html", "cl": 79, "ucl": 2, "cal": 81, "tl": 221, "cb": 23, "tb": 28, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.RegistryValueConverter", "rp": "MyNet.Platform.Windows_RegistryValueConverter.html", "cl": 50, "ucl": 0, "cal": 50, "tl": 107, "cb": 26, "tb": 28, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryNavigator", "rp": "MyNet.Platform.Windows_WindowsRegistryNavigator.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 44, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryQuery", "rp": "MyNet.Platform.Windows_WindowsRegistryQuery.html", "cl": 12, "ucl": 2, "cal": 14, "tl": 51, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryService", "rp": "MyNet.Platform.Windows_WindowsRegistryService.html", "cl": 20, "ucl": 0, "cal": 20, "tl": 85, "cb": 15, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryStore", "rp": "MyNet.Platform.Windows_WindowsRegistryStore.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 63, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Authentication.WindowsAuthenticationService", "rp": "MyNet.Platform.Windows_WindowsAuthenticationService.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Authentication.WindowsAuthenticationService\u003CT\u003E", "rp": "MyNet.Platform.Windows_WindowsAuthenticationService_1.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 89, "cb": 9, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Authentication.WindowsUserPrincipal", "rp": "MyNet.Platform.Windows_WindowsUserPrincipal.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 34, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Mail.NativeMethods", "rp": "MyNet.Platform.Windows_NativeMethods.html", "cl": 0, "ucl": 58, "cal": 58, "tl": 156, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.FileHistory.RegistryRecentFileRepository", "rp": "MyNet.Platform.Windows_RegistryRecentFileRepository.html", "cl": 79, "ucl": 2, "cal": 81, "tl": 222, "cb": 23, "tb": 28, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.RegistryValueConverter", "rp": "MyNet.Platform.Windows_RegistryValueConverter.html", "cl": 50, "ucl": 0, "cal": 50, "tl": 109, "cb": 26, "tb": 28, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryNavigator", "rp": "MyNet.Platform.Windows_WindowsRegistryNavigator.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 45, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryQuery", "rp": "MyNet.Platform.Windows_WindowsRegistryQuery.html", "cl": 12, "ucl": 2, "cal": 14, "tl": 52, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryService", "rp": "MyNet.Platform.Windows_WindowsRegistryService.html", "cl": 20, "ucl": 0, "cal": 20, "tl": 86, "cb": 15, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Platform.Windows.Registry.WindowsRegistryStore", "rp": "MyNet.Platform.Windows_WindowsRegistryStore.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 64, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Primitives",
