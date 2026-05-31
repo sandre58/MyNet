@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/30/2026 - 11:29:00 |
-| Coverage date: | 05/30/2026 - 11:25:39 - 05/30/2026 - 11:26:15 |
-| Parser: | MultiReport (61x Cobertura) |
+| Generated on: | 05/31/2026 - 07:47:15 |
+| Coverage date: | 05/31/2026 - 07:43:39 - 05/31/2026 - 07:44:34 |
+| Parser: | MultiReport (63x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 668 |
 | Files: | 623 |
-| **Line coverage:** | 72.7% (10191 of 14006) |
-| Covered lines: | 10191 |
-| Uncovered lines: | 3815 |
-| Coverable lines: | 14006 |
-| Total lines: | 57285 |
-| **Branch coverage:** | 60.4% (3937 of 6518) |
-| Covered branches: | 3937 |
+| **Line coverage:** | 72.8% (10206 of 14014) |
+| Covered lines: | 10206 |
+| Uncovered lines: | 3808 |
+| Coverable lines: | 14014 |
+| Total lines: | 57651 |
+| **Branch coverage:** | 60.4% (3938 of 6518) |
+| Covered branches: | 3938 |
 | Total branches: | 6518 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 272_26682554386 |
+| Tag: | 274_26706775603 |
 
 </details>
 
@@ -449,11 +449,11 @@
 |MyNet.Platform.Windows.Registry.WindowsRegistryStore|100%|50%|
 
 </details>
-<details><summary>MyNet.Primitives - 72%</summary>
+<details><summary>MyNet.Primitives - 72.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Primitives**|**72%**|**61.2%**|
+|**MyNet.Primitives**|**72.6%**|**61.2%**|
 |MyNet.Primitives.BooleanExtensions|100%|100%|
 |MyNet.Primitives.ComparableExtensions|100%|92%|
 |MyNet.Primitives.ComparerExtensions|100%||
@@ -486,9 +486,9 @@
 |MyNet.Primitives.Helpers.CharHelper|100%||
 |MyNet.Primitives.Helpers.ProcessHelper|69.5%|100%|
 |MyNet.Primitives.Helpers.ResourcesHelper|91.6%|87.5%|
-|MyNet.Primitives.IntervalExtensions|53.5%|28%|
-|MyNet.Primitives.Intervals.ClosedInterval`1|75%|50%|
-|MyNet.Primitives.Intervals.DateRange|50%|20%|
+|MyNet.Primitives.IntervalExtensions|56.6%|28%|
+|MyNet.Primitives.Intervals.ClosedInterval`1|100%|50%|
+|MyNet.Primitives.Intervals.DateRange|57.1%|20%|
 |MyNet.Primitives.Intervals.DateTimeRange|100%|75%|
 |MyNet.Primitives.Intervals.Interval`1|75%|100%|
 |MyNet.Primitives.Intervals.Interval`2|39.4%|39.2%|
@@ -502,7 +502,7 @@
 |MyNet.Primitives.MathExtensions|95%|78.5%|
 |MyNet.Primitives.Metadata.SymbolAttribute|100%||
 |MyNet.Primitives.NumberExtensions|75%||
-|MyNet.Primitives.NumberToTimeSpanExtensions|44.4%|33.3%|
+|MyNet.Primitives.NumberToTimeSpanExtensions|58.8%|33.3%|
 |MyNet.Primitives.ObjectExtensions|100%|66.6%|
 |MyNet.Primitives.PeriodExtensions|90%|87.5%|
 |MyNet.Primitives.Providers.ItemsProvider`1|100%|100%|
@@ -818,7 +818,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.7%**|
+|**MyNet.Utilities**|**81.9%**|**64.9%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -840,7 +840,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
