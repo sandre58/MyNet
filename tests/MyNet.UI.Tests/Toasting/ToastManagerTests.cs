@@ -65,6 +65,35 @@ public class ToastManagerTests
         sut.Toasts.Should().BeEmpty();
     }
 
+    [Fact]
+    public void StartLifetime_SkipsAutoCloseWhenFreezeOnMouseEnter()
+    {
+        using var service = new NotificationService();
+        using var sut = new ToastManager(
+            service,
+            new TestSchedulerProvider(),
+            new FrozenAutoCloseToastFactory(),
+            new AllToastsFilter(),
+            new ToastManagerOptions { DefaultDuration = TimeSpan.FromMilliseconds(50) });
+
+        service.Publish(new MessageNotification("hello"));
+
+        System.Threading.Thread.Sleep(150);
+
+        sut.Toasts.Should().ContainSingle();
+    }
+
+    private sealed class FrozenAutoCloseToastFactory : IToastFactory
+    {
+        public IToast Create(INotification notification) =>
+            new Toast(notification, new()
+            {
+                ClosingStrategy = ToastClosingStrategy.AutoClose,
+                Duration = TimeSpan.FromMilliseconds(50),
+                FreezeOnMouseEnter = true
+            });
+    }
+
     private sealed class TestToastFactory : IToastFactory
     {
         public IToast Create(INotification notification) =>

@@ -123,6 +123,9 @@ public sealed class ToastManager : IToastManager
         if (toast.Settings.ClosingStrategy is not ToastClosingStrategy.AutoClose and not ToastClosingStrategy.Both)
             return;
 
+        if (toast.Settings.FreezeOnMouseEnter)
+            return;
+
         var duration = toast.Settings.Duration ?? _options.DefaultDuration;
 
         var subscription = System.Reactive.Linq.Observable.Timer(duration, _scheduler.Background)
