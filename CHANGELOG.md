@@ -6,15 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.2.1] - 2026-05-31
+## [v19.3.0] - 2026-06-01
 
 
-### 🐛 Bug Fixes
+### 🚀 Features
 
-- Add freeze on mouse enter functionality to toast notifications *(commit by **Stéphane ANDRE (E104915)** in [19581230](https://github.com/sandre58/MyNet/commit/1958123026986889c23b2a6b8a9af2b861017cd3))*
-
-
-
+- Add CountryExtensions class for retrieving country flags *(commit by **Stéphane ANDRE (E104915)** in [d09b04aa](https://github.com/sandre58/MyNet/commit/d09b04aad65124934ca65b6bc17f67f270b367fc))*
 
 
 
@@ -22,7 +19,10 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.2.0...v19.2.1](https://github.com/sandre58/MyNet/compare/v19.2.0...v19.2.1)
+
+
+
+**Full Changelog:** [compare v19.2.1...v19.3.0](https://github.com/sandre58/MyNet/compare/v19.2.1...v19.3.0)
 
 
 ---
