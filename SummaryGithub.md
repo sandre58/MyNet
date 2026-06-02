@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 05/31/2026 - 20:31:17 |
-| Coverage date: | 05/31/2026 - 20:28:09 - 05/31/2026 - 20:28:56 |
-| Parser: | MultiReport (61x Cobertura) |
+| Generated on: | 06/02/2026 - 11:58:43 |
+| Coverage date: | 06/02/2026 - 11:55:31 - 06/02/2026 - 11:56:26 |
+| Parser: | MultiReport (64x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 668 |
-| Files: | 623 |
-| **Line coverage:** | 72.8% (10209 of 14016) |
-| Covered lines: | 10209 |
-| Uncovered lines: | 3807 |
-| Coverable lines: | 14016 |
-| Total lines: | 56820 |
-| **Branch coverage:** | 60.4% (3942 of 6520) |
-| Covered branches: | 3942 |
-| Total branches: | 6520 |
+| Classes: | 670 |
+| Files: | 625 |
+| **Line coverage:** | 72.8% (10213 of 14024) |
+| Covered lines: | 10213 |
+| Uncovered lines: | 3811 |
+| Coverable lines: | 14024 |
+| Total lines: | 57787 |
+| **Branch coverage:** | 60.4% (3943 of 6528) |
+| Covered branches: | 3943 |
+| Total branches: | 6528 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 277_26723532517 |
+| Tag: | 283_26817934090 |
 
 </details>
 
@@ -85,13 +85,14 @@
 |MyNet.Generator.SystemRandomSource|100%||
 
 </details>
-<details><summary>MyNet.Geography - 99.2%</summary>
+<details><summary>MyNet.Geography - 98.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Geography**|**99.2%**|**100%**|
+|**MyNet.Geography**|**98.4%**|**60%**|
 |MyNet.Geography.Address|100%|100%|
 |MyNet.Geography.Country|100%||
+|MyNet.Geography.CountryExtensions|0%|0%|
 |MyNet.Geography.CultureExtensions|75%|100%|
 
 </details>
@@ -104,11 +105,12 @@
 |MyNet.Geography.ServiceCollectionExtensions|100%||
 
 </details>
-<details><summary>MyNet.Geography.Resources - 100%</summary>
+<details><summary>MyNet.Geography.Resources - 91.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Geography.Resources**|**100%**|**83.3%**|
+|**MyNet.Geography.Resources**|**91.6%**|**83.3%**|
+|MyNet.Geography.Resources.CountryExtensions|0%||
 |MyNet.Geography.Resources.EmbeddedCountryFlagProvider|100%||
 |MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase|100%|83.3%|
 |MyNet.Geography.Resources.ServiceCollectionExtensions|100%||
@@ -607,11 +609,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 51.6%</summary>
+<details><summary>MyNet.UI - 51.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**51.6%**|**40.4%**|
+|**MyNet.UI**|**51.7%**|**40.4%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -692,7 +694,7 @@
 |MyNet.UI.Theming.ThemeChangedEventArgs|100%||
 |MyNet.UI.Theming.ThemeManager|54.5%|44.4%|
 |MyNet.UI.Threading.ServiceCollectionExtensions|100%||
-|MyNet.UI.Toasting.DefaultToastFactory|100%|66.6%|
+|MyNet.UI.Toasting.DefaultToastFactory|100%|50%|
 |MyNet.UI.Toasting.Filters.AllToastsFilter|100%||
 |MyNet.UI.Toasting.Filters.CompositeToastFilter|100%||
 |MyNet.UI.Toasting.Models.Toast|100%|50%|
