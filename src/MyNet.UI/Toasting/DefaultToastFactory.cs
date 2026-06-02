@@ -28,6 +28,10 @@ public sealed class DefaultToastFactory(ICommandFactory? commandFactory = null) 
             ? _commandFactory.Create((Action)(() => closable.RequestClose()))
             : null;
 
-        return new Toast(notification, settings, clickCommand: null, closeCommand: closeCommand);
+        var clickCommand = notification is ActionNotification { Action: not null } actionNotification
+            ? _commandFactory.Create(() => actionNotification.Action(actionNotification))
+            : null;
+
+        return new Toast(notification, settings, clickCommand: clickCommand, closeCommand: closeCommand);
     }
 }
