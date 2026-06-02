@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSchedulerProvider();
         services.TryAddSingleton<INotificationService>(_ => new NotificationService(processors));
+        services.TryAddSingleton<INotificationPublisher>(x => x.GetRequiredService<INotificationService>());
         services.TryAddSingleton<INotificationsManager, NotificationsManager>();
 
         return services;
