@@ -9,6 +9,7 @@ using System.Reactive.Disposables;
 using System.Windows.Input;
 using MyNet.UI.Commands;
 using MyNet.UI.Theming;
+using MyNet.Utilities.Suspending;
 
 namespace MyNet.UI.ViewModels.Shell.Chrome;
 
@@ -20,7 +21,7 @@ public sealed class ShellThemeViewModel : ViewModelBase
 {
     private readonly IThemeService _themeService;
     private readonly IThemeBaseRegistry _themeBaseRegistry;
-    private bool _applyingThemeFromService;
+    private readonly Suspender _themeSyncSuspender = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellThemeViewModel"/> class.
@@ -51,11 +52,16 @@ public sealed class ShellThemeViewModel : ViewModelBase
         get;
         set
         {
+            if (_themeSyncSuspender.IsSuspended)
+            {
+                SetProperty(ref field, value);
+                return;
+            }
+
             if (!SetProperty(ref field, value))
                 return;
 
-            if (!_applyingThemeFromService)
-                _themeService.ApplyBaseTheme(value ? _themeBaseRegistry.Dark : _themeBaseRegistry.Light);
+            _themeService.ApplyBaseTheme(value ? _themeBaseRegistry.Dark : _themeBaseRegistry.Light);
         }
     }
 
@@ -71,14 +77,11 @@ public sealed class ShellThemeViewModel : ViewModelBase
 
     private void OnThemeServiceThemeChanged(object? sender, ThemeChangedEventArgs e)
     {
-        _applyingThemeFromService = true;
-        try
-        {
-            IsDark = e.CurrentTheme.Base.IsDark;
-        }
-        finally
-        {
-            _applyingThemeFromService = false;
-        }
+        var isDark = e.CurrentTheme.Base.IsDark;
+        if (IsDark == isDark)
+            return;
+
+        using (_themeSyncSuspender.Suspend())
+            IsDark = isDark;
     }
 }

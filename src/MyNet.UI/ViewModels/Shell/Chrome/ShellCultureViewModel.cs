@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
 using MyNet.Globalization.Culture;
+using MyNet.Utilities.Suspending;
 
 namespace MyNet.UI.ViewModels.Shell.Chrome;
 
@@ -20,11 +21,17 @@ namespace MyNet.UI.ViewModels.Shell.Chrome;
 public sealed class ShellCultureViewModel : ViewModelBase
 {
     private readonly ICultureService _cultureService;
-    private bool _suppressCultureSync;
+    private readonly Suspender _cultureSyncSuspender = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellCultureViewModel"/> class.
     /// </summary>
+    /// <param name="cultureService">Application culture service.</param>
+    /// <param name="supportedCultures">
+    /// Cultures offered in the selector. When omitted, <see cref="SupportedCultures.French"/> and
+    /// <see cref="SupportedCultures.English"/> are used. Register a custom factory in DI to define
+    /// the list for your host application.
+    /// </param>
     public ShellCultureViewModel(
         ICultureService cultureService,
         IEnumerable<CultureInfo>? supportedCultures = null)
@@ -34,7 +41,9 @@ public sealed class ShellCultureViewModel : ViewModelBase
         foreach (var culture in supportedCultures ?? [SupportedCultures.French, SupportedCultures.English])
             Cultures.Add(culture);
 
-        SyncSelectedCultureFromService();
+        var initialCulture = ResolveSupportedCulture(_cultureService.CurrentCulture);
+        if (initialCulture is not null)
+            SelectedCulture = initialCulture;
 
         _cultureService.CultureChanged += OnCultureServiceCultureChanged;
         Disposables.Add(Disposable.Create(() => _cultureService.CultureChanged -= OnCultureServiceCultureChanged));
@@ -53,7 +62,13 @@ public sealed class ShellCultureViewModel : ViewModelBase
         get;
         set
         {
-            if (!SetProperty(ref field, value) || _suppressCultureSync)
+            if (_cultureSyncSuspender.IsSuspended)
+            {
+                SetProperty(ref field, value);
+                return;
+            }
+
+            if (!SetProperty(ref field, value))
                 return;
 
             var culture = value ?? CultureInfo.InstalledUICulture;
@@ -63,33 +78,24 @@ public sealed class ShellCultureViewModel : ViewModelBase
 
     private void OnCultureServiceCultureChanged(object? sender, CultureChangedEventArgs e)
     {
-        _suppressCultureSync = true;
-        try
-        {
-            SyncSelectedCultureFromService();
-        }
-        finally
-        {
-            _suppressCultureSync = false;
-        }
+        var culture = ResolveSupportedCulture(_cultureService.CurrentCulture);
+        if (culture is null || Equals(SelectedCulture, culture))
+            return;
+
+        using (_cultureSyncSuspender.Suspend())
+            SelectedCulture = culture;
     }
 
-    private void SyncSelectedCultureFromService()
+    private CultureInfo? ResolveSupportedCulture(CultureInfo culture)
     {
-        var culture = _cultureService.CurrentCulture;
-        SelectedCulture = Cultures.Contains(culture)
-            ? culture
-            : GetNearestSupportedCulture(culture);
-    }
-
-    private CultureInfo? GetNearestSupportedCulture(CultureInfo culture)
-    {
-        while (!culture.Equals(CultureInfo.InvariantCulture))
+        var current = culture;
+        while (!current.Equals(CultureInfo.InvariantCulture))
         {
-            if (Cultures.Contains(culture))
-                return culture;
+            var match = Cultures.FirstOrDefault(c => c.Equals(current));
+            if (match is not null)
+                return match;
 
-            culture = culture.Parent;
+            current = current.Parent;
         }
 
         return Cultures.FirstOrDefault();

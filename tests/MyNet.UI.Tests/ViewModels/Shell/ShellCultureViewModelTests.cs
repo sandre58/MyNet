@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
 using FluentAssertions;
 using MyNet.Globalization.Culture;
 using MyNet.UI.ViewModels.Shell.Chrome;
@@ -32,5 +33,28 @@ public class ShellCultureViewModelTests
         sut.SelectedCulture = SupportedCultures.French;
 
         cultureService.CurrentCulture.Should().Be(SupportedCultures.French);
+    }
+
+    [Fact]
+    public void Constructor_ResolvesSelectedCultureToSupportedListInstance()
+    {
+        var cultureService = new CultureService(CultureInfo.GetCultureInfo("en-US"));
+        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+
+        sut.SelectedCulture.Should().BeSameAs(SupportedCultures.English);
+    }
+
+    [Fact]
+    public void CultureChanged_SyncsSelectedCultureWithoutReentrantSetCulture()
+    {
+        var cultureService = new CultureService(SupportedCultures.English);
+        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+        var setCultureCalls = 0;
+        cultureService.CultureChanged += (_, _) => setCultureCalls++;
+
+        cultureService.SetCulture(SupportedCultures.French);
+
+        sut.SelectedCulture.Should().BeSameAs(SupportedCultures.French);
+        setCultureCalls.Should().Be(1);
     }
 }

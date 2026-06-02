@@ -46,8 +46,8 @@ public static class ServiceCollectionExtensions
             services.TryAddSingleton(options);
 
             // Core services
-            services.TryAddSingleton<ICultureService, CultureService>();
-            services.TryAddSingleton<ITimeZoneService, TimeZoneService>();
+            services.TryAddSingleton<ICultureService>(static sp => new CultureService(sp.GetRequiredService<GlobalizationOptions>()));
+            services.TryAddSingleton<ITimeZoneService>(static sp => new TimeZoneService(sp.GetRequiredService<GlobalizationOptions>()));
             services.TryAddSingleton<IGlobalizationService, GlobalizationService>();
 
             // Events
