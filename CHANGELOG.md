@@ -6,12 +6,14 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.1] - 2026-06-02
+## [v19.3.2] - 2026-06-02
 
 
 ### 🐛 Bug Fixes
 
-- Register INotificationPublisher to use existing INotificationService *(commit by **Stéphane ANDRE (E104915)** in [3fb71d0c](https://github.com/sandre58/MyNet/commit/3fb71d0c247756c397a8fc4124e8ceb5cf669654))*
+- Refactor culture and theme synchronization to prevent reentrant updates *(commit by **Stéphane ANDRE (E104915)** in [a9673164](https://github.com/sandre58/MyNet/commit/a967316463997d589686df21698c39921cb98199))*
+
+- Add click command support for ActionNotification in Toast creation *(commit by **Stéphane ANDRE (E104915)** in [2adc0fd2](https://github.com/sandre58/MyNet/commit/2adc0fd214c751fe13c293bcd4c2a6b4b7aa90ad))*
 
 
 
@@ -22,7 +24,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.0...v19.3.1](https://github.com/sandre58/MyNet/compare/v19.3.0...v19.3.1)
+**Full Changelog:** [compare v19.3.1...v19.3.2](https://github.com/sandre58/MyNet/compare/v19.3.1...v19.3.2)
 
 
 ---
