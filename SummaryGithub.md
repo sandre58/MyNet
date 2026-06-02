@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/02/2026 - 11:58:43 |
-| Coverage date: | 06/02/2026 - 11:55:31 - 06/02/2026 - 11:56:26 |
-| Parser: | MultiReport (64x Cobertura) |
+| Generated on: | 06/02/2026 - 21:41:28 |
+| Coverage date: | 06/02/2026 - 21:38:42 - 06/02/2026 - 21:39:33 |
+| Parser: | MultiReport (65x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 670 |
-| Files: | 625 |
-| **Line coverage:** | 72.8% (10213 of 14024) |
-| Covered lines: | 10213 |
-| Uncovered lines: | 3811 |
-| Coverable lines: | 14024 |
-| Total lines: | 57787 |
-| **Branch coverage:** | 60.4% (3943 of 6528) |
-| Covered branches: | 3943 |
-| Total branches: | 6528 |
+| Classes: | 671 |
+| Files: | 626 |
+| **Line coverage:** | 72.9% (10265 of 14075) |
+| Covered lines: | 10265 |
+| Uncovered lines: | 3810 |
+| Coverable lines: | 14075 |
+| Total lines: | 57766 |
+| **Branch coverage:** | 60.4% (3963 of 6552) |
+| Covered branches: | 3963 |
+| Total branches: | 6552 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 283_26817934090 |
+| Tag: | 285_26849489377 |
 
 </details>
 
@@ -116,11 +116,11 @@
 |MyNet.Geography.Resources.ServiceCollectionExtensions|100%||
 
 </details>
-<details><summary>MyNet.Globalization - 85.6%</summary>
+<details><summary>MyNet.Globalization - 85.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Globalization**|**85.6%**|**80.2%**|
+|**MyNet.Globalization**|**85.2%**|**79%**|
 |MyNet.Globalization.Culture.CultureChangedEventArgs|100%||
 |MyNet.Globalization.Culture.CultureService|100%|100%|
 |MyNet.Globalization.Culture.SupportedCultures|100%||
@@ -130,13 +130,14 @@
 |MyNet.Globalization.Events.GlobalizationEvents|0%||
 |MyNet.Globalization.Facade.CultureExtensions|0%||
 |MyNet.Globalization.Facade.DateTimeExtensions|0%|0%|
-|MyNet.Globalization.Facade.GlobalizationServices|88.8%|50%|
+|MyNet.Globalization.Facade.GlobalizationServiceProxy|67.6%|50%|
+|MyNet.Globalization.Facade.GlobalizationServices|90%|50%|
 |MyNet.Globalization.Facade.InflectorExtensions|68.4%|88.2%|
 |MyNet.Globalization.Facade.LocalizationRuntime|100%|100%|
 |MyNet.Globalization.Facade.Localizer|91.3%|50%|
 |MyNet.Globalization.Facade.TranslationExtensions|8.6%|0%|
 |MyNet.Globalization.GlobalizationOptions|85.7%||
-|MyNet.Globalization.GlobalizationService|18.1%||
+|MyNet.Globalization.GlobalizationService|31.8%||
 |MyNet.Globalization.Inflection.Cultures.Inflectors|100%||
 |MyNet.Globalization.Inflection.InflectionRule|100%|100%|
 |MyNet.Globalization.Inflection.InflectionRules|0%||
@@ -330,22 +331,22 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 82.8%</summary>
+<details><summary>MyNet.Observable - 83.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**82.8%**|**64.8%**|
+|**MyNet.Observable**|**83.3%**|**65.2%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
-|MyNet.Observable.BehaviorExtensions|56.2%||
+|MyNet.Observable.BehaviorExtensions|68.7%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
 |MyNet.Observable.Behaviors.BehaviorRegistry|91.4%|75%|
 |MyNet.Observable.Behaviors.CollectionTrackingBehavior|80.9%|58.8%|
-|MyNet.Observable.Behaviors.CultureChangedBehavior|63.6%|50%|
-|MyNet.Observable.Behaviors.EventBehavior`2|90.9%|75%|
+|MyNet.Observable.Behaviors.CultureChangedBehavior|90.9%|50%|
+|MyNet.Observable.Behaviors.EventBehavior`2|90.9%|83.3%|
 |MyNet.Observable.Behaviors.Metadata.Attributes.AlsoValidateAttribute|0%||
 |MyNet.Observable.Behaviors.Metadata.Features.ValidationDependencyFeature|100%||
 |MyNet.Observable.Behaviors.Metadata.MetadataApplicators|100%||
-|MyNet.Observable.Behaviors.MetadataBehaviorApplicator|95.2%|70%|
+|MyNet.Observable.Behaviors.MetadataBehaviorApplicator|96.7%|83.3%|
 |MyNet.Observable.Behaviors.ModificationTrackingBehavior|80.6%|62.8%|
 |MyNet.Observable.Behaviors.NotifyPropertyChangedSourceSnapshot|100%||
 |MyNet.Observable.Behaviors.ObservableBehavior`1|90.9%|50%|
@@ -354,7 +355,7 @@
 |MyNet.Observable.Behaviors.PropertyValueAccess|100%|70%|
 |MyNet.Observable.Behaviors.SelectionBehavior|80%|56.2%|
 |MyNet.Observable.Behaviors.SuspendableBehavior`1|100%|50%|
-|MyNet.Observable.Behaviors.TimeZoneChangedBehavior|63.6%|50%|
+|MyNet.Observable.Behaviors.TimeZoneChangedBehavior|90.9%|50%|
 |MyNet.Observable.Behaviors.ValidationBehavior`1|75.9%|59.6%|
 |MyNet.Observable.Behaviors.ValidationGraphVisitor|91.6%|83.3%|
 |MyNet.Observable.BoundedUnitValue`2|71.4%|33.3%|
@@ -609,11 +610,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 51.7%</summary>
+<details><summary>MyNet.UI - 51.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**51.7%**|**40.4%**|
+|**MyNet.UI**|**51.8%**|**40.6%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -793,8 +794,8 @@
 |MyNet.UI.ViewModels.Preferences.TimeAndLanguagePreferencesViewModel|0%|0%|
 |MyNet.UI.ViewModels.ServiceCollectionExtensions|0%||
 |MyNet.UI.ViewModels.Shell.About.AboutViewModel|0%|0%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|83.3%|55.5%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|71.4%|58.3%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|93.9%|70.8%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|66.6%|50%|
 |MyNet.UI.ViewModels.Shell.Drawers.ShellDrawerCoordinator|85.7%||
 |MyNet.UI.ViewModels.Shell.Drawers.ShellNotificationsHost|93.3%|50%|
 |MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|60%|
