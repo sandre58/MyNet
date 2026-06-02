@@ -16,6 +16,8 @@ namespace MyNet.Globalization.Facade;
 /// </summary>
 public static class GlobalizationServices
 {
+    private static readonly GlobalizationServiceProxy CurrentProxy = new(CreateDefaultGlobalization());
+
     private static int _configured;
 
     /// <summary>
@@ -29,13 +31,14 @@ public static class GlobalizationServices
         if (Interlocked.Exchange(ref _configured, 1) == 1)
             return;
 
-        Current = globalization;
+        CurrentProxy.SetTarget(globalization);
     }
 
     /// <summary>
     /// Gets the combined <see cref="IGlobalizationService"/> providing both culture and time zone management.
+    /// The returned instance is stable for the application lifetime; <see cref="Configure"/> only replaces its target.
     /// </summary>
-    public static IGlobalizationService Current { get; private set; } = CreateDefaultGlobalization();
+    public static IGlobalizationService Current => CurrentProxy;
 
     private static GlobalizationService CreateDefaultGlobalization()
     {

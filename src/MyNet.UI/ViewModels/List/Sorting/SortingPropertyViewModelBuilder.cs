@@ -45,7 +45,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     /// <summary>
     /// Sets the display name using a resource key.
     /// </summary>
-    public SortingPropertyViewModelBuilder<T> WithDisplayName(string displayName) => WithDisplayName(new CultureBoundValue<string>(() => displayName));
+    public SortingPropertyViewModelBuilder<T> WithDisplayName(string displayName) => WithDisplayName(new LocalizedString(displayName));
 
     /// <summary>
     /// Sets the default sorting direction to ascending. This means that when this sorting property is applied, it will sort in ascending order by default unless explicitly changed by the user. This method is a convenience method for setting the default direction without having to specify the enum value directly.
@@ -77,7 +77,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     internal SortingPropertyDefinition<T> Build()
     {
         var key = ResolveKey();
-        var displayName = _displayName ?? new CultureBoundValue<string>(() => key);
+        var displayName = _displayName ?? new LocalizedString(key);
 
         return new(key, expression, displayName, _defaultState);
     }

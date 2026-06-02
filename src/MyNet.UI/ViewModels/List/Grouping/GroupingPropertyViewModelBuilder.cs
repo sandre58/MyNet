@@ -58,7 +58,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
     internal GroupingPropertyDefinition<T> Build()
     {
         var key = ResolveKey();
-        var displayName = _displayName ?? new CultureBoundValue<string>(() => key);
+        var displayName = _displayName ?? new LocalizedString(key);
 
         return new(key, expression, displayName, _defaultState);
     }

@@ -6,9 +6,11 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using MyNet.Globalization.Facade;
 using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
+using MyNet.Observable.Behaviors.Metadata.Features.Events;
 
 namespace MyNet.Observable.Behaviors;
 
@@ -29,6 +31,9 @@ public static class MetadataBehaviorApplicator
 
         AppliedOwners.Add(owner, null);
 
+        var needsCulture = false;
+        var needsTimeZone = false;
+
         for (var current = owner.GetType(); current is not null && typeof(ObservableObject).IsAssignableFrom(current); current = current.BaseType)
         {
             var typeMetadata = MetadataRegistry.Get(current);
@@ -41,7 +46,19 @@ public static class MetadataBehaviorApplicator
 
                 ReplaceForwardingBehavior(owner, propertyName, feature.ConcatenatePropertyName);
             }
+
+            if (!needsCulture)
+                needsCulture = typeMetadata.WithFeature<EventReactionFeature>(x => x.Events.Contains(typeof(CultureChangedEvent))).Length > 0;
+
+            if (!needsTimeZone)
+                needsTimeZone = typeMetadata.WithFeature<EventReactionFeature>(x => x.Events.Contains(typeof(TimeZoneChangedEvent))).Length > 0;
         }
+
+        if (needsCulture)
+            owner.ReactOnCultureChanged(GlobalizationServices.Current);
+
+        if (needsTimeZone)
+            owner.ReactOnTimeZoneChanged(GlobalizationServices.Current);
     }
 
     /// <summary>
