@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/02/2026 - 21:41:28 |
-| Coverage date: | 06/02/2026 - 21:38:42 - 06/02/2026 - 21:39:33 |
+| Generated on: | 06/03/2026 - 07:05:17 |
+| Coverage date: | 06/03/2026 - 07:01:35 - 06/03/2026 - 07:02:22 |
 | Parser: | MultiReport (65x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 671 |
-| Files: | 626 |
-| **Line coverage:** | 72.9% (10265 of 14075) |
-| Covered lines: | 10265 |
-| Uncovered lines: | 3810 |
-| Coverable lines: | 14075 |
-| Total lines: | 57766 |
-| **Branch coverage:** | 60.4% (3963 of 6552) |
-| Covered branches: | 3963 |
-| Total branches: | 6552 |
+| Classes: | 673 |
+| Files: | 628 |
+| **Line coverage:** | 73% (10331 of 14133) |
+| Covered lines: | 10331 |
+| Uncovered lines: | 3802 |
+| Coverable lines: | 14133 |
+| Total lines: | 58166 |
+| **Branch coverage:** | 60.4% (3970 of 6562) |
+| Covered branches: | 3970 |
+| Total branches: | 6562 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 285_26849489377 |
+| Tag: | 287_26868967931 |
 
 </details>
 
@@ -610,11 +610,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 51.8%</summary>
+<details><summary>MyNet.UI - 52.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**51.8%**|**40.6%**|
+|**MyNet.UI**|**52.7%**|**40.8%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -645,6 +645,7 @@
 |MyNet.UI.Dialogs.MessageBox.MessageBoxService|89.2%|25%|
 |MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|6.6%|
 |MyNet.UI.Dialogs.ServiceCollectionExtensions|46.6%|100%|
+|MyNet.UI.Extensions.UiBuilder|58.3%|66.6%|
 |MyNet.UI.Helpers.ApplicationHelper|100%|50%|
 |MyNet.UI.Helpers.IoHelper|100%|83.3%|
 |MyNet.UI.Loading.BusyExtensions|4%||
@@ -688,10 +689,11 @@
 |MyNet.UI.Notifications.NotificationsManager|90.3%|77.2%|
 |MyNet.UI.Notifications.Processors.EmptyNotificationFilter|100%|100%|
 |MyNet.UI.Notifications.ServiceCollectionExtensions|100%|50%|
+|MyNet.UI.ServiceCollectionExtensions|62.5%||
 |MyNet.UI.Services.FileHistory.RecentFilesOperations|0%|0%|
 |MyNet.UI.Services.PreferencesService|0%|0%|
 |MyNet.UI.Services.ServiceCollectionExtensions|0%||
-|MyNet.UI.Theming.ServiceCollectionExtensions|100%||
+|MyNet.UI.Theming.ServiceCollectionExtensions|100%|75%|
 |MyNet.UI.Theming.ThemeChangedEventArgs|100%||
 |MyNet.UI.Theming.ThemeManager|54.5%|44.4%|
 |MyNet.UI.Threading.ServiceCollectionExtensions|100%||
@@ -792,7 +794,7 @@
 |MyNet.UI.ViewModels.Preferences.PreferencesTabWorkspace|100%||
 |MyNet.UI.ViewModels.Preferences.PreferencesViewModel|92.5%|83.3%|
 |MyNet.UI.ViewModels.Preferences.TimeAndLanguagePreferencesViewModel|0%|0%|
-|MyNet.UI.ViewModels.ServiceCollectionExtensions|0%||
+|MyNet.UI.ViewModels.ServiceCollectionExtensions|100%||
 |MyNet.UI.ViewModels.Shell.About.AboutViewModel|0%|0%|
 |MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|93.9%|70.8%|
 |MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|66.6%|50%|
