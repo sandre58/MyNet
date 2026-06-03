@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.3] - 2026-06-02
+## [v19.3.4] - 2026-06-03
 
 
 ### 🐛 Bug Fixes
 
-- Update display name handling to use LocalizedString and implement culture/time zone change reactions *(commit by **Stéphane ANDRE (E104915)** in [a5174127](https://github.com/sandre58/MyNet/commit/a51741279128672b6e320a691d53ec89206b17c3))*
+- Refactor UI service registration and enhance documentation for AddUi and UseUi methods *(commit by **Stéphane ANDRE (E104915)** in [82db6c96](https://github.com/sandre58/MyNet/commit/82db6c969a3a5ac945eabce00879b62d787ead7c))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.2...v19.3.3](https://github.com/sandre58/MyNet/compare/v19.3.2...v19.3.3)
+**Full Changelog:** [compare v19.3.3...v19.3.4](https://github.com/sandre58/MyNet/compare/v19.3.3...v19.3.4)
 
 
 ---
