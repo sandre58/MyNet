@@ -161,6 +161,36 @@ public sealed class MetadataProviderGeneratorTests
     }
 
     [Fact]
+    public void LazyBootstrap_AppliesMetadataForAbstractBaseType()
+    {
+        const string source = """
+                              using MyNet.Observable;
+                              using MyNet.Observable.Behaviors.Metadata.Attributes;
+                              using MyNet.Observable.Behaviors.Metadata.Features.Events;
+                              using MyNet.Metadata;
+
+                              namespace Demo;
+
+                              public abstract class BaseVm : ObservableObject
+                              {
+                                  [UpdateOnCultureChanged]
+                                  public string Title { get; set; } = string.Empty;
+                              }
+
+                              public sealed class Vm : BaseVm
+                              {
+                              }
+
+                              """;
+
+        var metadata = CompileAndGetMetadata(source, "Demo.BaseVm", "Title");
+
+        Assert.True(metadata.TryGetFeature<EventReactionFeature>(out var feature));
+        Assert.NotNull(feature);
+        Assert.Contains(typeof(CultureChangedEvent), feature.Events);
+    }
+
+    [Fact]
     public void ReportsStrictDiagnostic_WhenObservableObjectHasNoGeneratedProvider()
     {
         const string source = """

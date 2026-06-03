@@ -68,9 +68,6 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
         if (context.SemanticModel.GetDeclaredSymbol(classSyntax) is not INamedTypeSymbol typeSymbol)
             return null;
 
-        if (typeSymbol.IsAbstract)
-            return null;
-
         var observableObjectSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName(ObservableObjectType);
         if (observableObjectSymbol is null || !InheritsFrom(typeSymbol, observableObjectSymbol))
             return null;

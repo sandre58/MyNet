@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using MyNet.Metadata;
 using MyNet.Observable.Behaviors.Metadata.Features;
 
@@ -26,9 +28,7 @@ public abstract class EventBehavior<TOwner, TEvent>(TOwner owner) : SuspendableB
         if (IsDisposed || IsSuspended)
             return;
 
-        var properties = MetadataRegistry.Get(Owner.GetType()).WithFeature<EventReactionFeature>(x => x.Events.Contains(typeof(TEvent)));
-
-        foreach (var property in properties)
+        foreach (var property in GetEventReactionProperties(Owner.GetType()))
         {
             Owner.NotifyPropertyChanged(property);
         }
@@ -41,6 +41,20 @@ public abstract class EventBehavior<TOwner, TEvent>(TOwner owner) : SuspendableB
             case IAsyncEventAware<TEvent> asyncAware:
                 _ = asyncAware.OnEventAsync(evt);
                 break;
+        }
+    }
+
+    private static IEnumerable<string> GetEventReactionProperties(Type ownerType)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        for (var current = ownerType; current is not null && typeof(ObservableObject).IsAssignableFrom(current); current = current.BaseType)
+        {
+            foreach (var property in MetadataRegistry.Get(current).WithFeature<EventReactionFeature>(x => x.Events.Contains(typeof(TEvent))))
+            {
+                if (seen.Add(property))
+                    yield return property;
+            }
         }
     }
 }

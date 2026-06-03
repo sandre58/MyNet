@@ -26,6 +26,17 @@
                           ReferenceOutputAssembly="false" />
     </ItemGroup>
 
+    <!-- NuGet pack does not always pick up ProjectReference analyzers; include explicitly. -->
+    <Target Name="_PackObservableAnalyzers" BeforeTargets="_GetPackageFiles" Condition="'$(IsPackable)' == 'true'">
+        <ItemGroup>
+            <None Include="..\MyNet.Observable.Metadata.Generator\bin\$(Configuration)\netstandard2.0\MyNet.Observable.Metadata.Generator.dll"
+                  Pack="true"
+                  PackagePath="analyzers/dotnet/cs"
+                  Visible="false"
+                  Condition="Exists('..\MyNet.Observable.Metadata.Generator\bin\$(Configuration)\netstandard2.0\MyNet.Observable.Metadata.Generator.dll')" />
+        </ItemGroup>
+    </Target>
+
     <ItemGroup>
         <Compile Update="Resources\ValidationResources.Designer.cs">
             <DesignTime>True</DesignTime>

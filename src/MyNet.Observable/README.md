@@ -1,8 +1,8 @@
-<div align="center">
+﻿<div align="center">
 
 # MyNet.Observable
 
-<img src="../../assets/MyNetObservable.png" alt="MyNet.Observable" width="96" height="96" />
+<img src="MyNetObservable.png" alt="MyNet.Observable" width="96" height="96" />
 
 *MVVM-oriented observable models with INotifyPropertyChanged, edition tracking, FluentValidation, metadata, and an included Roslyn source generator.*
 
