@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.4] - 2026-06-03
+## [v19.3.5] - 2026-06-03
 
 
 ### 🐛 Bug Fixes
 
-- Refactor UI service registration and enhance documentation for AddUi and UseUi methods *(commit by **Stéphane ANDRE (E104915)** in [82db6c96](https://github.com/sandre58/MyNet/commit/82db6c969a3a5ac945eabce00879b62d787ead7c))*
+- Enhance ShellCultureViewModel and ShellThemeViewModel with command support for culture and theme changes *(commit by **Stéphane ANDRE (E104915)** in [99eb4be0](https://github.com/sandre58/MyNet/commit/99eb4be0eb3d8c7bbec923825dd80020ba6175c8))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.3...v19.3.4](https://github.com/sandre58/MyNet/compare/v19.3.3...v19.3.4)
+**Full Changelog:** [compare v19.3.4...v19.3.5](https://github.com/sandre58/MyNet/compare/v19.3.4...v19.3.5)
 
 
 ---
