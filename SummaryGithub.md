@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/03/2026 - 07:05:17 |
-| Coverage date: | 06/03/2026 - 07:01:35 - 06/03/2026 - 07:02:22 |
-| Parser: | MultiReport (65x Cobertura) |
+| Generated on: | 06/03/2026 - 17:05:11 |
+| Coverage date: | 06/03/2026 - 17:01:53 - 06/03/2026 - 17:02:43 |
+| Parser: | MultiReport (62x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 673 |
 | Files: | 628 |
-| **Line coverage:** | 73% (10331 of 14133) |
-| Covered lines: | 10331 |
+| **Line coverage:** | 73.1% (10338 of 14140) |
+| Covered lines: | 10338 |
 | Uncovered lines: | 3802 |
-| Coverable lines: | 14133 |
-| Total lines: | 58166 |
-| **Branch coverage:** | 60.4% (3970 of 6562) |
-| Covered branches: | 3970 |
-| Total branches: | 6562 |
+| Coverable lines: | 14140 |
+| Total lines: | 58078 |
+| **Branch coverage:** | 60.5% (3977 of 6570) |
+| Covered branches: | 3977 |
+| Total branches: | 6570 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 287_26868967931 |
+| Tag: | 290_26900097121 |
 
 </details>
 
@@ -116,11 +116,11 @@
 |MyNet.Geography.Resources.ServiceCollectionExtensions|100%||
 
 </details>
-<details><summary>MyNet.Globalization - 85.2%</summary>
+<details><summary>MyNet.Globalization - 85.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Globalization**|**85.2%**|**79%**|
+|**MyNet.Globalization**|**85.3%**|**79.5%**|
 |MyNet.Globalization.Culture.CultureChangedEventArgs|100%||
 |MyNet.Globalization.Culture.CultureService|100%|100%|
 |MyNet.Globalization.Culture.SupportedCultures|100%||
@@ -131,7 +131,7 @@
 |MyNet.Globalization.Facade.CultureExtensions|0%||
 |MyNet.Globalization.Facade.DateTimeExtensions|0%|0%|
 |MyNet.Globalization.Facade.GlobalizationServiceProxy|67.6%|50%|
-|MyNet.Globalization.Facade.GlobalizationServices|90%|50%|
+|MyNet.Globalization.Facade.GlobalizationServices|100%|100%|
 |MyNet.Globalization.Facade.InflectorExtensions|68.4%|88.2%|
 |MyNet.Globalization.Facade.LocalizationRuntime|100%|100%|
 |MyNet.Globalization.Facade.Localizer|91.3%|50%|
@@ -331,18 +331,18 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 83.3%</summary>
+<details><summary>MyNet.Observable - 83.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**83.3%**|**65.2%**|
+|**MyNet.Observable**|**83.4%**|**65.3%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|68.7%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
 |MyNet.Observable.Behaviors.BehaviorRegistry|91.4%|75%|
 |MyNet.Observable.Behaviors.CollectionTrackingBehavior|80.9%|58.8%|
 |MyNet.Observable.Behaviors.CultureChangedBehavior|90.9%|50%|
-|MyNet.Observable.Behaviors.EventBehavior`2|90.9%|83.3%|
+|MyNet.Observable.Behaviors.EventBehavior`2|93.7%|80%|
 |MyNet.Observable.Behaviors.Metadata.Attributes.AlsoValidateAttribute|0%||
 |MyNet.Observable.Behaviors.Metadata.Features.ValidationDependencyFeature|100%||
 |MyNet.Observable.Behaviors.Metadata.MetadataApplicators|100%||
@@ -425,12 +425,12 @@
 |MyNet.Observable.ValidationExtensions|50%|100%|
 
 </details>
-<details><summary>MyNet.Observable.Metadata.Generator - 86%</summary>
+<details><summary>MyNet.Observable.Metadata.Generator - 86.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable.Metadata.Generator**|**86%**|**65.3%**|
-|MyNet.Observable.Metadata.Generator.MetadataProviderGenerator|86.1%|70.3%|
+|**MyNet.Observable.Metadata.Generator**|**86.2%**|**65.4%**|
+|MyNet.Observable.Metadata.Generator.MetadataProviderGenerator|86.4%|70.7%|
 |MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer|81.5%|58%|
 |MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator|89%|63.4%|
 
@@ -796,8 +796,8 @@
 |MyNet.UI.ViewModels.Preferences.TimeAndLanguagePreferencesViewModel|0%|0%|
 |MyNet.UI.ViewModels.ServiceCollectionExtensions|100%||
 |MyNet.UI.ViewModels.Shell.About.AboutViewModel|0%|0%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|93.9%|70.8%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|66.6%|50%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|94.2%|69.2%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|61.5%|50%|
 |MyNet.UI.ViewModels.Shell.Drawers.ShellDrawerCoordinator|85.7%||
 |MyNet.UI.ViewModels.Shell.Drawers.ShellNotificationsHost|93.3%|50%|
 |MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|60%|
