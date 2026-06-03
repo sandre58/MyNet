@@ -6,14 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.2] - 2026-06-02
+## [v19.3.3] - 2026-06-02
 
 
 ### 🐛 Bug Fixes
 
-- Refactor culture and theme synchronization to prevent reentrant updates *(commit by **Stéphane ANDRE (E104915)** in [a9673164](https://github.com/sandre58/MyNet/commit/a967316463997d589686df21698c39921cb98199))*
-
-- Add click command support for ActionNotification in Toast creation *(commit by **Stéphane ANDRE (E104915)** in [2adc0fd2](https://github.com/sandre58/MyNet/commit/2adc0fd214c751fe13c293bcd4c2a6b4b7aa90ad))*
+- Update display name handling to use LocalizedString and implement culture/time zone change reactions *(commit by **Stéphane ANDRE (E104915)** in [a5174127](https://github.com/sandre58/MyNet/commit/a51741279128672b6e320a691d53ec89206b17c3))*
 
 
 
@@ -24,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.1...v19.3.2](https://github.com/sandre58/MyNet/compare/v19.3.1...v19.3.2)
+**Full Changelog:** [compare v19.3.2...v19.3.3](https://github.com/sandre58/MyNet/compare/v19.3.2...v19.3.3)
 
 
 ---
