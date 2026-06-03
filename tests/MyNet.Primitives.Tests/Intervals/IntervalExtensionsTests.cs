@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using MyNet.Primitives.Intervals;
 using Xunit;
 

@@ -22,23 +22,19 @@ Register services in your host (examples vary by UI stack):
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using MyNet.Globalization.Extensions;
+using MyNet.UI;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Locators;
-using MyNet.UI.Navigation;
-using MyNet.UI.Notifications;
-using MyNet.UI.Toasting;
-using MyNet.UI.ViewModels;
 
 var services = new ServiceCollection();
-services.AddGlobalization();
-services.AddViewLocators();
-services.AddDialogs(b => b.AddPresenter<MyDialogPresenter>()); // your IDialogPresenter
-services.AddNavigation();
-services.AddNotifications();
-services.AddToasting();
-services.AddShell();
-// Register ShellHostViewModel + views in your host project
+services.AddUi(b => b
+    .ConfigureViewLocators(r => r.Register(typeof(MainViewModel), typeof(MainView)))
+    .ConfigureDialogs(d => d.AddPresenter<MyDialogPresenter>())); // your IDialogPresenter
+
+// Register ShellHostViewModel, IThemeService, IThemeBaseRegistry, and views in your host project
+
+var provider = services.BuildServiceProvider();
+provider.UseUi();
 ```
 
 See [UI](guides/ui.md), [Dialogs](guides/dialogs.md), [Notifications & toasts](guides/notifications-and-toasts.md), [Shell](guides/shell.md), and [Observable](guides/observable.md).

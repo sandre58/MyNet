@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using MyNet.Globalization.Culture;
 using MyNet.Globalization.DateTime;

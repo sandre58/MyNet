@@ -166,9 +166,12 @@ services.AddShellPreferences(); // DisplayPreferencesViewModel
 
 var provider = services.BuildServiceProvider();
 provider.UseThemeManager(); // wires ThemeManager static bridge
+// or: provider.UseUi(); // configures ThemeManager only when both services are registered
 ```
 
 `UseThemeManager()` calls `ThemeManager.Configure(themeService, registry)` — required if legacy code or XAML uses `ThemeManager` static members.
+
+`UseThemeManagerIfAvailable()` (also invoked from `UseUi()`) configures the static bridge only when both `IThemeService` and `IThemeBaseRegistry` are registered; otherwise it is a no-op (useful for tests and hosts without theming).
 
 ### 3. Subscribe in the UI layer
 
@@ -409,6 +412,8 @@ Mock `IThemeService` for view-model tests (`DisplayPreferencesViewModelTests`, `
 | `src/MyNet.UI/Theming/IThemeBaseRegistry.cs` | Registry contract |
 | `src/MyNet.UI/Theming/Theme.cs` | Theme record |
 | `src/MyNet.UI/Theming/ThemeManager.cs` | Static bridge |
-| `src/MyNet.UI/Theming/Extensions/ServiceCollectionExtensions.cs` | `UseThemeManager()` |
+| `src/MyNet.UI/Theming/Extensions/ServiceCollectionExtensions.cs` | `UseThemeManager()`, `UseThemeManagerIfAvailable()` |
+| `src/MyNet.UI/Extensions/ServiceCollectionExtensions.cs` | `AddUi()`, `UseUi()` |
+| `src/MyNet.UI/Extensions/UiBuilder.cs` | Optional UI DI configuration |
 | `src/MyNet.UI/ViewModels/Preferences/DisplayPreferencesViewModel.cs` | Preferences UI |
 | `src/MyNet.UI/ViewModels/Shell/Chrome/ShellThemeViewModel.cs` | Shell toggle |

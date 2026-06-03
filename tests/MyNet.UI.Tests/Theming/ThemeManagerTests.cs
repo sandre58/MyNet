@@ -13,6 +13,7 @@ using Xunit;
 
 namespace MyNet.UI.Tests.Theming;
 
+[Collection(nameof(ThemeManagerTests))]
 public sealed class ThemeManagerTests : IDisposable
 {
     public ThemeManagerTests() => ThemeManager.ResetForTesting();
@@ -56,6 +57,31 @@ public sealed class ThemeManagerTests : IDisposable
 
         ThemeManager.IsConfigured.Should().BeTrue();
         ThemeManager.CurrentTheme.Should().BeSameAs(service.CurrentTheme);
+    }
+
+    [Fact]
+    public void UseThemeManagerIfAvailable_skips_when_services_missing()
+    {
+        using var provider = new ServiceCollection().BuildServiceProvider();
+
+        provider.UseThemeManagerIfAvailable();
+
+        ThemeManager.IsConfigured.Should().BeFalse();
+    }
+
+    [Fact]
+    public void UseThemeManagerIfAvailable_configures_when_services_present()
+    {
+        var service = new FakeThemeService();
+        var registry = new FakeThemeBaseRegistry();
+        var provider = new ServiceCollection()
+            .AddSingleton<IThemeService>(service)
+            .AddSingleton<IThemeBaseRegistry>(registry)
+            .BuildServiceProvider();
+
+        provider.UseThemeManagerIfAvailable();
+
+        ThemeManager.IsConfigured.Should().BeTrue();
     }
 
     private sealed class FakeThemeBase(string name, bool isDark, bool isHighContrast) : IThemeBase

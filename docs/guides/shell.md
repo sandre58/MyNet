@@ -6,6 +6,21 @@ Application **shell**: host view model, drawers (notifications, file menu), task
 
 ## Registration
 
+`AddUi()` registers dialogs, notifications, toasting, and shell in the correct order. Prefer `AddShellPreferences()` on the `UiBuilder` when you use the preferences workspace:
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using MyNet.UI;
+using MyNet.UI.ViewModels;
+
+services.AddUi(b => b.AddShellPreferences());
+
+services.AddSingleton<ShellHostViewModel>();
+services.AddTransient<PreferencesViewModel>();
+```
+
+Granular registration:
+
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using MyNet.UI.Dialogs;
@@ -19,7 +34,6 @@ services.AddToasting();
 services.AddShell();
 services.AddShellPreferences(); // display + time/language preference pages
 
-// Host application — register shell VM with your root content
 services.AddSingleton<ShellHostViewModel>();
 services.AddTransient<PreferencesViewModel>();
 ```

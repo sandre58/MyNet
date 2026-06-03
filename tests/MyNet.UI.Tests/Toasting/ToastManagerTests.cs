@@ -74,7 +74,7 @@ public class ToastManagerTests
             new TestSchedulerProvider(),
             new FrozenAutoCloseToastFactory(),
             new AllToastsFilter(),
-            new ToastManagerOptions { DefaultDuration = TimeSpan.FromMilliseconds(50) });
+            new() { DefaultDuration = TimeSpan.FromMilliseconds(50) });
 
         service.Publish(new MessageNotification("hello"));
 

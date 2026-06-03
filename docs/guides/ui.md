@@ -48,7 +48,57 @@ Code lives under [`src/MyNet.UI`](../../src/MyNet.UI).
 
 ---
 
-## DI registration (typical)
+## DI registration
+
+### Quick bootstrap (`AddUi` / `UseUi`)
+
+Registers globalization, localization, humanizer, busy state, navigation, locators, dialogs (headless defaults), notifications, toasts, shell, and UI translation resources. Call `UseUi()` after `BuildServiceProvider()` to wire static facades (globalization, localizer, humanizer, FluentValidation).
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using MyNet.Globalization.Culture;
+using MyNet.UI;
+using MyNet.UI.Dialogs;
+using MyNet.UI.Locators;
+using MyNet.UI.Navigation;
+using YourApp.UI.Theming;
+
+var services = new ServiceCollection();
+
+services.AddUi(b => b
+    .WithSupportedCultures([SupportedCultures.French, SupportedCultures.English])
+    .ConfigureViewLocators(r => r.Register(typeof(MainViewModel), typeof(MainView)))
+    .ConfigureDialogs(d => d.AddPresenter<MyDialogPresenter>())
+    .ConfigureNavigation(s => s.AddNavigationGuard<UnsavedChangesGuard>())
+    .AddShellPreferences());
+
+// Host: theme (optional for UseUi — configures ThemeManager only when both are registered)
+services.AddSingleton<IThemeBaseRegistry, ThemeBaseRegistry>();
+services.AddSingleton<IThemeService, ThemeService>();
+services.AddSingleton<ShellHostViewModel>();
+
+var provider = services.BuildServiceProvider();
+provider.UseUi();
+```
+
+A parameterless overload registers the same stack with default shell cultures (French and English):
+
+```csharp
+services.AddUi();
+```
+
+| `UiBuilder` method | Purpose |
+|--------------------|---------|
+| `WithSupportedCultures` | Cultures in shell chrome selector |
+| `ConfigureDialogs` | Platform `IDialogPresenter`, file dialogs, etc. |
+| `ConfigureViewLocators` | Manual ViewModel ↔ View mappings |
+| `ConfigureNavigation` | Guards and middleware (after `AddNavigation`) |
+| `ConfigureNotifications` / `ConfigureToasting` | Optional processor and toast options |
+| `AddShellPreferences` | Display and time/language preference pages |
+
+`UseUi()` calls `UseThemeManagerIfAvailable()`: if `IThemeService` and `IThemeBaseRegistry` are not in DI, theming statics are skipped (tests and minimal hosts). Register both in the host when you need `ThemeManager` or shell theme view models.
+
+### Granular registration (typical)
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -154,7 +204,8 @@ On failure (no mapping, incompatible type, instantiation error), `ViewResolution
 - `Conventions/` — naming strategies (`TypeNamingConventionBase`, helpers)
 - `Factories/ViewFactory.cs` — orchestration
 - `ViewLocator.cs`, `ViewModelLocator.cs` — instantiation
-- `ServiceCollectionExtensions.cs` — DI registration
+- `Extensions/ServiceCollectionExtensions.cs` — `AddUi`, `UseUi`
+- `Extensions/UiBuilder.cs` — optional UI DI configuration
 
 See also [`src/MyNet.UI/Locators/README.md`](../../src/MyNet.UI/Locators/README.md) if present.
 
