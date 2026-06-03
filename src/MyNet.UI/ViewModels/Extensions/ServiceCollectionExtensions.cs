@@ -9,6 +9,7 @@ using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyNet.Globalization.Culture;
+using MyNet.UI.Commands;
 using MyNet.UI.Dialogs.ContentDialogs;
 using MyNet.UI.Loading;
 using MyNet.UI.Services;
@@ -51,7 +52,7 @@ public static class ServiceCollectionExtensions
             services.TryAddSingleton<IFileMenuViewModelFactory, FileMenuViewModelFactory>();
 
             services.TryAddTransient<ShellNotificationsViewModel>();
-            services.TryAddTransient(sp => new ShellCultureViewModel(sp.GetRequiredService<ICultureService>(), supportedCultures));
+            services.TryAddTransient(sp => new ShellCultureViewModel(sp.GetRequiredService<ICultureService>(), sp.GetService<ICommandFactory>(), supportedCultures));
             services.TryAddTransient<ShellThemeViewModel>();
             services.TryAddTransient<SplashScreenViewModel>();
             services.TryAddTransient<AboutViewModel>();

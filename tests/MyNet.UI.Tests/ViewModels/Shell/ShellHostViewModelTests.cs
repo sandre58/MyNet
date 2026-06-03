@@ -157,7 +157,7 @@ public class ShellHostViewModelTests
         return new(
             applicationInfo,
             notificationsVm,
-            new(cultureService, [SupportedCultures.English]),
+            new(cultureService, null, [SupportedCultures.English]),
             new(theme.Object, registry.Object),
             Mock.Of<IAppCommandsService>(),
             new NoOpBusyService(),

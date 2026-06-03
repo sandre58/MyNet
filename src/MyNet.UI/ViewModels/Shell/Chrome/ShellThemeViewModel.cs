@@ -37,12 +37,15 @@ public sealed class ShellThemeViewModel : ViewModelBase
         var commands = commandFactory ?? RelayCommandFactory.Default;
         IsDarkCommand = commands.Create(() => IsDark = true);
         IsLightCommand = commands.Create(() => IsDark = false);
+        ChangeThemeCommand = commands.CreateRequired<IThemeBase>(themeBase => _themeService.ApplyBaseTheme(themeBase));
 
         IsDark = _themeService.CurrentTheme.Base.IsDark;
 
         _themeService.ThemeChanged += OnThemeServiceThemeChanged;
         Disposables.Add(Disposable.Create(() => _themeService.ThemeChanged -= OnThemeServiceThemeChanged));
     }
+
+    public IThemeBase CurrentTheme => _themeService.CurrentTheme.Base;
 
     /// <summary>
     /// Gets or sets a value indicating whether the dark theme base is active.
@@ -75,6 +78,11 @@ public sealed class ShellThemeViewModel : ViewModelBase
     /// </summary>
     public ICommand IsLightCommand { get; }
 
+    /// <summary>
+    /// Gets the command that toggles between light and dark theme bases.
+    /// </summary>
+    public ICommand ChangeThemeCommand { get; }
+
     private void OnThemeServiceThemeChanged(object? sender, ThemeChangedEventArgs e)
     {
         var isDark = e.CurrentTheme.Base.IsDark;
@@ -83,5 +91,7 @@ public sealed class ShellThemeViewModel : ViewModelBase
 
         using (_themeSyncSuspender.Suspend())
             IsDark = isDark;
+
+        NotifyPropertyChanged(nameof(CurrentTheme));
     }
 }

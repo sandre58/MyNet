@@ -18,7 +18,7 @@ public class ShellCultureViewModelTests
     public void Constructor_SyncsSelectedCultureFromService()
     {
         var cultureService = new CultureService(SupportedCultures.English);
-        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+        var sut = new ShellCultureViewModel(cultureService, null, [SupportedCultures.English, SupportedCultures.French]);
 
         sut.SelectedCulture.Should().Be(SupportedCultures.English);
         sut.Cultures.Should().HaveCount(2);
@@ -28,7 +28,7 @@ public class ShellCultureViewModelTests
     public void SelectedCulture_WhenSet_UpdatesCultureService()
     {
         var cultureService = new CultureService(SupportedCultures.English);
-        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+        var sut = new ShellCultureViewModel(cultureService, null, [SupportedCultures.English, SupportedCultures.French]);
 
         sut.SelectedCulture = SupportedCultures.French;
 
@@ -39,7 +39,7 @@ public class ShellCultureViewModelTests
     public void Constructor_ResolvesSelectedCultureToSupportedListInstance()
     {
         var cultureService = new CultureService(CultureInfo.GetCultureInfo("en-US"));
-        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+        var sut = new ShellCultureViewModel(cultureService, null, [SupportedCultures.English, SupportedCultures.French]);
 
         sut.SelectedCulture.Should().BeSameAs(SupportedCultures.English);
     }
@@ -48,7 +48,7 @@ public class ShellCultureViewModelTests
     public void CultureChanged_SyncsSelectedCultureWithoutReentrantSetCulture()
     {
         var cultureService = new CultureService(SupportedCultures.English);
-        var sut = new ShellCultureViewModel(cultureService, [SupportedCultures.English, SupportedCultures.French]);
+        var sut = new ShellCultureViewModel(cultureService, null, [SupportedCultures.English, SupportedCultures.French]);
         var setCultureCalls = 0;
         cultureService.CultureChanged += (_, _) => setCultureCalls++;
 

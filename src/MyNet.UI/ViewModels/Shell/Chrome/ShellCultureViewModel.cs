@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Windows.Input;
 using MyNet.Globalization.Culture;
+using MyNet.UI.Commands;
 using MyNet.Utilities.Suspending;
 
 namespace MyNet.UI.ViewModels.Shell.Chrome;
@@ -27,6 +29,7 @@ public sealed class ShellCultureViewModel : ViewModelBase
     /// Initializes a new instance of the <see cref="ShellCultureViewModel"/> class.
     /// </summary>
     /// <param name="cultureService">Application culture service.</param>
+    /// <param name="commandFactory">Factory to create commands.</param>
     /// <param name="supportedCultures">
     /// Cultures offered in the selector. When omitted, <see cref="SupportedCultures.French"/> and
     /// <see cref="SupportedCultures.English"/> are used. Register a custom factory in DI to define
@@ -34,9 +37,11 @@ public sealed class ShellCultureViewModel : ViewModelBase
     /// </param>
     public ShellCultureViewModel(
         ICultureService cultureService,
+        ICommandFactory? commandFactory = null,
         IEnumerable<CultureInfo>? supportedCultures = null)
     {
         _cultureService = cultureService ?? throw new ArgumentNullException(nameof(cultureService));
+        var commands = commandFactory ?? RelayCommandFactory.Default;
 
         foreach (var culture in supportedCultures ?? [SupportedCultures.French, SupportedCultures.English])
             Cultures.Add(culture);
@@ -47,6 +52,8 @@ public sealed class ShellCultureViewModel : ViewModelBase
 
         _cultureService.CultureChanged += OnCultureServiceCultureChanged;
         Disposables.Add(Disposable.Create(() => _cultureService.CultureChanged -= OnCultureServiceCultureChanged));
+
+        ChangeCultureCommand = commands.Create<CultureInfo>(cultureInfo => SelectedCulture = cultureInfo);
     }
 
     /// <summary>
@@ -75,6 +82,11 @@ public sealed class ShellCultureViewModel : ViewModelBase
             _cultureService.SetCulture(culture);
         }
     }
+
+    /// <summary>
+    /// Gets the command to change the current culture. The command parameter is the target culture.
+    /// </summary>
+    public ICommand ChangeCultureCommand { get; }
 
     private void OnCultureServiceCultureChanged(object? sender, CultureChangedEventArgs e)
     {
