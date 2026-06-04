@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/03/2026 - 17:05:11 |
-| Coverage date: | 06/03/2026 - 17:01:53 - 06/03/2026 - 17:02:43 |
+| Generated on: | 06/04/2026 - 21:11:57 |
+| Coverage date: | 06/04/2026 - 21:08:27 - 06/04/2026 - 21:09:15 |
 | Parser: | MultiReport (62x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 673 |
-| Files: | 628 |
-| **Line coverage:** | 73.1% (10338 of 14140) |
-| Covered lines: | 10338 |
-| Uncovered lines: | 3802 |
-| Coverable lines: | 14140 |
-| Total lines: | 58078 |
-| **Branch coverage:** | 60.5% (3977 of 6570) |
-| Covered branches: | 3977 |
-| Total branches: | 6570 |
+| Classes: | 682 |
+| Files: | 637 |
+| **Line coverage:** | 73.5% (10455 of 14221) |
+| Covered lines: | 10455 |
+| Uncovered lines: | 3766 |
+| Coverable lines: | 14221 |
+| Total lines: | 58615 |
+| **Branch coverage:** | 60.9% (3972 of 6516) |
+| Covered branches: | 3972 |
+| Total branches: | 6516 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 290_26900097121 |
+| Tag: | 292_26979594350 |
 
 </details>
 
@@ -610,15 +610,15 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 52.7%</summary>
+<details><summary>MyNet.UI - 54.6%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**52.7%**|**40.8%**|
+|**MyNet.UI**|**54.6%**|**41.9%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
-|MyNet.UI.Commands.CommandFactoryExtensions|86.6%||
+|MyNet.UI.Commands.CommandFactoryExtensions|87%|100%|
 |MyNet.UI.Commands.RelayCommand|100%|90%|
 |MyNet.UI.Commands.RelayCommand`1|87.5%|87.5%|
 |MyNet.UI.Commands.RelayCommandFactory|88.8%||
@@ -636,14 +636,19 @@
 |MyNet.UI.Dialogs.DialogServiceExtensions|100%|50%|
 |MyNet.UI.Dialogs.DialogServiceListExtensions|0%||
 |MyNet.UI.Dialogs.FileDialogs.CancelledFileDialogService|100%||
+|MyNet.UI.Dialogs.FileDialogs.FileDialogBuilderBase`2|83.3%||
 |MyNet.UI.Dialogs.FileDialogs.FileDialogResult|100%|100%|
+|MyNet.UI.Dialogs.FileDialogs.OpenFileDialogBuilder|75%||
 |MyNet.UI.Dialogs.FileDialogs.OpenFileDialogSettings|100%||
+|MyNet.UI.Dialogs.FileDialogs.OpenFolderDialogBuilder|0%||
 |MyNet.UI.Dialogs.FileDialogs.OpenFolderDialogSettings|50%||
+|MyNet.UI.Dialogs.FileDialogs.SaveFileDialogBuilder|66.6%||
 |MyNet.UI.Dialogs.FileDialogs.SaveFileDialogSettings|100%||
+|MyNet.UI.Dialogs.FileDialogServiceExtensions|66.6%||
 |MyNet.UI.Dialogs.MessageBox.DefaultMessageBoxFactory|100%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxBuilder|0%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxService|89.2%|25%|
-|MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|6.6%|
+|MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|0%|
 |MyNet.UI.Dialogs.ServiceCollectionExtensions|46.6%|100%|
 |MyNet.UI.Extensions.UiBuilder|58.3%|66.6%|
 |MyNet.UI.Helpers.ApplicationHelper|100%|50%|
@@ -684,11 +689,13 @@
 |MyNet.UI.Notifications.Models.DeduplicableMessageNotification|100%|50%|
 |MyNet.UI.Notifications.Models.MessageNotification|100%||
 |MyNet.UI.Notifications.Models.NotificationBase|50%||
-|MyNet.UI.Notifications.NotificationPublisherExtensions|100%|85.7%|
+|MyNet.UI.Notifications.NotificationBuilder|96.9%|100%|
+|MyNet.UI.Notifications.NotificationPublisherExtensions|92.8%|87.5%|
 |MyNet.UI.Notifications.NotificationService|78.9%|70%|
 |MyNet.UI.Notifications.NotificationsManager|90.3%|77.2%|
 |MyNet.UI.Notifications.Processors.EmptyNotificationFilter|100%|100%|
 |MyNet.UI.Notifications.ServiceCollectionExtensions|100%|50%|
+|MyNet.UI.Notifications.ValidationNotificationExtensions|100%|62.5%|
 |MyNet.UI.ServiceCollectionExtensions|62.5%||
 |MyNet.UI.Services.FileHistory.RecentFilesOperations|0%|0%|
 |MyNet.UI.Services.PreferencesService|0%|0%|
@@ -706,25 +713,25 @@
 |MyNet.UI.Toasting.Settings.ToastSettings|100%||
 |MyNet.UI.Toasting.ToastManager|72%|72.5%|
 |MyNet.UI.ViewModels.Crud.ChildItemViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|73%|
-|MyNet.UI.ViewModels.Crud.EditionViewModel|11.5%|10.5%|
+|MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|75%|
+|MyNet.UI.ViewModels.Crud.EditionViewModel|10.8%|8.8%|
 |MyNet.UI.ViewModels.Crud.ItemChangedEventArgs`1|100%||
 |MyNet.UI.ViewModels.Crud.ItemEditionViewModel`1|84.8%|50%|
 |MyNet.UI.ViewModels.Crud.ItemViewModel`1|64%|50%|
 |MyNet.UI.ViewModels.Crud.StringListEditionViewModel|95.2%|55.5%|
-|MyNet.UI.ViewModels.Dialog.DialogViewModel|75%|50%|
+|MyNet.UI.ViewModels.Dialog.DialogViewModel|66.6%|50%|
 |MyNet.UI.ViewModels.Dialog.DialogViewModel`1|100%||
 |MyNet.UI.ViewModels.Dialog.ListDialogViewModel`2|0%|0%|
 |MyNet.UI.ViewModels.Dialog.SelectionDialogViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Display.CalendarDisplayModeViewModel|73.6%|50%|
+|MyNet.UI.ViewModels.Display.CalendarDisplayModeViewModel|73.6%||
 |MyNet.UI.ViewModels.Display.ChartDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.DayDisplayModeViewModel|75%|50%|
 |MyNet.UI.ViewModels.Display.DetailedDisplayModeViewModel|100%||
-|MyNet.UI.ViewModels.Display.DisplayModeViewModel|57.1%|50%|
-|MyNet.UI.ViewModels.Display.DisplaySelectorViewModel|65.5%|55%|
+|MyNet.UI.ViewModels.Display.DisplayModeViewModel|57.1%||
+|MyNet.UI.ViewModels.Display.DisplaySelectorViewModel|65.5%|55.5%|
 |MyNet.UI.ViewModels.Display.GridDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.HourDisplayModeViewModel|100%||
-|MyNet.UI.ViewModels.Display.ListDisplayModeViewModel|71.4%|50%|
+|MyNet.UI.ViewModels.Display.ListDisplayModeViewModel|71.4%||
 |MyNet.UI.ViewModels.Display.MonthDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Display.Options.ColumnOptionsViewModel|46.6%|33.3%|
 |MyNet.UI.ViewModels.Display.Options.DisplayColumnOptionViewModel|82.6%||
@@ -732,7 +739,7 @@
 |MyNet.UI.ViewModels.Display.YearDisplayModeViewModel|100%||
 |MyNet.UI.ViewModels.Export.ExportColumnViewModel`1|0%||
 |MyNet.UI.ViewModels.Export.ExportFileType|100%|87.5%|
-|MyNet.UI.ViewModels.Export.ExportViewModelBase`1|97%|72.7%|
+|MyNet.UI.ViewModels.Export.ExportViewModelBase`1|100%|83.3%|
 |MyNet.UI.ViewModels.Export.ExportViewModelValidator`1|100%|100%|
 |MyNet.UI.ViewModels.Export.FileExportByColumnsViewModelBase`2|0%|0%|
 |MyNet.UI.ViewModels.Export.FileExportByColumnsViewModelValidator`2|0%|0%|
@@ -742,17 +749,17 @@
 |MyNet.UI.ViewModels.FileHistory.RecentFilesViewModel|0%|0%|
 |MyNet.UI.ViewModels.FileHistory.RecentFileViewModel|0%|0%|
 |MyNet.UI.ViewModels.Import.ImportBySourcesDialogViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.Import.ImportDialogViewModel`1|96.2%|68.7%|
+|MyNet.UI.ViewModels.Import.ImportDialogViewModel`1|100%|83.3%|
 |MyNet.UI.ViewModels.Import.ImportDialogViewModelValidator`1|100%|100%|
 |MyNet.UI.ViewModels.Import.ImportItemsProvider`1|0%|0%|
 |MyNet.UI.ViewModels.Import.ImportItemViewModel|66.6%||
-|MyNet.UI.ViewModels.Import.ImportListViewModel`1|95.2%|60%|
-|MyNet.UI.ViewModels.List.CrudListViewModel`1|72.4%|72.2%|
+|MyNet.UI.ViewModels.Import.ImportListViewModel`1|95.2%|61.1%|
+|MyNet.UI.ViewModels.List.CrudListViewModel`1|72.4%|75%|
 |MyNet.UI.ViewModels.List.ExtendedCollectionDataProvider`1|66.6%|50%|
 |MyNet.UI.ViewModels.List.Factories.ListViewModelFactory|73%|50%|
 |MyNet.UI.ViewModels.List.Filtering.Catalog.FilterDefinition`2|0%||
-|MyNet.UI.ViewModels.List.Filtering.FilterConditionViewModel`1|0%|0%|
-|MyNet.UI.ViewModels.List.Filtering.FilterGroupViewModel`1|0%|0%|
+|MyNet.UI.ViewModels.List.Filtering.FilterConditionViewModel`1|60%|0%|
+|MyNet.UI.ViewModels.List.Filtering.FilterGroupViewModel`1|23.5%|0%|
 |MyNet.UI.ViewModels.List.Filtering.Filters.BooleanFilterViewModel`1|0%||
 |MyNet.UI.ViewModels.List.Filtering.Filters.CollectionContainsFilterViewMode<br/>l`2|0%|0%|
 |MyNet.UI.ViewModels.List.Filtering.Filters.ComparableFilterViewModel`2|0%|0%|
@@ -766,10 +773,11 @@
 |MyNet.UI.ViewModels.List.Filtering.Filters.NullableComparableFilterViewMode<br/>l`2|0%|0%|
 |MyNet.UI.ViewModels.List.Filtering.Filters.SelectedValueFilterViewModel`2|0%|0%|
 |MyNet.UI.ViewModels.List.Filtering.Filters.SelectedValuesFilterViewModel`2|0%|0%|
-|MyNet.UI.ViewModels.List.Filtering.Filters.StringFilterViewModel`1|0%|0%|
+|MyNet.UI.ViewModels.List.Filtering.Filters.StringFilterViewModel`1|8.1%|0%|
 |MyNet.UI.ViewModels.List.Filtering.Filters.TimeSpanFilterViewModel`1|0%||
 |MyNet.UI.ViewModels.List.Filtering.FiltersChangedEventArgs`1|100%||
-|MyNet.UI.ViewModels.List.Filtering.FiltersViewModel`1|0%|0%|
+|MyNet.UI.ViewModels.List.Filtering.FiltersViewModel`1|61.7%|55.5%|
+|MyNet.UI.ViewModels.List.Filtering.FiltersViewModelBuilder`1|95.2%|50%|
 |MyNet.UI.ViewModels.List.Grouping.Group`1|100%|100%|
 |MyNet.UI.ViewModels.List.Grouping.GroupingChangedEventArgs`1|100%||
 |MyNet.UI.ViewModels.List.Grouping.GroupingPropertyViewModel`1|0%|0%|
@@ -780,7 +788,7 @@
 |MyNet.UI.ViewModels.List.ListViewModelBase`1|80.2%|60.3%|
 |MyNet.UI.ViewModels.List.ListViewModelBase`2|50%|0%|
 |MyNet.UI.ViewModels.List.Paging.PagingChangedEventArgs|100%||
-|MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|64.2%|
+|MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|65.3%|
 |MyNet.UI.ViewModels.List.Selection.SelectableCollectionSelectionManager`1|41.9%|12.5%|
 |MyNet.UI.ViewModels.List.Selection.SelectableListViewModel`1|96.9%|50%|
 |MyNet.UI.ViewModels.List.Services.NoOpCrudService`1|0%||
@@ -796,18 +804,19 @@
 |MyNet.UI.ViewModels.Preferences.TimeAndLanguagePreferencesViewModel|0%|0%|
 |MyNet.UI.ViewModels.ServiceCollectionExtensions|100%||
 |MyNet.UI.ViewModels.Shell.About.AboutViewModel|0%|0%|
-|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|94.2%|69.2%|
+|MyNet.UI.ViewModels.Shell.Chrome.ShellCultureViewModel|94.2%|70.8%|
 |MyNet.UI.ViewModels.Shell.Chrome.ShellThemeViewModel|61.5%|50%|
 |MyNet.UI.ViewModels.Shell.Drawers.ShellDrawerCoordinator|85.7%||
 |MyNet.UI.ViewModels.Shell.Drawers.ShellNotificationsHost|93.3%|50%|
-|MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|60%|
+|MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModel|73%|62.5%|
 |MyNet.UI.ViewModels.Shell.FileMenu.FileMenuViewModelFactory|0%||
 |MyNet.UI.ViewModels.Shell.FileMenu.ShellFileMenuHost|68.5%|50%|
 |MyNet.UI.ViewModels.Shell.Host.ShellHostProvider|100%|50%|
-|MyNet.UI.ViewModels.Shell.Host.ShellHostViewModel|79.2%|45.8%|
+|MyNet.UI.ViewModels.Shell.Host.ShellHostViewModel|79.2%|45.4%|
 |MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsDrawerCoordinator|94.7%|70%|
-|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsViewModel|87.7%|31.2%|
+|MyNet.UI.ViewModels.Shell.Notifications.ShellNotificationsViewModel|87.7%|28.5%|
 |MyNet.UI.ViewModels.Shell.Services.ShellService|72.7%|83.3%|
+|MyNet.UI.ViewModels.Shell.ShellDrawerServiceExtensions|33.3%||
 |MyNet.UI.ViewModels.Shell.ShellOptions|100%||
 |MyNet.UI.ViewModels.Shell.Startup.SplashScreenViewModel|59.1%|40.9%|
 |MyNet.UI.ViewModels.Shell.Taskbar.BusyTaskbarCoordinator|95%|71.4%|
@@ -815,15 +824,15 @@
 |MyNet.UI.ViewModels.ShellDrawerActionExtensions|71.4%|50%|
 |MyNet.UI.ViewModels.ViewModelBase|45.4%|30%|
 |MyNet.UI.ViewModels.ViewModelExtensions|100%||
-|MyNet.UI.ViewModels.Workspace.TabWorkspaceViewModel|42.8%|22.5%|
-|MyNet.UI.ViewModels.Workspace.WorkspaceViewModel|77.4%|58.3%|
+|MyNet.UI.ViewModels.Workspace.TabWorkspaceViewModel|42.8%|21%|
+|MyNet.UI.ViewModels.Workspace.WorkspaceViewModel|77.4%|60%|
 
 </details>
 <details><summary>MyNet.Utilities - 81.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.9%**|
+|**MyNet.Utilities**|**81.9%**|**64.7%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -845,7 +854,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
