@@ -5,14 +5,12 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using FluentValidation;
 using MyNet.Observable;
 using MyNet.Observable.Behaviors;
 using MyNet.UI.Commands;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Models;
 using MyNet.UI.ViewModels.Dialog;
 
 namespace MyNet.UI.ViewModels.Import;
@@ -43,9 +41,8 @@ public class ImportDialogViewModel<T> : DialogViewModel<IReadOnlyCollection<T>>
         List = list;
         _notificationPublisher = notificationPublisher;
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        ValidateCommand = commands.Create(ValidateAndClose, CanValidate);
-        CancelCommand = commands.Create(Cancel);
+        ValidateCommand = Commands.Create(ValidateAndClose, CanValidate);
+        CancelCommand = Commands.Create(Cancel);
 
         this.UseTracking()
             .UseValidation(validator ?? new ImportDialogViewModelValidator<T>());
@@ -87,33 +84,10 @@ public class ImportDialogViewModel<T> : DialogViewModel<IReadOnlyCollection<T>>
     /// </summary>
     protected virtual bool CanValidate() => ImportItemCount > 0;
 
-    /// <summary>
-    /// Displays validation errors to the user.
-    /// </summary>
-    /// <param name="errors">The validation errors to display.</param>
-    protected virtual void ShowValidationErrors(IEnumerable<string> errors)
-    {
-        if (_notificationPublisher is null)
-            return;
-
-        foreach (var error in errors.Where(x => !string.IsNullOrWhiteSpace(x)))
-            _notificationPublisher.Publish(new MessageNotification(error, severity: NotificationSeverity.Error));
-    }
-
-    /// <summary>
-    /// Validates the view model using the registered <see cref="IValidationBehavior"/>.
-    /// </summary>
-    /// <returns><see langword="true"/> when validation succeeds; otherwise <see langword="false"/>.</returns>
-    protected bool TryValidate() =>
-        Behaviors.TryGet<IValidationBehavior>(out var validationBehavior) && validationBehavior.Validate();
-
     private void ValidateAndClose()
     {
-        if (!TryValidate())
-        {
-            ShowValidationErrors(Errors);
+        if (!this.TryValidateAndNotify(_notificationPublisher))
             return;
-        }
 
         Close(List.ImportItems);
     }

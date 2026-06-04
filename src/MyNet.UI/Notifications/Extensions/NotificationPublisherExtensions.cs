@@ -5,7 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using MyNet.Globalization.Facade;
 using MyNet.Primitives;
 using MyNet.Primitives.Exceptions;
@@ -56,6 +58,17 @@ public static class NotificationPublisherExtensions
         /// </summary>
         public void PublishInformation(string message, string title = "") =>
             notificationPublisher.PublishMessage(message, NotificationSeverity.Information, title);
+
+        /// <summary>
+        /// Publishes each non-empty error message as an error notification.
+        /// </summary>
+        public void PublishErrors(IEnumerable<string> errors)
+        {
+            ArgumentNullException.ThrowIfNull(errors);
+
+            foreach (var error in errors.Where(static x => !string.IsNullOrWhiteSpace(x)))
+                notificationPublisher.PublishError(error);
+        }
 
         /// <summary>
         /// Logs an exception and publishes it as a UI notification.

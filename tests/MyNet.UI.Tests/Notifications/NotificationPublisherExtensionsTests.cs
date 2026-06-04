@@ -96,6 +96,18 @@ public sealed class NotificationPublisherExtensionsTests
     }
 
     [Fact]
+    public void PublishErrors_PublishesOnlyNonEmptyMessages()
+    {
+        var publisher = new Mock<INotificationPublisher>();
+
+        publisher.Object.PublishErrors(["one", " ", "two"]);
+
+        publisher.Verify(x => x.Publish(It.Is<MessageNotification>(n => n.Message == "one")), Times.Once);
+        publisher.Verify(x => x.Publish(It.Is<MessageNotification>(n => n.Message == "two")), Times.Once);
+        publisher.Verify(x => x.Publish(It.IsAny<MessageNotification>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public void PublishSuccess_PublishesSuccessNotification()
     {
         var publisher = new Mock<INotificationPublisher>();

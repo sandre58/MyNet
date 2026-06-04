@@ -41,7 +41,7 @@ public sealed class ShellCultureViewModel : ViewModelBase
         IEnumerable<CultureInfo>? supportedCultures = null)
     {
         _cultureService = cultureService ?? throw new ArgumentNullException(nameof(cultureService));
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         foreach (var culture in supportedCultures ?? [SupportedCultures.French, SupportedCultures.English])
             Cultures.Add(culture);

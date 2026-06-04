@@ -13,7 +13,6 @@ using System.Windows.Input;
 using FluentValidation;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
-using MyNet.UI.Dialogs.FileDialogs;
 using MyNet.UI.Notifications;
 
 namespace MyNet.UI.ViewModels.Export;
@@ -55,8 +54,7 @@ public abstract class FileExportViewModelBase<T> : ExportViewModelBase<T>
             ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             : defaultFolder;
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        SetFilePathCommand = commands.Create(() => SetFilePathAsync());
+        SetFilePathCommand = Commands.Create(() => SetFilePathAsync());
     }
 
     /// <summary>
@@ -84,15 +82,13 @@ public abstract class FileExportViewModelBase<T> : ExportViewModelBase<T>
 
     private async Task SetFilePathAsync(CancellationToken cancellationToken = default)
     {
-        var settings = new SaveFileDialogSettings
-        {
-            FileName = Path.GetFileNameWithoutExtension(Destination) ?? string.Empty,
-            InitialDirectory = GetInitialDirectory(),
-            Filters = FileType.DialogFilter,
-            DefaultExtension = FileType.DefaultExtension
-        };
-
-        var result = await _dialogService.ShowSaveFileDialogAsync(settings, cancellationToken).ConfigureAwait(false);
+        var result = await _dialogService.SaveFile()
+            .WithFileName(Path.GetFileNameWithoutExtension(Destination) ?? string.Empty)
+            .WithInitialDirectory(GetInitialDirectory())
+            .WithFilters(FileType.DialogFilter)
+            .WithDefaultExtension(FileType.DefaultExtension)
+            .PickAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         if (result is { IsCancelled: false, Files.Count: > 0 })
             Destination = result.Files[0];

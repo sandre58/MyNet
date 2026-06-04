@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ItemEditionViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -35,7 +35,7 @@ public abstract class ItemEditionViewModel<T> : ItemViewModel<T>, IItemEditionVi
         ICultureService? cultureService = null)
         : base(commandFactory, cultureService)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         ApplyCommand = commands.Create(() => ApplyAsync(), CanApply);
 

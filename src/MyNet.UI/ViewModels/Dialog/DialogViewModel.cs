@@ -35,10 +35,7 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
         ICommandFactory? commandFactory = null,
         ICultureService? cultureService = null)
         : base(commandFactory, cultureService)
-    {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        CloseCommand = commands.Create<bool?>(close => RequestClose(close == true), CanClose);
-    }
+        => CloseCommand = Commands.Create<bool?>(close => RequestClose(close == true), CanClose);
 
     /// <summary>
     /// Gets the command to close the dialog. The boolean parameter indicates whether to force close.
@@ -92,7 +89,7 @@ public abstract class DialogViewModel<TResult>(
     /// <inheritdoc />
     public override Task OnClosedAsync()
     {
-        // Guarantee the TCS always completes — even on forced/unexpected close.
+        // Guarantee the TCS always completes é even on forced/unexpected close.
         _tcs.TrySetResult(DialogResult<TResult>.Dismissed());
         return base.OnClosedAsync();
     }

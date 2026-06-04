@@ -17,7 +17,7 @@ namespace MyNet.UI.Toasting;
 /// </summary>
 public sealed class DefaultToastFactory(ICommandFactory? commandFactory = null) : IToastFactory
 {
-    private readonly ICommandFactory _commandFactory = commandFactory ?? RelayCommandFactory.Default;
+    private readonly ICommandFactory _commandFactory = commandFactory.GetOrDefault();
 
     /// <inheritdoc />
     public IToast Create(INotification notification)

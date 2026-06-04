@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Primitives;
 using MyNet.UI.ViewModels.List.Filtering;
 using MyNet.UI.ViewModels.List.Filtering.Filters;
 using MyNet.UI.ViewModels.List.Sorting;
@@ -25,22 +24,24 @@ internal sealed class RecentFilesListOptions(
     /// </summary>
     public static RecentFilesListOptions Create()
     {
-        var nameFilter = new StringFilterViewModel<RecentFileViewModel>(
-            nameof(RecentFileViewModel.DisplayName),
-            x => x.DisplayName);
+        StringFilterViewModel<RecentFileViewModel>? nameFilter = null;
+        StringFilterViewModel<RecentFileViewModel>? pathFilter = null;
 
-        var pathFilter = new StringFilterViewModel<RecentFileViewModel>(
-            nameof(RecentFileViewModel.Path),
-            x => x.Path);
+        var filters = FiltersViewModelBuilder<RecentFileViewModel>.Create(builder =>
+        {
+            builder.OrGroup(search =>
+            {
+                search.AddStringFilter(
+                    nameof(RecentFileViewModel.DisplayName),
+                    x => x.DisplayName,
+                    filter => nameFilter = filter);
 
-        var searchGroup = new FilterGroupViewModel<RecentFileViewModel> { Operator = LogicalOperator.Or };
-        searchGroup.Add(nameFilter);
-        searchGroup.Add(pathFilter);
-
-        var root = new FilterGroupViewModel<RecentFileViewModel>();
-        root.Add(searchGroup);
-
-        var filters = new FiltersViewModel<RecentFileViewModel>(root);
+                search.AddStringFilter(
+                    nameof(RecentFileViewModel.Path),
+                    x => x.Path,
+                    filter => pathFilter = filter);
+            });
+        });
 
         var sorting = SortingViewModelBuilder<RecentFileViewModel>.Create(builder =>
         {
@@ -57,7 +58,7 @@ internal sealed class RecentFilesListOptions(
                     .Descending());
         });
 
-        return new(filters, nameFilter, pathFilter, sorting);
+        return new(filters, nameFilter!, pathFilter!, sorting);
     }
 
     public FiltersViewModel<RecentFileViewModel> Filters { get; } = filters;

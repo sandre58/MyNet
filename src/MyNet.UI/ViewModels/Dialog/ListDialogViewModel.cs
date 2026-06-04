@@ -51,12 +51,10 @@ public class ListDialogViewModel<T, TList> : DialogViewModel<IReadOnlyCollection
         : base(commandFactory, cultureService)
     {
         ArgumentNullException.ThrowIfNull(list);
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-
         List = list;
 
-        ValidateCommand = commands.Create(Validate, CanValidate);
-        CancelCommand = commands.Create(Cancel);
+        ValidateCommand = Commands.Create(Validate, CanValidate);
+        CancelCommand = Commands.Create(Cancel);
     }
 
     /// <summary>

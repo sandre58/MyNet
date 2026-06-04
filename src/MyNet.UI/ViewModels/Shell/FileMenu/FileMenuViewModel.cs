@@ -33,7 +33,7 @@ public sealed class FileMenuViewModel : ViewModelBase
         foreach (var workspace in contentViewModels)
             _contentViewModels.Add(workspace);
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         ToggleFileMenuContentCommand = commands.CreateRequired<Type>(ToggleContent);
     }
 

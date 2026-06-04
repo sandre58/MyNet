@@ -67,8 +67,7 @@ public abstract class FileExportByColumnsViewModelBase<T, TColumn> : FileExportV
         Columns = [.. _defaultColumns.Select(x => new ExportColumnViewModel<TColumn>(x.Key, ColumnKeySelector(x.Key), x.Value))];
         PresetColumns = [.. presetColumns ?? []];
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        SetSelectedColumnsCommand = commands.Create<IReadOnlyCollection<string>>(x => SetSelectedColumns(x ?? []));
+        SetSelectedColumnsCommand = Commands.Create<IReadOnlyCollection<string>>(x => SetSelectedColumns(x ?? []));
     }
 
     /// <summary>

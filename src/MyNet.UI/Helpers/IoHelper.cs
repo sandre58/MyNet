@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="IoHelper.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -9,7 +9,6 @@ using System.IO;
 using MyNet.Primitives;
 using MyNet.Primitives.Helpers;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Models;
 using MyNet.UI.Resources;
 
 namespace MyNet.UI.Helpers;
@@ -36,7 +35,7 @@ public static class IoHelper
         }
 
         var message = MessageResources.FileXNotFoundError.FormatWith(CultureInfo.CurrentCulture, filePath);
-        notificationPublisher?.Publish(new MessageNotification(message, severity: NotificationSeverity.Error));
+        notificationPublisher?.PublishError(message);
         return false;
     }
 }

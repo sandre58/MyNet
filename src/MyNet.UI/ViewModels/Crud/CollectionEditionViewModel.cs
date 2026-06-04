@@ -29,7 +29,7 @@ public abstract class CollectionEditionViewModel<TRow> : ViewModelBase, IEdition
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
     protected CollectionEditionViewModel(ICommandFactory? commandFactory = null)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         AddCommand = commands.Create<TRow>(Add, CanAdd);
         RemoveCommand = commands.Create<TRow>(Remove, CanRemove);

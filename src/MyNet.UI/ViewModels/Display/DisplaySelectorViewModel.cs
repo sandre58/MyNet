@@ -33,7 +33,7 @@ public class DisplaySelectorViewModel : ObservableObject, IDisplaySelectorViewMo
         AllowedModes = [.. allowedModes ?? []];
         CurrentMode = defaultMode ?? AllowedModes.FirstOrDefault();
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         SetModeCommand = commands.Create<IDisplayModeViewModel>(SetMode, CanSetMode);
     }
 

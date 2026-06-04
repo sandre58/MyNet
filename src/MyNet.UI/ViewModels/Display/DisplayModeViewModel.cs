@@ -56,7 +56,7 @@ public abstract class DisplayModeViewModel : ObservableObject, IDisplayModeViewM
     protected DisplayModeViewModel(string key, ICommandFactory? commandFactory = null)
     {
         Key = key;
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         ResetCommand = commands.Create(Reset);
     }
 
@@ -136,7 +136,7 @@ public sealed class ListDisplayModeViewModel : DisplayModeViewModel, IColumnOpti
         : base(ListKey, commandFactory)
     {
         ColumnOptions = new(defaultColumns);
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         SetDisplayedColumnsCommand = commands.Create<IEnumerable<string>>(x => SetDisplayedColumns(x ?? []));
     }
 
@@ -182,7 +182,7 @@ public class CalendarDisplayModeViewModel : DisplayModeViewModel, IDateNavigable
 
         DisplayDate = DateTime.Now;
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         MoveToPreviousDateCommand = commands.Create(MoveToPreviousDate);
         MoveToNextDateCommand = commands.Create(MoveToNextDate);
         MoveToTodayCommand = commands.Create(MoveToToday);

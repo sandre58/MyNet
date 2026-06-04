@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="CrudListViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -33,7 +33,7 @@ public class CrudListViewModel<T> : ListViewModel<T>
         : base(dataProvider, options)
     {
         _crudService = crudService ?? throw new ArgumentNullException(nameof(crudService));
-        var commands = options?.CommandFactory ?? RelayCommandFactory.Default;
+        var commands = (options?.CommandFactory).GetOrDefault();
 
         AddCommand = commands.Create(() => AddAsync(), CanAdd);
         EditCommand = commands.CreateRequired<T>(item => EditAsync(item), CanEdit);

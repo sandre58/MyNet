@@ -122,6 +122,25 @@ services.AddFileDialogService<MyAvaloniaFileDialogService>();
 
 Use via `IDialogService` or `IFileDialogService` depending on your app layer.
 
+Fluent builders (same style as content dialogs):
+
+```csharp
+var result = await dialogService.SaveFile()
+    .WithFileName("export.csv")
+    .WithInitialDirectory(folder)
+    .WithFilters(fileType.DialogFilter)
+    .WithDefaultExtension(fileType.DefaultExtension)
+    .PickAsync(cancellationToken);
+
+var open = await dialogService.OpenFile()
+    .WithMultiselect()
+    .PickAsync(cancellationToken);
+
+var folder = await dialogService.OpenFolder()
+    .WithInitialDirectory(folder)
+    .PickAsync(cancellationToken);
+```
+
 ## Implementing `IDialogPresenter`
 
 ```csharp

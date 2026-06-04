@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,7 +13,6 @@ using MyNet.Observable;
 using MyNet.Observable.Behaviors;
 using MyNet.UI.Commands;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Models;
 using MyNet.UI.ViewModels.Dialog;
 
 namespace MyNet.UI.ViewModels.Export;
@@ -41,9 +39,8 @@ public abstract class ExportViewModelBase<T> : DialogViewModel<bool>
         : base(commandFactory)
     {
         _notificationPublisher = notificationPublisher;
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        ExportAndCloseCommand = commands.Create(() => ExportAndCloseAsync());
-        CancelCommand = commands.Create(Cancel);
+        ExportAndCloseCommand = Commands.Create(() => ExportAndCloseAsync());
+        CancelCommand = Commands.Create(Cancel);
 
         this.UseTracking()
             .UseValidation(validator ?? new ExportViewModelValidator<T>());
@@ -105,33 +102,10 @@ public abstract class ExportViewModelBase<T> : DialogViewModel<bool>
     /// <returns><see langword="true"/> when export succeeds; otherwise <see langword="false"/>.</returns>
     protected abstract Task<bool> ExportItemsAsync(ICollection<T> items, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Displays validation errors to the user.
-    /// </summary>
-    /// <param name="errors">The validation errors to display.</param>
-    protected virtual void ShowValidationErrors(IEnumerable<string> errors)
-    {
-        if (_notificationPublisher is null)
-            return;
-
-        foreach (var error in errors.Where(x => !string.IsNullOrWhiteSpace(x)))
-            _notificationPublisher.Publish(new MessageNotification(error, severity: NotificationSeverity.Error));
-    }
-
-    /// <summary>
-    /// Validates the view model using the registered <see cref="IValidationBehavior"/>.
-    /// </summary>
-    /// <returns><see langword="true"/> when validation succeeds; otherwise <see langword="false"/>.</returns>
-    protected bool TryValidate() =>
-        Behaviors.TryGet<IValidationBehavior>(out var validationBehavior) && validationBehavior.Validate();
-
     private async Task ExportAndCloseAsync(CancellationToken cancellationToken = default)
     {
-        if (!TryValidate())
-        {
-            ShowValidationErrors(Errors);
+        if (!this.TryValidateAndNotify(_notificationPublisher))
             return;
-        }
 
         if (SaveConfigurationOnValidate)
             SaveConfiguration();

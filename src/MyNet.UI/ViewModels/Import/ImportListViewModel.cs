@@ -25,7 +25,7 @@ public sealed class ImportListViewModel<T> : ViewModelBase
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
     public ImportListViewModel(ICommandFactory? commandFactory = null)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         ImportSelectionCommand = commands.Create(ImportSelection, CanApplyToSelection);
         DoNotImportSelectionCommand = commands.Create(DoNotImportSelection, CanApplyToSelection);
     }

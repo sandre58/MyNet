@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="PagingViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -26,7 +26,7 @@ public class PagingViewModel : ObservableObject, IPagingViewModel
     /// <param name="commandFactory">Optional command factory used to create commands.</param>
     public PagingViewModel(int pageSize = 25, ICommandFactory? commandFactory = null)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         _deferredAction = new(RaisePagingChanged);
 

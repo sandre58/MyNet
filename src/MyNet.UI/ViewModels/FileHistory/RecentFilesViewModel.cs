@@ -51,7 +51,7 @@ public sealed class RecentFilesViewModel : ListViewModelBase<RecentFileViewModel
         _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
         _listOptions = listOptions;
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         OpenCommand = commands.Create<RecentFileViewModel?>(async item =>
         {
             if (item is not null)

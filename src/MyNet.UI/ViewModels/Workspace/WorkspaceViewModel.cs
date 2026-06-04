@@ -30,10 +30,10 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
         ICommandFactory? commandFactory = null,
         ICultureService? cultureService = null)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        Commands = commandFactory.GetOrDefault();
 
-        RefreshCommand = commands.Create(() => RefreshAsync(), CanRefresh);
-        ResetCommand = commands.Create(() => ResetAsync(), CanReset);
+        RefreshCommand = Commands.Create(() => RefreshAsync(), CanRefresh);
+        ResetCommand = Commands.Create(() => ResetAsync(), CanReset);
 
         if (cultureService is not null)
         {
@@ -42,6 +42,11 @@ public class WorkspaceViewModel : ViewModelBase, IWorkspaceViewModel, IEventAwar
 
         ScheduleInitialTitle(cultureService?.CurrentCulture ?? CultureInfo.CurrentUICulture);
     }
+
+    /// <summary>
+    /// Gets the command factory used by this workspace (never null).
+    /// </summary>
+    protected ICommandFactory Commands { get; }
 
     /// <summary>
     /// Gets the command to refresh the workspace content.

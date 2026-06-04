@@ -84,6 +84,15 @@ public class ExportService(INotificationPublisher notifications)
 }
 ```
 
+**Validation** (bridge with `IValidationBehavior`):
+
+```csharp
+if (!viewModel.TryValidateAndNotify(notifications))
+    return;
+
+notifications.PublishErrors(viewModel.GetValidationErrors());
+```
+
 **Exceptions** (existing helper):
 
 ```csharp

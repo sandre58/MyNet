@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -17,6 +18,15 @@ namespace MyNet.UI.Commands;
 /// </summary>
 public static class CommandFactoryExtensions
 {
+    extension(ICommandFactory? factory)
+    {
+        /// <summary>
+        /// Returns the factory instance or <see cref="RelayCommandFactory.Default"/> when null.
+        /// </summary>
+        [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Method is more discoverable as an extension method.")]
+        public ICommandFactory GetOrDefault() => factory ?? RelayCommandFactory.Default;
+    }
+
     extension(ICommandFactory factory)
     {
         /// <summary>

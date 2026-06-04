@@ -34,7 +34,7 @@ public sealed class ShellThemeViewModel : ViewModelBase
         _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _themeBaseRegistry = themeBaseRegistry ?? throw new ArgumentNullException(nameof(themeBaseRegistry));
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         IsDarkCommand = commands.Create(() => IsDark = true);
         IsLightCommand = commands.Create(() => IsDark = false);
         ChangeThemeCommand = commands.CreateRequired<IThemeBase>(themeBase => _themeService.ApplyBaseTheme(themeBase));

@@ -42,10 +42,9 @@ public class ImportBySourcesDialogViewModel<T> : ImportDialogViewModel<T>
     {
         _itemsProvider = new(sources);
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        LoadSourceCommand = commands.Create<IImportSourceViewModel<T>>(async x => await LoadSourceAsync(x).ConfigureAwait(false), x => x is not null);
-        ReloadSourceCommand = commands.Create(ReloadSource, CanReloadSource);
-        ClearLoadedItemsCommand = commands.Create(ClearLoadedItems, CanClearLoadedItems);
+        LoadSourceCommand = Commands.Create<IImportSourceViewModel<T>>(async x => await LoadSourceAsync(x).ConfigureAwait(false), x => x is not null);
+        ReloadSourceCommand = Commands.Create(ReloadSource, CanReloadSource);
+        ClearLoadedItemsCommand = Commands.Create(ClearLoadedItems, CanClearLoadedItems);
     }
 
     /// <summary>

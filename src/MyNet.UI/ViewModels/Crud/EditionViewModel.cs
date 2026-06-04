@@ -19,9 +19,8 @@ using MyNet.Observable.Validation.Validators;
 using MyNet.UI.Commands;
 using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.MessageBox;
-using MyNet.UI.Loading.Models;
+using MyNet.UI.Loading;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Models;
 using MyNet.UI.Resources;
 using MyNet.UI.ViewModels.Dialog;
 using MyNet.UI.ViewModels.Workspace;
@@ -75,11 +74,9 @@ public abstract class EditionViewModel : DialogViewModel<bool>, IEditionStateVie
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-
-        CancelCommand = commands.Create(() => CancelAsync());
-        SaveCommand = commands.Create(() => SaveAsync(), CanSave);
-        SaveAndCloseCommand = commands.Create(() => SaveAndCloseAsync(), CanSave);
+        CancelCommand = Commands.Create(() => CancelAsync());
+        SaveCommand = Commands.Create(() => SaveAsync(), CanSave);
+        SaveAndCloseCommand = Commands.Create(() => SaveAndCloseAsync(), CanSave);
 
         Mode = ScreenMode.Creation;
 
@@ -196,7 +193,7 @@ public abstract class EditionViewModel : DialogViewModel<bool>, IEditionStateVie
     {
         try
         {
-            await BusyService.RunAsync<IndeterminateBusy>(async (_, ct) => await SaveCoreAsync(ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
+            await BusyService.RunIndeterminateAsync(async (_, ct) => await SaveCoreAsync(ct).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
             this.ResetIsModified();
             return true;
         }
@@ -244,20 +241,10 @@ public abstract class EditionViewModel : DialogViewModel<bool>, IEditionStateVie
     private bool HandleValidationErrors()
     {
         var errors = Behaviors.Get<IValidationBehavior>().Errors;
-        ShowValidationErrors(errors);
+        _notificationPublisher.PublishErrors(errors);
         OnSaveFailed(errors);
 
         return false;
-    }
-
-    /// <summary>
-    /// Displays validation errors to the user.
-    /// </summary>
-    /// <param name="errors">The validation errors to display.</param>
-    protected virtual void ShowValidationErrors(IEnumerable<string> errors)
-    {
-        foreach (var error in errors)
-            _notificationPublisher.Publish(new MessageNotification(error, severity: NotificationSeverity.Error));
     }
 
     /// <summary>

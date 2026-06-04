@@ -33,8 +33,7 @@ public class SelectionDialogViewModel<T> : ListDialogViewModel<T, ISelectableLis
     public SelectionDialogViewModel(ISelectableListViewModel<T> list, ICommandFactory? commandFactory = null)
         : base(list, commandFactory)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
-        DoubleClickCommand = commands.Create(Validate, () => List is { SelectedCount: > 0, SelectionMode: SelectionMode.Single });
+        DoubleClickCommand = Commands.Create(Validate, () => List is { SelectedCount: > 0, SelectionMode: SelectionMode.Single });
 
         if (List is ObservableObject observableList)
             observableList.PropertyChanged += HandleListPropertyChanged;

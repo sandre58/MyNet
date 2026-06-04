@@ -32,7 +32,7 @@ public sealed class MessageBoxViewModel : DialogViewModel<MessageBoxResult>, IMe
         Buttons = options.Buttons;
         DefaultResult = options.DefaultResult;
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         OkCommand = commands.Create(() => Complete(MessageBoxResult.Ok), () => Supports(MessageBoxResult.Ok));
         CancelCommand = commands.Create(() => Complete(MessageBoxResult.Cancel), () => Supports(MessageBoxResult.Cancel));
         YesCommand = commands.Create(() => Complete(MessageBoxResult.Yes), () => Supports(MessageBoxResult.Yes));

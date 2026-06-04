@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="TabWorkspaceViewModel.cs" company="Stéphane ANDRE">
 // Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
@@ -31,7 +31,7 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
         ICultureService? cultureService = null)
         : base(commandFactory, cultureService)
     {
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         Workspaces = new(_workspaces);
 

@@ -35,7 +35,7 @@ public sealed class ShellNotificationsViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(notificationsManager);
         ArgumentNullException.ThrowIfNull(schedulerProvider);
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         Notifications = ExtendedCollection.Create<IClosableNotification>(schedulerProvider.Ui);
 

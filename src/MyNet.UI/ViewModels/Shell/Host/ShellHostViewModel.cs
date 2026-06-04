@@ -72,7 +72,7 @@ public class ShellHostViewModel : ViewModelBase, IShellCapabilities, IShellHostW
         if (fileMenuViewModel is not null)
             FileMenuHost = new(fileMenuViewModel, this, OnFileMenuDrawerOpening);
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
 
         _notificationsHost = new(
             this,

@@ -18,7 +18,6 @@ using MyNet.UI.Dialogs;
 using MyNet.UI.Dialogs.MessageBox;
 using MyNet.UI.Helpers;
 using MyNet.UI.Notifications;
-using MyNet.UI.Notifications.Models;
 using MyNet.UI.Resources;
 using MyNet.UI.Services;
 using MyNet.UI.Services.FileHistory;
@@ -56,7 +55,7 @@ public sealed class RecentFileViewModel : ViewModelBase
         Path = recentFile.Path;
         Update(recentFile);
 
-        var commands = commandFactory ?? RelayCommandFactory.Default;
+        var commands = commandFactory.GetOrDefault();
         OpenCommand = commands.Create(OpenAsync, FileExists);
         OpenCopyCommand = commands.Create(OpenCopyAsync, () => !IsRecoveredFile && FileExists());
         OpenFolderLocationCommand = commands.Create(() => IoHelper.OpenFolderLocation(Path, _notificationPublisher), () => !IsRecoveredFile);
@@ -198,10 +197,8 @@ public sealed class RecentFileViewModel : ViewModelBase
         if (FileHelper.TryDeleteFile(Path))
         {
             await _recentFilesOperations.RemoveAsync(Path).ConfigureAwait(false);
-            _notificationPublisher.Publish(
-                new MessageNotification(
-                    MessageResources.FileXRemovedSuccess.FormatWith(CultureInfo.CurrentCulture, Path),
-                    severity: NotificationSeverity.Success));
+            _notificationPublisher.PublishSuccess(
+                MessageResources.FileXRemovedSuccess.FormatWith(CultureInfo.CurrentCulture, Path));
         }
     }
 
