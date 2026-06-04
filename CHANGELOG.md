@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.5] - 2026-06-03
+## [v19.3.6] - 2026-06-03
 
 
 ### 🐛 Bug Fixes
 
-- Enhance ShellCultureViewModel and ShellThemeViewModel with command support for culture and theme changes *(commit by **Stéphane ANDRE (E104915)** in [99eb4be0](https://github.com/sandre58/MyNet/commit/99eb4be0eb3d8c7bbec923825dd80020ba6175c8))*
+- Refactor EventBehavior to improve event reaction property retrieval and add tests for culture change behavior *(commit by **Stéphane ANDRE (E104915)** in [1c8051ab](https://github.com/sandre58/MyNet/commit/1c8051abea035c4a31bda68eec68c59cba3d1a5a))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.4...v19.3.5](https://github.com/sandre58/MyNet/compare/v19.3.4...v19.3.5)
+**Full Changelog:** [compare v19.3.5...v19.3.6](https://github.com/sandre58/MyNet/compare/v19.3.5...v19.3.6)
 
 
 ---
