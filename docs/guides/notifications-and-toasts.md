@@ -42,8 +42,36 @@ services.AddShell(); // wires shell notification drawer to INotificationsManager
 
 ### Publish
 
+**Shortcuts** (extension methods on `INotificationPublisher` in namespace `MyNet.UI.Notifications`):
+
+```csharp
+notifications.PublishSuccess("Export completed");
+notifications.PublishError("Export failed", title: "Export");
+notifications.PublishWarning("Disk space low");
+notifications.PublishInformation("Sync started");
+```
+
+**Fluent builder** (closable, click action, deduplication):
+
+```csharp
+notifications.Notify()
+    .WithMessage("Export completed")
+    .WithTitle("Export")
+    .AsSuccess()
+    .Publish();
+
+notifications.Notify()
+    .WithMessage("Open log file?")
+    .AsError()
+    .OnClick(n => OpenLog(n))
+    .Publish();
+```
+
+**Manual** (full control over notification type):
+
 ```csharp
 using MyNet.UI.Notifications;
+using MyNet.UI.Notifications.Models;
 
 public class ExportService(INotificationPublisher notifications)
 {
@@ -54,6 +82,12 @@ public class ExportService(INotificationPublisher notifications)
             severity: NotificationSeverity.Success));
     }
 }
+```
+
+**Exceptions** (existing helper):
+
+```csharp
+notifications.PublishException(ex, showInTaskBar: true, taskbarProgress: taskbar);
 ```
 
 `INotificationService` combines `INotificationPublisher` + `INotificationStream`.

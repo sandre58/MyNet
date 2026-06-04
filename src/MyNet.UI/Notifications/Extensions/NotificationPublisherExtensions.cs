@@ -18,43 +18,87 @@ namespace MyNet.UI.Notifications;
 
 public static class NotificationPublisherExtensions
 {
-    /// <summary>
-    /// Logs an exception and publishes it as a UI notification.
-    /// </summary>
-    /// <param name="notificationPublisher">Notification publisher used to emit the error notification.</param>
-    /// <param name="exception">Exception to surface.</param>
-    /// <param name="showInTaskBar">Whether to set the taskbar to an error state.</param>
-    /// <param name="taskbarProgress">Optional taskbar progress source (from <c>AddShell()</c>).</param>
-    /// <param name="reportTaskBar">Optional callback when <paramref name="taskbarProgress"/> is not provided.</param>
-    /// <param name="onClick">Optional action executed when notification is activated.</param>
-    public static void PublishException(
-        this INotificationPublisher notificationPublisher,
-        Exception exception,
-        bool showInTaskBar = false,
-        ITaskbarProgressSource? taskbarProgress = null,
-        Action<TaskbarProgressState, double?>? reportTaskBar = null,
-        Action<INotification>? onClick = null)
+    extension(INotificationPublisher notificationPublisher)
     {
-        var innerException = exception.InnerException ?? exception;
+        /// <summary>
+        /// Starts a fluent notification builder bound to this publisher.
+        /// </summary>
+        public INotificationBuilder Notify() => new NotificationBuilder(notificationPublisher);
 
-        if (showInTaskBar)
+        /// <summary>
+        /// Publishes a message notification with the given severity.
+        /// </summary>
+        public void PublishMessage(string message,
+            NotificationSeverity severity,
+            string title = "") =>
+            notificationPublisher.Publish(new MessageNotification(message, title, severity));
+
+        /// <summary>
+        /// Publishes a success notification.
+        /// </summary>
+        public void PublishSuccess(string message, string title = "") =>
+            notificationPublisher.PublishMessage(message, NotificationSeverity.Success, title);
+
+        /// <summary>
+        /// Publishes an error notification.
+        /// </summary>
+        public void PublishError(string message, string title = "") =>
+            notificationPublisher.PublishMessage(message, NotificationSeverity.Error, title);
+
+        /// <summary>
+        /// Publishes a warning notification.
+        /// </summary>
+        public void PublishWarning(string message, string title = "") =>
+            notificationPublisher.PublishMessage(message, NotificationSeverity.Warning, title);
+
+        /// <summary>
+        /// Publishes an informational notification.
+        /// </summary>
+        public void PublishInformation(string message, string title = "") =>
+            notificationPublisher.PublishMessage(message, NotificationSeverity.Information, title);
+
+        /// <summary>
+        /// Logs an exception and publishes it as a UI notification.
+        /// </summary>
+        /// <param name="exception">Exception to surface.</param>
+        /// <param name="showInTaskBar">Whether to set the taskbar to an error state.</param>
+        /// <param name="taskbarProgress">Optional taskbar progress source (from <c>AddShell()</c>).</param>
+        /// <param name="reportTaskBar">Optional callback when <paramref name="taskbarProgress"/> is not provided.</param>
+        /// <param name="onClick">Optional action executed when notification is activated.</param>
+        public void PublishException(Exception exception,
+            bool showInTaskBar = false,
+            ITaskbarProgressSource? taskbarProgress = null,
+            Action<TaskbarProgressState, double?>? reportTaskBar = null,
+            Action<INotification>? onClick = null)
         {
-            if (taskbarProgress is not null)
-                taskbarProgress.SetError();
+            var innerException = exception.InnerException ?? exception;
+
+            if (showInTaskBar)
+            {
+                if (taskbarProgress is not null)
+                    taskbarProgress.SetError();
+                else
+                    reportTaskBar?.Invoke(TaskbarProgressState.Error, 1);
+            }
+
+            var message = innerException is TranslatableException translatableException
+                ? translatableException.Parameters.Count > 0
+                    ? translatableException.ResourceKey.Translate().FormatWith(CultureInfo.CurrentCulture, translatableException.Parameters)
+                    : translatableException.ResourceKey.Translate()
+                : innerException.Message;
+
+            if (onClick is null)
+            {
+                notificationPublisher.PublishError(message);
+            }
             else
-                reportTaskBar?.Invoke(TaskbarProgressState.Error, 1);
+            {
+                notificationPublisher.Notify()
+                    .WithMessage(message)
+                    .AsError()
+                    .OnClick(onClick)
+                    .Publish();
+            }
         }
-
-        var message = innerException is TranslatableException translatableException
-            ? translatableException.Parameters.Count > 0
-                ? translatableException.ResourceKey.Translate().FormatWith(CultureInfo.CurrentCulture, translatableException.Parameters)
-                : translatableException.ResourceKey.Translate()
-            : innerException.Message;
-
-        INotification notification = onClick is null
-            ? new MessageNotification(message, severity: NotificationSeverity.Error)
-            : new ActionNotification(message, string.Empty, NotificationSeverity.Error, action: onClick);
-
-        notificationPublisher.Publish(notification);
     }
 }

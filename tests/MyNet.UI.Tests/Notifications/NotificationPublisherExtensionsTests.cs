@@ -76,6 +76,51 @@ public sealed class NotificationPublisherExtensionsTests
         value.Should().Be(1);
     }
 
+    [Theory]
+    [InlineData(NotificationSeverity.Success)]
+    [InlineData(NotificationSeverity.Error)]
+    [InlineData(NotificationSeverity.Warning)]
+    [InlineData(NotificationSeverity.Information)]
+    public void PublishMessage_PublishesMessageNotificationWithSeverity(NotificationSeverity severity)
+    {
+        var publisher = new Mock<INotificationPublisher>();
+
+        publisher.Object.PublishMessage("body", severity, "title");
+
+        publisher.Verify(
+            x => x.Publish(It.Is<MessageNotification>(n =>
+                n.Message == "body" &&
+                n.Title == "title" &&
+                n.Severity == severity)),
+            Times.Once);
+    }
+
+    [Fact]
+    public void PublishSuccess_PublishesSuccessNotification()
+    {
+        var publisher = new Mock<INotificationPublisher>();
+
+        publisher.Object.PublishSuccess("ok");
+
+        publisher.Verify(
+            x => x.Publish(It.Is<MessageNotification>(n =>
+                n.Message == "ok" && n.Severity == NotificationSeverity.Success)),
+            Times.Once);
+    }
+
+    [Fact]
+    public void PublishError_PublishesErrorNotification()
+    {
+        var publisher = new Mock<INotificationPublisher>();
+
+        publisher.Object.PublishError("fail", "Error");
+
+        publisher.Verify(
+            x => x.Publish(It.Is<MessageNotification>(n =>
+                n.Message == "fail" && n.Title == "Error" && n.Severity == NotificationSeverity.Error)),
+            Times.Once);
+    }
+
     [Fact]
     public void PublishException_WithOnClick_PublishesActionNotification()
     {
