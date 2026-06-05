@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/05/2026 - 20:36:04 |
-| Coverage date: | 06/05/2026 - 20:32:03 - 06/05/2026 - 20:32:53 |
+| Generated on: | 06/05/2026 - 21:17:33 |
+| Coverage date: | 06/05/2026 - 21:14:34 - 06/05/2026 - 21:15:27 |
 | Parser: | MultiReport (63x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 683 |
 | Files: | 638 |
-| **Line coverage:** | 73.6% (10518 of 14272) |
-| Covered lines: | 10518 |
-| Uncovered lines: | 3754 |
-| Coverable lines: | 14272 |
-| Total lines: | 57972 |
-| **Branch coverage:** | 61.1% (3993 of 6530) |
-| Covered branches: | 3993 |
-| Total branches: | 6530 |
+| **Line coverage:** | 73.7% (10532 of 14281) |
+| Covered lines: | 10532 |
+| Uncovered lines: | 3749 |
+| Coverable lines: | 14281 |
+| Total lines: | 58850 |
+| **Branch coverage:** | 61.1% (3999 of 6536) |
+| Covered branches: | 3999 |
+| Total branches: | 6536 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 294_27038455594 |
+| Tag: | 296_27040378622 |
 
 </details>
 
@@ -331,11 +331,11 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 83.7%</summary>
+<details><summary>MyNet.Observable - 83.8%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**83.7%**|**65.8%**|
+|**MyNet.Observable**|**83.8%**|**65.8%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|68.7%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
@@ -377,7 +377,7 @@
 |MyNet.Observable.Collections.PropertyDependencyExtractor`1|100%|92.8%|
 |MyNet.Observable.Collections.SchedulerCollectionEventDispatcher|100%|75%|
 |MyNet.Observable.Collections.Selection.SelectableCollection|50%||
-|MyNet.Observable.Collections.Selection.SelectableCollection`1|68.4%|100%|
+|MyNet.Observable.Collections.Selection.SelectableCollection`1|78.9%|100%|
 |MyNet.Observable.Collections.Selection.SelectionEngine`1|86.9%|84.4%|
 |MyNet.Observable.Collections.Sorting.ExpressionSortingProperty`1|100%||
 |MyNet.Observable.Collections.Sorting.SortEngine`1|95.2%|100%|
@@ -611,11 +611,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 55.2%</summary>
+<details><summary>MyNet.UI - 55.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**55.2%**|**42.5%**|
+|**MyNet.UI**|**55.3%**|**42.7%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -790,8 +790,8 @@
 |MyNet.UI.ViewModels.List.ListViewModelBase`2|50%|0%|
 |MyNet.UI.ViewModels.List.Paging.PagingChangedEventArgs|100%||
 |MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|65.3%|
-|MyNet.UI.ViewModels.List.Selection.SelectableCollectionSelectionManager`1|41.9%|12.5%|
-|MyNet.UI.ViewModels.List.Selection.SelectableListViewModel`1|96.9%|50%|
+|MyNet.UI.ViewModels.List.Selection.SelectableCollectionSelectionManager`1|58%|25%|
+|MyNet.UI.ViewModels.List.Selection.SelectableListViewModel`1|92.8%|55.5%|
 |MyNet.UI.ViewModels.List.Services.NoOpCrudService`1|0%||
 |MyNet.UI.ViewModels.List.Sorting.SortingChangedEventArgs`1|100%||
 |MyNet.UI.ViewModels.List.Sorting.SortingPropertyViewModel`1|0%|0%|
