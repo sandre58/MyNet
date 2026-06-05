@@ -31,4 +31,13 @@ public interface IDisplayTextStrategyResolver
     /// <exception cref="InvalidOperationException">Thrown if no display name strategy is registered for the specified type.</exception>
     IDisplayTextStrategy<T> GetRequired<T>()
         where T : notnull;
+
+    /// <summary>
+    /// Gets the display text strategy for the specified runtime type, or throws if none is registered.
+    /// </summary>
+    /// <param name="type">The runtime type for which to retrieve the display text strategy.</param>
+    /// <returns>The display text strategy for the specified type.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if no display text strategy is registered for the specified type.</exception>
+    IDisplayTextStrategy GetRequiredForType(Type type);
 }

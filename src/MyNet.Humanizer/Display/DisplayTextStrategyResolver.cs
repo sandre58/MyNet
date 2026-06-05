@@ -41,6 +41,15 @@ public sealed class DisplayTextStrategyResolver(IDisplayTextStrategyRegistry reg
             ? s
             : throw new InvalidOperationException($"No display text strategy registered for '{typeof(T).FullName}'.");
 
+    /// <inheritdoc/>
+    public IDisplayTextStrategy GetRequiredForType(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        return _cache.GetOrAdd(type, Resolve)
+            ?? throw new InvalidOperationException($"No display text strategy registered for '{type.FullName}'.");
+    }
+
     /// <summary>
     /// Resolves a display name provider for the requested type using hierarchical fallback:
     /// 1. Exact match: provider registered for the requested type.

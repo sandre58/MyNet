@@ -19,5 +19,12 @@ public class DisplayTextService(IDisplayTextStrategyResolver resolver, ICultureC
     /// <inheritdoc/>
     public string GetDisplayText<T>(T value, DisplayTextOptions options, CultureInfo? culture = null)
         where T : notnull
-        => resolver.GetRequired<T>().GetDisplayText(value, options, culture ?? cultureContext.CurrentCulture);
+    {
+        var cultureToUse = culture ?? cultureContext.CurrentCulture;
+
+        if (typeof(T) == value.GetType())
+            return resolver.GetRequired<T>().GetDisplayText(value, options, cultureToUse);
+
+        return resolver.GetRequiredForType(value.GetType()).GetDisplayText(value, options, cultureToUse);
+    }
 }
