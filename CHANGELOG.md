@@ -6,15 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.3.6] - 2026-06-03
+## [v19.5.0] - 2026-06-05
 
 
-### 🐛 Bug Fixes
+### 🚀 Features
 
-- Refactor EventBehavior to improve event reaction property retrieval and add tests for culture change behavior *(commit by **Stéphane ANDRE (E104915)** in [1c8051ab](https://github.com/sandre58/MyNet/commit/1c8051abea035c4a31bda68eec68c59cba3d1a5a))*
-
-
-
+- Add paging support to ExtendedCollection and related components *(commit by **Stéphane ANDRE (E104915)** in [aeee4261](https://github.com/sandre58/MyNet/commit/aeee426198a9f89264834e811708ac38ed7a61c0))*
 
 
 
@@ -22,7 +19,10 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.3.5...v19.3.6](https://github.com/sandre58/MyNet/compare/v19.3.5...v19.3.6)
+
+
+
+**Full Changelog:** [compare v19.4.0...v19.5.0](https://github.com/sandre58/MyNet/compare/v19.4.0...v19.5.0)
 
 
 ---
