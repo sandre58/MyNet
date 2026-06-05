@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/04/2026 - 21:11:57 |
-| Coverage date: | 06/04/2026 - 21:08:27 - 06/04/2026 - 21:09:15 |
-| Parser: | MultiReport (62x Cobertura) |
+| Generated on: | 06/05/2026 - 20:36:04 |
+| Coverage date: | 06/05/2026 - 20:32:03 - 06/05/2026 - 20:32:53 |
+| Parser: | MultiReport (63x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 682 |
-| Files: | 637 |
-| **Line coverage:** | 73.5% (10455 of 14221) |
-| Covered lines: | 10455 |
-| Uncovered lines: | 3766 |
-| Coverable lines: | 14221 |
-| Total lines: | 58615 |
-| **Branch coverage:** | 60.9% (3972 of 6516) |
-| Covered branches: | 3972 |
-| Total branches: | 6516 |
+| Classes: | 683 |
+| Files: | 638 |
+| **Line coverage:** | 73.6% (10518 of 14272) |
+| Covered lines: | 10518 |
+| Uncovered lines: | 3754 |
+| Coverable lines: | 14272 |
+| Total lines: | 57972 |
+| **Branch coverage:** | 61.1% (3993 of 6530) |
+| Covered branches: | 3993 |
+| Total branches: | 6530 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 292_26979594350 |
+| Tag: | 294_27038455594 |
 
 </details>
 
@@ -331,11 +331,11 @@
 |MyNet.Metadata.TypeMetadataExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.Observable - 83.4%</summary>
+<details><summary>MyNet.Observable - 83.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Observable**|**83.4%**|**65.3%**|
+|**MyNet.Observable**|**83.7%**|**65.8%**|
 |MyNet.Observable.AbstractValidatorLocalizedExtensions|100%|50%|
 |MyNet.Observable.BehaviorExtensions|68.7%||
 |MyNet.Observable.Behaviors.BehaviorKey|100%|71.4%|
@@ -362,22 +362,23 @@
 |MyNet.Observable.BoundedValue`1|56%|25%|
 |MyNet.Observable.CollectionExtensions|0%||
 |MyNet.Observable.Collections.ExtendedCollection|75%||
-|MyNet.Observable.Collections.ExtendedCollection`1|87.6%|87.5%|
+|MyNet.Observable.Collections.ExtendedCollection`1|88.4%|87.5%|
 |MyNet.Observable.Collections.ExtendedCollectionBuilder`1|51.7%|60%|
 |MyNet.Observable.Collections.ExtendedObservableCollection`1|50%||
 |MyNet.Observable.Collections.Filters.ExpressionFilter`1|100%||
 |MyNet.Observable.Collections.Filters.FilterBuilder`1|92.5%|87.5%|
-|MyNet.Observable.Collections.Filters.FilterEngine`1|100%|90%|
+|MyNet.Observable.Collections.Filters.FilterEngine`1|92.3%|90%|
 |MyNet.Observable.Collections.Filters.FilterGroup`1|95.2%|75%|
 |MyNet.Observable.Collections.Grouping.ExpressionGroupingProperty`1|100%||
 |MyNet.Observable.Collections.Grouping.GroupingBuilder`1|100%||
 |MyNet.Observable.Collections.Grouping.GroupingEngine`1|100%|100%|
-|MyNet.Observable.Collections.PipelineEngine|100%||
+|MyNet.Observable.Collections.Paging.PagingEngine|83.3%|50%|
+|MyNet.Observable.Collections.PipelineEngine|100%|100%|
 |MyNet.Observable.Collections.PropertyDependencyExtractor`1|100%|92.8%|
 |MyNet.Observable.Collections.SchedulerCollectionEventDispatcher|100%|75%|
 |MyNet.Observable.Collections.Selection.SelectableCollection|50%||
 |MyNet.Observable.Collections.Selection.SelectableCollection`1|68.4%|100%|
-|MyNet.Observable.Collections.Selection.SelectionEngine`1|83.3%|80%|
+|MyNet.Observable.Collections.Selection.SelectionEngine`1|86.9%|84.4%|
 |MyNet.Observable.Collections.Sorting.ExpressionSortingProperty`1|100%||
 |MyNet.Observable.Collections.Sorting.SortEngine`1|95.2%|100%|
 |MyNet.Observable.Collections.Sorting.SortingBuilder`1|100%||
@@ -610,11 +611,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 54.6%</summary>
+<details><summary>MyNet.UI - 55.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**54.6%**|**41.9%**|
+|**MyNet.UI**|**55.2%**|**42.5%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -755,8 +756,8 @@
 |MyNet.UI.ViewModels.Import.ImportItemViewModel|66.6%||
 |MyNet.UI.ViewModels.Import.ImportListViewModel`1|95.2%|61.1%|
 |MyNet.UI.ViewModels.List.CrudListViewModel`1|72.4%|75%|
-|MyNet.UI.ViewModels.List.ExtendedCollectionDataProvider`1|66.6%|50%|
-|MyNet.UI.ViewModels.List.Factories.ListViewModelFactory|73%|50%|
+|MyNet.UI.ViewModels.List.ExtendedCollectionDataProvider`1|76.4%|50%|
+|MyNet.UI.ViewModels.List.Factories.ListViewModelFactory|80.7%|66.6%|
 |MyNet.UI.ViewModels.List.Filtering.Catalog.FilterDefinition`2|0%||
 |MyNet.UI.ViewModels.List.Filtering.FilterConditionViewModel`1|60%|0%|
 |MyNet.UI.ViewModels.List.Filtering.FilterGroupViewModel`1|23.5%|0%|
@@ -785,7 +786,7 @@
 |MyNet.UI.ViewModels.List.Grouping.GroupingViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.List.Grouping.GroupingViewModelBuilder`1|0%|0%|
 |MyNet.UI.ViewModels.List.ListViewModel`1|42.8%|41.6%|
-|MyNet.UI.ViewModels.List.ListViewModelBase`1|80.2%|60.3%|
+|MyNet.UI.ViewModels.List.ListViewModelBase`1|91.8%|70.3%|
 |MyNet.UI.ViewModels.List.ListViewModelBase`2|50%|0%|
 |MyNet.UI.ViewModels.List.Paging.PagingChangedEventArgs|100%||
 |MyNet.UI.ViewModels.List.Paging.PagingViewModel|95.5%|65.3%|
@@ -832,7 +833,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.7%**|
+|**MyNet.Utilities**|**81.9%**|**64.9%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -854,7 +855,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
