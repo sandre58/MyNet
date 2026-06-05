@@ -46,6 +46,33 @@ public sealed class SelectableListViewModelTests
     }
 
     [Fact]
+    public void SelectedItem_Set_Should_SelectItemInSingleMode()
+    {
+        using var vm = ListViewModelFactory.CreateSelection(
+            ["A", "B"],
+            selectionMode: SelectionMode.Single);
+
+        vm.SelectedItem = "B";
+
+        vm.SelectedItem.Should().Be("B");
+        vm.IsSelected("B").Should().BeTrue();
+    }
+
+    [Fact]
+    public void SelectedItem_SetNull_Should_ClearSelection()
+    {
+        using var vm = ListViewModelFactory.CreateSelection(
+            ["A", "B"],
+            selectionMode: SelectionMode.Single);
+
+        vm.SelectedItem = "A";
+        vm.SelectedItem = null;
+
+        vm.SelectedCount.Should().Be(0);
+        vm.SelectedItem.Should().BeNull();
+    }
+
+    [Fact]
     public void Dispose_Should_NotThrow()
     {
         var vm = ListViewModelFactory.CreateSelection(["A"]);

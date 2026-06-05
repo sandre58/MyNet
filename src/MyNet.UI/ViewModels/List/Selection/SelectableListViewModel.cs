@@ -89,7 +89,26 @@ public class SelectableListViewModel<T> : ListViewModelBase<T, ExtendedCollectio
     public int SelectedCount => _selection.SelectedCount;
 
     /// <inheritdoc />
-    public T? SelectedItem => SelectedItems.FirstOrDefault();
+    public T? SelectedItem
+    {
+        get => SelectedItems.FirstOrDefault();
+        set
+        {
+            if (EqualityComparer<T>.Default.Equals(SelectedItem, value))
+                return;
+
+            if (value is null)
+            {
+                ClearSelection();
+                return;
+            }
+
+            if (SelectionMode == SelectionMode.Single)
+                Select(value);
+            else
+                SetSelection([value]);
+        }
+    }
 
     /// <inheritdoc />
     public bool IsSelected(T item) => _selection.IsSelected(item);

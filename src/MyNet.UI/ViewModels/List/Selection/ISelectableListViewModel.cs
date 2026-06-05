@@ -32,9 +32,9 @@ public interface ISelectableListViewModel<T> : IListViewModel<T>
     int SelectedCount { get; }
 
     /// <summary>
-    /// Gets the first selected item, if any.
+    /// Gets or sets the first selected item, if any.
     /// </summary>
-    T? SelectedItem { get; }
+    T? SelectedItem { get; set; }
 
     /// <summary>
     /// Determines whether the specified item is selected.
