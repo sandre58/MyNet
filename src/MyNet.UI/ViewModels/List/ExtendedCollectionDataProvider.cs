@@ -31,7 +31,16 @@ public sealed class ExtendedCollectionDataProvider<T>(ExtendedCollection<T> coll
     public ReadOnlyObservableCollection<T> Source => Collection.Source;
 
     /// <inheritdoc />
+    public ReadOnlyObservableCollection<T> FilteredItems => Collection.FilteredItems;
+
+    /// <inheritdoc />
     public ReadOnlyObservableCollection<T> Items => Collection.Items;
+
+    /// <inheritdoc />
+    public int FilteredCount => Collection.Count;
+
+    /// <inheritdoc />
+    public IObservable<IChangeSet<T>> ConnectFiltered() => Collection.ConnectFiltered();
 
     /// <inheritdoc />
     public IObservable<IChangeSet<T>> Connect() => Collection.Connect();
@@ -56,6 +65,12 @@ public sealed class ExtendedCollectionDataProvider<T>(ExtendedCollection<T> coll
 
     /// <inheritdoc />
     public void ClearGrouping() => Collection.ClearGrouping();
+
+    /// <inheritdoc />
+    public void SetPaging(int page, int pageSize) => Collection.SetPaging(page, pageSize);
+
+    /// <inheritdoc />
+    public void ClearPaging() => Collection.ClearPaging();
 
     /// <inheritdoc />
     public void Dispose() => Collection.Dispose();

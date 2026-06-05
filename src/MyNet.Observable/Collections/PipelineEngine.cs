@@ -5,8 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Reactive.Linq;
 using DynamicData;
 using MyNet.Observable.Collections.Filters;
+using MyNet.Observable.Collections.Paging;
 using MyNet.Observable.Collections.Sorting;
 
 namespace MyNet.Observable.Collections;
@@ -38,5 +40,31 @@ internal static class PipelineEngine
             .Sort(sortEngine.Comparer, resort: sortEngine.Resort);
 
         return (sorted, filtered);
+    }
+
+    /// <summary>
+    /// Applies a paging window on top of a filtered and sorted change set stream.
+    /// </summary>
+    /// <param name="filtered">The filtered and sorted change set stream.</param>
+    /// <param name="pagingEngine">The paging engine providing the active page window.</param>
+    /// <typeparam name="T">The type of items in the collection.</typeparam>
+    /// <returns>The paged change set stream.</returns>
+    public static IObservable<IChangeSet<T>> ApplyPaging<T>(
+        IObservable<IChangeSet<T>> filtered,
+        PagingEngine pagingEngine)
+        where T : notnull
+    {
+        var pageRequests = pagingEngine.State
+            .Select(state => state switch
+            {
+                null => null,
+                var (page, pageSize) => (IPageRequest?)new PageRequest(Math.Max(page, 1), pageSize)
+            })
+            .Where(request => request is not null)
+            .Select(request => request!);
+
+        return pagingEngine.State
+            .Select(state => state is null ? filtered : filtered.Page(pageRequests))
+            .Switch();
     }
 }

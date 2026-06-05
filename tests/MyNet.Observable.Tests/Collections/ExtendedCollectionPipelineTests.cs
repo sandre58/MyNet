@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.ComponentModel;
+using System.Linq;
 using FluentAssertions;
 using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Filters;
@@ -39,5 +40,36 @@ public sealed class ExtendedCollectionPipelineTests
         collection.SetSorting(new ExpressionSortingProperty<int>(x => x, ListSortDirection.Descending));
 
         collection.Should().Equal(3, 2, 1);
+    }
+
+    [Fact]
+    public void Paging_ExposesOnlyCurrentPageInItems()
+    {
+        using var collection = ExtendedCollection.FromReadOnly(Enumerable.Range(1, 250));
+
+        collection.SetPaging(1, 100);
+
+        collection.Count.Should().Be(250);
+        collection.FilteredItems.Should().HaveCount(250);
+        collection.FilteredItems.Should().Equal(Enumerable.Range(1, 250));
+        collection.Items.Should().HaveCount(100);
+        collection.Items.Should().Equal(Enumerable.Range(1, 100));
+
+        collection.SetPaging(2, 100);
+
+        collection.FilteredItems.Should().HaveCount(250);
+        collection.Items.Should().HaveCount(100);
+        collection.Items.Should().Equal(Enumerable.Range(101, 100));
+    }
+
+    [Fact]
+    public void ClearPaging_ExposesFullFilteredCollectionInItems()
+    {
+        using var collection = ExtendedCollection.FromReadOnly(Enumerable.Range(1, 250));
+
+        collection.SetPaging(1, 100);
+        collection.ClearPaging();
+
+        collection.Items.Should().HaveCount(250);
     }
 }

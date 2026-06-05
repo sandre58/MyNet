@@ -65,6 +65,7 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
         _pipelineRefreshDeferrer = new(RefreshPipeline);
 
         Source = DataProvider.Source;
+        FilteredItems = DataProvider.FilteredItems;
         Items = DataProvider.Items;
         Groups = new(_groups);
 
@@ -93,9 +94,9 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
         if (Paging is not null)
         {
             Disposables.Add(
-                DataProvider.Connect()
+                DataProvider.ConnectFiltered()
                     .ObserveOn(scheduler1)
-                    .Subscribe(_ => UpdatePaging()));
+                    .Subscribe(_ => SyncPagingMetadata()));
         }
     }
 
@@ -108,6 +109,9 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     public ReadOnlyObservableCollection<T> Source { get; }
 
     /// <inheritdoc />
+    public ReadOnlyObservableCollection<T> FilteredItems { get; }
+
+    /// <inheritdoc />
     public ReadOnlyObservableCollection<T> Items { get; }
 
     /// <inheritdoc />
@@ -115,6 +119,9 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
 
     /// <inheritdoc />
     public int TotalCount => Source.Count;
+
+    /// <inheritdoc />
+    public int FilteredCount => DataProvider.FilteredCount;
 
     /// <inheritdoc />
     public IFiltersViewModel<T>? Filters { get; }
@@ -156,14 +163,18 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     public IDisposable DeferRefresh() => _pipelineRefreshDeferrer.Defer();
 
     /// <summary>
-    /// Refreshes the collection pipeline by applying the current filter, sorting, grouping, and updating paging metadata.
+    /// Refreshes the collection pipeline by applying the current filter, sorting, grouping, and paging window.
     /// </summary>
     private void RefreshPipeline()
     {
         ApplyFilter();
         ApplySorting();
         ApplyGrouping();
-        UpdatePaging();
+        ApplyPaging();
+        SyncPagingMetadata();
+
+        if (Paging is not null)
+            ApplyPaging();
     }
 
     /// <summary>
@@ -175,10 +186,15 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
 
     /// <summary>
     /// Applies the current filter from the Filters view model to the collection.
+    /// When no <see cref="Filters"/> view model is configured, the data provider filter is left unchanged
+    /// so derived classes can manage ad-hoc filters through <see cref="IListDataProvider{T}.SetFilter"/>.
     /// </summary>
     private void ApplyFilter()
     {
-        CurrentFilter = Filters?.CurrentFilter;
+        if (Filters is null)
+            return;
+
+        CurrentFilter = Filters.CurrentFilter;
 
         if (CurrentFilter is null)
             DataProvider.ClearFilter();
@@ -213,15 +229,33 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
     }
 
     /// <summary>
-    /// Updates paging metadata based on the current total count.
+    /// Applies the current paging window to the collection.
     /// </summary>
-    private void UpdatePaging()
+    private void ApplyPaging()
+    {
+        if (Paging is null)
+        {
+            DataProvider.ClearPaging();
+            return;
+        }
+
+        DataProvider.SetPaging(Paging.CurrentPage, Paging.PageSize);
+    }
+
+    /// <summary>
+    /// Updates paging metadata based on the current filtered count.
+    /// </summary>
+    private void SyncPagingMetadata()
     {
         if (Paging is null)
             return;
 
+        var previousPage = Paging.CurrentPage;
         var currentPage = Math.Max(1, Paging.CurrentPage);
-        Paging.Update(TotalCount, currentPage);
+        Paging.Update(DataProvider.FilteredCount, currentPage);
+
+        if (Paging.CurrentPage != previousPage)
+            ApplyPaging();
     }
 
     /// <summary>

@@ -38,7 +38,10 @@ public sealed class PipelineDebouncingTests : IDisposable
         var source = new ObservableCollection<int>([1, 2, 3]);
         Mock<IListDataProvider<int>> providerMock = new();
         providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<int>(source));
+        providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<int>(source));
         providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<int>(source));
+        providerMock.Setup(p => p.FilteredCount).Returns(source.Count);
+        providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<int>>());
         providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<int>>());
         providerMock.Setup(p => p.ConnectGroups()).Returns(Return<IReadOnlyList<CollectionGroup<int>>>([]));
         providerMock.Setup(p => p.ClearFilter()).Callback(() => _providerCallCount++);

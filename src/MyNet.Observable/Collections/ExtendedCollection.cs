@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using DynamicData;
 using MyNet.Observable.Collections.Filters;
 using MyNet.Observable.Collections.Grouping;
+using MyNet.Observable.Collections.Paging;
 using MyNet.Observable.Collections.Sorting;
 using MyNet.Observable.Collections.Sources;
 using MyNet.Primitives;
@@ -89,10 +90,13 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     private readonly FilterEngine<T> _filterEngine = new();
     private readonly SortEngine<T> _sortEngine = new();
     private readonly GroupingEngine<T> _groupingEngine = new();
+    private readonly PagingEngine _pagingEngine = new();
     private readonly PropertyDependencyExtractor<T> _dependencyExtractor = new();
 
+    private readonly IObservable<IChangeSet<T>> _filteredObservable;
     private readonly IObservable<IChangeSet<T>> _itemsObservable;
     private readonly IObservable<IChangeSet<T>> _sourceObservable;
+    private readonly ReadOnlyObservableCollection<T> _filteredItems;
     private readonly ReadOnlyObservableCollection<T> _items;
     private readonly ReadOnlyObservableCollection<T> _sortedSource;
     private readonly IObservable<IReadOnlyList<CollectionGroup<T>>> _groupsObservable;
@@ -111,16 +115,18 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
         _source = source;
         IsReadOnly = source.IsReadOnly;
 
-        (_sourceObservable, _itemsObservable) = PipelineEngine.Build(_source.Connect(), _filterEngine, _sortEngine);
+        (_sourceObservable, _filteredObservable) = PipelineEngine.Build(_source.Connect(), _filterEngine, _sortEngine);
+        _itemsObservable = PipelineEngine.ApplyPaging(_filteredObservable, _pagingEngine);
 
-        // Groups observable: recomputed reactively whenever items or grouping config changes
-        _groupsObservable = _itemsObservable.ToCollection()
+        // Groups observable: recomputed reactively whenever filtered items or grouping config changes
+        _groupsObservable = _filteredObservable.ToCollection()
             .CombineLatest(
                 _groupingEngine.Grouping,
                 (items, grouping) => GroupingEngine<T>.ComputeGroups([.. items], grouping));
 
         Disposables.Add(_sourceObservable.ObserveOnOptional(scheduler).Bind(out _sortedSource).Subscribe(_ => UpdateSourceCount()));
-        Disposables.Add(_itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe(_ => UpdateFilteredCount()));
+        Disposables.Add(_filteredObservable.ObserveOnOptional(scheduler).Bind(out _filteredItems).Subscribe(_ => UpdateFilteredCount()));
+        Disposables.Add(_itemsObservable.ObserveOnOptional(scheduler).Bind(out _items).Subscribe());
         Disposables.Add(_source.Connect().SubscribeMany(SubscribeToItemChanges).Subscribe());
         Disposables.Add(ObserveCollectionChanges(_items).Subscribe(HandleCollectionChanged));
 
@@ -129,7 +135,12 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     }
 
     /// <summary>
-    /// Gets a read-only observable collection of items that represents the current state of the collection after applying filters and sorting. This collection automatically updates when the underlying data changes, and it raises collection changed events to notify subscribers of any changes to the items in the collection. The Items property provides a way to access the filtered and sorted items while ensuring that external code cannot modify the collection directly, maintaining encapsulation and integrity of the data.
+    /// Gets a read-only observable collection of items after applying filters and sorting, before paging.
+    /// </summary>
+    public ReadOnlyObservableCollection<T> FilteredItems => _filteredItems;
+
+    /// <summary>
+    /// Gets a read-only observable collection of items that represents the current page after applying filters, sorting, and paging.
     /// </summary>
     public ReadOnlyObservableCollection<T> Items => _items;
 
@@ -154,7 +165,12 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     public IFilter<T>? CurrentFilter => _filterEngine.Current;
 
     /// <summary>
-    /// Connects to the collection and returns an observable sequence of change sets representing the changes to the items in the collection after filtering and sorting are applied. This method allows subscribers to receive notifications of changes to the collection's contents, including additions, removals, and updates to items, based on the current filters and sorting properties. The Connect method provides a way to react to changes in the collection's items, enabling dynamic updates to user interfaces or other dependent components based on the specific changes that occur in the collection, while still maintaining encapsulation and integrity of the data.
+    /// Observes item changes after filter/sort operations, before paging is applied.
+    /// </summary>
+    public IObservable<IChangeSet<T>> ConnectFiltered() => _filteredObservable;
+
+    /// <summary>
+    /// Connects to the collection and returns an observable sequence of change sets representing the changes to the items in the collection after filtering, sorting, and paging are applied.
     /// </summary>
     public IObservable<IChangeSet<T>> Connect() => _itemsObservable;
 
@@ -171,6 +187,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
         _filterEngine.Dispose();
         _sortEngine.Dispose();
         _groupingEngine.Dispose();
+        _pagingEngine.Dispose();
         _source.Dispose();
 
         base.DisposeManagedResources();
@@ -248,6 +265,22 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
 
     #endregion
 
+    #region Paging
+
+    /// <summary>
+    /// Sets the active paging window applied to the filtered and sorted items exposed through <see cref="Items"/>.
+    /// </summary>
+    /// <param name="page">The one-based page index.</param>
+    /// <param name="pageSize">The page size.</param>
+    public void SetPaging(int page, int pageSize) => _pagingEngine.Set(page, pageSize);
+
+    /// <summary>
+    /// Clears paging and exposes the full filtered and sorted collection through <see cref="Items"/>.
+    /// </summary>
+    public void ClearPaging() => _pagingEngine.Clear();
+
+    #endregion
+
     #region INotifyCollectionChanged
 
     /// <summary>
@@ -277,7 +310,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     #region ICollection
 
     /// <summary>
-    /// Gets the number of items in the collection after filtering is applied. This count reflects the number of items that are currently visible in the collection based on the defined filters, and it may differ from the total number of items in the source collection. The Count property provides a way to determine how many items are currently included in the collection after filtering, which can be useful for scenarios where you want to know the number of items that meet specific criteria defined by the filters, while still maintaining encapsulation and integrity of the data.
+    /// Gets the number of items in the collection after filtering and sorting are applied, before paging.
     /// </summary>
     public int Count => _count;
 
@@ -396,7 +429,7 @@ public class ExtendedCollection<T> : ObservableObject, ICollection<T>, IReadOnly
     /// Synchronizes <see cref="Count"/> with the filtered view.
     /// </summary>
     private void UpdateFilteredCount() =>
-        SetProperty(ref _count, _items.Count, nameof(Count));
+        SetProperty(ref _count, _filteredItems.Count, nameof(Count));
 
     /// <summary>
     /// Subscribes to property changes of an item in the collection if it implements INotifyPropertyChanged. This method creates an observable that listens for property change events on the item and triggers a refresh of the filter and sort engines when relevant properties change. The SubscribeToItemChanges method ensures that the collection remains up-to-date with changes to the properties of individual items, allowing for dynamic updates to the collection based on changes to the underlying data, while still maintaining encapsulation and integrity of the data.

@@ -25,7 +25,13 @@ public interface IListViewModel<T> : IDisposable
     ReadOnlyObservableCollection<T> Source { get; }
 
     /// <summary>
-    /// Gets the resulting items after applying the pipeline (filter, sort, page).
+    /// Gets the items after filter and sort, before paging.
+    /// </summary>
+    ReadOnlyObservableCollection<T> FilteredItems { get; }
+
+    /// <summary>
+    /// Gets the current page items after filter, sort, and paging.
+    /// When paging is disabled, this matches <see cref="FilteredItems"/>.
     /// </summary>
     ReadOnlyObservableCollection<T> Items { get; }
 
@@ -39,6 +45,11 @@ public interface IListViewModel<T> : IDisposable
     /// Gets the total number of items in the source.
     /// </summary>
     int TotalCount { get; }
+
+    /// <summary>
+    /// Gets the number of items after filter and sort, before paging.
+    /// </summary>
+    int FilteredCount { get; }
 
     /// <summary>
     /// Gets the filtering configuration ViewModel.

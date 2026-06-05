@@ -35,7 +35,10 @@ public sealed class ListViewModelBaseDataProviderTests : IDisposable
     {
         _providerMock = new();
         _providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<string>(_sourceItems));
+        _providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<string>(_filteredItems));
         _providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<string>(_filteredItems));
+        _providerMock.Setup(p => p.FilteredCount).Returns(_filteredItems.Count);
+        _providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<string>>());
         _providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<string>>());
         _providerMock.Setup(p => p.ConnectGroups()).Returns(Return<IReadOnlyList<CollectionGroup<string>>>([]));
 
@@ -50,14 +53,20 @@ public sealed class ListViewModelBaseDataProviderTests : IDisposable
     }
 
     [Fact]
+    public void FilteredItems_Should_ReturnProviderFilteredItems() => _vm.FilteredItems.Should().HaveCount(2);
+
+    [Fact]
+    public void FilteredCount_Should_ReturnProviderFilteredCount() => _vm.FilteredCount.Should().Be(2);
+
+    [Fact]
     public void Items_Should_ReturnProviderItems() => _vm.Items.Should().HaveCount(2);
 
     [Fact]
     public void TotalCount_Should_ReflectSourceCount() => _vm.TotalCount.Should().Be(3);
 
     [Fact]
-    public void WhenFiltersViewModelIsNull_ClearFilter_Should_BeCalled() =>
-        _providerMock.Verify(p => p.ClearFilter(), Times.AtLeastOnce);
+    public void WhenFiltersViewModelIsNull_ClearFilter_Should_NotBeCalledOnRefresh()
+        => _providerMock.Verify(p => p.ClearFilter(), Times.Never);
 
     [Fact]
     public void WhenFilterChanged_Provider_SetFilter_Should_BeCalled()

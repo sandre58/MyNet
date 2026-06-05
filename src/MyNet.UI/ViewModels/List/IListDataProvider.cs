@@ -27,12 +27,28 @@ public interface IListDataProvider<T> : IDisposable
     ReadOnlyObservableCollection<T> Source { get; }
 
     /// <summary>
-    /// Gets the current items after the pipeline has been applied.
+    /// Gets the items after filter and sort, before paging.
+    /// </summary>
+    ReadOnlyObservableCollection<T> FilteredItems { get; }
+
+    /// <summary>
+    /// Gets the current page items after filter, sort, and paging.
+    /// When paging is disabled, this matches <see cref="FilteredItems"/>.
     /// </summary>
     ReadOnlyObservableCollection<T> Items { get; }
 
     /// <summary>
-    /// Observes item changes after filter/sort operations.
+    /// Gets the number of items after filter and sort, before paging.
+    /// </summary>
+    int FilteredCount { get; }
+
+    /// <summary>
+    /// Observes item changes after filter/sort operations, before paging is applied.
+    /// </summary>
+    IObservable<IChangeSet<T>> ConnectFiltered();
+
+    /// <summary>
+    /// Observes item changes after filter/sort/paging operations.
     /// </summary>
     IObservable<IChangeSet<T>> Connect();
 
@@ -70,4 +86,14 @@ public interface IListDataProvider<T> : IDisposable
     /// Clears the active grouping.
     /// </summary>
     void ClearGrouping();
+
+    /// <summary>
+    /// Sets the active paging window.
+    /// </summary>
+    void SetPaging(int page, int pageSize);
+
+    /// <summary>
+    /// Clears the active paging window.
+    /// </summary>
+    void ClearPaging();
 }
