@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/05/2026 - 21:17:33 |
-| Coverage date: | 06/05/2026 - 21:14:34 - 06/05/2026 - 21:15:27 |
-| Parser: | MultiReport (63x Cobertura) |
+| Generated on: | 06/05/2026 - 22:18:31 |
+| Coverage date: | 06/05/2026 - 22:15:26 - 06/05/2026 - 22:16:32 |
+| Parser: | MultiReport (64x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 683 |
 | Files: | 638 |
-| **Line coverage:** | 73.7% (10532 of 14281) |
-| Covered lines: | 10532 |
+| **Line coverage:** | 73.7% (10538 of 14287) |
+| Covered lines: | 10538 |
 | Uncovered lines: | 3749 |
-| Coverable lines: | 14281 |
-| Total lines: | 58850 |
-| **Branch coverage:** | 61.1% (3999 of 6536) |
-| Covered branches: | 3999 |
-| Total branches: | 6536 |
+| Coverable lines: | 14287 |
+| Total lines: | 58776 |
+| **Branch coverage:** | 61.1% (4002 of 6540) |
+| Covered branches: | 4002 |
+| Total branches: | 6540 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 296_27040378622 |
+| Tag: | 298_27042813555 |
 
 </details>
 
@@ -192,14 +192,14 @@
 |MyNet.Http.WebApiService|44.9%|50%|
 
 </details>
-<details><summary>MyNet.Humanizer - 88.3%</summary>
+<details><summary>MyNet.Humanizer - 88.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Humanizer**|**88.3%**|**75.1%**|
+|**MyNet.Humanizer**|**88.4%**|**75.1%**|
 |MyNet.Humanizer.Display.DisplayTextOptions|100%||
 |MyNet.Humanizer.Display.DisplayTextService|100%|100%|
-|MyNet.Humanizer.Display.DisplayTextStrategyResolver|73.6%|35.7%|
+|MyNet.Humanizer.Display.DisplayTextStrategyResolver|77.2%|37.5%|
 |MyNet.Humanizer.Display.Registration.DisplayTextStrategyRegistration`1|100%||
 |MyNet.Humanizer.Display.Registration.DisplayTextStrategyRegistry|100%||
 |MyNet.Humanizer.Display.Strategies.DisplayTextStrategyBase`1|96.1%|77.7%|
