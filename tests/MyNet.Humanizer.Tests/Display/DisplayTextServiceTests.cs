@@ -109,7 +109,7 @@ public sealed class DisplayTextServiceTests
         resolver.Verify(r => r.GetRequiredForType(It.IsAny<Type>()), Times.Never);
     }
 
-    public interface IContract;
+    internal interface IContract;
 
-    public sealed class DerivedType : IContract;
+    internal sealed class DerivedType : IContract;
 }

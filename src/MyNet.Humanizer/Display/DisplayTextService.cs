@@ -22,9 +22,6 @@ public class DisplayTextService(IDisplayTextStrategyResolver resolver, ICultureC
     {
         var cultureToUse = culture ?? cultureContext.CurrentCulture;
 
-        if (typeof(T) == value.GetType())
-            return resolver.GetRequired<T>().GetDisplayText(value, options, cultureToUse);
-
-        return resolver.GetRequiredForType(value.GetType()).GetDisplayText(value, options, cultureToUse);
+        return typeof(T) == value.GetType() ? resolver.GetRequired<T>().GetDisplayText(value, options, cultureToUse) : resolver.GetRequiredForType(value.GetType()).GetDisplayText(value, options, cultureToUse);
     }
 }
