@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/05/2026 - 22:18:31 |
-| Coverage date: | 06/05/2026 - 22:15:26 - 06/05/2026 - 22:16:32 |
+| Generated on: | 06/06/2026 - 19:48:05 |
+| Coverage date: | 06/06/2026 - 19:45:04 - 06/06/2026 - 19:45:53 |
 | Parser: | MultiReport (64x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 683 |
-| Files: | 638 |
-| **Line coverage:** | 73.7% (10538 of 14287) |
-| Covered lines: | 10538 |
-| Uncovered lines: | 3749 |
-| Coverable lines: | 14287 |
-| Total lines: | 58776 |
-| **Branch coverage:** | 61.1% (4002 of 6540) |
-| Covered branches: | 4002 |
-| Total branches: | 6540 |
+| Classes: | 685 |
+| Files: | 640 |
+| **Line coverage:** | 73.8% (10605 of 14360) |
+| Covered lines: | 10605 |
+| Uncovered lines: | 3755 |
+| Coverable lines: | 14360 |
+| Total lines: | 59128 |
+| **Branch coverage:** | 61.3% (4036 of 6576) |
+| Covered branches: | 4036 |
+| Total branches: | 6576 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 298_27042813555 |
+| Tag: | 301_27072015784 |
 
 </details>
 
@@ -553,12 +553,13 @@
 |MyNet.Temporal.Decomposition.TimeUnitRuleSelector|96%|95%|
 
 </details>
-<details><summary>MyNet.Text - 73.3%</summary>
+<details><summary>MyNet.Text - 73.7%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Text**|**73.3%**|**60.5%**|
+|**MyNet.Text**|**73.7%**|**60.3%**|
 |MyNet.Text.Formatting.Formatter|100%||
+|MyNet.Text.Formatting.HumanizeKeyFormatterTransform|88.2%|50%|
 |MyNet.Text.Formatting.IncrementTransform|72.9%|90%|
 |MyNet.Text.Formatting.InitialsFormatterTransform|93.3%|87.5%|
 |MyNet.Text.GeneratorServiceCollectionExtensions|100%||
@@ -593,7 +594,7 @@
 |MyNet.Text.TextCasing.TitleCasingTransform|100%||
 |MyNet.Text.TextCasing.UpperCasingTransform|100%||
 |MyNet.Text.TextCasingExtensions|70.9%|80%|
-|MyNet.Text.TextFormattingExtensions|29.4%||
+|MyNet.Text.TextFormattingExtensions|33.3%||
 |MyNet.Text.TextNormalizationExtensions|100%||
 |MyNet.Text.TextPipeline|100%||
 |MyNet.Text.TextRandomGeneratorExtensions|0%|0%|
@@ -611,11 +612,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 55.3%</summary>
+<details><summary>MyNet.UI - 55.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**55.3%**|**42.7%**|
+|**MyNet.UI**|**55.9%**|**43.8%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -690,7 +691,7 @@
 |MyNet.UI.Notifications.Models.DeduplicableMessageNotification|100%|50%|
 |MyNet.UI.Notifications.Models.MessageNotification|100%||
 |MyNet.UI.Notifications.Models.NotificationBase|50%||
-|MyNet.UI.Notifications.NotificationBuilder|96.9%|100%|
+|MyNet.UI.Notifications.NotificationBuilder|93.2%|93.7%|
 |MyNet.UI.Notifications.NotificationPublisherExtensions|92.8%|87.5%|
 |MyNet.UI.Notifications.NotificationService|78.9%|70%|
 |MyNet.UI.Notifications.NotificationsManager|90.3%|77.2%|
@@ -705,13 +706,14 @@
 |MyNet.UI.Theming.ThemeChangedEventArgs|100%||
 |MyNet.UI.Theming.ThemeManager|54.5%|44.4%|
 |MyNet.UI.Threading.ServiceCollectionExtensions|100%||
-|MyNet.UI.Toasting.DefaultToastFactory|100%|50%|
+|MyNet.UI.Toasting.DefaultToastFactory|100%|90%|
 |MyNet.UI.Toasting.Filters.AllToastsFilter|100%||
 |MyNet.UI.Toasting.Filters.CompositeToastFilter|100%||
 |MyNet.UI.Toasting.Models.Toast|100%|50%|
 |MyNet.UI.Toasting.ServiceCollectionExtensions|100%|50%|
 |MyNet.UI.Toasting.Settings.ToastManagerOptions|100%||
-|MyNet.UI.Toasting.Settings.ToastSettings|100%||
+|MyNet.UI.Toasting.Settings.ToastSettings|0%||
+|MyNet.UI.Toasting.Settings.ToastSettingsMerger|100%|95%|
 |MyNet.UI.Toasting.ToastManager|72%|72.5%|
 |MyNet.UI.ViewModels.Crud.ChildItemViewModel`1|0%|0%|
 |MyNet.UI.ViewModels.Crud.CollectionEditionViewModel`1|73.4%|75%|
