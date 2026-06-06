@@ -6,6 +6,7 @@
 
 using System;
 using MyNet.UI.Notifications.Models;
+using MyNet.UI.Toasting.Settings;
 
 namespace MyNet.UI.Notifications;
 
@@ -23,6 +24,7 @@ public sealed class NotificationBuilder : INotificationBuilder
     private bool _useClosableNotification;
     private bool _isClosable = true;
     private Action<INotification>? _onClick;
+    private ToastSettingsOverrides? _toastSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NotificationBuilder"/> class without an associated publisher.
@@ -94,11 +96,58 @@ public sealed class NotificationBuilder : INotificationBuilder
     }
 
     /// <inheritdoc />
-    public INotification Build() => _useClosableNotification || _onClick is not null
-        ? new ActionNotification(_message, _title, _severity, _isClosable, _onClick)
-        : _deduplicable
-            ? new DeduplicableMessageNotification(_message, _title, _severity)
-            : (INotification)new MessageNotification(_message, _title, _severity);
+    public INotificationBuilder WithClosingStrategy(ToastClosingStrategy closingStrategy)
+    {
+        _toastSettings = MergeToastSettings(_toastSettings, new() { ClosingStrategy = closingStrategy });
+        return this;
+    }
+
+    /// <inheritdoc />
+    public INotificationBuilder WithFreezeOnMouseEnter(bool freezeOnMouseEnter)
+    {
+        _toastSettings = MergeToastSettings(_toastSettings, new() { FreezeOnMouseEnter = freezeOnMouseEnter });
+        return this;
+    }
+
+    /// <inheritdoc />
+    public INotificationBuilder WithDuration(TimeSpan duration)
+    {
+        _toastSettings = MergeToastSettings(_toastSettings, new() { Duration = duration });
+        return this;
+    }
+
+    /// <inheritdoc />
+    public INotificationBuilder WithToastSettings(ToastSettingsOverrides toastSettings)
+    {
+        ArgumentNullException.ThrowIfNull(toastSettings);
+        _toastSettings = MergeToastSettings(_toastSettings, toastSettings);
+        return this;
+    }
+
+    /// <inheritdoc />
+    public INotification Build()
+    {
+        if (_useClosableNotification || _onClick is not null)
+        {
+            return new ActionNotification(_message, _title, _severity, _isClosable, _onClick)
+            {
+                ToastSettings = _toastSettings
+            };
+        }
+
+        if (_deduplicable)
+        {
+            return new DeduplicableMessageNotification(_message, _title, _severity)
+            {
+                ToastSettings = _toastSettings
+            };
+        }
+
+        return new MessageNotification(_message, _title, _severity)
+        {
+            ToastSettings = _toastSettings
+        };
+    }
 
     /// <inheritdoc />
     public void Publish()
@@ -107,5 +156,20 @@ public sealed class NotificationBuilder : INotificationBuilder
             throw new InvalidOperationException("Cannot publish: create the builder via INotificationPublisher.Notify() or pass a publisher to NotificationBuilder.");
 
         _publisher.Publish(Build());
+    }
+
+    private static ToastSettingsOverrides MergeToastSettings(
+        ToastSettingsOverrides? current,
+        ToastSettingsOverrides update)
+    {
+        if (current is null)
+            return update;
+
+        return new()
+        {
+            ClosingStrategy = update.ClosingStrategy ?? current.ClosingStrategy,
+            FreezeOnMouseEnter = update.FreezeOnMouseEnter ?? current.FreezeOnMouseEnter,
+            Duration = update.Duration ?? current.Duration
+        };
     }
 }

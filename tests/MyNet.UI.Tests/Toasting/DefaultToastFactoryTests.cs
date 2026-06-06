@@ -7,8 +7,10 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MyNet.Primitives;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Toasting;
+using MyNet.UI.Toasting.Settings;
 using Xunit;
 
 namespace MyNet.UI.Tests.Toasting;
@@ -37,6 +39,61 @@ public class DefaultToastFactoryTests
         var toast = sut.Create(notification);
 
         toast.CloseCommand.Should().BeNull();
+    }
+
+    [Fact]
+    public void Create_UsesToastManagerOptionsAsGlobalDefaults()
+    {
+        var options = new ToastManagerOptions
+        {
+            DefaultClosingStrategy = ToastClosingStrategy.Both,
+            DefaultFreezeOnMouseEnter = false
+        };
+
+        var toast = new DefaultToastFactory(options).Create(new MessageNotification("hello"));
+
+        toast.Settings.ClosingStrategy.Should().Be(ToastClosingStrategy.Both);
+        toast.Settings.FreezeOnMouseEnter.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Create_AppliesNotificationToastSettingsOverrides()
+    {
+        var notification = new MessageNotification("hello")
+        {
+            ToastSettings = new()
+            {
+                Duration = 3.Seconds(),
+                FreezeOnMouseEnter = false
+            }
+        };
+
+        var toast = new DefaultToastFactory().Create(notification);
+
+        toast.Settings.Duration.Should().Be(3.Seconds());
+        toast.Settings.FreezeOnMouseEnter.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Create_WithClosableNotification_UsesBothClosingStrategyByDefault()
+    {
+        var toast = new DefaultToastFactory().Create(
+            new ClosableNotification("message", "title", NotificationSeverity.Information));
+
+        toast.Settings.ClosingStrategy.Should().Be(ToastClosingStrategy.Both);
+    }
+
+    [Fact]
+    public void Create_WithActionNotification_AssignsClickCommand()
+    {
+        var clicked = false;
+        var notification = new ActionNotification("message", "title", NotificationSeverity.Information, action: _ => clicked = true);
+
+        var toast = new DefaultToastFactory().Create(notification);
+
+        toast.ClickCommand.Should().NotBeNull();
+        toast.ClickCommand!.Execute(null);
+        clicked.Should().BeTrue();
     }
 
     private sealed class CustomClosableNotification(string message, bool isClosable) : NotificationBase(message), IClosableNotification

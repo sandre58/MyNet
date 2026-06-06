@@ -41,4 +41,14 @@ public class ToastManagerOptions
     /// Gets or sets the default duration for which a toast is displayed before it is automatically dismissed. This can be overridden on a per-toast basis if needed.
     /// </summary>
     public TimeSpan DefaultDuration { get; set; } = 5.Seconds();
+
+    /// <summary>
+    /// Gets or sets the default closing strategy applied when a toast is created.
+    /// </summary>
+    public ToastClosingStrategy DefaultClosingStrategy { get; set; } = ToastClosingStrategy.AutoClose;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether toasts pause auto-close while the pointer is over them.
+    /// </summary>
+    public bool DefaultFreezeOnMouseEnter { get; set; } = true;
 }

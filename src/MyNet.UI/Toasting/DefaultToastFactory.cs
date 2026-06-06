@@ -15,14 +15,26 @@ namespace MyNet.UI.Toasting;
 /// <summary>
 /// Creates default toast instances from notifications.
 /// </summary>
-public sealed class DefaultToastFactory(ICommandFactory? commandFactory = null) : IToastFactory
+public sealed class DefaultToastFactory : IToastFactory
 {
-    private readonly ICommandFactory _commandFactory = commandFactory.GetOrDefault();
+    private readonly ToastManagerOptions _options;
+    private readonly ICommandFactory _commandFactory;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultToastFactory"/> class.
+    /// </summary>
+    /// <param name="options">Global toast defaults used when resolving settings.</param>
+    /// <param name="commandFactory">Optional command factory for toast interaction commands.</param>
+    public DefaultToastFactory(ToastManagerOptions? options = null, ICommandFactory? commandFactory = null)
+    {
+        _options = options ?? new ToastManagerOptions();
+        _commandFactory = commandFactory.GetOrDefault();
+    }
 
     /// <inheritdoc />
     public IToast Create(INotification notification)
     {
-        var settings = ToastSettings.Default;
+        var settings = ToastSettingsMerger.Merge(notification, _options);
 
         var closeCommand = notification is IClosableNotification { IsClosable: true } closable
             ? _commandFactory.Create((Action)(() => closable.RequestClose()))

@@ -19,7 +19,9 @@ services.AddNotifications(configureProcessors: processors =>
 services.AddToasting(options =>
 {
     options.MaxVisibleToasts = 5;
-    // options.DefaultDuration = TimeSpan.FromSeconds(4);
+    options.DefaultDuration = TimeSpan.FromSeconds(4);
+    options.DefaultClosingStrategy = ToastClosingStrategy.Both;
+    options.DefaultFreezeOnMouseEnter = true;
 });
 ```
 
@@ -65,6 +67,14 @@ notifications.Notify()
     .AsError()
     .OnClick(n => OpenLog(n))
     .Publish();
+
+notifications.Notify()
+    .WithMessage("Saved")
+    .AsSuccess()
+    .WithDuration(TimeSpan.FromSeconds(2))
+    .WithClosingStrategy(ToastClosingStrategy.Both)
+    .WithFreezeOnMouseEnter(true)
+    .Publish();
 ```
 
 **Manual** (full control over notification type):
@@ -79,7 +89,14 @@ public class ExportService(INotificationPublisher notifications)
     {
         notifications.Publish(new MessageNotification(
             "Export completed",
-            severity: NotificationSeverity.Success));
+            severity: NotificationSeverity.Success)
+        {
+            ToastSettings = new()
+            {
+                Duration = TimeSpan.FromSeconds(2),
+                ClosingStrategy = ToastClosingStrategy.Both
+            }
+        });
     }
 }
 ```
@@ -148,6 +165,33 @@ public class ToastHostViewModel(IToastManager toastManager)
 ```
 
 Customize filtering with `IToastFilter` (default: `AllToastsFilter`). Customize creation with `IToastFactory` (default: `DefaultToastFactory`).
+
+### Toast settings (global vs per notification)
+
+Toast behavior is resolved in three layers:
+
+| Layer | Source | Examples |
+|-------|--------|----------|
+| Global defaults | `ToastManagerOptions` | `DefaultDuration`, `DefaultClosingStrategy`, `DefaultFreezeOnMouseEnter`, queue limits |
+| Per notification | `IHasToastSettings.ToastSettings` (`ToastSettingsOverrides`) | duration, closing strategy, hover pause for one publish |
+| Type inference | `DefaultToastFactory` / `ToastSettingsMerger` | closable notifications upgrade `AutoClose` → `Both` |
+
+`INotificationPublisher.Publish()` still accepts only `INotification`. Attach overrides on `NotificationBase` derivatives:
+
+```csharp
+new MessageNotification("Saved", severity: NotificationSeverity.Success)
+{
+    ToastSettings = new ToastSettingsOverrides
+    {
+        Duration = TimeSpan.FromSeconds(2),
+        ClosingStrategy = ToastClosingStrategy.Both
+    }
+};
+```
+
+Or use the fluent builder (`WithDuration`, `WithClosingStrategy`, `WithFreezeOnMouseEnter`, `WithToastSettings`).
+
+Only non-null properties in `ToastSettingsOverrides` replace global defaults. `Duration == null` on the resolved toast falls back to `ToastManagerOptions.DefaultDuration` in `ToastManager`.
 
 ### Direct test pattern
 
@@ -289,44 +333,11 @@ Bind to `IToast`. Display text from `Notification`; style from `Notification.Sev
 
 Map `NotificationSeverity` to brushes in your theme ([Theming](theming.md)) — e.g. success green, error red, warning amber. A `DataTrigger` on `Notification.Severity` or a small converter in the host works well.
 
-**Close button:** `DefaultToastFactory` sets `CloseCommand` only for `IClosableNotification` with `IsClosable == true`. `MessageNotification` has no close command — rely on auto-dismiss, or call `IToastManager.Remove(toast)` from a custom button.
+**Close button:** `DefaultToastFactory` sets `CloseCommand` for `IClosableNotification` with `IsClosable == true` and upgrades the closing strategy so hosts can show a close affordance (`AutoClose` → `Both`, `None` → `CloseButton`). Plain `MessageNotification` instances rely on auto-dismiss unless you override settings or use `Closable()`.
 
-**Click action:** the default factory does not wire `ClickCommand` for `ActionNotification`. Use a custom `IToastFactory` (register **before** `AddToasting()`):
+**Click action:** `DefaultToastFactory` wires `ClickCommand` for `ActionNotification` with a non-null `Action`.
 
-```csharp
-using MyNet.UI.Commands;
-using MyNet.UI.Notifications.Models;
-using MyNet.UI.Toasting.Models;
-using MyNet.UI.Toasting.Settings;
-
-public sealed class AppToastFactory(ICommandFactory commands) : IToastFactory
-{
-    public IToast Create(INotification notification)
-    {
-        var settings = new ToastSettings
-        {
-            ClosingStrategy = ToastClosingStrategy.Both,
-            FreezeOnMouseEnter = true
-        };
-
-        ICommand? close = notification is IClosableNotification { IsClosable: true } closable
-            ? commands.Create((Action)(() => closable.RequestClose()))
-            : null;
-
-        ICommand? click = notification is ActionNotification { Action: { } action }
-            ? commands.Create((Action)(() => action(notification)))
-            : null;
-
-        return new Toast(notification, settings, click, close);
-    }
-}
-```
-
-```csharp
-services.AddNotifications();
-services.AddSingleton<IToastFactory, AppToastFactory>();
-services.AddToasting();
-```
+Use a custom `IToastFactory` only when you need rules that cannot be expressed with `ToastManagerOptions`, `ToastSettingsOverrides`, or `ToastSettingsMerger` (register **before** `AddToasting()`):
 
 ### 4. Auto-dismiss and hover pause
 

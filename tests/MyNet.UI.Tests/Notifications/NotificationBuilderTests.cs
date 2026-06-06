@@ -9,6 +9,7 @@ using FluentAssertions;
 using Moq;
 using MyNet.UI.Notifications;
 using MyNet.UI.Notifications.Models;
+using MyNet.UI.Toasting.Settings;
 using Xunit;
 
 namespace MyNet.UI.Tests.Notifications;
@@ -67,6 +68,25 @@ public sealed class NotificationBuilderTests
         notification.Should().BeOfType<ActionNotification>();
         ((ActionNotification)notification).IsClosable.Should().BeTrue();
         ((ActionNotification)notification).Action.Should().BeNull();
+    }
+
+    [Fact]
+    public void Build_WithToastSettings_AppliesOverridesToNotification()
+    {
+        var notification = new NotificationBuilder()
+            .WithMessage("toast")
+            .WithDuration(TimeSpan.FromSeconds(4))
+            .WithClosingStrategy(ToastClosingStrategy.CloseButton)
+            .WithFreezeOnMouseEnter(false)
+            .Build();
+
+        notification.Should().BeAssignableTo<IHasToastSettings>();
+        var settings = ((IHasToastSettings)notification).ToastSettings;
+
+        settings.Should().NotBeNull();
+        settings.Duration.Should().Be(TimeSpan.FromSeconds(4));
+        settings.ClosingStrategy.Should().Be(ToastClosingStrategy.CloseButton);
+        settings.FreezeOnMouseEnter.Should().BeFalse();
     }
 
     [Fact]

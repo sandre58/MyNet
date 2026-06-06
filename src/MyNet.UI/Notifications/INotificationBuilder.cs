@@ -6,6 +6,7 @@
 
 using System;
 using MyNet.UI.Notifications.Models;
+using MyNet.UI.Toasting.Settings;
 
 namespace MyNet.UI.Notifications;
 
@@ -63,6 +64,26 @@ public interface INotificationBuilder
     /// Sets the action executed when the notification is activated.
     /// </summary>
     INotificationBuilder OnClick(Action<INotification> action);
+
+    /// <summary>
+    /// Overrides the toast closing strategy for this notification.
+    /// </summary>
+    INotificationBuilder WithClosingStrategy(ToastClosingStrategy closingStrategy);
+
+    /// <summary>
+    /// Overrides whether the toast pauses auto-close while the pointer is over it.
+    /// </summary>
+    INotificationBuilder WithFreezeOnMouseEnter(bool freezeOnMouseEnter);
+
+    /// <summary>
+    /// Overrides the toast auto-close duration for this notification.
+    /// </summary>
+    INotificationBuilder WithDuration(TimeSpan duration);
+
+    /// <summary>
+    /// Applies optional toast setting overrides for this notification.
+    /// </summary>
+    INotificationBuilder WithToastSettings(ToastSettingsOverrides toastSettings);
 
     /// <summary>
     /// Builds the notification without publishing it.
