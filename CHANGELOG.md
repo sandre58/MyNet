@@ -6,12 +6,12 @@ This file is generated automatically based on commit history and tags.
 
 
 
-## [v19.5.1] - 2026-06-05
+## [v19.5.2] - 2026-06-05
 
 
 ### 🐛 Bug Fixes
 
-- Enable setting the selected item in ISelectableListViewModel and update related logic *(commit by **Stéphane ANDRE (E104915)** in [d5a1af91](https://github.com/sandre58/MyNet/commit/d5a1af91f5c435fdbc19a83ebbe09e4744561298))*
+- Enhance display text strategy resolution with type-based retrieval *(commit by **Stéphane ANDRE (E104915)** in [1136c615](https://github.com/sandre58/MyNet/commit/1136c61502ebc0d6bc803b3b2103c02ff8dc4397))*
 
 
 
@@ -22,7 +22,7 @@ This file is generated automatically based on commit history and tags.
 
 
 
-**Full Changelog:** [compare v19.5.0...v19.5.1](https://github.com/sandre58/MyNet/compare/v19.5.0...v19.5.1)
+**Full Changelog:** [compare v19.5.1...v19.5.2](https://github.com/sandre58/MyNet/compare/v19.5.1...v19.5.2)
 
 
 ---
