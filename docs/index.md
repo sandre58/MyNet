@@ -15,6 +15,7 @@ docs/
 └── guides/
     ├── README.md
     ├── foundations.md
+    ├── text.md
     ├── collections-messaging.md
     ├── observable.md             ★ MVVM + metadata
     ├── ui.md                     ★ Locators overview
@@ -48,7 +49,7 @@ docs/
 | Package | Guide |
 |---------|-------|
 | [MyNet.Primitives](../src/MyNet.Primitives/README.md) | [Foundations](guides/foundations.md) |
-| [MyNet.Text](../src/MyNet.Text/README.md) | [Foundations](guides/foundations.md) |
+| [MyNet.Text](../src/MyNet.Text/README.md) | [Text transformations](guides/text.md) |
 | [MyNet.Utilities](../src/MyNet.Utilities/README.md) | [Foundations](guides/foundations.md) |
 | [MyNet.Generator](../src/MyNet.Generator/README.md) | [Foundations](guides/foundations.md) |
 | [MyNet.Reflection](../src/MyNet.Reflection/README.md) | [Foundations](guides/foundations.md) |
@@ -104,6 +105,7 @@ docs/
 | [theming.md](guides/theming.md) | Complete |
 | [globalization.md](guides/globalization.md) | Complete |
 | [foundations.md](guides/foundations.md) | Complete (overview per package) |
+| [text.md](guides/text.md) | Complete |
 | [collections-messaging.md](guides/collections-messaging.md) | Complete |
 | [humanizer.md](guides/humanizer.md) | Complete |
 | [geography.md](guides/geography.md) | Complete |

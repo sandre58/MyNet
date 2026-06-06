@@ -68,6 +68,7 @@ var text = new TemplateTransform(options).Apply("Hello, {Name}!", CultureInfo.In
 ---
 ## Documentation
 
+- [Text transformations guide](https://github.com/sandre58/MyNet/blob/main/docs/guides/text.md)
 - [Foundations guide](https://github.com/sandre58/MyNet/blob/main/docs/guides/foundations.md)
 - [Documentation index](https://github.com/sandre58/MyNet/blob/main/docs/index.md)
 ---

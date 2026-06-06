@@ -38,4 +38,35 @@ public class TextFormattingExtensionsTests
 
         Assert.Equal("GH", result);
     }
+
+    [Theory]
+    [InlineData("CeciEstUnTest", "Ceci est un test")]
+    [InlineData("ceciEstUnTest", "Ceci est un test")]
+    [InlineData("ceci_est_un_test", "Ceci est un test")]
+    [InlineData("ceci-est-un-test", "Ceci est un test")]
+    [InlineData("HTTPStatusCode404", "Http status code 404")]
+    public void HumanizeKey_ProducesReadableSentence(string input, string expected)
+    {
+        var result = input.HumanizeKey(CultureInfo.InvariantCulture);
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void HumanizeKey_Transform_IsAvailable()
+    {
+        var result = Formatter.HumanizeKey.Apply("CeciEstUnTest", CultureInfo.InvariantCulture);
+
+        Assert.Equal("Ceci est un test", result);
+    }
+
+    [Fact]
+    public void Pipeline_HumanizeKey_Works()
+    {
+        var result = TextPortal.For("CeciEstUnTest", CultureInfo.InvariantCulture)
+            .HumanizeKey()
+            .Value;
+
+        Assert.Equal("Ceci est un test", result);
+    }
 }

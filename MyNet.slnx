@@ -105,6 +105,7 @@
     <File Path="docs/guides/observable.md" />
     <File Path="docs/guides/README.md" />
     <File Path="docs/guides/shell.md" />
+    <File Path="docs/guides/text.md" />
     <File Path="docs/guides/theming.md" />
     <File Path="docs/guides/ui.md" />
   </Folder>

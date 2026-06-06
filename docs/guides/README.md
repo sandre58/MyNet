@@ -5,6 +5,7 @@ Topic-oriented guides for MyNet subsystems. Each guide links to package READMEs 
 | Guide | Packages | Summary |
 |-------|----------|---------|
 | [Foundations](foundations.md) | Primitives, Text, Utilities, Generator, Reflection, Metadata, Temporal | Core types, strings, cache, crypto, random |
+| [Text transformations](text.md) | Text | Full transformation catalog with examples |
 | [Collections & messaging](collections-messaging.md) | Collections, Messaging | Observable range collections, weak messenger |
 | [Observable models](observable.md) | Observable | MVVM models, validation, metadata generator |
 | [UI presentation layer](ui.md) | UI | Overview, locators |

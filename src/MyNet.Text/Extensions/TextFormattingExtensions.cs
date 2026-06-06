@@ -26,6 +26,11 @@ public static class TextFormattingExtensions
         public TextPipeline Initials() => pipeline.Apply(Formatter.Initials);
 
         /// <summary>
+        /// Converts key-like identifiers (PascalCase, camelCase, snake_case, kebab-case) to human-readable text.
+        /// </summary>
+        public TextPipeline HumanizeKey() => pipeline.Apply(Formatter.HumanizeKey);
+
+        /// <summary>
         /// Applies an increment transformation to the current text using explicit options.
         /// </summary>
         /// <param name="options">Options used to configure increment behavior.</param>
@@ -74,6 +79,11 @@ public static class TextFormattingExtensions
         /// Converts the string to initials.
         /// </summary>
         public string Initials(CultureInfo? culture = null) => input.Apply(culture.OrCurrent(), Formatter.Initials);
+
+        /// <summary>
+        /// Converts key-like identifiers (PascalCase, camelCase, snake_case, kebab-case) to human-readable text.
+        /// </summary>
+        public string HumanizeKey(CultureInfo? culture = null) => input.Apply(culture.OrCurrent(), Formatter.HumanizeKey);
 
         /// <summary>
         /// Applies an increment transformation using explicit options.
