@@ -87,17 +87,19 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
         BeginShow(dialog, strategy);
 
         await dialog.OnOpenedAsync().ConfigureAwait(false);
+        var resultTask = dialog.GetResultAsync();
 
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
             await strategy.ShowAsync(dialog, resolvedOptions, cancellationToken).ConfigureAwait(false);
-            return await dialog.GetResultAsync().ConfigureAwait(false);
         }
         finally
         {
             await CompleteLifecycleAsync(dialog).ConfigureAwait(false);
         }
+
+        return await resultTask.ConfigureAwait(false);
     }
 
     /// <inheritdoc />

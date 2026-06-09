@@ -35,4 +35,22 @@ public sealed class MessageBoxOptions
     /// Gets the default selected result.
     /// </summary>
     public MessageBoxResult DefaultResult { get; internal set; } = MessageBoxResult.Ok;
+
+    /// <summary>
+    /// Creates a configured <see cref="MessageBoxOptions"/> instance for use with <see cref="IMessageBoxFactory"/>.
+    /// </summary>
+    public static MessageBoxOptions Create(
+        string message,
+        string? title = null,
+        MessageSeverity severity = MessageSeverity.Information,
+        MessageBoxResultOption buttons = MessageBoxResultOption.Ok,
+        MessageBoxResult defaultResult = MessageBoxResult.Ok)
+        => new()
+        {
+            Message = message,
+            Title = title,
+            Severity = severity,
+            Buttons = buttons,
+            DefaultResult = defaultResult
+        };
 }

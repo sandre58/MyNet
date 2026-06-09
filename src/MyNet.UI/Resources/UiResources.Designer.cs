@@ -1167,6 +1167,42 @@ namespace MyNet.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erreur.
+        /// </summary>
+        public static string MessageSeverityError {
+            get {
+                return ResourceManager.GetString("MessageSeverityError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        public static string MessageSeverityInformation {
+            get {
+                return ResourceManager.GetString("MessageSeverityInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Succès.
+        /// </summary>
+        public static string MessageSeveritySuccess {
+            get {
+                return ResourceManager.GetString("MessageSeveritySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention.
+        /// </summary>
+        public static string MessageSeverityWarning {
+            get {
+                return ResourceManager.GetString("MessageSeverityWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Réduire.
         /// </summary>
         public static string Minimize {
@@ -1347,7 +1383,7 @@ namespace MyNet.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ok.
+        ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string Ok {
             get {

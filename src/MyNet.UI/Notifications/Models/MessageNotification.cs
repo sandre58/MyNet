@@ -15,4 +15,4 @@ namespace MyNet.UI.Notifications.Models;
 /// <param name="message">The message content.</param>
 /// <param name="title">The title of the notification.</param>
 /// <param name="severity">The severity of the notification.</param>
-public class MessageNotification(string message, string title = "", NotificationSeverity severity = NotificationSeverity.Information) : NotificationBase(message, title, severity);
+public class MessageNotification(string message, string? title = "", NotificationSeverity severity = NotificationSeverity.Information) : NotificationBase(message, title, severity);

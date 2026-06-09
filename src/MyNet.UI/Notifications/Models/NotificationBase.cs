@@ -6,6 +6,7 @@
 
 using System;
 using MyNet.Observable;
+using MyNet.Primitives;
 using MyNet.UI.Toasting.Settings;
 
 namespace MyNet.UI.Notifications.Models;
@@ -16,14 +17,14 @@ namespace MyNet.UI.Notifications.Models;
 /// <param name="message">The message content of the notification.</param>
 /// <param name="title">The title of the notification.</param>
 /// <param name="severity">The severity level of the notification.</param>
-public abstract class NotificationBase(string message, string title = "", NotificationSeverity severity = NotificationSeverity.Information)
+public abstract class NotificationBase(string message, string? title = "", NotificationSeverity severity = NotificationSeverity.Information)
     : ObservableObject, INotification, IHasToastSettings
 {
     /// <inheritdoc/>
     public Guid Id { get; } = Guid.NewGuid();
 
     /// <inheritdoc/>
-    public string Title { get; } = title;
+    public string Title { get; } = title.OrEmpty();
 
     /// <inheritdoc/>
     public string Message { get; } = message;

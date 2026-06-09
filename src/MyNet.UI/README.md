@@ -1,8 +1,8 @@
-<div align="center">
+﻿<div align="center">
 
 # MyNet.UI
 
-<img src="../../assets/MyNetUI.png" alt="MyNet.UI" width="96" height="96" />
+<img src="MyNetUI.png" alt="MyNet.UI" width="96" height="96" />
 
 *UI-framework-agnostic presentation layer: view models, shell, dialogs, navigation, notifications, and toasts. You provide concrete UI (WPF, Avalonia, etc.).*
 

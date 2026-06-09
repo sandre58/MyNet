@@ -394,7 +394,7 @@
     <value>(Pas de suggestions)</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+      <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Ouvrir</value>
@@ -852,5 +852,17 @@ Veuillez sélectionner un seul élément.</value>
   </data>
   <data name="Pm" xml:space="preserve">
     <value>Pm</value>
+  </data>
+  <data name="MessageSeverityInformation" xml:space="preserve">
+      <value>Information</value>
+  </data>
+  <data name="MessageSeverityError" xml:space="preserve">
+      <value>Erreur</value>
+  </data>
+  <data name="MessageSeverityWarning" xml:space="preserve">
+      <value>Attention</value>
+  </data>
+  <data name="MessageSeveritySuccess" xml:space="preserve">
+      <value>Succès</value>
   </data>
 </root>
