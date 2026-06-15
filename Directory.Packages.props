@@ -36,6 +36,6 @@
     <!-- Tools: package icon generator -->
     <PackageVersion Include="SkiaSharp" Version="4.147.0-preview.3.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Win32" Version="4.147.0-preview.3.1" />
-    <PackageVersion Include="Svg.Skia" Version="5.0.0" />
+    <PackageVersion Include="Svg.Skia" Version="5.1.1" />
   </ItemGroup>
 </Project>
