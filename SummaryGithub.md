@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/06/2026 - 19:48:05 |
-| Coverage date: | 06/06/2026 - 19:45:04 - 06/06/2026 - 19:45:53 |
-| Parser: | MultiReport (64x Cobertura) |
+| Generated on: | 06/26/2026 - 14:03:05 |
+| Coverage date: | 06/26/2026 - 13:59:46 - 06/26/2026 - 14:00:33 |
+| Parser: | MultiReport (62x Cobertura) |
 | Assemblies: | 24 |
-| Classes: | 685 |
-| Files: | 640 |
-| **Line coverage:** | 73.8% (10605 of 14360) |
-| Covered lines: | 10605 |
-| Uncovered lines: | 3755 |
-| Coverable lines: | 14360 |
-| Total lines: | 59128 |
-| **Branch coverage:** | 61.3% (4036 of 6576) |
-| Covered branches: | 4036 |
+| Classes: | 687 |
+| Files: | 642 |
+| **Line coverage:** | 73.6% (10608 of 14404) |
+| Covered lines: | 10608 |
+| Uncovered lines: | 3796 |
+| Coverable lines: | 14404 |
+| Total lines: | 57891 |
+| **Branch coverage:** | 61.3% (4034 of 6576) |
+| Covered branches: | 4034 |
 | Total branches: | 6576 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 301_27072015784 |
+| Tag: | 308_28242731399 |
 
 </details>
 
@@ -240,14 +240,14 @@
 |MyNet.Humanizer.TimeHumanizerExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.IO - 84%</summary>
+<details><summary>MyNet.IO - 84.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84%**|**77.2%**|
+|**MyNet.IO**|**84.2%**|**76.4%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
+|MyNet.IO.AutoSave.AutoSaveEngine|66.6%|54.1%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
 |MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
@@ -612,11 +612,11 @@
 |MyNet.Text.Truncation.Truncator|0%||
 
 </details>
-<details><summary>MyNet.UI - 55.9%</summary>
+<details><summary>MyNet.UI - 55.3%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.UI**|**55.9%**|**43.8%**|
+|**MyNet.UI**|**55.3%**|**43.8%**|
 |MyNet.UI.Attributes.AttributeExtensions|100%||
 |MyNet.UI.Commands.AsyncRelayCommand|92.3%|92.8%|
 |MyNet.UI.Commands.AsyncRelayCommand`1|13.3%|15%|
@@ -625,7 +625,7 @@
 |MyNet.UI.Commands.RelayCommand`1|87.5%|87.5%|
 |MyNet.UI.Commands.RelayCommandFactory|88.8%||
 |MyNet.UI.Dialogs.ContentDialogs.ContentDialogLifecycleEventArgs|100%|50%|
-|MyNet.UI.Dialogs.ContentDialogs.ContentDialogService|96.8%|85.7%|
+|MyNet.UI.Dialogs.ContentDialogs.ContentDialogService|96.9%|85.7%|
 |MyNet.UI.Dialogs.ContentDialogs.DialogBuilder|0%||
 |MyNet.UI.Dialogs.ContentDialogs.DialogBuilder`1|0%||
 |MyNet.UI.Dialogs.ContentDialogs.DialogOptions|100%|100%|
@@ -649,6 +649,7 @@
 |MyNet.UI.Dialogs.FileDialogServiceExtensions|66.6%||
 |MyNet.UI.Dialogs.MessageBox.DefaultMessageBoxFactory|100%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxBuilder|0%||
+|MyNet.UI.Dialogs.MessageBox.MessageBoxOptions|0%||
 |MyNet.UI.Dialogs.MessageBox.MessageBoxService|89.2%|25%|
 |MyNet.UI.Dialogs.MessageBox.MessageBoxViewModel|61.9%|0%|
 |MyNet.UI.Dialogs.ServiceCollectionExtensions|46.6%|100%|
@@ -662,6 +663,7 @@
 |MyNet.UI.Loading.Models.DeterminateBusy|100%||
 |MyNet.UI.Loading.Models.IndeterminateBusy|100%||
 |MyNet.UI.Loading.Models.ProgressionBusy|100%|50%|
+|MyNet.UI.Loading.ProgresserBusyExtensions|0%||
 |MyNet.UI.Loading.ServiceCollectionExtensions|100%||
 |MyNet.UI.Locators.Conventions.AssemblyRootConvention|81.8%|50%|
 |MyNet.UI.Locators.Conventions.NamespaceConvention|80%|50%|
@@ -690,7 +692,7 @@
 |MyNet.UI.Notifications.Models.ClosableNotification|66.6%|50%|
 |MyNet.UI.Notifications.Models.DeduplicableMessageNotification|100%|50%|
 |MyNet.UI.Notifications.Models.MessageNotification|100%||
-|MyNet.UI.Notifications.Models.NotificationBase|50%||
+|MyNet.UI.Notifications.Models.NotificationBase|66.6%||
 |MyNet.UI.Notifications.NotificationBuilder|93.2%|93.7%|
 |MyNet.UI.Notifications.NotificationPublisherExtensions|92.8%|87.5%|
 |MyNet.UI.Notifications.NotificationService|78.9%|70%|
@@ -835,7 +837,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.9%**|
+|**MyNet.Utilities**|**81.9%**|**64.7%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -857,7 +859,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
