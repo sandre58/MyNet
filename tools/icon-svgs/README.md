@@ -11,6 +11,14 @@ Paths are inspired by [Tabler Icons](https://tabler.io/icons) (MIT). You can rep
 | `observable.svg` | MyNet.Observable | Activity pulse — reactive / observable |
 | `typography.svg` | MyNet.Text | Document with text lines |
 | `utilities.svg` | MyNet.Utilities | Puzzle — helpers / building blocks |
+| `avalonia.svg` | *(unused)* | Former « A » mark |
+| `xaml-binding.svg` | MyNet.Avalonia | Braces + binding dot |
+| `controls-panel.svg` | MyNet.Avalonia.Controls | Sliders / control panel |
+| `dialog.svg` | MyNet.Avalonia.Extended | Dialog / message bubble |
+| `palette.svg` | MyNet.Avalonia.Theme | Theming / styling |
+| `theme-control.svg` | MyNet.Avalonia.Theme.Controls | Palette + toggle control |
+
+Full registry (all repos): [`icon-registry.md`](../icon-registry.md).
 
 ## Add or change an icon
 

@@ -1,5 +1,8 @@
 # Generates NuGet package icons (128x128 PNG) from SVG sources.
 # Usage (repo root): pwsh -File tools/generate-package-icons.ps1
+#
+# Cross-repo (e.g. MyAvalonia): pass --manifest, --svg-dir, --output after --
+# See tools/icon-registry.md
 
 $ErrorActionPreference = 'Stop'
 

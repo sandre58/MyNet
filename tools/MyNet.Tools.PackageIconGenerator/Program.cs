@@ -17,14 +17,31 @@ const float footerHeight = 24f;
 const float cornerRadius = 18f;
 const float iconMaxSize = 56f;
 
-var toolsDir = findToolsDirectory();
-var manifestPath = Path.Combine(toolsDir, "package-icons.json");
-var svgDir = Path.Combine(toolsDir, "icon-svgs");
-var assetsDir = Path.GetFullPath(Path.Combine(toolsDir, "..", "assets"));
+if (!tryParseOptions(args, out var options))
+{
+    printHelp();
+    return 1;
+}
+
+if (options.ShowHelp)
+{
+    printHelp();
+    return 0;
+}
+
+var manifestPath = options.ManifestPath!;
+var svgDir = options.SvgDirectory!;
+var assetsDir = options.OutputDirectory!;
 
 if (!File.Exists(manifestPath))
 {
     Console.Error.WriteLine($"Manifest not found: {manifestPath}");
+    return 1;
+}
+
+if (!Directory.Exists(svgDir))
+{
+    Console.Error.WriteLine($"SVG directory not found: {svgDir}");
     return 1;
 }
 
@@ -67,6 +84,107 @@ foreach (var icon in manifest.Icons)
 }
 
 return errors == 0 ? 0 : 1;
+
+static bool tryParseOptions(string[] args, out GeneratorOptions options)
+{
+    options = new GeneratorOptions();
+
+    for (var i = 0; i < args.Length; i++)
+    {
+        switch (args[i])
+        {
+            case "--help":
+            case "-h":
+                options.ShowHelp = true;
+                return true;
+            case "--manifest":
+                if (!tryReadValue(args, ref i, out var manifest))
+                    return false;
+
+                options.ManifestPath = Path.GetFullPath(manifest);
+                break;
+            case "--svg-dir":
+                if (!tryReadValue(args, ref i, out var svgDir))
+                    return false;
+
+                options.SvgDirectory = Path.GetFullPath(svgDir);
+                break;
+            case "--output":
+                if (!tryReadValue(args, ref i, out var output))
+                    return false;
+
+                options.OutputDirectory = Path.GetFullPath(output);
+                break;
+            default:
+                Console.Error.WriteLine($"Unknown argument: {args[i]}");
+                return false;
+        }
+    }
+
+    if (options.ShowHelp)
+        return true;
+
+    if (options.ManifestPath is null)
+    {
+        var toolsDir = findToolsDirectory();
+        options.ManifestPath = Path.Combine(toolsDir, "package-icons.json");
+        options.SvgDirectory ??= Path.Combine(toolsDir, "icon-svgs");
+        options.OutputDirectory ??= Path.GetFullPath(Path.Combine(toolsDir, "..", "assets"));
+    }
+    else
+    {
+        var manifestDir = Path.GetDirectoryName(options.ManifestPath)
+                          ?? throw new InvalidOperationException("Invalid manifest path.");
+
+        options.SvgDirectory ??= Path.Combine(manifestDir, "icon-svgs");
+        options.OutputDirectory ??= Path.GetFullPath(Path.Combine(manifestDir, "..", "assets"));
+    }
+
+    if (options.SvgDirectory is null)
+    {
+        Console.Error.WriteLine("SVG directory is required.");
+        return false;
+    }
+
+    if (options.OutputDirectory is null)
+    {
+        Console.Error.WriteLine("Output directory is required.");
+        return false;
+    }
+
+    return true;
+}
+
+static bool tryReadValue(string[] args, ref int index, out string value)
+{
+    if (index + 1 >= args.Length || args[index + 1].StartsWith('-'))
+    {
+        Console.Error.WriteLine($"Missing value for {args[index]}.");
+        value = string.Empty;
+        return false;
+    }
+
+    index++;
+    value = args[index];
+    return true;
+}
+
+static void printHelp()
+{
+    Console.WriteLine("""
+        MyNet.Tools.PackageIconGenerator — rasterize package icon manifests to 128x128 PNG.
+
+        Usage:
+          dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release
+          dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release -- [options]
+
+        Options:
+          --manifest <path>   Icon manifest JSON (default: tools/package-icons.json in repo root)
+          --svg-dir <path>    SVG source folder (default: icon-svgs next to manifest)
+          --output <path>     Output PNG folder (default: assets/ next to manifest repo)
+          -h, --help          Show this help
+        """);
+}
 
 static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
 {
@@ -167,7 +285,7 @@ static void drawGlyph(SKCanvas canvas, string glyph, float centerY, float scale)
     textPaint.IsAntialias = true;
     var font = new SKFont(typeface, textSize) { Edging = SKFontEdging.Alias, Embolden = true };
 
-    canvas.DrawText(glyph.ToUpperInvariant(), size / 2f, centerY + (textSize * 0.35f), SKTextAlign.Center, font,  textPaint);
+    canvas.DrawText(glyph.ToUpperInvariant(), size / 2f, centerY + (textSize * 0.35f), SKTextAlign.Center, font, textPaint);
 }
 
 static string findToolsDirectory()

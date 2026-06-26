@@ -10,7 +10,8 @@ Icons are built from **SVG sources** in [`tools/icon-svgs`](../tools/icon-svgs/)
 pwsh -File tools/generate-package-icons.ps1
 ```
 
-Configuration: [`tools/package-icons.json`](../tools/package-icons.json).
+Configuration: [`tools/package-icons.json`](../tools/package-icons.json).  
+Full registry (all repos): [`tools/icon-registry.md`](../tools/icon-registry.md).
 
 ## Shared icons
 
