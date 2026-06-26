@@ -47,12 +47,14 @@ Use `MyNet.IO` namespaces for path extensions, file helpers, and auto-save patte
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Primitives](https://www.nuget.org/packages/MyNet.Primitives)
 - [MyNet.Platform.Windows](https://www.nuget.org/packages/MyNet.Platform.Windows)
 - [MyNet.UI](https://www.nuget.org/packages/MyNet.UI)
+
 
 
 

@@ -50,11 +50,13 @@ Implement or consume `IMailService` via **MyNet.Mail.MailKit** for SMTP.
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Mail.MailKit](https://www.nuget.org/packages/MyNet.Mail.MailKit)
 - [MyNet.Platform.Windows](https://www.nuget.org/packages/MyNet.Platform.Windows) — MAPI (Windows)
+
 
 
 

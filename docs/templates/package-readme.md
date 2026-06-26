@@ -1,6 +1,8 @@
 # Package README template
 
-Regenerate all package READMEs: `powershell -File tools/update-package-readmes.ps1`
+Regenerate all package READMEs (MyNet): `powershell -File tools/update-package-readmes.ps1`
+
+Package metadata lives in [`tools/package-readmes.json`](../../tools/package-readmes.json). Sibling repos (e.g. **MyAvalonia**) call the same script with `-RepoRoot`, `-GitHubRepo`, and their own `package-readmes.json`.
 
 ---
 

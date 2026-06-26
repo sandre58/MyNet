@@ -43,12 +43,14 @@ Use Windows-specific implementations from this package when you need registry-ba
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.IO](https://www.nuget.org/packages/MyNet.IO)
 - [MyNet.Utilities](https://www.nuget.org/packages/MyNet.Utilities)
 - [MyNet.Mail](https://www.nuget.org/packages/MyNet.Mail) — SMTP abstractions (cross-platform)
+
 
 
 

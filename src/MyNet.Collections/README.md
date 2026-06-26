@@ -47,11 +47,13 @@ items.ReplaceRange(0, 1, ["A"]);
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Observable](https://www.nuget.org/packages/MyNet.Observable) — extended/selectable collection wrappers
 - [MyNet.Primitives](https://www.nuget.org/packages/MyNet.Primitives)
+
 
 
 

@@ -57,10 +57,12 @@ Unregister with `Messenger.Default.Unregister(this)` when the subscriber is disp
 
 
 
+
 ---
 ## Related packages
 
 Standalone — no required MyNet dependencies.
+
 
 
 

@@ -49,12 +49,14 @@ services.AddInflection();
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Text](https://www.nuget.org/packages/MyNet.Text)
 - [MyNet.Humanizer](https://www.nuget.org/packages/MyNet.Humanizer)
 - [MyNet.Observable](https://www.nuget.org/packages/MyNet.Observable)
+
 
 
 

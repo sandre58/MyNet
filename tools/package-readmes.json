@@ -1,0 +1,258 @@
+{
+    "githubRepo":  "sandre58/MyNet",
+    "packages":  [
+                     {
+                         "icon":  "MyNetPrimitives.png",
+                         "features":  [
+                                          "SmartEnum|Strongly typed name/value pairs",
+                                          "Intervals|Ranges, sequences, and numeric bounds",
+                                          "Conversions|Unit conversions and physical quantities",
+                                          "Comparers|Guards, comparers, and minimal BCL-only dependencies"
+                                      ],
+                         "id":  "MyNet.Primitives",
+                         "tagline":  "Foundation library for the MyNet suite: SmartEnum, intervals, unit conversions, comparers, sequences, and shared primitives."
+                     },
+                     {
+                         "icon":  "MyNetText.png",
+                         "features":  [
+                                          "Templates|Token-based templates with culture-aware formatting",
+                                          "Transforms|Slugify, sanitize, normalize, truncate, and redact",
+                                          "Pipelines|Composable text transformation pipelines",
+                                          "DI extensions|Random generator registration for tests"
+                                      ],
+                         "id":  "MyNet.Text",
+                         "tagline":  "String processing: templating, slugification, sanitization, normalization, truncation, redaction, and formatting pipelines."
+                     },
+                     {
+                         "icon":  "MyNetUtilities.png",
+                         "features":  [
+                                          "Caching|In-memory storage with absolute and sliding expiration",
+                                          "Security|AES encryption and authentication helpers",
+                                          "Progress|Reporting, debouncing, and serialized async runners",
+                                          "Threading|Deferral, suspending scopes, and coordination"
+                                      ],
+                         "id":  "MyNet.Utilities",
+                         "tagline":  "Cross-cutting utilities: caching, encryption, authentication helpers, progress reporting, threading, deferral, and DI-friendly services."
+                     },
+                     {
+                         "icon":  "MyNetGenerator.png",
+                         "features":  [
+                                          "IRandomGenerator|Facade for ints, strings, and collections",
+                                          "Sampling|Weighted picks and repeatable test doubles",
+                                          "Culture-aware|Random data building blocks per locale",
+                                          "Lightweight|No host framework assumptions"
+                                      ],
+                         "id":  "MyNet.Generator",
+                         "tagline":  "Pseudo-random value generators, weighted sampling, and sequence helpers for unit tests, benchmarks, and prototyping."
+                     },
+                     {
+                         "icon":  "MyNetReflection.png",
+                         "features":  [
+                                          "Accessors|Cached property and member accessors",
+                                          "Expressions|Expression-tree helpers for fast get/set",
+                                          "Object graphs|Traversal and inspection utilities",
+                                          "Infrastructure|Focused API for higher-level MyNet packages"
+                                      ],
+                         "id":  "MyNet.Reflection",
+                         "tagline":  "Cached reflection accessors, expression helpers, and object-graph utilities to reduce runtime reflection overhead."
+                     },
+                     {
+                         "icon":  "MyNetMetadata.png",
+                         "features":  [
+                                          "Registry|Central type and member metadata store",
+                                          "Providers|Pluggable metadata feature providers",
+                                          "Lookups|Reflection-light resolution for UI and generators",
+                                          "Observable|Foundation for metadata source generation"
+                                      ],
+                         "id":  "MyNet.Metadata",
+                         "tagline":  "Central metadata registry for types and members with pluggable feature providers for reflection-light, extensible APIs."
+                     },
+                     {
+                         "icon":  "MyNetTemporal.png",
+                         "features":  [
+                                          "Decomposition|TimeSpan breakdown into readable parts",
+                                          "Durations|Helpers for UI labels and logging",
+                                          "Primitives|Built on MyNet.Primitives temporal types",
+                                          "Humanizer|Pairs with localized display formatters"
+                                      ],
+                         "id":  "MyNet.Temporal",
+                         "tagline":  "TimeSpan decomposition, duration breakdown, and temporal helpers built on MyNet.Primitives for readable time representations."
+                     },
+                     {
+                         "icon":  "MyNetCollections.png",
+                         "features":  [
+                                          "Range collection|Batch AddRange and ReplaceRange with notifications",
+                                          "Keyed patterns|Selectable and keyed collection helpers",
+                                          "Synchronizers|Multi-source collection sync for MVVM",
+                                          "Notifications|Efficient range change events for UI binding"
+                                      ],
+                         "id":  "MyNet.Collections",
+                         "tagline":  "Observable collections with range notifications, keyed collections, synchronizers, and batch update helpers for MVVM."
+                     },
+                     {
+                         "icon":  "MyNetMessaging.png",
+                         "features":  [
+                                          "Weak references|Messenger that avoids view model leaks",
+                                          "Messaging|Register, send, and unregister patterns",
+                                          "Decoupling|Loose communication without a service locator",
+                                          "Standalone|No required MyNet package dependencies"
+                                      ],
+                         "id":  "MyNet.Messaging",
+                         "tagline":  "Weak-reference in-process messenger for loosely coupled communication between view models and services (MVVM-friendly)."
+                     },
+                     {
+                         "icon":  "MyNetObservable.png",
+                         "features":  [
+                                          "ObservableObject|INotifyPropertyChanged base with change notification",
+                                          "Behaviors|Edition tracking and FluentValidation integration",
+                                          "Source generator|Roslyn codegen for observable properties",
+                                          "Metadata|Labels, groups, and UI hints for bound models"
+                                      ],
+                         "id":  "MyNet.Observable",
+                         "tagline":  "MVVM-oriented observable models with INotifyPropertyChanged, edition tracking, FluentValidation, metadata, and an included Roslyn source generator."
+                     },
+                     {
+                         "icon":  "MyNetUI.png",
+                         "features":  [
+                                          "Navigation|View locators and navigation services",
+                                          "Dialogs|Presenter abstraction and shell host patterns",
+                                          "Notifications|Toast and notification managers for MVVM",
+                                          "Theming|Contracts implemented by your UI host (WPF, Avalonia, etc.)"
+                                      ],
+                         "id":  "MyNet.UI",
+                         "tagline":  "UI-framework-agnostic presentation layer: view models, shell, dialogs, navigation, notifications, and toasts. You provide concrete UI (WPF, Avalonia, etc.)."
+                     },
+                     {
+                         "icon":  "MyNetGlobalization.png",
+                         "features":  [
+                                          "Formatting|Culture-aware formatting and localization",
+                                          "Translations|Resource registration for DI hosts",
+                                          "Inflection|Grammatically correct UI text helpers",
+                                          "DI|Microsoft.Extensions.DependencyInjection integration"
+                                      ],
+                         "id":  "MyNet.Globalization",
+                         "tagline":  "Culture-aware formatting, localization services, inflection, and translation resource registration for DI-based applications."
+                     },
+                     {
+                         "icon":  "MyNetHumanizer.png",
+                         "features":  [
+                                          "Formatters|Localized dates, enums, and lists",
+                                          "Domains|Geography and temporal display helpers",
+                                          "UI binding|Culture-aware human-readable output",
+                                          "Stack|Built on Globalization and Temporal packages"
+                                      ],
+                         "id":  "MyNet.Humanizer",
+                         "tagline":  "Localized human-readable strings for dates, enums, lists, geography, and common .NET types (display beyond raw ToString())."
+                     },
+                     {
+                         "icon":  "MyNetGeography.png",
+                         "features":  [
+                                          "ISO 3166|Country and continent model",
+                                          "Addresses|Postal addresses and coordinates",
+                                          "Flags|Pluggable IFlagProvider contract",
+                                          "Core types|Shared geography model across the suite"
+                                      ],
+                         "id":  "MyNet.Geography",
+                         "tagline":  "ISO 3166 countries and continents, postal addresses, coordinates, and a pluggable country-flag provider contract."
+                     },
+                     {
+                         "icon":  "MyNetGeography.png",
+                         "features":  [
+                                          "Flag assets|Embedded multi-resolution country PNGs",
+                                          "IFlagProvider|Default implementation for Geography",
+                                          "DI|Registration via AddGeographyFlags()",
+                                          "Satellite|Optional resources for Geography consumers"
+                                      ],
+                         "id":  "MyNet.Geography.Resources",
+                         "tagline":  "Embedded multi-resolution country flag PNG assets and a default IFlagProvider for MyNet.Geography."
+                     },
+                     {
+                         "icon":  "MyNetGeography.png",
+                         "features":  [
+                                          "Display names|Localized country and region labels",
+                                          "Resources|Satellite .resx files for multiple cultures",
+                                          "Humanizer|Formatters for geography types",
+                                          "Extension|Culture-aware labels for MyNet.Geography"
+                                      ],
+                         "id":  "MyNet.Geography.Localization",
+                         "tagline":  "Localized country display names and MyNet.Humanizer formatters for geography types in MyNet.Geography."
+                     },
+                     {
+                         "icon":  "MyNetGoogle.png",
+                         "features":  [
+                                          "Geocoding|Forward and reverse geocoding helpers",
+                                          "Routing|Directions and distance matrix queries",
+                                          "URLs|Map and Street View link builders",
+                                          "Geography|Integrates with coordinates and addresses"
+                                      ],
+                         "id":  "MyNet.Google",
+                         "tagline":  "Google Maps integration: geocoding, directions, distance matrix queries, and map or Street View URL builders."
+                     },
+                     {
+                         "icon":  "MyNetIO.png",
+                         "features":  [
+                                          "Files|Path and file extension helpers",
+                                          "Auto-save|Coordinators for documents and settings",
+                                          "Registry|Portable abstractions for desktop apps",
+                                          "UI integration|Workspace and recent-file scenarios"
+                                      ],
+                         "id":  "MyNet.IO",
+                         "tagline":  "File and path helpers, auto-save coordinators, and portable registry abstractions for desktop and cross-platform apps."
+                     },
+                     {
+                         "icon":  "MyNetPlatformWindows.png",
+                         "features":  [
+                                          "Registry|Windows implementations for MyNet.IO",
+                                          "Authentication|Windows identity integrations",
+                                          "MAPI|Desktop mail support via native APIs",
+                                          "Adapters|Platform code kept out of portable packages"
+                                      ],
+                         "id":  "MyNet.Platform.Windows",
+                         "tagline":  "Windows platform adapters: registry access, authentication integrations, and MAPI mail support for MyNet.IO and MyNet.Utilities."
+                     },
+                     {
+                         "icon":  "MyNetHttp.png",
+                         "features":  [
+                                          "WebApiService|Typed REST calls with System.Text.Json",
+                                          "Timeouts|Per-request timeout configuration",
+                                          "Requests|HttpClient-friendly building patterns",
+                                          "Responses|Helpers for Web API consumption"
+                                      ],
+                         "id":  "MyNet.Http",
+                         "tagline":  "HTTP client helpers and Web API consumption utilities on HttpClient and System.Text.Json."
+                     },
+                     {
+                         "icon":  "MyNetMail.png",
+                         "features":  [
+                                          "Email builder|Fluent API for recipients, subject, and body",
+                                          "Attachments|Models and address parsing",
+                                          "IMailService|Transport-independent mail abstraction",
+                                          "MailKit|Optional SMTP delivery via sibling package"
+                                      ],
+                         "id":  "MyNet.Mail",
+                         "tagline":  "Email message and attachment models, address parsing, and SMTP service abstractions independent of a mail transport."
+                     },
+                     {
+                         "icon":  "MyNetMail.png",
+                         "features":  [
+                                          "MailKit|IMailService implementation for SMTP",
+                                          "TLS|Configuration and connection reuse",
+                                          "DI|AddMailKit() registration extensions",
+                                          "Production|Ready transport for MyNet.Mail models"
+                                      ],
+                         "id":  "MyNet.Mail.MailKit",
+                         "tagline":  "MailKit implementation of MyNet.Mail IMailService with TLS configuration, connection reuse, and Microsoft.Extensions.DependencyInjection registration."
+                     },
+                     {
+                         "icon":  "MyNetFakers.png",
+                         "features":  [
+                                          "Generators|Culture-aware person, address, and internet data",
+                                          "Stack|Built on Generator and Geography packages",
+                                          "Fixtures|Realistic data for MVVM and API demos",
+                                          "Cultures|Integrates with Globalization settings"
+                                      ],
+                         "id":  "MyNet.Fakers",
+                         "tagline":  "Locale-aware fake data for tests and demos: names, addresses, emails, URLs, and related patterns."
+                     }
+                 ]
+}

@@ -68,11 +68,13 @@ var response = await mail.SendAsync(email);
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Mail](https://www.nuget.org/packages/MyNet.Mail)
 - [MyNet.Utilities](https://www.nuget.org/packages/MyNet.Utilities)
+
 
 
 

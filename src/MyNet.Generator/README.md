@@ -46,11 +46,13 @@ var item = RandomGenerator.Current.Item(["a", "b", "c"]);
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Primitives](https://www.nuget.org/packages/MyNet.Primitives)
 - [MyNet.Fakers](https://www.nuget.org/packages/MyNet.Fakers) — higher-level locale-aware fakes
+
 
 
 

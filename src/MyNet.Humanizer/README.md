@@ -41,12 +41,14 @@ Register globalization/culture services first, then use Humanizer formatters and
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Globalization](https://www.nuget.org/packages/MyNet.Globalization)
 - [MyNet.Geography](https://www.nuget.org/packages/MyNet.Geography)
 - [MyNet.Temporal](https://www.nuget.org/packages/MyNet.Temporal)
+
 
 
 

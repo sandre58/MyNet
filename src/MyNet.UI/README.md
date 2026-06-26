@@ -1,8 +1,8 @@
-﻿<div align="center">
+<div align="center">
 
 # MyNet.UI
 
-<img src="MyNetUI.png" alt="MyNet.UI" width="96" height="96" />
+<img src="../../assets/MyNetUI.png" alt="MyNet.UI" width="96" height="96" />
 
 *UI-framework-agnostic presentation layer: view models, shell, dialogs, navigation, notifications, and toasts. You provide concrete UI (WPF, Avalonia, etc.).*
 
@@ -62,6 +62,7 @@ Or register modules individually (`AddViewLocators`, `AddDialogs`, `AddNavigatio
 
 
 
+
 ---
 ## Documentation
 
@@ -72,6 +73,7 @@ Or register modules individually (`AddViewLocators`, `AddDialogs`, `AddNavigatio
 - [Shell](https://github.com/sandre58/MyNet2/blob/main/docs/guides/shell.md)
 - [Theming](https://github.com/sandre58/MyNet2/blob/main/docs/guides/theming.md)
 - [Documentation index](https://github.com/sandre58/MyNet2/blob/main/docs/index.md)
+
 
 
 

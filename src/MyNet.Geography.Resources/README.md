@@ -51,10 +51,12 @@ services.AddGeographyFlags();
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Geography](https://www.nuget.org/packages/MyNet.Geography)
+
 
 
 

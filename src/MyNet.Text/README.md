@@ -57,11 +57,13 @@ var text = new TemplateTransform(options).Apply("Hello, {Name}!", CultureInfo.In
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Primitives](https://www.nuget.org/packages/MyNet.Primitives)
 - [MyNet.Generator](https://www.nuget.org/packages/MyNet.Generator)
+
 
 
 

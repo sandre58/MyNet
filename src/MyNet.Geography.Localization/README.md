@@ -41,11 +41,13 @@ Add the package when you need **translated country names** in UI or reports. Reg
 
 
 
+
 ---
 ## Related packages
 
 - [MyNet.Geography](https://www.nuget.org/packages/MyNet.Geography)
 - [MyNet.Humanizer](https://www.nuget.org/packages/MyNet.Humanizer)
+
 
 
 
