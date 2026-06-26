@@ -99,6 +99,9 @@ StyleCop.Cache
 *.tmp
 *.temp
 
+# Local NuGet pack on build (see Directory.Build.local.props.example)
+Directory.Build.local.props
+
 ## =========================
 ## Secrets / Environment
 ## =========================

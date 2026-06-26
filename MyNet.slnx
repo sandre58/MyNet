@@ -50,7 +50,9 @@
     <File Path=".runsettings" />
     <File Path="build/code-analysis.props" />
     <File Path="build/dependencies.props" />
+    <File Path="build/local-nuget-pack.props" />
     <File Path="build/package.props" />
+    <File Path="Directory.Build.local.props" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />

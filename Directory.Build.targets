@@ -3,6 +3,7 @@
     <Target Name="ShowProjectProperties" AfterTargets="Build">
         <Message Text="========== $(MSBuildProjectName) ==========" Importance="High" />
         <Message Text="PackageVersion=$(PackageVersion)" Importance="High" Condition="'$(IsPackable)' == 'True'" />
+        <Message Text="GeneratePackageOnBuild=$(GeneratePackageOnBuild)" Importance="High" Condition="'$(IsPackable)' == 'True'" />
         <Message Text="IsTestProject=$(IsTestProject)" Importance="High" />
         <Message Text="IsPackable=$(IsPackable)" Importance="High" />
         <Message Text="EnableAnalyzers=$(EnableAnalyzers)" Importance="High" />

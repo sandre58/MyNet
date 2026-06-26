@@ -71,5 +71,6 @@
     <Import Project="$(MSBuildThisFileDirectory)/build/code-analysis.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/code-analysis.props') and '$(EnableAnalyzers)' == 'true'" />
     <Import Project="$(MSBuildThisFileDirectory)/build/dependencies.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/dependencies.props')" />
     <Import Project="$(MSBuildThisFileDirectory)/build/package.props" Condition="Exists('$(MSBuildThisFileDirectory)/build/package.props') and '$(IsPackable)' == 'true'" />
+    <Import Project="$(MSBuildThisFileDirectory)Directory.Build.local.props" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
 
 </Project>

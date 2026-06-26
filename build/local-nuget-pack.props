@@ -1,0 +1,13 @@
+<Project>
+    <!--
+      Local NuGet feed: opt in via Directory.Build.local.props (copy from Directory.Build.local.props.example).
+      Packable projects emit 0.0.0-local .nupkg to ../packages on every build.
+    -->
+    <PropertyGroup>
+        <MyNetLocalPackageVersion>0.0.0-local</MyNetLocalPackageVersion>
+        <Version>$(MyNetLocalPackageVersion)</Version>
+        <PackageVersion>$(MyNetLocalPackageVersion)</PackageVersion>
+        <VersionSuffix />
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+</Project>
