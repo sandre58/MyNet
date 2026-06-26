@@ -140,6 +140,7 @@
     <File Path="tools/generate-package-icons.ps1" />
     <File Path="tools/icon-registry.md" />
     <File Path="tools/package-icons.json" />
+    <File Path="tools/package-readmes.json" />
     <File Path="tools/update-package-readmes.ps1" />
     <Project Path="tools/MyNet.Tools.PackageIconGenerator/MyNet.Tools.PackageIconGenerator.csproj" />
   </Folder>
