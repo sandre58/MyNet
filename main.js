@@ -351,16 +351,16 @@ var assemblies = [
   {
     "name": "MyNet.Geography.Localization",
     "classes": [
-      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 30, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Localization.Providers.CountryDisplayTextStrategy", "rp": "MyNet.Geography.Localization_CountryDisplayTextStrategy.html", "cl": 3, "ucl": 1, "cal": 4, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.ServiceCollectionExtensions", "rp": "MyNet.Geography.Localization_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Geography.Resources",
     "classes": [
-      { "name": "MyNet.Geography.Resources.CountryExtensions", "rp": "MyNet.Geography.Resources_CountryExtensions.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 85, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 85, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.CountryExtensions", "rp": "MyNet.Geography.Resources_CountryExtensions.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProvider", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProvider.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.EmbeddedCountryFlagProviderBase", "rp": "MyNet.Geography.Resources_EmbeddedCountryFlagProviderBase.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 84, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Geography.Resources.ServiceCollectionExtensions", "rp": "MyNet.Geography.Resources_ServiceCollectionExtensions.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Globalization",
@@ -479,7 +479,7 @@ var assemblies = [
     "classes": [
       { "name": "MyNet.IO.Attributes.FileExtensionsAllowedAttribute", "rp": "MyNet.IO_FileExtensionsAllowedAttribute.html", "cl": 33, "ucl": 0, "cal": 33, "tl": 122, "cb": 16, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs", "rp": "MyNet.IO_AutoSaveEnabledChangedEventArgs.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.IO.AutoSave.AutoSaveEngine", "rp": "MyNet.IO_AutoSaveEngine.html", "cl": 40, "ucl": 20, "cal": 60, "tl": 218, "cb": 13, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.IO.AutoSave.AutoSaveEngine", "rp": "MyNet.IO_AutoSaveEngine.html", "cl": 39, "ucl": 21, "cal": 60, "tl": 218, "cb": 14, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.IO.AutoSave.AutoSaveFeature", "rp": "MyNet.IO_AutoSaveFeature.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 48, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.IO.DirectoryService", "rp": "MyNet.IO_DirectoryService.html", "cl": 43, "ucl": 15, "cal": 58, "tl": 179, "cb": 17, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.IO.DriveExtensions", "rp": "MyNet.IO_DriveExtensions.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 45, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -645,9 +645,9 @@ var assemblies = [
   {
     "name": "MyNet.Observable.Metadata.Generator",
     "classes": [
-      { "name": "MyNet.Observable.Metadata.Generator.MetadataProviderGenerator", "rp": "MyNet.Observable.Metadata.Generator_MetadataProviderGenerator.html", "cl": 179, "ucl": 28, "cal": 207, "tl": 422, "cb": 75, "tb": 106, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer", "rp": "MyNet.Observable.Metadata.Generator_ObservableObjectSetterAnalyzer.html", "cl": 62, "ucl": 14, "cal": 76, "tl": 154, "cb": 36, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator", "rp": "MyNet.Observable.Metadata.Generator_ObservablePropertyGenerator.html", "cl": 98, "ucl": 12, "cal": 110, "tl": 228, "cb": 33, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.MetadataProviderGenerator", "rp": "MyNet.Observable.Metadata.Generator_MetadataProviderGenerator.html", "cl": 179, "ucl": 28, "cal": 207, "tl": 397, "cb": 75, "tb": 106, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.ObservableObjectSetterAnalyzer", "rp": "MyNet.Observable.Metadata.Generator_ObservableObjectSetterAnalyzer.html", "cl": 62, "ucl": 14, "cal": 76, "tl": 153, "cb": 36, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Observable.Metadata.Generator.ObservablePropertyGenerator", "rp": "MyNet.Observable.Metadata.Generator_ObservablePropertyGenerator.html", "cl": 98, "ucl": 12, "cal": 110, "tl": 225, "cb": 33, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "MyNet.Platform.Windows",
@@ -1052,7 +1052,7 @@ var assemblies = [
       { "name": "MyNet.Utilities.LoggerExtensions", "rp": "MyNet.Utilities_LoggerExtensions.html", "cl": 4, "ucl": 1, "cal": 5, "tl": 71, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.Log", "rp": "MyNet.Utilities_Log.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.Log\u003CT\u003E", "rp": "MyNet.Utilities_Log_1.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "MyNet.Utilities.Logging.PerformanceLogger", "rp": "MyNet.Utilities_PerformanceLogger.html", "cl": 63, "ucl": 6, "cal": 69, "tl": 226, "cb": 34, "tb": 54, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "MyNet.Utilities.Logging.PerformanceLogger", "rp": "MyNet.Utilities_PerformanceLogger.html", "cl": 63, "ucl": 6, "cal": 69, "tl": 226, "cb": 35, "tb": 54, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Logging.PerformanceLoggerMessages", "rp": "MyNet.Utilities_PerformanceLoggerMessages.html", "cl": 11, "ucl": 1, "cal": 12, "tl": 203, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Plugins.PluginLoadContext", "rp": "MyNet.Utilities_PluginLoadContext.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 47, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "MyNet.Utilities.Plugins.PluginService", "rp": "MyNet.Utilities_PluginService.html", "cl": 0, "ucl": 32, "cal": 32, "tl": 151, "cb": 0, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },

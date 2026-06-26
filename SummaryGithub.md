@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/26/2026 - 14:03:05 |
-| Coverage date: | 06/26/2026 - 13:59:46 - 06/26/2026 - 14:00:33 |
-| Parser: | MultiReport (62x Cobertura) |
+| Generated on: | 06/26/2026 - 16:03:54 |
+| Coverage date: | 06/26/2026 - 16:00:46 - 06/26/2026 - 16:01:40 |
+| Parser: | MultiReport (59x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 687 |
 | Files: | 642 |
-| **Line coverage:** | 73.6% (10608 of 14404) |
-| Covered lines: | 10608 |
-| Uncovered lines: | 3796 |
+| **Line coverage:** | 73.6% (10607 of 14404) |
+| Covered lines: | 10607 |
+| Uncovered lines: | 3797 |
 | Coverable lines: | 14404 |
-| Total lines: | 57891 |
-| **Branch coverage:** | 61.3% (4034 of 6576) |
-| Covered branches: | 4034 |
+| Total lines: | 57787 |
+| **Branch coverage:** | 61.3% (4036 of 6576) |
+| Covered branches: | 4036 |
 | Total branches: | 6576 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 308_28242731399 |
+| Tag: | 310_28249555718 |
 
 </details>
 
@@ -240,14 +240,14 @@
 |MyNet.Humanizer.TimeHumanizerExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.IO - 84.2%</summary>
+<details><summary>MyNet.IO - 84%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84.2%**|**76.4%**|
+|**MyNet.IO**|**84%**|**77.2%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|66.6%|54.1%|
+|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
 |MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
@@ -837,7 +837,7 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Utilities**|**81.9%**|**64.7%**|
+|**MyNet.Utilities**|**81.9%**|**64.9%**|
 |MyNet.Utilities.Authentication.AuthenticatedEventArgs|100%||
 |MyNet.Utilities.Authentication.IdentityHelper|100%|100%|
 |MyNet.Utilities.Caching.CacheStorage`2|76.7%|65.6%|
@@ -859,7 +859,7 @@
 |MyNet.Utilities.LoggerExtensions|80%|50%|
 |MyNet.Utilities.Logging.Log|100%||
 |MyNet.Utilities.Logging.Log`1|100%||
-|MyNet.Utilities.Logging.PerformanceLogger|91.3%|62.9%|
+|MyNet.Utilities.Logging.PerformanceLogger|91.3%|64.8%|
 |MyNet.Utilities.Logging.PerformanceLoggerMessages|91.6%||
 |MyNet.Utilities.Plugins.PluginLoadContext|0%|0%|
 |MyNet.Utilities.Plugins.PluginService|0%|0%|
