@@ -3,22 +3,22 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/26/2026 - 16:15:04 |
-| Coverage date: | 06/26/2026 - 16:12:29 - 06/26/2026 - 16:13:24 |
-| Parser: | MultiReport (63x Cobertura) |
+| Generated on: | 06/26/2026 - 21:05:33 |
+| Coverage date: | 06/26/2026 - 21:02:41 - 06/26/2026 - 21:03:35 |
+| Parser: | MultiReport (62x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 687 |
 | Files: | 642 |
-| **Line coverage:** | 73.6% (10607 of 14404) |
-| Covered lines: | 10607 |
-| Uncovered lines: | 3797 |
+| **Line coverage:** | 73.6% (10608 of 14404) |
+| Covered lines: | 10608 |
+| Uncovered lines: | 3796 |
 | Coverable lines: | 14404 |
-| Total lines: | 55805 |
-| **Branch coverage:** | 61.3% (4036 of 6576) |
-| Covered branches: | 4036 |
+| Total lines: | 58761 |
+| **Branch coverage:** | 61.3% (4035 of 6576) |
+| Covered branches: | 4035 |
 | Total branches: | 6576 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 311_28250235787 |
+| Tag: | 312_28264975490 |
 
 </details>
 
@@ -240,14 +240,14 @@
 |MyNet.Humanizer.TimeHumanizerExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.IO - 84%</summary>
+<details><summary>MyNet.IO - 84.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84%**|**77.2%**|
+|**MyNet.IO**|**84.2%**|**76.4%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
+|MyNet.IO.AutoSave.AutoSaveEngine|66.6%|54.1%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
 |MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
