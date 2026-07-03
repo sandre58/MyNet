@@ -87,5 +87,28 @@ public static class PeriodExtensions
                 : left.End!.Value.Value < right.Start!.Value.Value
                     ? right.Start.Value.Value - left.End.Value.Value
                     : left.Start!.Value.Value - right.End!.Value.Value;
+
+        /// <summary>
+        /// Gets the start time-of-day component of the period.
+        /// </summary>
+        public TimeSpan StartTimeOfDay => left.Start!.Value.Value.TimeOfDay;
+
+        /// <summary>
+        /// Gets the end time-of-day component, collapsing sub-minute intervals to the start time.
+        /// </summary>
+        /// <param name="minimumDuration">Minimum duration before end time is returned; defaults to one minute.</param>
+        public TimeSpan EndTimeOfDay(TimeSpan minimumDuration = default)
+        {
+            var minimum = minimumDuration == TimeSpan.Zero ? TimeSpan.FromMinutes(1) : minimumDuration;
+            var start = left.StartTimeOfDay;
+            var end = left.End!.Value.Value.TimeOfDay;
+
+            return end > start && end - start < minimum ? start : end;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the period spans more than one calendar day.
+        /// </summary>
+        public bool SpansMidnight => left.End!.Value.Value.Date > left.Start!.Value.Value.Date;
     }
 }

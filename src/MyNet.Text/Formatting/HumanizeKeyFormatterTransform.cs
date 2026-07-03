@@ -45,21 +45,21 @@ public sealed partial class HumanizeKeyFormatterTransform : ITextFormatterTransf
             : char.ToUpper(sentence[0], culture) + sentence[1..];
     }
 
-    [GeneratedRegex("[\\s_\\-./:]+", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"[\s_\-./:]+", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex SeparatorRegex();
 
-    [GeneratedRegex("(?<=[\\p{Lu}])(?=[\\p{Lu}][\\p{Ll}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(?<=[\p{Lu}])(?=[\p{Lu}][\p{Ll}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex AcronymBoundaryRegex();
 
-    [GeneratedRegex("(?<=[\\p{Ll}\\p{Nd}])(?=[\\p{Lu}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(?<=[\p{Ll}\p{Nd}])(?=[\p{Lu}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex CasingBoundaryRegex();
 
-    [GeneratedRegex("(?<=[\\p{L}])(?=[\\p{Nd}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(?<=[\p{L}])(?=[\p{Nd}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex LetterToDigitBoundaryRegex();
 
-    [GeneratedRegex("(?<=[\\p{Nd}])(?=[\\p{L}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(?<=[\p{Nd}])(?=[\p{L}])", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex DigitToLetterBoundaryRegex();
 
-    [GeneratedRegex("\\s+", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\s+", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
     private static partial Regex MultiWhitespaceRegex();
 }

@@ -87,7 +87,7 @@ return errors == 0 ? 0 : 1;
 
 static bool tryParseOptions(string[] args, out GeneratorOptions options)
 {
-    options = new GeneratorOptions();
+    options = new();
 
     for (var i = 0; i < args.Length; i++)
     {

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using MyNet.Primitives.Intervals;
 using MyNet.Primitives.Temporal;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
@@ -159,6 +160,33 @@ public static class TimeSpanExtensions
                 TimeUnit.Year => Math.Round(abs.TotalDays / DateTimeHelper.DaysPerYear),
                 _ => 0
             };
+        }
+
+        /// <summary>
+        /// When same-day ranges are required, aligns the non-edited boundary to the edited one if <paramref name="end"/> is before the receiver.
+        /// </summary>
+        /// <param name="end">The end time of the range.</param>
+        /// <param name="editedEnd">When <see langword="true"/>, the end boundary was edited; otherwise the start boundary was edited.</param>
+        public (TimeSpan Start, TimeSpan End) CoerceSameDayRange(TimeSpan end, bool editedEnd = false) =>
+            end >= timeSpan ? (timeSpan, end)
+                : editedEnd ? (end, end) : (timeSpan, timeSpan);
+
+        /// <summary>
+        /// Builds a <see cref="Period"/> from time-of-day values on a reference calendar date.
+        /// </summary>
+        public Period ToPeriod(TimeSpan end, DateTime referenceDate, bool allowOvernight = false)
+        {
+            referenceDate = referenceDate.DiscardTime();
+
+            var startDateTime = referenceDate.Add(timeSpan);
+            var endDateTime = allowOvernight && end <= timeSpan
+                ? referenceDate.AddDays(1).Add(end)
+                : referenceDate.Add(end);
+
+            if (!allowOvernight && end == timeSpan)
+                endDateTime = startDateTime.AddTicks(1);
+
+            return startDateTime.ToPeriod(endDateTime);
         }
     }
 

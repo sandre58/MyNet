@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Xunit;
 
 namespace MyNet.Collections.Tests;
@@ -52,6 +53,16 @@ public sealed class ListExtensionsTests
         list.SortDescending(x => x, Comparer<int>.Default);
 
         Assert.Equal([3, 2, 1], list);
+    }
+
+    [Fact]
+    public void SortByDisplay_SortsCaseInsensitiveByDisplayText()
+    {
+        var list = new List<string> { "zebra", "Alpha", "beta" };
+
+        list.SortByDisplay(x => x, CultureInfo.InvariantCulture);
+
+        Assert.Equal(["Alpha", "beta", "zebra"], list);
     }
 
     [Fact]

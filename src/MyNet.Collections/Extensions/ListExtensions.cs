@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using MyNet.Primitives;
 
@@ -83,6 +84,29 @@ public static class ListExtensions
         /// Sorts the collection in descending order using the specified key selector.
         /// </summary>
         public void SortDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey> comparer) => list.Sort(keySelector, comparer.Reverse());
+
+        /// <summary>
+        /// Sorts the collection in place using culture-aware, case-insensitive display text.
+        /// </summary>
+        public void SortByDisplay(
+            Func<T, string> displaySelector,
+            CultureInfo? culture = null,
+            CompareOptions options = CompareOptions.IgnoreCase)
+        {
+            ArgumentNullException.ThrowIfNull(list);
+            ArgumentNullException.ThrowIfNull(displaySelector);
+
+            var compareInfo = (culture ?? CultureInfo.CurrentCulture).CompareInfo;
+
+            if (list is List<T> concrete)
+            {
+                concrete.Sort((left, right) =>
+                    compareInfo.Compare(displaySelector(left), displaySelector(right), options));
+                return;
+            }
+
+            list.Sort(displaySelector, StringComparer.Create(culture ?? CultureInfo.CurrentCulture, options));
+        }
 
         /// <summary>
         /// Gets the element at the specified index or returns a default value if the index is out of range.

@@ -148,8 +148,7 @@ public static class TranslationExtensions
         /// <param name="count">The pluralization count.</param>
         /// <param name="culture">The target culture.</param>
         /// <returns>The translated string.</returns>
-        public string Translate(decimal count, CultureInfo culture)
-            => key.Translate(x => x.WithQuantity(count), culture);
+        public string Translate(decimal count, CultureInfo culture) => key.Translate(x => x.WithQuantity(count), culture);
 
         /// <summary>
         /// Translates using pluralization count, display style and culture.
@@ -162,8 +161,7 @@ public static class TranslationExtensions
         /// <param name="style">The display style.</param>
         /// <param name="culture">The target culture.</param>
         /// <returns>The translated string.</returns>
-        public string Translate(decimal count, DisplayStyle style, CultureInfo culture)
-            => key.Translate(x => x.WithStyle(style).WithQuantity(count), culture);
+        public string Translate(decimal count, DisplayStyle style, CultureInfo culture) => key.Translate(x => x.WithStyle(style).WithQuantity(count), culture);
 
         /// <summary>
         /// Translates using custom rendering arguments.
@@ -175,5 +173,18 @@ public static class TranslationExtensions
         /// <param name="arguments">The rendering arguments.</param>
         /// <returns>The translated string.</returns>
         public string Translate(params KeyValuePair<string, object?>[] arguments) => key.Translate(x => x.WithArguments(arguments));
+
+        /// <summary>
+        /// Translates when <paramref name="key"/> is set; otherwise returns <paramref name="fallbackText"/> or empty.
+        /// </summary>
+        public string TranslateOr(
+            string? fallbackText = null,
+            string? resourceFilename = null,
+            CultureInfo? culture = null)
+            => !string.IsNullOrEmpty(key)
+                ? string.IsNullOrEmpty(resourceFilename)
+                    ? key.Translate(culture)
+                    : key.Translate(resourceFilename, culture)
+                : fallbackText ?? string.Empty;
     }
 }

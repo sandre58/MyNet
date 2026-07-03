@@ -71,6 +71,20 @@ public static class DateTimeExtensions
         public Period ToPeriod(FluentTimeSpan timeSpan) => new(dateTime, dateTime.AddFluentTimeSpan(timeSpan));
 
         /// <summary>
+        /// Creates an inclusive calendar-day <see cref="Period"/> (end-of-day for single-day ranges).
+        /// </summary>
+        /// <param name="end">The other end of the range.</param>
+        /// <returns>A <see cref="Period"/> suitable for calendar date selection.</returns>
+        public Period ToInclusivePeriod(DateTime end)
+        {
+            var (normalizedStart, normalizedEnd) = dateTime.Normalize(end);
+
+            return normalizedStart == normalizedEnd
+                ? normalizedStart.ToPeriod(normalizedStart.AddDays(1).AddTicks(-1))
+                : normalizedStart.ToPeriod(normalizedEnd);
+        }
+
+        /// <summary>
         /// Creates a <see cref="Period"/> that spans between this date/time and another date/time.
         /// </summary>
         /// <param name="otherDateTime">The other end of the period.</param>
@@ -843,6 +857,16 @@ public static class DateTimeExtensions
         public bool InRange(DateTime start, DateTime end, bool discardTime = true) => (discardTime && (dateTime.SameDay(start) || dateTime.SameDay(end))) || ComparableExtensions.InRange(dateTime, start, end);
 
         /// <summary>
+        /// Orders and normalizes date-only bounds (discards time, ascending order).
+        /// </summary>
+        /// <param name="end">The other end of the range.</param>
+        /// <returns>Normalized start and end dates.</returns>
+        public (DateTime Start, DateTime End) Normalize(DateTime end) =>
+            dateTime.IsBefore(end)
+                ? (dateTime.DiscardTime(), end.DiscardTime())
+                : (end.DiscardTime(), dateTime.DiscardTime());
+
+        /// <summary>
         /// Calculates the age in years from a birthdate to now (UTC based).
         /// </summary>
         /// <returns>The number of full years elapsed since <paramref name="dateTime"/>.</returns>
@@ -892,6 +916,58 @@ public static class DateTimeExtensions
                 for (var i = dateTime; i >= max; i = increment(i))
                     yield return i;
             }
+        }
+    }
+
+    extension(DateTime? dateTime)
+    {
+        /// <summary>
+        /// Returns the date or <see cref="DateTime.MinValue"/> when null.
+        /// </summary>
+        public DateTime OrMinValue() => dateTime ?? DateTime.MinValue;
+
+        /// <summary>
+        /// Returns the date or <see cref="DateTime.MaxValue"/> when null.
+        /// </summary>
+        public DateTime OrMaxValue() => dateTime ?? DateTime.MaxValue;
+    }
+
+    extension(IReadOnlyList<DateTime> dates)
+    {
+        /// <summary>
+        /// Returns the earliest date in the list, or null when empty.
+        /// </summary>
+        public DateTime? MinOrNull()
+        {
+            if (dates.Count == 0)
+                return null;
+
+            var min = dates[0];
+            for (var i = 1; i < dates.Count; i++)
+            {
+                if (dates[i].IsBefore(min))
+                    min = dates[i];
+            }
+
+            return min;
+        }
+
+        /// <summary>
+        /// Returns the latest date in the list, or null when empty.
+        /// </summary>
+        public DateTime? MaxOrNull()
+        {
+            if (dates.Count == 0)
+                return null;
+
+            var max = dates[0];
+            for (var i = 1; i < dates.Count; i++)
+            {
+                if (dates[i].IsAfter(max))
+                    max = dates[i];
+            }
+
+            return max;
         }
     }
 }
