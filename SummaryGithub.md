@@ -3,31 +3,31 @@
 
 |||
 |:---|:---|
-| Generated on: | 06/26/2026 - 21:05:33 |
-| Coverage date: | 06/26/2026 - 21:02:41 - 06/26/2026 - 21:03:35 |
-| Parser: | MultiReport (62x Cobertura) |
+| Generated on: | 07/04/2026 - 07:40:52 |
+| Coverage date: | 07/04/2026 - 07:38:08 - 07/04/2026 - 07:39:06 |
+| Parser: | MultiReport (63x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 687 |
 | Files: | 642 |
-| **Line coverage:** | 73.6% (10608 of 14404) |
-| Covered lines: | 10608 |
-| Uncovered lines: | 3796 |
-| Coverable lines: | 14404 |
-| Total lines: | 58761 |
-| **Branch coverage:** | 61.3% (4035 of 6576) |
-| Covered branches: | 4035 |
-| Total branches: | 6576 |
+| **Line coverage:** | 73.7% (10656 of 14457) |
+| Covered lines: | 10656 |
+| Uncovered lines: | 3801 |
+| Coverable lines: | 14457 |
+| Total lines: | 57229 |
+| **Branch coverage:** | 61.3% (4066 of 6626) |
+| Covered branches: | 4066 |
+| Total branches: | 6626 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 312_28264975490 |
+| Tag: | 321_28699296487 |
 
 </details>
 
 ## Coverage
-<details><summary>MyNet.Collections - 88.2%</summary>
+<details><summary>MyNet.Collections - 88%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Collections**|**88.2%**|**72.3%**|
+|**MyNet.Collections**|**88%**|**71.6%**|
 |MyNet.Collections.CollectionExtensions|100%|100%|
 |MyNet.Collections.DefaultCollectionSorter`1|91.6%|80%|
 |MyNet.Collections.DictionaryExtensions|100%|100%|
@@ -35,7 +35,7 @@
 |MyNet.Collections.EnumerableExtensions|97.8%|87%|
 |MyNet.Collections.ImmediateCollectionEventDispatcher|100%||
 |MyNet.Collections.ImmediateCollectionSynchronizer|100%||
-|MyNet.Collections.ListExtensions|94.4%|91.1%|
+|MyNet.Collections.ListExtensions|92%|82.5%|
 |MyNet.Collections.LockCollectionSynchronizer|56%||
 |MyNet.Collections.ObservableCollectionDecorator`1|79.5%|80%|
 |MyNet.Collections.ObservableKeyedCollection`2|76.5%|52.7%|
@@ -116,11 +116,11 @@
 |MyNet.Geography.Resources.ServiceCollectionExtensions|100%||
 
 </details>
-<details><summary>MyNet.Globalization - 85.3%</summary>
+<details><summary>MyNet.Globalization - 85.4%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Globalization**|**85.3%**|**79.5%**|
+|**MyNet.Globalization**|**85.4%**|**78.6%**|
 |MyNet.Globalization.Culture.CultureChangedEventArgs|100%||
 |MyNet.Globalization.Culture.CultureService|100%|100%|
 |MyNet.Globalization.Culture.SupportedCultures|100%||
@@ -135,7 +135,7 @@
 |MyNet.Globalization.Facade.InflectorExtensions|68.4%|88.2%|
 |MyNet.Globalization.Facade.LocalizationRuntime|100%|100%|
 |MyNet.Globalization.Facade.Localizer|91.3%|50%|
-|MyNet.Globalization.Facade.TranslationExtensions|8.6%|0%|
+|MyNet.Globalization.Facade.TranslationExtensions|25%|21.4%|
 |MyNet.Globalization.GlobalizationOptions|85.7%||
 |MyNet.Globalization.GlobalizationService|31.8%||
 |MyNet.Globalization.Inflection.Cultures.Inflectors|100%||
@@ -240,14 +240,14 @@
 |MyNet.Humanizer.TimeHumanizerExtensions|100%|100%|
 
 </details>
-<details><summary>MyNet.IO - 84.2%</summary>
+<details><summary>MyNet.IO - 84%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.IO**|**84.2%**|**76.4%**|
+|**MyNet.IO**|**84%**|**77.2%**|
 |MyNet.IO.Attributes.FileExtensionsAllowedAttribute|100%|100%|
 |MyNet.IO.AutoSave.AutoSaveEnabledChangedEventArgs|100%||
-|MyNet.IO.AutoSave.AutoSaveEngine|66.6%|54.1%|
+|MyNet.IO.AutoSave.AutoSaveEngine|65%|58.3%|
 |MyNet.IO.AutoSave.AutoSaveFeature|100%|75%|
 |MyNet.IO.DirectoryService|74.1%|70.8%|
 |MyNet.IO.DriveExtensions|100%|100%|
@@ -453,13 +453,13 @@
 |MyNet.Platform.Windows.Registry.WindowsRegistryStore|100%|50%|
 
 </details>
-<details><summary>MyNet.Primitives - 72.6%</summary>
+<details><summary>MyNet.Primitives - 73.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**MyNet.Primitives**|**72.6%**|**61.2%**|
+|**MyNet.Primitives**|**73.1%**|**61.4%**|
 |MyNet.Primitives.BooleanExtensions|100%|100%|
-|MyNet.Primitives.ComparableExtensions|100%|92%|
+|MyNet.Primitives.ComparableExtensions|100%|93.6%|
 |MyNet.Primitives.ComparerExtensions|100%||
 |MyNet.Primitives.Comparers.CultureInfoNameComparer|100%|50%|
 |MyNet.Primitives.Comparers.NullableComparer`1|100%|100%|
@@ -479,7 +479,7 @@
 |MyNet.Primitives.CultureExtensions|100%|50%|
 |MyNet.Primitives.DateOnlyExtensions|76.8%|76.8%|
 |MyNet.Primitives.DateRangeExtensions|79.1%|64.2%|
-|MyNet.Primitives.DateTimeExtensions|54.9%|37.2%|
+|MyNet.Primitives.DateTimeExtensions|59%|41.8%|
 |MyNet.Primitives.DateTimeOffsetExtensions|57.2%|62.2%|
 |MyNet.Primitives.DelegateDisposable|100%|100%|
 |MyNet.Primitives.EnumExtensions|100%||
@@ -508,7 +508,7 @@
 |MyNet.Primitives.NumberExtensions|75%||
 |MyNet.Primitives.NumberToTimeSpanExtensions|58.8%|33.3%|
 |MyNet.Primitives.ObjectExtensions|100%|66.6%|
-|MyNet.Primitives.PeriodExtensions|90%|87.5%|
+|MyNet.Primitives.PeriodExtensions|92.3%|71.4%|
 |MyNet.Primitives.Providers.ItemsProvider`1|100%|100%|
 |MyNet.Primitives.Providers.ItemsProviderBase`1|100%||
 |MyNet.Primitives.Providers.PredicateItemsProvider`1|100%|100%|
@@ -522,7 +522,7 @@
 |MyNet.Primitives.Temporal.FluentTimeSpan|93.7%|75%|
 |MyNet.Primitives.TimeOnlyExtensions|87%|66.6%|
 |MyNet.Primitives.TimeRangeExtensions|100%|100%|
-|MyNet.Primitives.TimeSpanExtensions|31.2%|27.2%|
+|MyNet.Primitives.TimeSpanExtensions|41.3%|41.1%|
 
 </details>
 <details><summary>MyNet.Reflection - 69.3%</summary>
