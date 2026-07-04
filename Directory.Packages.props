@@ -7,7 +7,7 @@
     <PackageVersion Include="DynamicData" Version="9.4.33" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="MailKit" Version="4.17.0" />
-    <PackageVersion Include="System.Reactive" Version="7.0.0-preview.20" />
+    <PackageVersion Include="System.Reactive" Version="7.0.0-rc.1" />
     <!-- Microsoft.Extensions -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.4.26230.115" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.4.26230.115" />
