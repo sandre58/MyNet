@@ -48,6 +48,7 @@
         <None Include="$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)" Pack="true" PackagePath="" Condition="Exists('$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)')">
             <Link>_package/$(PackageIcon)</Link>
         </None>
+        <None Include="README.md" Condition="Exists('$(MSBuildProjectDirectory)\README.md')" />
     </ItemGroup>
 
     <!-- NuGet readme: icon at package root; repo readme uses ../../assets/ for GitHub -->
