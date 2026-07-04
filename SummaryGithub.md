@@ -3,9 +3,9 @@
 
 |||
 |:---|:---|
-| Generated on: | 07/04/2026 - 07:40:52 |
-| Coverage date: | 07/04/2026 - 07:38:08 - 07/04/2026 - 07:39:06 |
-| Parser: | MultiReport (63x Cobertura) |
+| Generated on: | 07/04/2026 - 07:52:48 |
+| Coverage date: | 07/04/2026 - 07:49:45 - 07/04/2026 - 07:50:38 |
+| Parser: | MultiReport (62x Cobertura) |
 | Assemblies: | 24 |
 | Classes: | 687 |
 | Files: | 642 |
@@ -13,12 +13,12 @@
 | Covered lines: | 10656 |
 | Uncovered lines: | 3801 |
 | Coverable lines: | 14457 |
-| Total lines: | 57229 |
+| Total lines: | 59140 |
 | **Branch coverage:** | 61.3% (4066 of 6626) |
 | Covered branches: | 4066 |
 | Total branches: | 6626 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 321_28699296487 |
+| Tag: | 323_28699572109 |
 
 </details>
 
