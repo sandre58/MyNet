@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using MyNet.Observable;
 using MyNet.Observable.Metadata;
 using Xunit;
 

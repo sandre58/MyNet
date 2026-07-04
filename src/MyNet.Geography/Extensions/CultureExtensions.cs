@@ -20,7 +20,6 @@ public static class CultureExtensions
         /// Gets the country associated with the specified culture, if available.
         /// </summary>
         /// <returns>The country associated with the specified culture, or <c>null</c> if not available.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="culture"/> is <c>null</c>.</exception>
         public Country? GetCountry()
         {
             ArgumentNullException.ThrowIfNull(culture);

@@ -7,11 +7,6 @@
         <PackageTags>mynet dotnet</PackageTags>
     </PropertyGroup>
 
-    <!-- NuGet readme: icon at package root; repo readme uses ../../assets/ for GitHub -->
-    <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\README.md')">
-        <PackageReadmePackPath>$(IntermediateOutputPath)README.md</PackageReadmePackPath>
-    </PropertyGroup>
-    
     <PropertyGroup>
 
         <!-- NuGet information -->
@@ -53,16 +48,14 @@
         <None Include="$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)" Pack="true" PackagePath="" Condition="Exists('$(MSBuildThisFileDirectory)..\assets\$(PackageIcon)')">
             <Link>_package/$(PackageIcon)</Link>
         </None>
-        <None Include="$(PackageReadmePackPath)" Pack="true" PackagePath="" Condition="Exists('$(PackageReadmePackPath)')">
-            <Link>_package/README.md</Link>
-        </None>
     </ItemGroup>
 
-    <!-- For Nuget.org -->
+    <!-- NuGet readme: icon at package root; repo readme uses ../../assets/ for GitHub -->
     <Target Name="_PreparePackageReadmeForPack"
             BeforeTargets="_GetPackageFiles"
             Condition="'$(IsPackable)' == 'true' And Exists('$(MSBuildProjectDirectory)\README.md')">
         <PropertyGroup>
+            <PackageReadmePackPath>$(IntermediateOutputPath)README.md</PackageReadmePackPath>
             <_ReadmeSource>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\README.md'))</_ReadmeSource>
             <_ReadmeForPack>$(_ReadmeSource.Replace('../../assets/', ''))</_ReadmeForPack>
         </PropertyGroup>
@@ -70,6 +63,11 @@
                           Lines="$(_ReadmeForPack)"
                           Overwrite="true"
                           Encoding="UTF-8" />
+        <ItemGroup>
+            <None Include="$(PackageReadmePackPath)" Pack="true" PackagePath="">
+                <Link>_package/README.md</Link>
+            </None>
+        </ItemGroup>
     </Target>
 
 </Project>
