@@ -9,9 +9,9 @@
     <PackageVersion Include="MailKit" Version="4.17.0" />
     <PackageVersion Include="System.Reactive" Version="7.0.0-preview.20" />
     <!-- Microsoft.Extensions -->
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.4.26230.115" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.4.26230.115" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.4.26230.115" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.6.26359.118" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.6.26359.118" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.6.26359.118" />
     <!-- Code analysis -->
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-preview.4.26230.115" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
