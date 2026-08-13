@@ -25,11 +25,11 @@
 </tr>
 <tr>
 <th>File(s):</th>
-<td class="overflow-wrap"><a href="#httpsrawgithubusercontentcomsandre58MyNet85372080fe102cd9ee155ceab49ae000e7f66103srcMyNetPrimitivesEventsWeakEventSourcecs" class="navigatetohash">https://raw.githubusercontent.com/sandre58/MyNet/85372080fe102cd9ee155ceab49ae000e7f66103/src/MyNet.Primitives/Events/WeakEventSource.cs</a></td>
+<td class="overflow-wrap"><a href="#httpsrawgithubusercontentcomsandre58MyNet5aaaab311aa14541478b9e402357d98b657a23e4srcMyNetPrimitivesEventsWeakEventSourcecs" class="navigatetohash">https://raw.githubusercontent.com/sandre58/MyNet/5aaaab311aa14541478b9e402357d98b657a23e4/src/MyNet.Primitives/Events/WeakEventSource.cs</a></td>
 </tr>
 <tr>
 <th>Tag:</th>
-<td class="limit-width " title="323_28699572109">323_28699572109</td>
+<td class="limit-width " title="342_31701152804">342_31701152804</td>
 </tr>
 </table>
 </div>
@@ -122,7 +122,7 @@
 </table>
 </div>
 <h1>File(s)</h1>
-<h2 id="httpsrawgithubusercontentcomsandre58MyNet85372080fe102cd9ee155ceab49ae000e7f66103srcMyNetPrimitivesEventsWeakEventSourcecs">https://raw.githubusercontent.com/sandre58/MyNet/85372080fe102cd9ee155ceab49ae000e7f66103/src/MyNet.Primitives/Events/WeakEventSource.cs</h2>
+<h2 id="httpsrawgithubusercontentcomsandre58MyNet5aaaab311aa14541478b9e402357d98b657a23e4srcMyNetPrimitivesEventsWeakEventSourcecs">https://raw.githubusercontent.com/sandre58/MyNet/5aaaab311aa14541478b9e402357d98b657a23e4/src/MyNet.Primitives/Events/WeakEventSource.cs</h2>
 <div class="table-responsive">
 <table class="lineAnalysis">
 <thead><tr><th></th><th>#</th><th>Line</th><th></th><th>Line coverage</th></tr></thead>
@@ -152,7 +152,7 @@
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;Subscribes&nbsp;to&nbsp;the&nbsp;event&nbsp;with&nbsp;a&nbsp;weak&nbsp;reference&nbsp;to&nbsp;the&nbsp;handler,&nbsp;allowing&nbsp;the&nbsp;subscriber&nbsp;to&nbsp;be&nbsp;garbage&nbsp;collected&nbsp;if</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;/summary&gt;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;param&nbsp;name=&quot;handler&quot;&gt;The&nbsp;event&nbsp;handler&nbsp;to&nbsp;subscribe.&lt;/param&gt;</code></td></tr>
-<tr class="coverableline" title="Covered (12 visits)" data-coverage="{'AllTestMethods': {'VC': '12', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">12</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;Subscribe(EventHandler&lt;TEventArgs&gt;&nbsp;handler)&nbsp;=&gt;&nbsp;_subscriptions.Add(new(handler));</code></td></tr>
+<tr class="coverableline" title="Covered (12 visits)" data-coverage="{'AllTestMethods': {'VC': '12', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">12</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;Subscribe(EventHandler&lt;TEventArgs&gt;&nbsp;handler)&nbsp;=&gt;&nbsp;_subscriptions.Add(new&nbsp;WeakSubscription(handler));</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;summary&gt;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;Unsubscribes&nbsp;from&nbsp;the&nbsp;event.</code></td></tr>
@@ -191,7 +191,7 @@
 <tr class="coverableline" title="Covered (12 visits)" data-coverage="{'AllTestMethods': {'VC': '12', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">12</td><td class="rightmargin right"><a id="file0_line62"></a><code>62</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_method&nbsp;=&nbsp;handler.Method;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line63"></a><code>63</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr class="coverableline" title="Covered (12 visits, 2 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '12', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">12</td><td class="rightmargin right"><a id="file0_line64"></a><code>64</code></td><td class="percentagebar percentagebar100"><i class="icon-fork"></i></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(handler.Target&nbsp;!=&nbsp;null)</code></td></tr>
-<tr class="coverableline" title="Covered (9 visits)" data-coverage="{'AllTestMethods': {'VC': '9', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">9</td><td class="rightmargin right"><a id="file0_line65"></a><code>65</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_targetReference&nbsp;=&nbsp;new(handler.Target);</code></td></tr>
+<tr class="coverableline" title="Covered (9 visits)" data-coverage="{'AllTestMethods': {'VC': '9', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">9</td><td class="rightmargin right"><a id="file0_line65"></a><code>65</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_targetReference&nbsp;=&nbsp;new&nbsp;WeakReference(handler.Target);</code></td></tr>
 <tr class="coverableline" title="Covered (12 visits)" data-coverage="{'AllTestMethods': {'VC': '12', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">12</td><td class="rightmargin right"><a id="file0_line66"></a><code>66</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line67"></a><code>67</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line68"></a><code>68</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;summary&gt;</code></td></tr>
@@ -230,7 +230,7 @@
 </tbody>
 </table>
 </div>
-<div class="footer">Generated by: ReportGenerator 5.5.10.0<br />07/04/2026 - 07:52:19<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
+<div class="footer">Generated by: ReportGenerator 5.5.11.0<br />08/13/2026 - 12:46:33<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
