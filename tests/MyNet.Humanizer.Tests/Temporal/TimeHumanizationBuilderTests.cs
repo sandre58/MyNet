@@ -60,7 +60,7 @@ public class TimeHumanizationBuilderTests
             MaxComponents = 3,
             IncludeZeroUnits = true,
             DecompositionMode = TimeSpanDecompositionMode.Flat,
-            ListFormatting = new() { Conjunction = ListConjunction.Or }
+            ListFormatting = new ListFormattingOptions { Conjunction = ListConjunction.Or }
         };
 
         var options = new TimeHumanizationBuilder().From(source).Build();

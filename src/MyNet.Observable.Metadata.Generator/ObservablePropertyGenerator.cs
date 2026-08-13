@@ -118,7 +118,7 @@ public sealed class ObservablePropertyGenerator : IIncrementalGenerator
             ? string.Empty
             : containingType.ContainingNamespace.ToDisplayString();
 
-        return new(namespaceName, containingType.Name, propertyName, propertyType, fieldName, null);
+        return new FieldModel(namespaceName, containingType.Name, propertyName, propertyType, fieldName, null);
     }
 
     private static bool HasObservablePropertyAttribute(IFieldSymbol fieldSymbol) => Enumerable.Any(fieldSymbol.GetAttributes(), attribute => attribute.AttributeClass?.ToDisplayString() == ObservablePropertyAttribute);
@@ -221,7 +221,7 @@ public sealed class ObservablePropertyGenerator : IIncrementalGenerator
         public static FieldModel WithDiagnostic(DiagnosticDescriptor descriptor, Location location, string typeName)
         {
             var diagnostic = Diagnostic.Create(descriptor, location, typeName);
-            return new(string.Empty, typeName, string.Empty, string.Empty, string.Empty, diagnostic);
+            return new FieldModel(string.Empty, typeName, string.Empty, string.Empty, string.Empty, diagnostic);
         }
     }
 }

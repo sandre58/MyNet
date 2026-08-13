@@ -26,9 +26,9 @@ public sealed class WindowsRegistryTests : IDisposable
 
     public WindowsRegistryTests()
     {
-        _store = new(_converter);
-        _query = new(_converter);
-        _service = new(_store, _navigator, _converter);
+        _store = new WindowsRegistryStore(_converter);
+        _query = new WindowsRegistryQuery(_converter);
+        _service = new WindowsRegistryService(_store, _navigator, _converter);
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public sealed class WindowsRegistryTests : IDisposable
     public void WindowsRegistryService_Remove_DeletesEntry()
     {
         var path = RegistryPath.Combine(_rootPath.ToString(), "ToRemove");
-        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(path, new() { Name = "RemoveMe", Count = 1, IsEnabled = true }));
+        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(path, new TestRegistryItem { Name = "RemoveMe", Count = 1, IsEnabled = true }));
 
         _service.Remove(path);
 
@@ -121,8 +121,8 @@ public sealed class WindowsRegistryTests : IDisposable
         var firstPath = RegistryPath.Combine(_rootPath.ToString(), "Entry1");
         var secondPath = RegistryPath.Combine(_rootPath.ToString(), "Entry2");
 
-        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(firstPath, new() { Name = "One", Count = 1, IsEnabled = true }));
-        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(secondPath, new() { Name = "Two", Count = 2, IsEnabled = false }));
+        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(firstPath, new TestRegistryItem { Name = "One", Count = 1, IsEnabled = true }));
+        _service.AddOrUpdate(new RegistryEntry<TestRegistryItem>(secondPath, new TestRegistryItem { Name = "Two", Count = 2, IsEnabled = false }));
 
         var single = _service.Get<TestRegistryItem>(firstPath);
         var all = _service.GetAll<TestRegistryItem>(_rootPath).ToArray();

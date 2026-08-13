@@ -46,7 +46,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
     /// <param name="order">The order in which this grouping property should be activated relative to other properties.</param>
     public GroupingPropertyViewModelBuilder<T> ByDefault(int? order = null)
     {
-        _defaultState = new(order ?? _order++);
+        _defaultState = new GroupingDefaultState(order ?? _order++);
         return this;
     }
 
@@ -60,7 +60,7 @@ public sealed class GroupingPropertyViewModelBuilder<T>(Expression<Func<T, objec
         var key = ResolveKey();
         var displayName = _displayName ?? new LocalizedString(key);
 
-        return new(key, expression, displayName, _defaultState);
+        return new GroupingPropertyDefinition<T>(key, expression, displayName, _defaultState);
     }
 
     /// <summary>

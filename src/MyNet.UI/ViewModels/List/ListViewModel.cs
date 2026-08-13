@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Reactive.Concurrency;
+using MyNet.Observable.Collections;
 using MyNet.Observable.Collections.Sources;
 using MyNet.UI.ViewModels.List.Factories;
 using MyNet.UI.ViewModels.List.Filtering;
@@ -41,7 +42,7 @@ public class ListViewModel<T>(IListDataProvider<T> dataProvider,
     /// <param name="source">The collection of items to be managed by the view model.</param>
     /// <param name="options">Optional list view model options.</param>
     public ListViewModel(SourceEngine<T> source, ListViewModelOptions<T>? options)
-        : this(new ExtendedCollectionDataProvider<T>(new(source, options?.Scheduler)), options)
+        : this(new ExtendedCollectionDataProvider<T>(new ExtendedCollection<T>(source, options?.Scheduler)), options)
     {
     }
 
@@ -54,7 +55,7 @@ public class ListViewModel<T>(IListDataProvider<T> dataProvider,
         IGroupingViewModel<T>? grouping = null,
         IPagingViewModel? paging = null,
         IScheduler? scheduler = null)
-        : this(new ExtendedCollectionDataProvider<T>(new(source, scheduler)), filters, sorting, grouping, paging, scheduler)
+        : this(new ExtendedCollectionDataProvider<T>(new ExtendedCollection<T>(source, scheduler)), filters, sorting, grouping, paging, scheduler)
     {
     }
 

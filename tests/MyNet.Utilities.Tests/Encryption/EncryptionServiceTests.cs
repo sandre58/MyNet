@@ -18,7 +18,7 @@ public class EncryptionServiceTests
     {
         const string key = "g.ul0l6:pc5h?yp?:l1;j70pd;vo4h0.";
         var keys = Encoding.ASCII.GetBytes(key);
-        _encryptionService = new(keys);
+        _encryptionService = new AesEncryptionService(keys);
     }
 
     [Theory]

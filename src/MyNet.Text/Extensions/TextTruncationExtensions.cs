@@ -37,7 +37,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed TextPipeline instance.</returns>
         public TextPipeline Truncate(int length, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => pipeline.Truncate(new FixedLengthTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = length,
                     TruncationString = truncationString,
@@ -53,7 +53,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed TextPipeline instance.</returns>
         public TextPipeline TruncateWords(int count, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => pipeline.Truncate(new FixedNumberOfWordsTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = count,
                     TruncationString = truncationString,
@@ -69,7 +69,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed TextPipeline instance.</returns>
         public TextPipeline TruncateCharacters(int count, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => pipeline.Truncate(new FixedNumberOfCharactersTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = count,
                     TruncationString = truncationString,
@@ -100,7 +100,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed string.</returns>
         public string Truncate(int length, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => input.Truncate(new FixedLengthTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = length,
                     TruncationString = truncationString,
@@ -116,7 +116,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed string.</returns>
         public string TruncateWords(int count, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => input.Truncate(new FixedNumberOfWordsTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = count,
                     TruncationString = truncationString,
@@ -132,7 +132,7 @@ public static class TextTruncationExtensions
         /// <returns>The transformed string.</returns>
         public string TruncateCharacters(int count, string truncationString = "…", TruncateFrom direction = TruncateFrom.Right)
             => input.Truncate(new FixedNumberOfCharactersTextTruncator(
-                new()
+                new TextTruncationOptions
                 {
                     Length = count,
                     TruncationString = truncationString,

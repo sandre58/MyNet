@@ -21,7 +21,7 @@ public class ViewFactoryTests
     private static ViewFactory BuildFactory(ITypeResolver resolver, IServiceProvider? provider = null)
     {
         provider ??= new ServiceCollection().BuildServiceProvider();
-        return new(resolver, new ViewLocator(provider));
+        return new ViewFactory(resolver, new ViewLocator(provider));
     }
 
     [Fact]

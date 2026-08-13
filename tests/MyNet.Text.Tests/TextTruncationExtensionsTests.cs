@@ -50,7 +50,7 @@ public class TextTruncationExtensionsTests
     [Fact]
     public void Apply_WithNullCulture_Throws()
     {
-        var truncator = new FixedLengthTextTruncator(new() { Length = 3 });
+        var truncator = new FixedLengthTextTruncator(new TextTruncationOptions { Length = 3 });
 
         Assert.Throws<ArgumentNullException>(() => truncator.Apply("abcdef", null!));
     }

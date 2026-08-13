@@ -47,7 +47,7 @@ public class OpenIntervalTests
 
         var expanded = interval.ExpandTo(0, inclusive: false);
 
-        Assert.Equal(new(0, 5), expanded);
+        Assert.Equal(new OpenInterval<int>(0, 5), expanded);
     }
 
     [Fact]

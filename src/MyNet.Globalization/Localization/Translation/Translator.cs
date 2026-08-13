@@ -94,7 +94,7 @@ public sealed class Translator(
             ? ApplyInflectionFallback(value, options.Quantity.Value, culture)
             : value;
 
-        return new TemplateTransform(new()
+        return new TemplateTransform(new TextTemplateOptions
         {
             Quantity = options.Quantity,
             Arguments = options.Arguments,

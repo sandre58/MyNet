@@ -127,6 +127,11 @@ public sealed class ShellNotificationsViewModel : ViewModelBase
             case NotifyCollectionChangedAction.Reset:
                 Notifications.Clear();
                 break;
+            case NotifyCollectionChangedAction.Replace:
+            case NotifyCollectionChangedAction.Move:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(e), e, null);
         }
 
         RefreshNotificationState();

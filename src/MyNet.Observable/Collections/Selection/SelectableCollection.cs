@@ -72,7 +72,7 @@ public static class SelectableCollection
     {
         var collection = new ExtendedCollection<T>(source, scheduler);
 
-        return new(collection, mode, disposeCollection: true);
+        return new SelectableCollection<T>(collection, mode, disposeCollection: true);
     }
 }
 
@@ -102,7 +102,7 @@ public sealed class SelectableCollection<T> : IDisposable
         ArgumentNullException.ThrowIfNull(collection);
 
         Collection = collection;
-        _selection = new(collection.Connect(), mode);
+        _selection = new SelectionEngine<T>(collection.Connect(), mode);
         _disposeCollection = disposeCollection;
     }
 

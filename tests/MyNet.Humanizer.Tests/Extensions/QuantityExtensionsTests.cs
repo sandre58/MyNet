@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using MyNet.Globalization.Localization.Translation;
 using MyNet.Humanizer.Facade;
 using MyNet.Primitives;
@@ -71,7 +72,7 @@ public class QuantityExtensionsTests
     [Fact]
     public void Quantify_UsesCustomNumericFormatAndCulture()
     {
-        var result = "request".Quantify(12345, "N0", new("fr-FR"));
+        var result = "request".Quantify(12345, "N0", new CultureInfo("fr-FR"));
 
         Assert.Contains("12", result, StringComparison.Ordinal);
         Assert.Contains("345", result, StringComparison.Ordinal);

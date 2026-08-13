@@ -68,7 +68,7 @@ public static class StreamExtensions
                 memoryStream.TryGetBuffer(out var segment))
             {
                 return segment.Array is not null
-                    ? segment.Array.AsSpan(0, (int)memoryStream.Length).ToArray()
+                    ? [.. segment.Array.AsSpan(0, (int)memoryStream.Length)]
                     : memoryStream.ToArray();
             }
 
@@ -91,7 +91,7 @@ public static class StreamExtensions
                 memoryStream.TryGetBuffer(out var segment))
             {
                 return segment.Array is not null
-                    ? segment.Array.AsSpan(0, (int)memoryStream.Length).ToArray()
+                    ? [.. segment.Array.AsSpan(0, (int)memoryStream.Length)]
                     : memoryStream.ToArray();
             }
 

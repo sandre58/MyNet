@@ -39,7 +39,7 @@ public sealed class NavigationRequestBuilder(Func<INavigationPage> pageFactory, 
 
         if (_parameters is null)
         {
-            parameters = new();
+            parameters = new NavigationParameters();
             _parameters = parameters;
         }
         else if (parameters is null)

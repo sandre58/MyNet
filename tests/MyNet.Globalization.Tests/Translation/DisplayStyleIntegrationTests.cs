@@ -23,39 +23,39 @@ namespace MyNet.Globalization.Tests.Translation;
 
 public class DisplayStyleIntegrationTests
 {
-    public static IEnumerable<object[]> AllDisplayStyles =>
+    public static TheoryData<DisplayStyle> AllDisplayStyles { get; } =
     [
-        [DisplayStyle.Default],
-        [DisplayStyle.Short],
-        [DisplayStyle.Abbreviation],
-        [DisplayStyle.Symbol],
-        [DisplayStyle.Narrow]
+        DisplayStyle.Default,
+        DisplayStyle.Short,
+        DisplayStyle.Abbreviation,
+        DisplayStyle.Symbol,
+        DisplayStyle.Narrow
     ];
 
-    public static IEnumerable<object[]> DisplayStylesWithCultures =>
-    [
-        [DisplayStyle.Default, "en-US"],
-        [DisplayStyle.Default, "fr-FR"],
-        [DisplayStyle.Default, "de-DE"],
-        [DisplayStyle.Short, "en-US"],
-        [DisplayStyle.Short, "fr-FR"],
-        [DisplayStyle.Short, "de-DE"],
-        [DisplayStyle.Abbreviation, "en-US"],
-        [DisplayStyle.Abbreviation, "fr-FR"],
-        [DisplayStyle.Abbreviation, "de-DE"],
-        [DisplayStyle.Symbol, "en-US"],
-        [DisplayStyle.Symbol, "fr-FR"],
-        [DisplayStyle.Symbol, "de-DE"],
-        [DisplayStyle.Narrow, "en-US"],
-        [DisplayStyle.Narrow, "fr-FR"],
-        [DisplayStyle.Narrow, "de-DE"]
-    ];
+    public static TheoryData<DisplayStyle, string> DisplayStylesWithCultures { get; } = new()
+    {
+        { DisplayStyle.Default, "en-US" },
+        { DisplayStyle.Default, "fr-FR" },
+        { DisplayStyle.Default, "de-DE" },
+        { DisplayStyle.Short, "en-US" },
+        { DisplayStyle.Short, "fr-FR" },
+        { DisplayStyle.Short, "de-DE" },
+        { DisplayStyle.Abbreviation, "en-US" },
+        { DisplayStyle.Abbreviation, "fr-FR" },
+        { DisplayStyle.Abbreviation, "de-DE" },
+        { DisplayStyle.Symbol, "en-US" },
+        { DisplayStyle.Symbol, "fr-FR" },
+        { DisplayStyle.Symbol, "de-DE" },
+        { DisplayStyle.Narrow, "en-US" },
+        { DisplayStyle.Narrow, "fr-FR" },
+        { DisplayStyle.Narrow, "de-DE" }
+    };
 
     [Theory]
     [MemberData(nameof(AllDisplayStyles))]
     public void TranslateWithDisplayStyle_AllStylesSupported(DisplayStyle style)
     {
-        var manager = new InMemoryResourceManager(new()
+        var manager = new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -69,7 +69,7 @@ public class DisplayStyleIntegrationTests
         var translator = CreateTranslator(new ParameterizedKeyResolver(style), ("Main", manager));
 
         var options = new TranslationOptionsBuilder().WithStyle(style).Build();
-        var result = translator.Translate("Label", options, new("en-US"));
+        var result = translator.Translate("Label", options, new CultureInfo("en-US"));
 
         Assert.NotEmpty(result);
     }
@@ -84,7 +84,7 @@ public class DisplayStyleIntegrationTests
         var options = new TranslationOptionsBuilder().WithStyle(style).Build();
 
         // Should not throw and should return some value
-        var result = translator.Translate("Message", options, new(cultureName));
+        var result = translator.Translate("Message", options, new CultureInfo(cultureName));
         Assert.NotEmpty(result);
     }
 
@@ -92,7 +92,7 @@ public class DisplayStyleIntegrationTests
     [MemberData(nameof(AllDisplayStyles))]
     public void TranslateWithStyleAndQuantity_AppliesPluralization(DisplayStyle style)
     {
-        var manager = new InMemoryResourceManager(new()
+        var manager = new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -111,7 +111,7 @@ public class DisplayStyleIntegrationTests
             .WithQuantity(5)
             .Build();
 
-        var result = translator.Translate("items", options, new("en-US"));
+        var result = translator.Translate("items", options, new CultureInfo("en-US"));
 
         Assert.NotEmpty(result);
     }
@@ -120,10 +120,10 @@ public class DisplayStyleIntegrationTests
     public void TranslateWithAllStyles_Symbol_PrefersDirect()
     {
         var translator = CreateTranslator(
-            new ParameterizedKeyResolver(DisplayStyle.Symbol), ("Main", new InMemoryResourceManager(new() { ["en-US"] = new() { ["Currency"] = "Dollar", ["Currency_symbol"] = "$" } })));
+            new ParameterizedKeyResolver(DisplayStyle.Symbol), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Currency"] = "Dollar", ["Currency_symbol"] = "$" } })));
 
         var options = new TranslationOptionsBuilder().WithStyle(DisplayStyle.Symbol).Build();
-        var result = translator.Translate("Currency", options, new("en-US"));
+        var result = translator.Translate("Currency", options, new CultureInfo("en-US"));
 
         Assert.Equal("$", result);
     }
@@ -131,7 +131,7 @@ public class DisplayStyleIntegrationTests
     [Fact]
     public void TranslateWithMultipleStyles_FallsBackCorrectly()
     {
-        var manager = new InMemoryResourceManager(new()
+        var manager = new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -143,7 +143,7 @@ public class DisplayStyleIntegrationTests
             new ParameterizedKeyResolver(DisplayStyle.Short), ("Main", manager));
 
         var options = new TranslationOptionsBuilder().WithStyle(DisplayStyle.Short).Build();
-        var result = translator.Translate("Status", options, new("en-US"));
+        var result = translator.Translate("Status", options, new CultureInfo("en-US"));
 
         // Should fall back to default
         Assert.Equal("Status Text", result);
@@ -156,10 +156,10 @@ public class DisplayStyleIntegrationTests
     public void TranslateWithStyleAcrossCultures_CultureFallbackWorks(string requestCulture, string resourceCulture)
     {
         var translator = CreateTranslator(
-            new ParameterizedKeyResolver(DisplayStyle.Default), ("Main", new InMemoryResourceManager(new() { [resourceCulture] = new() { ["Hello"] = "Translation in " + resourceCulture } })));
+            new ParameterizedKeyResolver(DisplayStyle.Default), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { [resourceCulture] = new() { ["Hello"] = "Translation in " + resourceCulture } })));
 
         var options = TranslationOptionsPresets.Default;
-        var result = translator.Translate("Hello", options, new(requestCulture));
+        var result = translator.Translate("Hello", options, new CultureInfo(requestCulture));
 
         // Should use the key as fallback since we don't have the exact culture
         Assert.NotEmpty(result);
@@ -182,7 +182,7 @@ public class DisplayStyleIntegrationTests
     public void TranslateWithAllStylesAndQuantity_ComplexScenario()
     {
         var translator = CreateTranslator(
-            new ParameterizedKeyResolver(DisplayStyle.Abbreviation), ("Main", new InMemoryResourceManager(new() { ["en-US"] = new() { ["item"] = "item", ["item_abbreviation"] = "itm" } })));
+            new ParameterizedKeyResolver(DisplayStyle.Abbreviation), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["item"] = "item", ["item_abbreviation"] = "itm" } })));
 
         var options = new TranslationOptionsBuilder()
             .WithStyle(DisplayStyle.Abbreviation)
@@ -190,7 +190,7 @@ public class DisplayStyleIntegrationTests
             .WithArgument("location", "warehouse")
             .Build();
 
-        var result = translator.Translate("item", options, new("en-US"));
+        var result = translator.Translate("item", options, new CultureInfo("en-US"));
 
         Assert.NotEmpty(result);
         Assert.Equal(DisplayStyle.Abbreviation, options.Style);
@@ -200,7 +200,7 @@ public class DisplayStyleIntegrationTests
     private static Dictionary<string, Dictionary<string, string>> BuildMultiCultureResources()
         => new()
         {
-            ["en-US"] = new()
+            ["en-US"] = new Dictionary<string, string>
             {
                 ["Message"] = "Hello",
                 ["Message_short"] = "Hi",
@@ -208,7 +208,7 @@ public class DisplayStyleIntegrationTests
                 ["Message_symbol"] = "✓",
                 ["Message_narrow"] = "H"
             },
-            ["fr-FR"] = new()
+            ["fr-FR"] = new Dictionary<string, string>
             {
                 ["Message"] = "Bonjour",
                 ["Message_short"] = "Salut",
@@ -216,7 +216,7 @@ public class DisplayStyleIntegrationTests
                 ["Message_symbol"] = "✓",
                 ["Message_narrow"] = "B"
             },
-            ["de-DE"] = new()
+            ["de-DE"] = new Dictionary<string, string>
             {
                 ["Message"] = "Hallo",
                 ["Message_short"] = "Hi",
@@ -240,7 +240,7 @@ public class DisplayStyleIntegrationTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, keyResolver, new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, keyResolver, new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext
@@ -267,11 +267,11 @@ public class DisplayStyleIntegrationTests
                 };
 
                 if (!string.IsNullOrEmpty(styleSuffix))
-                    candidates.Add(new(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
+                    candidates.Add(new TranslationKeyCandidate(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
             }
 
             // Add base key
-            candidates.Add(new(baseKey, TranslationFallbackPolicy.Flexible));
+            candidates.Add(new TranslationKeyCandidate(baseKey, TranslationFallbackPolicy.Flexible));
 
             return candidates;
         }

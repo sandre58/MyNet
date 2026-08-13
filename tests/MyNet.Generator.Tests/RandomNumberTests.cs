@@ -43,11 +43,9 @@ public class RandomNumberTests
 
         for (var i = 0; i < 20; i++)
         {
-            if (RandomGenerator.Current.Decimal() != first)
-            {
-                different = true;
-                break;
-            }
+            if (RandomGenerator.Current.Decimal() == first) continue;
+            different = true;
+            break;
         }
 
         Assert.True(different, "Decimal() returned the same value every time — likely broken.");

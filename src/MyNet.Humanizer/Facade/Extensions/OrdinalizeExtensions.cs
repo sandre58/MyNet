@@ -34,7 +34,7 @@ public static class OrdinalizeExtensions
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
-        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(long.Parse(numberString, culture), new() { Gender = gender });
+        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(long.Parse(numberString, culture), new OrdinalizationOptions { Gender = gender });
     }
 
     extension(int number)
@@ -53,7 +53,7 @@ public static class OrdinalizeExtensions
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
-        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new() { Gender = gender });
+        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new OrdinalizationOptions { Gender = gender });
     }
 
     extension(long number)
@@ -69,7 +69,7 @@ public static class OrdinalizeExtensions
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
-        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new() { Gender = gender });
+        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new OrdinalizationOptions { Gender = gender });
     }
 
     extension(uint number)
@@ -85,7 +85,7 @@ public static class OrdinalizeExtensions
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
-        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new() { Gender = gender });
+        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize(number, new OrdinalizationOptions { Gender = gender });
     }
 
     extension(ulong number)
@@ -101,6 +101,6 @@ public static class OrdinalizeExtensions
         /// </summary>
         /// <param name="gender">The grammatical gender to use for output words.</param>
         /// <param name="culture">Culture to use. If null, current thread's UI culture is used.</param>
-        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize((long)number, new() { Gender = gender });
+        public string Ordinalize(GrammaticalGender gender, CultureInfo? culture = null) => Localizer.ForCulture(culture).GetRequired<IOrdinalizer>().Ordinalize((long)number, new OrdinalizationOptions { Gender = gender });
     }
 }

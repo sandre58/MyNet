@@ -87,7 +87,7 @@ return errors == 0 ? 0 : 1;
 
 static bool tryParseOptions(string[] args, out GeneratorOptions options)
 {
-    options = new();
+    options = new GeneratorOptions();
 
     for (var i = 0; i < args.Length; i++)
     {
@@ -146,13 +146,10 @@ static bool tryParseOptions(string[] args, out GeneratorOptions options)
         return false;
     }
 
-    if (options.OutputDirectory is null)
-    {
-        Console.Error.WriteLine("Output directory is required.");
-        return false;
-    }
+    if (options.OutputDirectory is not null) return true;
 
-    return true;
+    Console.Error.WriteLine("Output directory is required.");
+    return false;
 }
 
 static bool tryReadValue(string[] args, ref int index, out string value)
@@ -172,18 +169,18 @@ static bool tryReadValue(string[] args, ref int index, out string value)
 static void printHelp()
 {
     Console.WriteLine("""
-        MyNet.Tools.PackageIconGenerator — rasterize package icon manifests to 128x128 PNG.
+                      MyNet.Tools.PackageIconGenerator — rasterize package icon manifests to 128x128 PNG.
 
-        Usage:
-          dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release
-          dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release -- [options]
+                      Usage:
+                        dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release
+                        dotnet run --project tools/MyNet.Tools.PackageIconGenerator -c Release -- [options]
 
-        Options:
-          --manifest <path>   Icon manifest JSON (default: tools/package-icons.json in repo root)
-          --svg-dir <path>    SVG source folder (default: icon-svgs next to manifest)
-          --output <path>     Output PNG folder (default: assets/ next to manifest repo)
-          -h, --help          Show this help
-        """);
+                      Options:
+                        --manifest <path>   Icon manifest JSON (default: tools/package-icons.json in repo root)
+                        --svg-dir <path>    SVG source folder (default: icon-svgs next to manifest)
+                        --output <path>     Output PNG folder (default: assets/ next to manifest repo)
+                        -h, --help          Show this help
+                      """);
 }
 
 static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
@@ -199,8 +196,8 @@ static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
     using (var bgPaint = new SKPaint())
     {
         bgPaint.Shader = SKShader.CreateLinearGradient(
-            new(card.Left, card.Top),
-            new(card.Right, card.Bottom),
+            new SKPoint(card.Left, card.Top),
+            new SKPoint(card.Right, card.Bottom),
             [baseColor, accentColor],
             null,
             SKShaderTileMode.Clamp);
@@ -212,7 +209,7 @@ static void renderIcon(IconDefinition icon, string? svgPath, string outPath)
 
     using (var footerPaint = new SKPaint())
     {
-        footerPaint.Color = new(0, 0, 0, 100);
+        footerPaint.Color = new SKColor(0, 0, 0, 100);
         footerPaint.IsAntialias = true;
         canvas.Save();
         var clip = new SKPathBuilder();

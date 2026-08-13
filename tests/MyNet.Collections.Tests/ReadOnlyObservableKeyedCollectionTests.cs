@@ -13,7 +13,7 @@ public sealed class ReadOnlyObservableKeyedCollectionTests
     [Fact]
     public void Indexer_WithExistingKey_ReturnsItem()
     {
-        var keyed = new TestKeyedCollection { new("k1", "value1") };
+        var keyed = new TestKeyedCollection { new KeyedValue("k1", "value1") };
 
         var readOnly = new ReadOnlyObservableKeyedCollection<string, KeyedValue>(keyed);
 

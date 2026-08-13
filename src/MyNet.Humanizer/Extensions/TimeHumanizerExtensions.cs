@@ -36,7 +36,7 @@ public static class TimeHumanizerExtensions
         {
             ArgumentNullException.ThrowIfNull(options);
 
-            return new()
+            return new TimeSpanDecompositionOptions
             {
                 MinUnit = options.MinUnit,
                 MaxUnit = options.MaxUnit,

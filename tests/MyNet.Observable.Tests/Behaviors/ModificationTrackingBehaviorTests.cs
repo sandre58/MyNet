@@ -156,7 +156,7 @@ public sealed class ModificationTrackingBehaviorTests
         public DeferredChildOwner()
         {
             Behaviors.Register(new ModificationTrackingBehavior(this));
-            _host = new();
+            _host = new ChildHost();
         }
 
         public TrackableChild Child => _host.Child;
@@ -169,7 +169,7 @@ public sealed class ModificationTrackingBehaviorTests
         public NullConditionalChildOwner()
         {
             Behaviors.Register(new ModificationTrackingBehavior(this));
-            _host = new();
+            _host = new ChildHost();
         }
 
         public TrackableChild? Child => _host?.Child;
@@ -189,7 +189,7 @@ public sealed class ModificationTrackingBehaviorTests
         public void MarkModified()
         {
             IsModified = true;
-            PropertyChanged?.Invoke(this, new(nameof(IsModified)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsModified)));
         }
 
         public void ResetModified() => IsModified = false;

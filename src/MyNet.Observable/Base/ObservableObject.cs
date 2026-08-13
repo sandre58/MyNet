@@ -40,7 +40,7 @@ public abstract class ObservableObject : IObservableObject
     protected ObservableObject()
     {
         _notificationSuspension.PendingFlush = DeliverDeferredPropertyChanged;
-        Behaviors = new(_behaviors);
+        Behaviors = new ObservableBehaviors(_behaviors);
         MetadataBehaviorApplicator.Apply(this);
     }
 
@@ -318,14 +318,14 @@ public abstract class ObservableObject : IObservableObject
     /// </summary>
     /// <param name="propertyName">The name of the property.</param>
     /// <returns>A cached PropertyChangedEventArgs instance.</returns>
-    private static PropertyChangedEventArgs GetPropertyChangedEventArgs(string propertyName) => PropertyChangedEventArgsCache.GetOrAdd(propertyName, static x => new(x));
+    private static PropertyChangedEventArgs GetPropertyChangedEventArgs(string propertyName) => PropertyChangedEventArgsCache.GetOrAdd(propertyName, static x => new PropertyChangedEventArgs(x));
 
     /// <summary>
     /// Gets a cached PropertyChangingEventArgs instance for the specified property name.
     /// </summary>
     /// <param name="propertyName">The name of the property.</param>
     /// <returns>A cached PropertyChangingEventArgs instance.</returns>
-    private static PropertyChangingEventArgs GetPropertyChangingEventArgs(string propertyName) => PropertyChangingEventArgsCache.GetOrAdd(propertyName, static x => new(x));
+    private static PropertyChangingEventArgs GetPropertyChangingEventArgs(string propertyName) => PropertyChangingEventArgsCache.GetOrAdd(propertyName, static x => new PropertyChangingEventArgs(x));
 
     #endregion
 }
@@ -402,7 +402,7 @@ internal sealed class PropertyNotificationSuspension
         }
 
         _pendingOrder.Add(propertyName);
-        _pending[propertyName] = new(before, after);
+        _pending[propertyName] = new PendingPropertyMutation(before, after);
         return true;
     }
 

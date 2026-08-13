@@ -24,5 +24,5 @@ public sealed class TypeMetadata
     /// </summary>
     /// <param name="name">The name of the property for which to retrieve metadata.</param>
     /// <returns>The <see cref="PropertyMetadata"/> instance associated with the specified property name.</returns>
-    public PropertyMetadata GetProperty(string name) => Properties.GetOrAdd(name, static _ => new());
+    public PropertyMetadata GetProperty(string name) => Properties.GetOrAdd(name, static _ => new PropertyMetadata());
 }

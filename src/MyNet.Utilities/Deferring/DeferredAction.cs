@@ -65,11 +65,9 @@ public class DeferredAction(Action action) : IDeferrable
     {
         _deferCount--;
 
-        if (_deferCount == 0 && _pending)
-        {
-            _pending = false;
-            action.Invoke();
-        }
+        if (_deferCount != 0 || !_pending) return;
+        _pending = false;
+        action.Invoke();
     }
 
     /// <summary>

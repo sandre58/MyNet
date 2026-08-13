@@ -76,12 +76,12 @@ public sealed class ObservablePropertyGeneratorTests
 
     private static CSharpCompilation CreateCompilation(string source)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(source, new(LanguageVersion.Preview));
+        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview));
 
         return CSharpCompilation.Create(
             assemblyName: "ObservablePropertyGeneratorTests",
             syntaxTrees: [syntaxTree],
             references: MetadataProviderGeneratorTests.GetMetadataReferences(),
-            options: new(OutputKind.DynamicallyLinkedLibrary));
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 }

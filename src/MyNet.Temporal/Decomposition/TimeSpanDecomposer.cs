@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MyNet.Primitives;
-using MyNet.Temporal;
 
 namespace MyNet.Temporal.Decomposition;
 
@@ -37,7 +36,7 @@ public sealed class TimeSpanDecomposer : ITimeSpanDecomposer
             .ToList();
 
         if (units.Count == 0)
-            return [new(0, options.MinUnit)];
+            return [new TimeUnitValue(0, options.MinUnit)];
 
         var result = options.Mode switch
         {
@@ -50,7 +49,7 @@ public sealed class TimeSpanDecomposer : ITimeSpanDecomposer
 
         result = ApplyPostProcessing(result, options);
 
-        return result.Count == 0 ? [new(0, options.MinUnit)] : result;
+        return result.Count == 0 ? [new TimeUnitValue(0, options.MinUnit)] : result;
     }
 
     // --------------------------------------------------
@@ -75,7 +74,7 @@ public sealed class TimeSpanDecomposer : ITimeSpanDecomposer
                 continue;
 
             var value = (int)(remaining / unitTicks);
-            result.Add(new(value, unit));
+            result.Add(new TimeUnitValue(value, unit));
 
             remaining -= value * unitTicks;
             if (remaining <= 0)
@@ -110,7 +109,7 @@ public sealed class TimeSpanDecomposer : ITimeSpanDecomposer
         var unit = units[0];
         var value = (int)(ticks / GetUnitTicks(unit));
 
-        return [new(value, unit)];
+        return [new TimeUnitValue(value, unit)];
     }
 
     /// <summary>
@@ -124,7 +123,7 @@ public sealed class TimeSpanDecomposer : ITimeSpanDecomposer
         var unit = units[^1];
         var value = (int)(ticks / GetUnitTicks(unit));
 
-        return [new(value, unit)];
+        return [new TimeUnitValue(value, unit)];
     }
 
     /// <summary>

@@ -72,7 +72,7 @@ public sealed class SortingViewModelBuilder<T>
                     def.DefaultState.Direction);
             }
 
-            results.Add(new(vm, defaultSort));
+            results.Add(new SortingPropertyBuildResult(vm, defaultSort));
         }
 
         var defaultSorting = results
@@ -83,7 +83,7 @@ public sealed class SortingViewModelBuilder<T>
 
         var viewModels = results.ConvertAll(x => x.ViewModel);
 
-        return new(viewModels, defaultSorting);
+        return new SortingViewModel<T>(viewModels, defaultSorting);
     }
 
     /// <summary>

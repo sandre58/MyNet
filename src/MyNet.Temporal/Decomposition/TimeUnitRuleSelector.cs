@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using MyNet.Primitives;
-using MyNet.Temporal;
 
 namespace MyNet.Temporal.Decomposition;
 
@@ -44,11 +43,9 @@ public sealed class TimeUnitRuleSelector : ITimeUnitRuleEngine
 
         for (var unit = maxUnit; unit >= minUnit; unit--)
         {
-            if (GetTotal(absolute, unit) >= 1d)
-            {
-                largest = unit;
-                break;
-            }
+            if (!(GetTotal(absolute, unit) >= 1d)) continue;
+            largest = unit;
+            break;
         }
 
         var result = new List<TimeUnit>();

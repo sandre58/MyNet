@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using MyNet.Temporal;
 using MyNet.Temporal.Intervals;
 using Xunit;
 
@@ -19,31 +18,31 @@ public class DateTimePeriodExtensionsTests
     [Fact]
     public void Shift_MovesPeriodByOffset()
     {
-        var period = MakeDateTimePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
+        var period = MakeDateTimePeriod(new DateTime(2024, 1, 1, 8, 0, 0), new DateTime(2024, 1, 1, 10, 0, 0));
         var shifted = period.Shift(TimeSpan.FromHours(2));
 
-        Assert.Equal(new(2024, 1, 1, 10, 0, 0), shifted.Start!.Value.Value);
-        Assert.Equal(new(2024, 1, 1, 12, 0, 0), shifted.End!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 10, 0, 0), shifted.Start!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 12, 0, 0), shifted.End!.Value.Value);
     }
 
     [Fact]
     public void Shift_WithNegativeOffset_MovesPeriodBack()
     {
-        var period = MakeDateTimePeriod(new(2024, 1, 1, 10, 0, 0), new(2024, 1, 1, 12, 0, 0));
+        var period = MakeDateTimePeriod(new DateTime(2024, 1, 1, 10, 0, 0), new DateTime(2024, 1, 1, 12, 0, 0));
         var shifted = period.Shift(TimeSpan.FromHours(-2));
 
-        Assert.Equal(new(2024, 1, 1, 8, 0, 0), shifted.Start!.Value.Value);
-        Assert.Equal(new(2024, 1, 1, 10, 0, 0), shifted.End!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 8, 0, 0), shifted.Start!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 10, 0, 0), shifted.End!.Value.Value);
     }
 
     [Fact]
     public void Extend_LengthensPeriodAtEnd()
     {
-        var period = MakeDateTimePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
+        var period = MakeDateTimePeriod(new DateTime(2024, 1, 1, 8, 0, 0), new DateTime(2024, 1, 1, 10, 0, 0));
         var extended = period.Extend(TimeSpan.FromHours(3));
 
-        Assert.Equal(new(2024, 1, 1, 8, 0, 0), extended.Start!.Value.Value);
-        Assert.Equal(new(2024, 1, 1, 13, 0, 0), extended.End!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 8, 0, 0), extended.Start!.Value.Value);
+        Assert.Equal(new DateTime(2024, 1, 1, 13, 0, 0), extended.End!.Value.Value);
     }
 
     [Fact]
@@ -121,8 +120,8 @@ public class DateTimePeriodExtensionsTests
     [Fact]
     public void Gap_WithNonOverlappingPeriods_ReturnsElapsedTimeBetweenThem()
     {
-        var left = MakeDateTimePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 10, 0, 0));
-        var right = MakeDateTimePeriod(new(2024, 1, 1, 12, 0, 0), new(2024, 1, 1, 14, 0, 0));
+        var left = MakeDateTimePeriod(new DateTime(2024, 1, 1, 8, 0, 0), new DateTime(2024, 1, 1, 10, 0, 0));
+        var right = MakeDateTimePeriod(new DateTime(2024, 1, 1, 12, 0, 0), new DateTime(2024, 1, 1, 14, 0, 0));
 
         Assert.Equal(TimeSpan.FromHours(2), left.TimeGap(right));
     }
@@ -130,8 +129,8 @@ public class DateTimePeriodExtensionsTests
     [Fact]
     public void Gap_WithOverlappingPeriods_ReturnsZero()
     {
-        var left = MakeDateTimePeriod(new(2024, 1, 1, 8, 0, 0), new(2024, 1, 1, 12, 0, 0));
-        var right = MakeDateTimePeriod(new(2024, 1, 1, 10, 0, 0), new(2024, 1, 1, 14, 0, 0));
+        var left = MakeDateTimePeriod(new DateTime(2024, 1, 1, 8, 0, 0), new DateTime(2024, 1, 1, 12, 0, 0));
+        var right = MakeDateTimePeriod(new DateTime(2024, 1, 1, 10, 0, 0), new DateTime(2024, 1, 1, 14, 0, 0));
 
         Assert.Equal(TimeSpan.Zero, left.TimeGap(right));
     }

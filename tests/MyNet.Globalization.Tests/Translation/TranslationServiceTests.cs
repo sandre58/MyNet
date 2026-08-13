@@ -27,7 +27,7 @@ public class TranslationServiceTests
     public void Translate_WithDefaultCulture_UsesContextCulture()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var result = service.Translate("Greeting", TranslationOptionsPresets.Default);
 
@@ -38,7 +38,7 @@ public class TranslationServiceTests
     public void Translate_WithDifferentContextCulture_UsesContextCulture()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("fr-FR")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("fr-FR")));
 
         var result = service.Translate("Greeting", TranslationOptionsPresets.Default);
 
@@ -49,7 +49,7 @@ public class TranslationServiceTests
     public void Translate_WithOptions_AppliesOptions()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithArgument("name", "Alice")
@@ -64,7 +64,7 @@ public class TranslationServiceTests
     public void Translate_WithStyle_AppliesStyle()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithStyle(DisplayStyle.Abbreviation)
@@ -79,7 +79,7 @@ public class TranslationServiceTests
     public void Translate_WithQuantity_AppliesQuantity()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithQuantity(5)
@@ -94,7 +94,7 @@ public class TranslationServiceTests
     public void Translate_ComplexScenario_AllFeaturesWork()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithStyle(DisplayStyle.Default)
@@ -112,7 +112,7 @@ public class TranslationServiceTests
     public void Translate_WithoutKeyFallback_ReturnsEmptyIfNotFound()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithoutKeyFallback()
@@ -127,7 +127,7 @@ public class TranslationServiceTests
     public void Translate_MultipleCallsSameCulture_ConsistentResults()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var result1 = service.Translate("Greeting", TranslationOptionsPresets.Default);
         var result2 = service.Translate("Greeting", TranslationOptionsPresets.Default);
@@ -142,8 +142,8 @@ public class TranslationServiceTests
     {
         var translator = CreateTranslator();
 
-        var enService = new TranslationService(translator, new FixedCultureContext(new("en-US")));
-        var frService = new TranslationService(translator, new FixedCultureContext(new("fr-FR")));
+        var enService = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
+        var frService = new TranslationService(translator, new FixedCultureContext(new CultureInfo("fr-FR")));
 
         var enResult = enService.Translate("Greeting", TranslationOptionsPresets.Default);
         var frResult = frService.Translate("Greeting", TranslationOptionsPresets.Default);
@@ -157,14 +157,14 @@ public class TranslationServiceTests
     public void Translate_WithChangingContext_ReflectsNewCulture()
     {
         var translator = CreateTranslator();
-        var context = new DynamicCultureContext(new("en-US"));
+        var context = new DynamicCultureContext(new CultureInfo("en-US"));
         var service = new TranslationService(translator, context);
 
         var result1 = service.Translate("Greeting", TranslationOptionsPresets.Default);
         Assert.Equal("Hello", result1);
 
         // Change culture
-        context.CurrentCulture = new("fr-FR");
+        context.CurrentCulture = new CultureInfo("fr-FR");
         var result2 = service.Translate("Greeting", TranslationOptionsPresets.Default);
         Assert.Equal("Bonjour", result2);
     }
@@ -173,7 +173,7 @@ public class TranslationServiceTests
     public void Translate_InflectionFallback_Respected()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var optionsWithInflection = new TranslationOptionsBuilder()
             .WithQuantity(2)
@@ -188,7 +188,7 @@ public class TranslationServiceTests
     public void Translate_WithAllDisplayStyles_AllSupported()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var styles = new[] { DisplayStyle.Default, DisplayStyle.Short, DisplayStyle.Abbreviation, DisplayStyle.Symbol, DisplayStyle.Narrow };
 
@@ -207,7 +207,7 @@ public class TranslationServiceTests
     public void Translate_VariousCultures_AllSupported(string cultureName)
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new(cultureName)));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo(cultureName)));
 
         var result = service.Translate("Greeting", TranslationOptionsPresets.Default);
 
@@ -218,7 +218,7 @@ public class TranslationServiceTests
     public void Translate_TemplateWithMultipleArguments_AllRenderedCorrectly()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var options = new TranslationOptionsBuilder()
             .WithQuantity(42)
@@ -235,7 +235,7 @@ public class TranslationServiceTests
     public void Translate_VeryLongKey_Handled()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var longKey = new string('K', 500);
         var result = service.Translate(longKey, TranslationOptionsPresets.Default);
@@ -247,7 +247,7 @@ public class TranslationServiceTests
     public void Translate_BuiltOptionsReused_Works()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         // Build options once
         var options = new TranslationOptionsBuilder()
@@ -269,7 +269,7 @@ public class TranslationServiceTests
     public void Translate_WithPresetOptions_Works()
     {
         var translator = CreateTranslator();
-        var service = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var service = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
 
         var result = service.Translate("Greeting", TranslationOptionsPresets.Default);
 
@@ -279,7 +279,7 @@ public class TranslationServiceTests
     private static Translator CreateTranslator()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -315,7 +315,7 @@ public class TranslationServiceTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext
@@ -347,11 +347,11 @@ public class TranslationServiceTests
                 };
 
                 if (!string.IsNullOrEmpty(styleSuffix))
-                    candidates.Add(new(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
+                    candidates.Add(new TranslationKeyCandidate(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
             }
 
             // Add base key
-            candidates.Add(new(baseKey, TranslationFallbackPolicy.Flexible));
+            candidates.Add(new TranslationKeyCandidate(baseKey, TranslationFallbackPolicy.Flexible));
 
             return candidates;
         }

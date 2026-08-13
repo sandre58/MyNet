@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Globalization;
 using Xunit;
 
@@ -56,13 +57,13 @@ public sealed class StringExtensionsTests
     }
 
     [Fact]
-    public void ToVersion_ParsesVersion() => Assert.Equal(new(1, 2, 3, 4), "1.2.3.4".ToVersion());
+    public void ToVersion_ParsesVersion() => Assert.Equal(new Version(1, 2, 3, 4), "1.2.3.4".ToVersion());
 
     [Fact]
     public void TryToVersion_InvalidInput_ReturnsFalse()
     {
         Assert.False("not-a-version".TryToVersion(out _));
         Assert.True("1.0".TryToVersion(out var version));
-        Assert.Equal(new(1, 0), version);
+        Assert.Equal(new Version(1, 0), version);
     }
 }

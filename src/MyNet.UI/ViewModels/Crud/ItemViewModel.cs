@@ -66,7 +66,7 @@ public abstract class ItemViewModel<T>(
         SubscribeToItem(newValue);
         HandleItemChanged();
 
-        ItemChanged?.Invoke(this, new(oldValue, newValue));
+        ItemChanged?.Invoke(this, new ItemChangedEventArgs<T>(oldValue, newValue));
     }
 
     private void SubscribeToItem(T? item)

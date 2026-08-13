@@ -33,11 +33,9 @@ public sealed class FixedNumberOfWordsTextTruncator(TextTruncationOptions option
                 continue;
             }
 
-            if (!insideWord)
-            {
-                insideWord = true;
-                count++;
-            }
+            if (insideWord) continue;
+            insideWord = true;
+            count++;
         }
 
         return count;
@@ -119,17 +117,15 @@ public sealed class FixedNumberOfWordsTextTruncator(TextTruncationOptions option
                     break;
             }
 
-            if (words > Options.Length)
+            if (words <= Options.Length) continue;
+            var startIndex = i + 1;
+
+            while (startIndex < input.Length && char.IsWhiteSpace(input[startIndex]))
             {
-                var startIndex = i + 1;
-
-                while (startIndex < input.Length && char.IsWhiteSpace(input[startIndex]))
-                {
-                    startIndex++;
-                }
-
-                return string.Concat(Options.TruncationString, input[startIndex..].TrimEnd());
+                startIndex++;
             }
+
+            return string.Concat(Options.TruncationString, input[startIndex..].TrimEnd());
         }
 
         return input;

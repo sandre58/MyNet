@@ -63,7 +63,7 @@ public sealed class WindowsRegistryService(IRegistryStore store, IRegistryNaviga
             prop.SetValue(instance, converted);
         }
 
-        return new(path, instance);
+        return new RegistryEntry<T>(path, instance);
     }
 
     /// <summary>

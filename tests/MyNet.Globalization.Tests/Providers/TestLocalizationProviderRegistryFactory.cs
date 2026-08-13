@@ -46,6 +46,6 @@ internal static class TestLocalizationProviderRegistryFactory
             }
         }
 
-        return new(registrations);
+        return new LocalizationFactoryRegistry(registrations);
     }
 }

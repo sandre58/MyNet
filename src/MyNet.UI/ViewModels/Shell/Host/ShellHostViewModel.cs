@@ -70,11 +70,11 @@ public class ShellHostViewModel : ViewModelBase, IShellCapabilities, IShellHostW
         TaskbarProgress = taskbarProgress;
 
         if (fileMenuViewModel is not null)
-            FileMenuHost = new(fileMenuViewModel, this, OnFileMenuDrawerOpening);
+            FileMenuHost = new ShellFileMenuHost(fileMenuViewModel, this, OnFileMenuDrawerOpening);
 
         var commands = commandFactory.GetOrDefault();
 
-        _notificationsHost = new(
+        _notificationsHost = new ShellNotificationsHost(
             this,
             notificationsViewModel,
             notificationsDrawerCoordinator,

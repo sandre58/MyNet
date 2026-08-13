@@ -32,7 +32,7 @@ public sealed class InflectorBuilder
 
         Culture = culture;
 
-        _uncountables = new(StringComparer.Create(culture, ignoreCase: true));
+        _uncountables = [with(StringComparer.Create(culture, ignoreCase: true))];
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public sealed class InflectorBuilder
     /// Builds and returns an instance of the <see cref="Inflector"/> class based on the rules that have been added to the builder. This method compiles the inflection rules into a format that can be efficiently applied when pluralizing or singularizing words. The resulting inflector will use the specified culture and the defined rules to perform inflection operations according to the language's grammar and conventions.
     /// </summary>
     /// <returns>An instance of the <see cref="Inflector"/> class.</returns>
-    public Inflector Build() => new(Culture, new()
+    public Inflector Build() => new(Culture, new InflectionRules
     {
         Plurals = [.._plurals],
         Singulars = [.._singulars],
@@ -133,6 +133,6 @@ public sealed class InflectorBuilder
     /// <returns>An inflection rule based on the provided pattern and replacement.</returns>
     private static InflectionRule CreateRule(string pattern, string replacement)
         => new(
-            new(pattern, RegexOptions.None | RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant),
+            new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant),
             replacement);
 }

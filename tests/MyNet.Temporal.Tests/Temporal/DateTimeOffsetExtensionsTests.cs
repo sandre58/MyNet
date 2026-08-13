@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -118,8 +117,8 @@ public sealed class DateTimeOffsetExtensionsTests
 
         Assert.True(value.FirstDayOfWeek() <= value);
         Assert.True(value.LastDayOfWeek() >= value);
-        Assert.Equal(new(2024, 1, 1, 10, 0, 0, TimeSpan.Zero), value.FirstDayOfYear());
-        Assert.Equal(new(2024, 12, 31, 10, 0, 0, TimeSpan.Zero), value.LastDayOfYear());
+        Assert.Equal(new DateTimeOffset(2024, 1, 1, 10, 0, 0, TimeSpan.Zero), value.FirstDayOfYear());
+        Assert.Equal(new DateTimeOffset(2024, 12, 31, 10, 0, 0, TimeSpan.Zero), value.LastDayOfYear());
     }
 
     [Fact]

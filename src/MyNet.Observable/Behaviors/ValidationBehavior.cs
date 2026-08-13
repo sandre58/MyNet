@@ -102,7 +102,7 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
 
         foreach (var property in properties)
         {
-            ErrorsChanged?.Invoke(Owner, new(property));
+            ErrorsChanged?.Invoke(Owner, new DataErrorsChangedEventArgs(property));
         }
     }
 
@@ -136,7 +136,7 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// </summary>
     /// <param name="selector">The validator selector to use, or null to use the default selector.</param>
     /// <returns>The validation context for the owner object.</returns>
-    private ValidationContext<T> CreateValidationContext(IValidatorSelector? selector = null) => new(Owner, new(), selector ?? ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory());
+    private ValidationContext<T> CreateValidationContext(IValidatorSelector? selector = null) => new(Owner, new PropertyChain(), selector ?? ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory());
 
     /// <summary>
     /// Applies the validation result for the entire object. This method takes the validation result for the entire object and updates the internal dictionary of errors accordingly. It groups the validation errors by property name and updates the error messages in the dictionary for each property. If there are no errors for a property, it removes any existing entry for that property from the dictionary. After updating the errors, it raises the necessary notifications to indicate that the validation state has changed and that the errors for each affected property have been updated. By calling this method with the validation result for the entire object, you can ensure that the validation state of all properties is accurately reflected in the internal error tracking and that any UI elements or other components that are bound to the validation errors are properly updated to reflect the current state of validation for all properties of the object.
@@ -185,11 +185,9 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
 
         if (errors.Count == 0)
         {
-            if (_errors.Remove(propertyName))
-            {
-                RaiseValidationStateChanged();
-                RaiseErrorsChanged(propertyName);
-            }
+            if (!_errors.Remove(propertyName)) return;
+            RaiseValidationStateChanged();
+            RaiseErrorsChanged(propertyName);
 
             return;
         }
@@ -217,7 +215,7 @@ public sealed class ValidationBehavior<T>(T owner, IValidator validator) : Suspe
     /// Raises the ErrorsChanged event for a specific property. This method is called whenever the validation errors for a property change, and it raises the ErrorsChanged event to notify any subscribers that the validation errors for the specified property have changed. It also raises a notification for the HasErrors property to indicate that the overall error state of the object may have changed. By calling this method whenever validation errors are added, removed, or updated for a property, you can ensure that any UI elements or other components that are bound to the validation errors are properly updated to reflect the current state of validation for that property.
     /// </summary>
     /// <param name="propertyName">The name of the property whose validation errors have changed.</param>
-    private void RaiseErrorsChanged(string propertyName) => ErrorsChanged?.Invoke(Owner, new(propertyName));
+    private void RaiseErrorsChanged(string propertyName) => ErrorsChanged?.Invoke(Owner, new DataErrorsChangedEventArgs(propertyName));
 
     #endregion
 

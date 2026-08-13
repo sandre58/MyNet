@@ -144,6 +144,6 @@ public sealed class ThemeManagerTests : IDisposable
 
         public IThemeService AddAccentExtension(IThemeExtension extension) => this;
 
-        public void RaiseThemeChanged() => ThemeChanged?.Invoke(this, new(CurrentTheme));
+        public void RaiseThemeChanged() => ThemeChanged?.Invoke(this, new ThemeChangedEventArgs(CurrentTheme));
     }
 }

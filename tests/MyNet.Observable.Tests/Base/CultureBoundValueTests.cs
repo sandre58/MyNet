@@ -30,7 +30,7 @@ public sealed class CultureBoundValueTests
         _ = sut.Value;
         Assert.Equal(1, computeCount);
 
-        cultureService.Raise(CultureInfo.InvariantCulture, new("fr-FR"));
+        cultureService.Raise(CultureInfo.InvariantCulture, new CultureInfo("fr-FR"));
         _ = sut.Value;
         Assert.Equal(2, computeCount);
     }
@@ -45,7 +45,7 @@ public sealed class CultureBoundValueTests
         sut.PropertyChanged += (_, e) => changedProperties.Add(e.PropertyName ?? string.Empty);
 
         _ = sut.Value;
-        cultureService.Raise(CultureInfo.InvariantCulture, new("fr-FR"));
+        cultureService.Raise(CultureInfo.InvariantCulture, new CultureInfo("fr-FR"));
 
         Assert.Contains(nameof(CultureBoundValue<>.Value), changedProperties);
     }
@@ -63,7 +63,7 @@ public sealed class CultureBoundValueTests
         public void Raise(CultureInfo oldCulture, CultureInfo newCulture)
         {
             CurrentCulture = newCulture;
-            CultureChanged?.Invoke(this, new(oldCulture, newCulture));
+            CultureChanged?.Invoke(this, new CultureChangedEventArgs(oldCulture, newCulture));
         }
     }
 }

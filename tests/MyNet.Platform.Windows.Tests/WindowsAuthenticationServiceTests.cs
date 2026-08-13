@@ -60,7 +60,7 @@ public sealed class WindowsAuthenticationServiceTests : IDisposable
     {
         public static readonly TestPrincipal AnonymousPrincipal = new(new GenericIdentity(string.Empty), []);
 
-        public void SignIn(string name) => Authenticate(new(new GenericIdentity(name), []));
+        public void SignIn(string name) => Authenticate(new TestPrincipal(new GenericIdentity(name), []));
 
         protected override TestPrincipal GetAnonymous() => AnonymousPrincipal;
 

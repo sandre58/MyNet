@@ -44,7 +44,7 @@ public static class ListFormatterExtensions
         /// </code>
         /// </example>
         public string Humanize(ListConjunction conjunction = ListConjunction.And, string separator = ", ", CultureInfo? culture = null)
-            => source.Humanize(x => x?.ToString(), new() { Conjunction = conjunction, Separator = separator }, culture);
+            => source.Humanize(x => x?.ToString(), new ListFormattingOptions { Conjunction = conjunction, Separator = separator }, culture);
 
         /// <summary>
         /// Formats a collection of items into a human-readable list using a custom formatter for each item.
@@ -58,7 +58,7 @@ public static class ListFormatterExtensions
         public string Humanize(Func<T, string?> formatter, ListConjunction conjunction = ListConjunction.And, string separator = ", ", CultureInfo? culture = null)
         {
             ArgumentNullException.ThrowIfNull(formatter);
-            return source.Humanize(formatter, new() { Conjunction = conjunction, Separator = separator }, culture);
+            return source.Humanize(formatter, new ListFormattingOptions { Conjunction = conjunction, Separator = separator }, culture);
         }
 
         /// <summary>

@@ -67,11 +67,9 @@ public class ThreadSafeObservableCollectionTests
         {
             for (var j = 0; j < 10; j++)
             {
-                if (sut.Count > 0)
-                {
-                    sut.RemoveAt(0);
-                    Interlocked.Increment(ref removedCount);
-                }
+                if (sut.Count == 0) continue;
+                sut.RemoveAt(0);
+                Interlocked.Increment(ref removedCount);
             }
         });
 

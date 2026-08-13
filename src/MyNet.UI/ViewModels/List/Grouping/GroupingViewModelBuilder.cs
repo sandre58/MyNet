@@ -70,7 +70,7 @@ public sealed class GroupingViewModelBuilder<T>
                 defaultGroup = new ExpressionGroupingProperty<T>(def.Expression);
             }
 
-            results.Add(new(vm, defaultGroup));
+            results.Add(new GroupingPropertyBuildResult(vm, defaultGroup));
         }
 
         var defaultGrouping = results
@@ -81,7 +81,7 @@ public sealed class GroupingViewModelBuilder<T>
 
         var viewModels = results.ConvertAll(x => x.ViewModel);
 
-        return new(viewModels, defaultGrouping);
+        return new GroupingViewModel<T>(viewModels, defaultGrouping);
     }
 
     /// <summary>

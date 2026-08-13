@@ -203,7 +203,7 @@ public abstract class Interval<T, TSelf> : IInterval<T>
             }
         }
 
-        if (other.End.HasValue && Start.HasValue)
+        if (!other.End.HasValue || !Start.HasValue) return true;
         {
             var comparison = other.End.Value.Value.CompareTo(Start.Value.Value);
 

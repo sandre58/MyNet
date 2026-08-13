@@ -28,7 +28,7 @@ public class TranslationErrorConditionTests
     {
         var translator = CreateTranslator([]);
 
-        var result = translator.Translate("UnknownKey", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("UnknownKey", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("UnknownKey", result);
     }
@@ -39,7 +39,7 @@ public class TranslationErrorConditionTests
         var translator = CreateTranslator([]);
         var options = new TranslationOptionsBuilder().WithoutKeyFallback().Build();
 
-        var result = translator.Translate("UnknownKey", options, new("en-US"));
+        var result = translator.Translate("UnknownKey", options, new CultureInfo("en-US"));
 
         Assert.Empty(result);
     }
@@ -48,7 +48,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithNullArgument_Handled()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["Message"] = "Hello {name}" }
             }))]);
@@ -58,7 +58,7 @@ public class TranslationErrorConditionTests
             .Build();
 
         // Should not throw even with null argument
-        var result = translator.Translate("Message", options, new("en-US"));
+        var result = translator.Translate("Message", options, new CultureInfo("en-US"));
         Assert.NotEmpty(result);
     }
 
@@ -66,12 +66,12 @@ public class TranslationErrorConditionTests
     public void Translate_WithMissingResource_FallsBackToKey()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["Existing"] = "Exists" }
             }))]);
 
-        var result = translator.Translate("NonExistent", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("NonExistent", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("NonExistent", result);
     }
@@ -80,13 +80,13 @@ public class TranslationErrorConditionTests
     public void Translate_WithEmptyKe_ReturnsEmpty()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { [string.Empty] = "Empty key result" }
             }))]);
 
         // Empty key might be handled as null or empty
-        var result = translator.Translate(string.Empty, TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate(string.Empty, TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.NotNull(result);
     }
@@ -95,7 +95,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithInvalidFormat_Renders()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new()
                 {
@@ -105,7 +105,7 @@ public class TranslationErrorConditionTests
             }))]);
 
         var options = new TranslationOptionsBuilder().WithQuantity(1234567).Build();
-        var result = translator.Translate("Template", options, new("en-US"));
+        var result = translator.Translate("Template", options, new CultureInfo("en-US"));
 
         // Should render the format correctly
         Assert.NotEmpty(result);
@@ -115,7 +115,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithUnknownPlaceholder_PreservesPlaceholder()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new()
                 {
@@ -123,7 +123,7 @@ public class TranslationErrorConditionTests
                 }
             }))]);
 
-        var result = translator.Translate("Message", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Message", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         // Unknown placeholders should be preserved
         Assert.Contains("{unknownArg}", result, StringComparison.InvariantCultureIgnoreCase);
@@ -133,7 +133,7 @@ public class TranslationErrorConditionTests
     public void TranslateWithMultipleUnknownPlaceholders_AllPreserved()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new()
                 {
@@ -141,7 +141,7 @@ public class TranslationErrorConditionTests
                 }
             }))]);
 
-        var result = translator.Translate("Complex", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Complex", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Contains("{missing1}", result, StringComparison.InvariantCultureIgnoreCase);
         Assert.Contains("{missing2}", result, StringComparison.InvariantCultureIgnoreCase);
@@ -183,7 +183,7 @@ public class TranslationErrorConditionTests
     public void Translate_FromInvariantCulture_Works()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 [string.Empty] = new() { ["Current"] = "Invariant Value" }
             }))]);
@@ -198,12 +198,12 @@ public class TranslationErrorConditionTests
     public void Translate_WithCultureFallbackDisabled_DoesNotFallBack()
     {
         var translator = CreateTranslatorWithoutFallback(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en"] = new() { ["Greeting"] = "Hello from en" }
             }))]);
 
-        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         // Should not fallback to en culture, returns key
         Assert.Equal("Greeting", result);
@@ -216,7 +216,7 @@ public class TranslationErrorConditionTests
         var translator = CreateTranslator(
             [("Main", new InMemoryResourceManager([]))]);
 
-        var result = translator.Translate(longKey, TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate(longKey, TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         // Should return the key itself as fallback
         Assert.Equal(longKey, result);
@@ -227,12 +227,12 @@ public class TranslationErrorConditionTests
     {
         const string specialKey = "Key@#$%^&*()";
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { [specialKey] = "Found" }
             }))]);
 
-        var result = translator.Translate(specialKey, TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate(specialKey, TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("Found", result);
     }
@@ -242,12 +242,12 @@ public class TranslationErrorConditionTests
     {
         const string unicodeKey = "🔑Key";
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { [unicodeKey] = "Unicode Found" }
             }))]);
 
-        var result = translator.Translate(unicodeKey, TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate(unicodeKey, TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("Unicode Found", result);
     }
@@ -256,7 +256,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithVeryLargeQuantity_Handled()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["item"] = "item" }
             }))]);
@@ -265,7 +265,7 @@ public class TranslationErrorConditionTests
         var options = new TranslationOptionsBuilder().WithQuantity(quantity).Build();
 
         // Should handle very large numbers
-        var result = translator.Translate("item", options, new("en-US"));
+        var result = translator.Translate("item", options, new CultureInfo("en-US"));
         Assert.NotEmpty(result);
     }
 
@@ -273,7 +273,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithNegativeQuantity_Handled()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["item"] = "item" }
             }))]);
@@ -281,7 +281,7 @@ public class TranslationErrorConditionTests
         var options = new TranslationOptionsBuilder().WithQuantity(-5).Build();
 
         // Should handle negative numbers
-        var result = translator.Translate("item", options, new("en-US"));
+        var result = translator.Translate("item", options, new CultureInfo("en-US"));
         Assert.NotEmpty(result);
     }
 
@@ -289,7 +289,7 @@ public class TranslationErrorConditionTests
     public void Translate_WithZeroQuantity_Handled()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["item"] = "item" }
             }))]);
@@ -297,7 +297,7 @@ public class TranslationErrorConditionTests
         var options = new TranslationOptionsBuilder().WithQuantity(0).Build();
 
         // Should handle zero
-        var result = translator.Translate("item", options, new("en-US"));
+        var result = translator.Translate("item", options, new CultureInfo("en-US"));
         Assert.NotEmpty(result);
     }
 
@@ -305,14 +305,14 @@ public class TranslationErrorConditionTests
     public void TranslateMultipleTimes_SameKey_ConsistentResults()
     {
         var translator = CreateTranslator(
-            [("Main", new InMemoryResourceManager(new()
+            [("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
             {
                 ["en-US"] = new() { ["Key"] = "Value" }
             }))]);
 
-        var result1 = translator.Translate("Key", TranslationOptionsPresets.Default, new("en-US"));
-        var result2 = translator.Translate("Key", TranslationOptionsPresets.Default, new("en-US"));
-        var result3 = translator.Translate("Key", TranslationOptionsPresets.Default, new("en-US"));
+        var result1 = translator.Translate("Key", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
+        var result2 = translator.Translate("Key", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
+        var result3 = translator.Translate("Key", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal(result1, result2);
         Assert.Equal(result2, result3);
@@ -332,7 +332,7 @@ public class TranslationErrorConditionTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private static Translator CreateTranslatorWithoutFallback(List<(string Key, ResourceManager ResourceManager)> resources)
@@ -347,7 +347,7 @@ public class TranslationErrorConditionTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.None);
+        return new Translator(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.None);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext

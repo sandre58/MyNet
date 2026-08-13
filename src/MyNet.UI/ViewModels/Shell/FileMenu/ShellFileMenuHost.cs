@@ -108,6 +108,8 @@ public sealed class ShellFileMenuHost(
                 }
 
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(action), action, null);
         }
     }
 

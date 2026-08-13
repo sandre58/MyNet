@@ -16,7 +16,7 @@ public static partial class Redactor
     /// <summary>
     /// Gets a generic redactor that preserves the first and last two characters.
     /// </summary>
-    public static ITextRedactorTransform Generic { get; } = new FixedMaskTextRedactor(new() { ShowStart = 2, ShowEnd = 2 });
+    public static ITextRedactorTransform Generic { get; } = new FixedMaskTextRedactor(new TextRedactionOptions { ShowStart = 2, ShowEnd = 2 });
 
     /// <summary>
     /// Gets an email redactor that preserves first character and domain suffix.

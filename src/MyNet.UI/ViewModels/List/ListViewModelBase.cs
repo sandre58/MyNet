@@ -62,12 +62,12 @@ public class ListViewModelBase<T> : ViewModelBase, IListViewModel<T>
 
         var scheduler1 = scheduler ?? Scheduler.Default;
         DataProvider = dataProvider;
-        _pipelineRefreshDeferrer = new(RefreshPipeline);
+        _pipelineRefreshDeferrer = new DeferredAction(RefreshPipeline);
 
         Source = DataProvider.Source;
         FilteredItems = DataProvider.FilteredItems;
         Items = DataProvider.Items;
-        Groups = new(_groups);
+        Groups = [with(_groups)];
 
         Filters = filters;
         Sorting = sorting;

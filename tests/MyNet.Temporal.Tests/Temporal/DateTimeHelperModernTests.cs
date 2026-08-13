@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;

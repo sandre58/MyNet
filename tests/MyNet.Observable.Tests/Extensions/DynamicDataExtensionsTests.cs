@@ -82,6 +82,7 @@ public sealed class DynamicDataExtensionsTests
         IEnumerable<int>? itemsToRemove = null;
 
         Assert.Throws<ArgumentNullException>(() => act(itemsToRemove!));
+        return;
 
         void act(IEnumerable<int> items) => list.RemoveMany(items);
     }
@@ -99,7 +100,7 @@ public sealed class DynamicDataExtensionsTests
                     return;
 
                 field = value;
-                PropertyChanged?.Invoke(this, new(nameof(Value)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
             }
         }
 

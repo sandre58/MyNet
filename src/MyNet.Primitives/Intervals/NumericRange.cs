@@ -31,5 +31,5 @@ public sealed class NumericRange<T>(T start, T end) : NumericInterval<T, Numeric
             ? throw new InvalidOperationException("NumericRange must be bounded.")
             : !start.Value.IsInclusive || !end.Value.IsInclusive
                 ? throw new InvalidOperationException("NumericRange only supports inclusive boundaries.")
-                : new(start.Value.Value, end.Value.Value);
+                : new NumericRange<T>(start.Value.Value, end.Value.Value);
 }

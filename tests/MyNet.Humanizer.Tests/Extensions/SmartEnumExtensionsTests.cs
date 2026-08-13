@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using MyNet.Humanizer.Display;
 using MyNet.Humanizer.Facade;
 using MyNet.Primitives;
 using Xunit;
@@ -20,7 +21,7 @@ public class SmartEnumExtensionsTests
     [Fact]
     public void Humanize_WithHumanizeFallbackDisabled_ReturnsSmartEnumName()
     {
-        var result = TestStatus.PendingApproval.Humanize(options: new());
+        var result = TestStatus.PendingApproval.Humanize(options: new DisplayTextOptions());
 
         Assert.Equal("Pending Approval", result);
     }

@@ -6,8 +6,6 @@
 
 using System;
 using MyNet.Primitives;
-using MyNet.Primitives.Intervals;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;

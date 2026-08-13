@@ -16,11 +16,11 @@ public static class CommonFileFilters
     /// </summary>
     public static FileExtensionGroup Images { get; } =
         new(nameof(Images), [
-            new(".jpg"),
-            new(".jpeg"),
-            new(".png"),
-            new(".gif"),
-            new(".bmp"),
-            new(".tif")
+            new FileExtension(".jpg"),
+            new FileExtension(".jpeg"),
+            new FileExtension(".png"),
+            new FileExtension(".gif"),
+            new FileExtension(".bmp"),
+            new FileExtension(".tif")
         ]);
 }

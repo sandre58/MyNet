@@ -21,6 +21,6 @@ public static class AddressExtensions
     {
         var coordinates = address is { Coordinates: not null } ? new Coordinates(address.Coordinates.Latitude, address.Coordinates.Longitude) : null;
         var fullAddress = address.ToString();
-        GoogleMapsHelper.OpenGoogleMaps(new() { Coordinates = coordinates, Address = fullAddress });
+        GoogleMapsHelper.OpenGoogleMaps(new GoogleMapsSettings { Coordinates = coordinates, Address = fullAddress });
     }
 }

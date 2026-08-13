@@ -56,7 +56,7 @@ public static class TextRandomGeneratorExtensions
                     : c;
             }
 
-            return new(buffer);
+            return new string(buffer);
         }
 
         /// <summary>

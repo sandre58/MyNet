@@ -96,13 +96,8 @@ public abstract class FileExportViewModelBase<T> : ExportViewModelBase<T>
 
     private string GetInitialDirectory()
     {
-        if (!string.IsNullOrWhiteSpace(Destination))
-        {
-            var directory = Path.GetDirectoryName(Destination);
-            if (!string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory))
-                return directory;
-        }
-
-        return _defaultFolder;
+        if (string.IsNullOrWhiteSpace(Destination)) return _defaultFolder;
+        var directory = Path.GetDirectoryName(Destination);
+        return !string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory) ? directory : _defaultFolder;
     }
 }

@@ -78,7 +78,7 @@ public sealed class SingleTaskRunner(
 
             _cts?.Dispose();
 
-            _cts = new();
+            _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
             _isRunning = true;

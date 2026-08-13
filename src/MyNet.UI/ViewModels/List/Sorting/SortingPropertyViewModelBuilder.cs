@@ -54,7 +54,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     /// <returns>The current instance of <see cref="SortingPropertyViewModelBuilder{T}"/> for fluent configuration.</returns>
     public SortingPropertyViewModelBuilder<T> Ascending(int? order = null)
     {
-        _defaultState = new(ListSortDirection.Ascending, order ?? _order++);
+        _defaultState = new SortingDefaultState(ListSortDirection.Ascending, order ?? _order++);
         return this;
     }
 
@@ -65,7 +65,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
     /// <returns>The current instance of <see cref="SortingPropertyViewModelBuilder{T}"/> for fluent configuration.</returns>
     public SortingPropertyViewModelBuilder<T> Descending(int? order = null)
     {
-        _defaultState = new(ListSortDirection.Descending, order ?? _order++);
+        _defaultState = new SortingDefaultState(ListSortDirection.Descending, order ?? _order++);
         return this;
     }
 
@@ -79,7 +79,7 @@ public sealed class SortingPropertyViewModelBuilder<T>(Expression<Func<T, object
         var key = ResolveKey();
         var displayName = _displayName ?? new LocalizedString(key);
 
-        return new(key, expression, displayName, _defaultState);
+        return new SortingPropertyDefinition<T>(key, expression, displayName, _defaultState);
     }
 
     /// <summary>

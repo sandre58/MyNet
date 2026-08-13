@@ -42,7 +42,7 @@ public class BoundedValue<T> : ObservableObject, IBoundedValue<T>
     /// <param name="propertyDisplayKey">Translation key used as the field name in validation messages.</param>
     /// <param name="defaultValue">Optional default value used by <see cref="Reset"/>.</param>
     public BoundedValue(T? min, T? max, string propertyDisplayKey = nameof(Value), T? defaultValue = null)
-        : this(new(min, max), propertyDisplayKey, defaultValue) { }
+        : this(new Interval<T>(min, max), propertyDisplayKey, defaultValue) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BoundedValue{T}"/> class.
@@ -83,7 +83,7 @@ public class BoundedValue<T> : ObservableObject, IBoundedValue<T>
                 return;
 
             var before = Min;
-            Range = new(value, Max);
+            Range = new Interval<T>(value, Max);
             NotifyPropertyChanged(nameof(Min), before, value);
             Behaviors.GetOrDefault<ValidationBehavior<BoundedValue<T>>>()?.ValidateProperty(nameof(Value));
         }
@@ -99,7 +99,7 @@ public class BoundedValue<T> : ObservableObject, IBoundedValue<T>
                 return;
 
             var before = Max;
-            Range = new(Min, value);
+            Range = new Interval<T>(Min, value);
             NotifyPropertyChanged(nameof(Max), before, value);
             Behaviors.GetOrDefault<ValidationBehavior<BoundedValue<T>>>()?.ValidateProperty(nameof(Value));
         }

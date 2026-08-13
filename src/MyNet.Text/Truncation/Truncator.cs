@@ -14,15 +14,15 @@ public static class Truncator
     /// <summary>
     /// Gets or sets a truncator that truncates text to a fixed length, optionally adding a truncation string (e.g. ellipsis) at the truncation point.
     /// </summary>
-    public static FixedLengthTextTruncator FixedLength { get; set; } = new(new() { Length = 100, TruncationString = "..." });
+    public static FixedLengthTextTruncator FixedLength { get; set; } = new(new TextTruncationOptions { Length = 100, TruncationString = "..." });
 
     /// <summary>
     /// Gets or sets a truncator that truncates text to a fixed number of characters, optionally adding a truncation string (e.g. ellipsis) at the truncation point.
     /// </summary>
-    public static FixedNumberOfCharactersTextTruncator FixedNumberOfCharacters { get; set; } = new(new() { Length = 100, TruncationString = "..." });
+    public static FixedNumberOfCharactersTextTruncator FixedNumberOfCharacters { get; set; } = new(new TextTruncationOptions { Length = 100, TruncationString = "..." });
 
     /// <summary>
     /// Gets or sets a truncator that truncates text to a fixed number of words, optionally adding a truncation string (e.g. ellipsis) at the truncation point.
     /// </summary>
-    public static FixedNumberOfWordsTextTruncator FixedNumberOfWords { get; set; } = new(new() { Length = 100, TruncationString = "..." });
+    public static FixedNumberOfWordsTextTruncator FixedNumberOfWords { get; set; } = new(new TextTruncationOptions { Length = 100, TruncationString = "..." });
 }

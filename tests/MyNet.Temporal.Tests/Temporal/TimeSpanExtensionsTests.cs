@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -17,7 +16,7 @@ public sealed class TimeSpanExtensionsTests
     {
         var time = new TimeSpan(14, 30, 0).ToTime();
 
-        Assert.Equal(new(14, 30), time);
+        Assert.Equal(new TimeOnly(14, 30), time);
     }
 
     [Fact]
@@ -26,9 +25,9 @@ public sealed class TimeSpanExtensionsTests
         var origin = new DateTime(2024, 6, 15, 12, 0, 0);
         var span = TimeSpan.FromHours(2);
 
-        Assert.Equal(new(2024, 6, 15, 10, 0, 0), span.Before(origin));
-        Assert.Equal(new(2024, 6, 15, 14, 0, 0), span.From(origin));
-        Assert.Equal(new(2024, 6, 15, 14, 0, 0), span.Since(origin));
+        Assert.Equal(new DateTime(2024, 6, 15, 10, 0, 0), span.Before(origin));
+        Assert.Equal(new DateTime(2024, 6, 15, 14, 0, 0), span.From(origin));
+        Assert.Equal(new DateTime(2024, 6, 15, 14, 0, 0), span.Since(origin));
     }
 
     [Fact]

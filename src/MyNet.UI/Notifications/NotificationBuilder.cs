@@ -98,21 +98,21 @@ public sealed class NotificationBuilder : INotificationBuilder
     /// <inheritdoc />
     public INotificationBuilder WithClosingStrategy(ToastClosingStrategy closingStrategy)
     {
-        _toastSettings = MergeToastSettings(_toastSettings, new() { ClosingStrategy = closingStrategy });
+        _toastSettings = MergeToastSettings(_toastSettings, new ToastSettingsOverrides { ClosingStrategy = closingStrategy });
         return this;
     }
 
     /// <inheritdoc />
     public INotificationBuilder WithFreezeOnMouseEnter(bool freezeOnMouseEnter)
     {
-        _toastSettings = MergeToastSettings(_toastSettings, new() { FreezeOnMouseEnter = freezeOnMouseEnter });
+        _toastSettings = MergeToastSettings(_toastSettings, new ToastSettingsOverrides { FreezeOnMouseEnter = freezeOnMouseEnter });
         return this;
     }
 
     /// <inheritdoc />
     public INotificationBuilder WithDuration(TimeSpan duration)
     {
-        _toastSettings = MergeToastSettings(_toastSettings, new() { Duration = duration });
+        _toastSettings = MergeToastSettings(_toastSettings, new ToastSettingsOverrides { Duration = duration });
         return this;
     }
 
@@ -165,7 +165,7 @@ public sealed class NotificationBuilder : INotificationBuilder
         if (current is null)
             return update;
 
-        return new()
+        return new ToastSettingsOverrides
         {
             ClosingStrategy = update.ClosingStrategy ?? current.ClosingStrategy,
             FreezeOnMouseEnter = update.FreezeOnMouseEnter ?? current.FreezeOnMouseEnter,

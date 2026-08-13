@@ -54,7 +54,7 @@ public sealed class FileExtensionsAllowedAttribute : ValidationAttribute
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="extensions"/> array is null.</exception>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="extensions"/> array is empty.</exception>
     public FileExtensionsAllowedAttribute(params FileExtension[] extensions)
-        : this(extensions.Select(x => x.Value).ToArray())
+        : this([.. extensions.Select(x => x.Value)])
     {
     }
 

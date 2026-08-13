@@ -19,7 +19,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_FormatWithEnglish_WorksCorrectly()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(["apple", "banana", "cherry"]);
 
@@ -32,7 +32,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_FormatWithFrench_WorksCorrectly()
     {
-        var formatter = CreateListFormatter(new("fr-FR"));
+        var formatter = CreateListFormatter(new CultureInfo("fr-FR"));
 
         var result = formatter.Format(["pomme", "banane", "cerise"]);
 
@@ -45,7 +45,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_EmptyList_ReturnsEmpty()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format([]);
 
@@ -55,7 +55,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_SingleItem_ReturnsSingleItem()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(["apple"]);
 
@@ -65,7 +65,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_TwoItems_FormatsTwoItems()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(["apple", "banana"]);
 
@@ -77,11 +77,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_WithAndConjunction_FormatsCorrectly()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             ["apple", "banana", "cherry"],
-            new() { Conjunction = ListConjunction.And });
+            new ListFormattingOptions { Conjunction = ListConjunction.And });
 
         Assert.NotEmpty(result);
     }
@@ -89,11 +89,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_WithOrConjunction_FormatsCorrectly()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             ["apple", "banana", "cherry"],
-            new() { Conjunction = ListConjunction.Or });
+            new ListFormattingOptions { Conjunction = ListConjunction.Or });
 
         Assert.NotEmpty(result);
     }
@@ -101,11 +101,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_WithOxfordComma_AddsCommaBeforeConjunction()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             ["apple", "banana", "cherry"],
-            new() { Conjunction = ListConjunction.And, UseOxfordComma = true });
+            new ListFormattingOptions { Conjunction = ListConjunction.And, UseOxfordComma = true });
 
         Assert.NotEmpty(result);
     }
@@ -113,11 +113,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_IgnoringNullOrWhiteSpace_FiltersEmptyItems()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             ["apple", null, "  ", "banana"],
-            new() { IgnoreNullOrWhiteSpace = true });
+            new ListFormattingOptions { IgnoreNullOrWhiteSpace = true });
 
         Assert.NotEmpty(result);
         Assert.Contains("apple", result, StringComparison.CurrentCultureIgnoreCase);
@@ -127,11 +127,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_WithCustomSeparator_UsesSeparator()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             ["apple", "banana", "cherry"],
-            new() { Separator = "|", Conjunction = ListConjunction.And });
+            new ListFormattingOptions { Separator = "|", Conjunction = ListConjunction.And });
 
         Assert.NotEmpty(result);
     }
@@ -142,7 +142,7 @@ public class ListFormatterTests
     [InlineData("de-DE")]
     public void ListFormatter_DifferentCultures_AllWork(string cultureName)
     {
-        var formatter = CreateListFormatter(new(cultureName));
+        var formatter = CreateListFormatter(new CultureInfo(cultureName));
 
         var result = formatter.Format(["first", "second", "third"]);
 
@@ -152,7 +152,7 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_LargeList_Works()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var items = new List<string>();
         for (var i = 0; i < 100; i++)
@@ -166,11 +166,11 @@ public class ListFormatterTests
     [Fact]
     public void ListFormatter_AllNullOrWhiteSpace_ReturnsEmpty()
     {
-        var formatter = CreateListFormatter(new("en-US"));
+        var formatter = CreateListFormatter(new CultureInfo("en-US"));
 
         var result = formatter.Format(
             [null, "  ", "\t", "\n"],
-            new() { IgnoreNullOrWhiteSpace = true });
+            new ListFormattingOptions { IgnoreNullOrWhiteSpace = true });
 
         Assert.Empty(result);
     }
@@ -180,7 +180,7 @@ public class ListFormatterTests
         // Create a simple translator implementation
         var translator = new SimpleTranslator();
         var translationService = new TranslationService(translator, new FixedCultureContext(culture));
-        return new(translationService, culture);
+        return new ListFormatter(translationService, culture);
     }
 
     /// <summary>

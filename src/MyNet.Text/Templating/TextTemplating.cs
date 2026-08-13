@@ -16,7 +16,7 @@ public static class TextTemplating
     /// <summary>
     /// Gets a sanitizer suitable for file names.
     /// </summary>
-    public static ITemplateTransform Default { get; } = new TemplateTransform(new());
+    public static ITemplateTransform Default { get; } = new TemplateTransform(new TextTemplateOptions());
 
     /// <summary>
     /// Creates a new template transform with the specified configuration.

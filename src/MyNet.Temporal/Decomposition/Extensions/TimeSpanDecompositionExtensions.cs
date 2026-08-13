@@ -107,7 +107,7 @@ public static class TimeSpanDecompositionExtensions
         {
             var result = timeSpan.Decompose(options);
 
-            return result.Count > 0 ? result[0] : new(0, options.MinUnit);
+            return result.Count > 0 ? result[0] : new TimeUnitValue(0, options.MinUnit);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ public static class TimeSpanDecompositionExtensions
         {
             var result = timeSpan.Decompose(configure);
 
-            return result.Count > 0 ? result[0] : new(0, TimeUnit.Millisecond);
+            return result.Count > 0 ? result[0] : new TimeUnitValue(0, TimeUnit.Millisecond);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ public static class TimeSpanDecompositionExtensions
         {
             var result = timeSpan.Decompose(options);
 
-            return result.Count > 0 ? result[^1] : new(0, options.MinUnit);
+            return result.Count > 0 ? result[^1] : new TimeUnitValue(0, options.MinUnit);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ public static class TimeSpanDecompositionExtensions
         {
             var result = timeSpan.Decompose(configure);
 
-            return result.Count > 0 ? result[^1] : new(0, TimeUnit.Millisecond);
+            return result.Count > 0 ? result[^1] : new TimeUnitValue(0, TimeUnit.Millisecond);
         }
     }
 }

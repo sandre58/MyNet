@@ -56,5 +56,5 @@ public sealed class DateTimeOffsetPeriod(DateTimeOffset start, DateTimeOffset en
             ? throw new InvalidOperationException("DateTimeOffsetPeriod must be bounded.")
             : !start.Value.IsInclusive || end.Value.IsInclusive
                 ? throw new InvalidOperationException("DateTimeOffsetPeriod only supports [start, end) boundaries.")
-                : new(start.Value.Value, end.Value.Value);
+                : new DateTimeOffsetPeriod(start.Value.Value, end.Value.Value);
 }

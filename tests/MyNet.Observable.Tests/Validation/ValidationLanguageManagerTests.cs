@@ -52,7 +52,7 @@ public sealed class ValidationLanguageManagerTests
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
 
             var validator = new NameValidator();
-            var result = validator.Validate(new Person { Name = new('a', 11) });
+            var result = validator.Validate(new Person { Name = new string('a', 11) });
 
             Assert.False(result.IsValid);
             Assert.Contains(result.Errors, e =>

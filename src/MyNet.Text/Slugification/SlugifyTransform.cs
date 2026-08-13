@@ -40,14 +40,10 @@ public sealed class SlugifyTransform(TextSlugifierOptions options) : ITextSlugif
                 continue;
             }
 
-            if (char.IsWhiteSpace(ch) || ch == '_' || ch == '-' || ch == '.' || ch == '/')
-            {
-                if (sb.Length > 0 && !wroteSeparator)
-                {
-                    sb.Append(options.Separator);
-                    wroteSeparator = true;
-                }
-            }
+            if (!char.IsWhiteSpace(ch) && ch != '_' && ch != '-' && ch != '.' && ch != '/') continue;
+            if (sb.Length <= 0 || wroteSeparator) continue;
+            sb.Append(options.Separator);
+            wroteSeparator = true;
         }
 
         var slug = sb.ToString().Trim(options.Separator);

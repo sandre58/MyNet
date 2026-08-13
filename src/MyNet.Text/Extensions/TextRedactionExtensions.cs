@@ -43,7 +43,7 @@ public static class TextRedactionExtensions
         /// Redacts the middle part of the text and keeps edge characters visible.
         /// </summary>
         public string Redact(int showStart, int showEnd, char maskCharacter = '*', CultureInfo? culture = null)
-            => input.Redact(new FixedMaskTextRedactor(new()
+            => input.Redact(new FixedMaskTextRedactor(new TextRedactionOptions
                 {
                     ShowStart = showStart,
                     ShowEnd = showEnd,

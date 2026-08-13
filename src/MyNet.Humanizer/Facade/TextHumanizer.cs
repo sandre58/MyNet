@@ -45,6 +45,6 @@ public static class TextHumanizer
     private static DisplayTextService CreateDisplayTextService()
     {
         var defaultRegistry = new DisplayTextStrategyRegistry(new Dictionary<Type, IDisplayTextStrategy>());
-        return new(new DisplayTextStrategyResolver(defaultRegistry), new ThreadCultureContext());
+        return new DisplayTextService(new DisplayTextStrategyResolver(defaultRegistry), new ThreadCultureContext());
     }
 }

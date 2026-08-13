@@ -40,7 +40,7 @@ public sealed class MessengerTests : IDisposable
         // Act
         for (var i = 0; i < 5; i++)
         {
-            _messenger.Register<TestMessage>(new(), _ => count++);
+            _messenger.Register<TestMessage>(new object(), _ => count++);
         }
 
         _messenger.Send(new TestMessage());
@@ -129,7 +129,7 @@ public sealed class MessengerTests : IDisposable
         // Act
         _messenger.Register<TestMessage>(target, _ => targetExecuted = true);
         _messenger.Register<TestMessage>(other, _ => otherExecuted = true);
-        _messenger.Send<TestMessage, TargetClass>(new());
+        _messenger.Send<TestMessage, TargetClass>(new TestMessage());
 
         // Assert
         Assert.True(targetExecuted);
@@ -274,7 +274,7 @@ public sealed class MessengerTests : IDisposable
     public void Cleanup_RemovesDeadWeakActions()
     {
         // Arrange
-        _messenger.Register<TestMessage>(new(), _ => { });
+        _messenger.Register<TestMessage>(new object(), _ => { });
 
         // Act
         GC.Collect(); // Force garbage collection
@@ -298,7 +298,7 @@ public sealed class MessengerTests : IDisposable
 
         // Act
         _messenger.Register<TestMessage>(this, _ => throw new InvalidOperationException("Test"));
-        _messenger.Register<TestMessage>(new(), _ => secondExecuted = true);
+        _messenger.Register<TestMessage>(new object(), _ => secondExecuted = true);
 
         // This should not throw
         _messenger.Send(new TestMessage());

@@ -48,5 +48,5 @@ public sealed class DateTimeRange(DateTime start, DateTime end, bool inclusiveSt
     protected override DateTimeRange Create(IntervalBoundary<DateTime>? start, IntervalBoundary<DateTime>? end) =>
         !start.HasValue || !end.HasValue
             ? throw new InvalidOperationException("DateTimeRange must be bounded.")
-            : new(start.Value.Value, end.Value.Value, start.Value.IsInclusive, end.Value.IsInclusive);
+            : new DateTimeRange(start.Value.Value, end.Value.Value, start.Value.IsInclusive, end.Value.IsInclusive);
 }

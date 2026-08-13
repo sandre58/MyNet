@@ -49,7 +49,7 @@ public class FilterGroupViewModel<T> : ObservableObject, IFilterGroupViewModel<T
     public FilterGroupViewModel(bool isReadOnly = false)
     {
         IsReadOnly = isReadOnly;
-        Children = new(_children);
+        Children = [with(_children)];
     }
 
     /// <summary>

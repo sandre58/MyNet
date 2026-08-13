@@ -31,13 +31,9 @@ public sealed class HeadlessDialogStrategy : IDialogStrategy
     {
         ct.ThrowIfCancellationRequested();
 
-        if (dialog is MessageBoxViewModel messageBox)
-        {
-            messageBox.ApplyResult(messageBox.DefaultResult);
-            return Task.FromResult(DialogResult.Ok());
-        }
-
-        return Task.FromResult(DialogResult.Dismiss());
+        if (dialog is not MessageBoxViewModel messageBox) return Task.FromResult(DialogResult.Dismiss());
+        messageBox.ApplyResult(messageBox.DefaultResult);
+        return Task.FromResult(DialogResult.Ok());
     }
 
     /// <inheritdoc />

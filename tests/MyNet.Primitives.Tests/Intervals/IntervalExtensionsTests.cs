@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using MyNet.Primitives;
+using System;
 using MyNet.Primitives.Intervals;
 using MyNet.Temporal.Intervals;
 using Xunit;
@@ -48,8 +48,8 @@ public class IntervalExtensionsTests
     [Fact]
     public void StartValue_OnDateRange_ReturnsStartValue()
     {
-        var interval = new DateRange(new(2020, 1, 1), new(2020, 12, 31));
+        var interval = new DateRange(new DateOnly(2020, 1, 1), new DateOnly(2020, 12, 31));
 
-        Assert.Equal(new(2020, 1, 1), interval.StartValue());
+        Assert.Equal(new DateOnly(2020, 1, 1), interval.StartValue());
     }
 }

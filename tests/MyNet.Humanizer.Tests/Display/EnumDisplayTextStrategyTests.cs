@@ -25,7 +25,7 @@ public class EnumDisplayTextStrategyTests
         ITranslator translator = new NullTranslator();
         ITranslationKeyProvider keyProvider = new DefaultTranslationKeyProvider();
         var translationService = new TranslationService(translator, new FixedCultureContext(CultureInfo.CurrentCulture));
-        _provider = new(translationService, keyProvider);
+        _provider = new EnumDisplayTextStrategy(translationService, keyProvider);
     }
 
     [Fact]

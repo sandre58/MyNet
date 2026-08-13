@@ -36,10 +36,10 @@ public class SortingViewModel<T> : ObservableObject, ISortingViewModel<T>
     /// <param name="defaultSorting">The optional default sorting configuration.</param>
     public SortingViewModel(IEnumerable<ISortingPropertyViewModel<T>> properties, IEnumerable<ISortingProperty<T>>? defaultSorting = null)
     {
-        Properties = new(new(properties));
+        Properties = [with([.. properties])];
         DefaultSorting = defaultSorting?.ToList() ?? [];
 
-        _deferredAction = new(RaiseSortingChanged);
+        _deferredAction = new DeferredAction(RaiseSortingChanged);
 
         Reset();
 
@@ -99,11 +99,9 @@ public class SortingViewModel<T> : ObservableObject, ISortingViewModel<T>
             {
                 var vm = FindMatching(def);
 
-                if (vm != null)
-                {
-                    vm.IsEnabled = true;
-                    vm.Direction = def.Direction;
-                }
+                if (vm == null) continue;
+                vm.IsEnabled = true;
+                vm.Direction = def.Direction;
             }
         }
     }
@@ -192,7 +190,7 @@ public class SortingViewModel<T> : ObservableObject, ISortingViewModel<T>
     private void RaiseSortingChanged()
     {
         CurrentSorting = ComputeCurrentSorting();
-        SortingChanged?.Invoke(this, new(CurrentSorting));
+        SortingChanged?.Invoke(this, new SortingChangedEventArgs<T>(CurrentSorting));
     }
 
     /// <summary>

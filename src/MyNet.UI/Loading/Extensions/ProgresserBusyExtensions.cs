@@ -86,11 +86,9 @@ public static class ProgresserBusyExtensions
 
             // Only append a breadcrumb entry when the innermost message actually changes,
             // otherwise repeated reports for the same step would flood the history.
-            if (!string.Equals(message, lastMessage, StringComparison.Ordinal))
-            {
-                busy.Messages.Add(message);
-                lastMessage = message;
-            }
+            if (string.Equals(message, lastMessage, StringComparison.Ordinal)) return;
+            busy.Messages.Add(message);
+            lastMessage = message;
         });
 
         progresser.Subscribe(sink);

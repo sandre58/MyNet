@@ -23,7 +23,7 @@ public sealed class FiltersViewModelBuilder<T>
     /// Initializes a new instance of the <see cref="FiltersViewModelBuilder{T}"/> class with an empty root group.
     /// </summary>
     public FiltersViewModelBuilder()
-        : this(new())
+        : this(new FilterGroupViewModel<T>())
     {
     }
 
@@ -80,7 +80,7 @@ public sealed class FiltersViewModelBuilder<T>
         ArgumentNullException.ThrowIfNull(configure);
 
         var group = new FilterGroupViewModel<T> { Operator = logicalOperator };
-        configure(new(group));
+        configure(new FiltersViewModelBuilder<T>(group));
         _group.Add(group);
         return this;
     }

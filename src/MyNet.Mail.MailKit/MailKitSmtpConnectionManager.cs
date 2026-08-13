@@ -50,7 +50,7 @@ internal sealed class MailKitSmtpConnectionManager(SmtpClientOptions options) : 
 
     private async Task<SmtpClient> GetConnectedClientAsync(CancellationToken cancellationToken)
     {
-        _client ??= new();
+        _client ??= new SmtpClient();
 
         if (_client.IsConnected)
         {

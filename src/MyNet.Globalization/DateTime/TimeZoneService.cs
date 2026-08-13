@@ -53,7 +53,7 @@ public sealed class TimeZoneService(TimeZoneInfo initialTimeZone) : ITimeZoneSer
 
             var old = CurrentTimeZone;
             CurrentTimeZone = timeZone;
-            args = new(old, timeZone);
+            args = new TimeZoneChangedEventArgs(old, timeZone);
         }
 
         // Raise event outside the lock to prevent deadlocks when subscribers access the service.

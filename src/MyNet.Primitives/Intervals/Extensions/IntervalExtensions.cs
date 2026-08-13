@@ -54,7 +54,7 @@ public static class IntervalExtensions
             }
 
             var touchesOnLeft = false;
-            if (right.HasEnd && left.HasStart)
+            if (!right.HasEnd || !left.HasStart) return touchesOnRight || touchesOnLeft;
             {
                 var comparison = right.End!.Value.Value.CompareTo(left.Start!.Value.Value);
                 touchesOnLeft = comparison == 0 && !(right.End.Value.IsInclusive && left.Start.Value.IsInclusive);

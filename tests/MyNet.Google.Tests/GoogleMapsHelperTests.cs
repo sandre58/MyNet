@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using MyNet.Geography;
 using MyNet.Google.Maps;
 using Xunit;
 
@@ -15,7 +16,7 @@ public class GoogleMapsHelperTests
     [Fact]
     public void GetGoogleMapsUrl_WithNoSettings_ReturnsBaseUrl()
     {
-        var url = GoogleMapsHelper.GetGoogleMapsUrl(new());
+        var url = GoogleMapsHelper.GetGoogleMapsUrl(new GoogleMapsSettings());
 
         Assert.Equal(GoogleMapsHelper.Url, url);
     }
@@ -23,7 +24,7 @@ public class GoogleMapsHelperTests
     [Fact]
     public void GetGoogleMapsUrl_WithAddress_EncodesSpacesAsPlus()
     {
-        var url = GoogleMapsHelper.GetGoogleMapsUrl(new() { Address = "10 rue de Paris" });
+        var url = GoogleMapsHelper.GetGoogleMapsUrl(new GoogleMapsSettings { Address = "10 rue de Paris" });
 
         Assert.StartsWith($"{GoogleMapsHelper.Url}?", url, StringComparison.Ordinal);
         Assert.Contains("q=10+rue+de+Paris", url, StringComparison.Ordinal);
@@ -34,9 +35,9 @@ public class GoogleMapsHelperTests
     {
         const double latitude = 48.8566;
         const double longitude = 2.3522;
-        var url = GoogleMapsHelper.GetGoogleMapsUrl(new()
+        var url = GoogleMapsHelper.GetGoogleMapsUrl(new GoogleMapsSettings
         {
-            Coordinates = new(latitude, longitude)
+            Coordinates = new Coordinates(latitude, longitude)
         });
 
         Assert.Contains("ll=", url, StringComparison.Ordinal);
@@ -47,7 +48,7 @@ public class GoogleMapsHelperTests
     [Fact]
     public void GetGoogleMapsUrl_WithHideLeftPanel_AddsEmbedOutput()
     {
-        var url = GoogleMapsHelper.GetGoogleMapsUrl(new()
+        var url = GoogleMapsHelper.GetGoogleMapsUrl(new GoogleMapsSettings
         {
             Address = "Paris",
             HideLeftPanel = true

@@ -31,7 +31,7 @@ public static class ListViewModelFactory
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        return new(provider, options);
+        return new ListViewModel<T>(provider, options);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public static class ListViewModelFactory
         ArgumentNullException.ThrowIfNull(provider);
         ArgumentNullException.ThrowIfNull(crudService);
 
-        return new(provider, crudService, options);
+        return new CrudListViewModel<T>(provider, crudService, options);
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public static class ListViewModelFactory
         ArgumentNullException.ThrowIfNull(items);
 
         var source = SourceEngine<T>.From(items, readOnly: false);
-        return new(source, options);
+        return new ListViewModel<T>(source, options);
     }
 
     /// <summary>
@@ -90,9 +90,9 @@ public static class ListViewModelFactory
         ArgumentNullException.ThrowIfNull(crudService);
 
         var source = SourceEngine<T>.From(items, readOnly: false);
-        var provider = new ExtendedCollectionDataProvider<T>(new(source, options?.Scheduler));
+        var provider = new ExtendedCollectionDataProvider<T>(new ExtendedCollection<T>(source, options?.Scheduler));
 
-        return new(provider, crudService, options);
+        return new CrudListViewModel<T>(provider, crudService, options);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public static class ListViewModelFactory
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        return new(provider, options);
+        return new VirtualizedListViewModel<T>(provider, options);
     }
 
     /// <summary>
@@ -127,9 +127,9 @@ public static class ListViewModelFactory
         ArgumentNullException.ThrowIfNull(items);
 
         var source = SourceEngine<T>.From(items, readOnly: false);
-        var provider = new ExtendedCollectionDataProvider<T>(new(source, options?.Scheduler));
+        var provider = new ExtendedCollectionDataProvider<T>(new ExtendedCollection<T>(source, options?.Scheduler));
 
-        return new(provider, options);
+        return new VirtualizedListViewModel<T>(provider, options);
     }
 
     /// <summary>
@@ -148,12 +148,12 @@ public static class ListViewModelFactory
     {
         ArgumentNullException.ThrowIfNull(items);
 
-        options ??= new();
+        options ??= new ListViewModelOptions<T>();
 
         var source = SourceEngine<T>.From(items, readOnly: false);
         var collection = new ExtendedCollection<T>(source, options.Scheduler);
 
-        return new(collection, selectionMode, options);
+        return new SelectableListViewModel<T>(collection, selectionMode, options);
     }
 
     /// <summary>
@@ -167,6 +167,6 @@ public static class ListViewModelFactory
     {
         ArgumentNullException.ThrowIfNull(collection);
 
-        return new(collection, selectionMode, options);
+        return new SelectableListViewModel<T>(collection, selectionMode, options);
     }
 }

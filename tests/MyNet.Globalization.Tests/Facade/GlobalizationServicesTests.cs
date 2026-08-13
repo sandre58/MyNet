@@ -85,8 +85,8 @@ public class GlobalizationServicesTests
         // ITranslationService accepts an optional culture override — culture is always explicit here, independent of the "current" culture.
         GlobalizationServices.Current.SetCulture("fr-FR");
 
-        var en = Localizer.Translation.Translate(nameof(DataResources.Value1), TranslationOptionsPresets.Default, new("en-US"));
-        var fr = Localizer.Translation.Translate(nameof(DataResources.Value1), TranslationOptionsPresets.Default, new("fr-FR"));
+        var en = Localizer.Translation.Translate(nameof(DataResources.Value1), TranslationOptionsPresets.Default, new CultureInfo("en-US"));
+        var fr = Localizer.Translation.Translate(nameof(DataResources.Value1), TranslationOptionsPresets.Default, new CultureInfo("fr-FR"));
 
         Assert.Equal("Value One", en);
         Assert.Equal("Valeur Une", fr);

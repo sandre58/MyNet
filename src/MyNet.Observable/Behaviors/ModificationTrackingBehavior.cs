@@ -23,7 +23,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
 {
     private readonly CollectionTrackingBehavior? _collections;
     private readonly bool _ownsCollections;
-    private readonly HashSet<string> _attachedProperties = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _attachedProperties = [with(StringComparer.Ordinal)];
     private readonly HashSet<IModificationAware> _trackedChildren = [];
     private readonly Dictionary<IModificationAware, INotifyPropertyChanged> _childNotifiers = [];
     private readonly Lock _attachSync = new();
@@ -33,7 +33,7 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     /// </summary>
     /// <param name="owner">The owner object.</param>
     public ModificationTrackingBehavior(ObservableObject owner)
-        : this(owner, new(owner), ownsCollections: true)
+        : this(owner, new CollectionTrackingBehavior(owner), ownsCollections: true)
     {
     }
 
@@ -202,17 +202,11 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     /// </summary>
     private void Attach(object? value)
     {
-        if (value is IModificationAware child)
-        {
-            if (_trackedChildren.Add(child))
-            {
-                if (value is INotifyPropertyChanged npc)
-                {
-                    _childNotifiers[child] = npc;
-                    npc.PropertyChanged += OnChildChanged;
-                }
-            }
-        }
+        if (value is not IModificationAware child) return;
+        if (!_trackedChildren.Add(child)) return;
+        if (value is not INotifyPropertyChanged npc) return;
+        _childNotifiers[child] = npc;
+        npc.PropertyChanged += OnChildChanged;
     }
 
     /// <summary>
@@ -220,17 +214,11 @@ public sealed class ModificationTrackingBehavior : SuspendableBehavior<Observabl
     /// </summary>
     private void Detach(object? value)
     {
-        if (value is IModificationAware child)
-        {
-            if (_trackedChildren.Remove(child))
-            {
-                if (_childNotifiers.TryGetValue(child, out var npc))
-                {
-                    npc.PropertyChanged -= OnChildChanged;
-                    _childNotifiers.Remove(child);
-                }
-            }
-        }
+        if (value is not IModificationAware child) return;
+        if (!_trackedChildren.Remove(child)) return;
+        if (!_childNotifiers.TryGetValue(child, out var npc)) return;
+        npc.PropertyChanged -= OnChildChanged;
+        _childNotifiers.Remove(child);
     }
 
     /// <summary>

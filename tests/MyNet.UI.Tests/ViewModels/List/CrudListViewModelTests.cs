@@ -75,9 +75,9 @@ public sealed class CrudListViewModelTests
     {
         var source = new ObservableCollection<string>(["A", "B", "C"]);
         var providerMock = new Mock<IListDataProvider<string>>();
-        providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<string>(source));
+        providerMock.Setup(p => p.Source).Returns([with(source)]);
+        providerMock.Setup(p => p.FilteredItems).Returns([with(source)]);
+        providerMock.Setup(p => p.Items).Returns([with(source)]);
         providerMock.Setup(p => p.FilteredCount).Returns(source.Count);
         providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<string>>());
         providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<string>>());
@@ -104,9 +104,9 @@ public sealed class CrudListViewModelTests
     {
         var source = new ObservableCollection<string>(["A", "B", "C"]);
         var providerMock = new Mock<IListDataProvider<string>>();
-        providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<string>(source));
+        providerMock.Setup(p => p.Source).Returns([with(source)]);
+        providerMock.Setup(p => p.FilteredItems).Returns([with(source)]);
+        providerMock.Setup(p => p.Items).Returns([with(source)]);
         providerMock.Setup(p => p.FilteredCount).Returns(source.Count);
         providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<string>>());
         providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<string>>());

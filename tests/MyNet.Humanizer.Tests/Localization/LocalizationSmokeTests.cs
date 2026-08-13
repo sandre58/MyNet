@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
 using MyNet.Globalization.Facade;
 using MyNet.Globalization.Localization.Translation;
 using Xunit;
@@ -17,7 +18,7 @@ public class LocalizationSmokeTests
     public void RegisteredListResources_CanTranslateAndSeparator()
     {
         const string resourceKey = "ListResources";
-        var value = Localizer.Translation.Translate("AndSeparator", TranslationOptionsPresets.Default, resourceKey, new("en-US"));
+        var value = Localizer.Translation.Translate("AndSeparator", TranslationOptionsPresets.Default, resourceKey, new CultureInfo("en-US"));
 
         Assert.Equal(" and ", value);
     }

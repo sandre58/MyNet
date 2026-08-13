@@ -130,8 +130,8 @@ public sealed class MessengerExtensionsTests : IDisposable
 
         // Act
         _messenger.Register<TestMessage>(new TargetClass(), _ => targetExecuted = true);
-        _messenger.Register<TestMessage>(new(), _ => otherExecuted = true);
-        _messenger.SendTo<TestMessage, TargetClass>(new());
+        _messenger.Register<TestMessage>(new object(), _ => otherExecuted = true);
+        _messenger.SendTo<TestMessage, TargetClass>(new TestMessage());
 
         // Assert
         Assert.True(targetExecuted);

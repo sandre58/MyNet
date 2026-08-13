@@ -71,7 +71,7 @@ public sealed class StringListEditionViewModel(ICommandFactory? commandFactory =
     protected override void EnsureEditableRow()
     {
         if (Items.Count == 0)
-            Items.Add(new());
+            Items.Add(new StringListItemViewModel());
     }
 
     /// <inheritdoc />

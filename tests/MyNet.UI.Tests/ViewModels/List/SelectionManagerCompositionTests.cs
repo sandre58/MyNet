@@ -26,7 +26,7 @@ public sealed class SelectionManagerCompositionTests : IDisposable
 
     public SelectionManagerCompositionTests()
     {
-        _managerMock = new();
+        _managerMock = new Mock<ISelectionManager<string>>();
         _managerMock.Setup(m => m.SelectedItems).Returns([]);
         _managerMock.Setup(m => m.SelectedCount).Returns(0);
         _managerMock.Setup(m => m.IsSelected(It.IsAny<string>())).Returns(false);
@@ -34,7 +34,7 @@ public sealed class SelectionManagerCompositionTests : IDisposable
         var source = SourceEngine<string>.From(["Alpha", "Beta", "Gamma"], readOnly: false);
         var collection = new ExtendedCollection<string>(source);
 
-        _vm = new(collection, _managerMock.Object);
+        _vm = new SelectableListViewModel<string>(collection, _managerMock.Object);
     }
 
     [Fact]

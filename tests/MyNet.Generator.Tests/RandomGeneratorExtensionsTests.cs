@@ -56,8 +56,8 @@ public sealed class RandomGeneratorExtensionsTests
     public void Date_WithInterval_UsesIntervalBounds()
     {
         var interval = new ClosedInterval<DateTime>(
-            new(2020, 1, 1),
-            new(2020, 12, 31));
+            new DateTime(2020, 1, 1),
+            new DateTime(2020, 12, 31));
 
         for (var i = 0; i < 20; i++)
         {

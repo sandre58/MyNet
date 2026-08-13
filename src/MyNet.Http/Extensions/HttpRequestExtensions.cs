@@ -26,7 +26,7 @@ public static class HttpRequestExtensions
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            request.Options.Set(new(TimeoutPropertyKey), timeout);
+            request.Options.Set(new HttpRequestOptionsKey<TimeSpan?>(TimeoutPropertyKey), timeout);
         }
 
         /// <summary>

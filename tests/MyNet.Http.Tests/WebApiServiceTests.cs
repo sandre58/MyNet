@@ -21,12 +21,12 @@ public class WebApiServiceTests
     [Fact]
     public async Task GetDataAsyncDeserializesJsonResponseAsync()
     {
-        using var handler = new StubHttpMessageHandler((_, _) => new(HttpStatusCode.OK)
+        using var handler = new StubHttpMessageHandler((_, _) => new HttpResponseMessage(HttpStatusCode.OK)
         {
             Content = new StringContent("{\"value\":\"hello\"}", Encoding.UTF8, "application/json")
         });
         using var client = new HttpClient(handler);
-        client.BaseAddress = new("https://example.com/");
+        client.BaseAddress = new Uri("https://example.com/");
         using var service = new WebApiService(client);
 
         var result = await service.GetDataAsync<ResponseDto>("/data", CancellationToken.None);
@@ -37,13 +37,13 @@ public class WebApiServiceTests
     [Fact]
     public async Task ErrorResponseThrowsWebApiExceptionWithStatusAndBodyAsync()
     {
-        using var handler = new StubHttpMessageHandler((_, _) => new(HttpStatusCode.BadRequest)
+        using var handler = new StubHttpMessageHandler((_, _) => new HttpResponseMessage(HttpStatusCode.BadRequest)
         {
             ReasonPhrase = "Bad Request",
             Content = new StringContent("invalid payload", Encoding.UTF8, "text/plain")
         });
         using var client = new HttpClient(handler);
-        client.BaseAddress = new("https://example.com/");
+        client.BaseAddress = new Uri("https://example.com/");
         using var service = new WebApiService(client);
 
         var ex = await Assert.ThrowsAsync<WebApiException>(() => service.GetDataAsync<ResponseDto>("/data", CancellationToken.None));
@@ -64,12 +64,12 @@ public class WebApiServiceTests
             }
             """;
 
-        using var handler = new StubHttpMessageHandler((_, _) => new(HttpStatusCode.BadRequest)
+        using var handler = new StubHttpMessageHandler((_, _) => new HttpResponseMessage(HttpStatusCode.BadRequest)
         {
             Content = new StringContent(json, Encoding.UTF8, "application/problem+json")
         });
         using var client = new HttpClient(handler);
-        client.BaseAddress = new("https://example.com/");
+        client.BaseAddress = new Uri("https://example.com/");
         using var service = new WebApiService(client);
 
         var ex = await Assert.ThrowsAsync<MultipleHttpException>(() => service.GetDataAsync<ResponseDto>("/data", CancellationToken.None));
@@ -85,10 +85,10 @@ public class WebApiServiceTests
         using var handler = new StubHttpMessageHandler((request, _) =>
         {
             method = request.Method;
-            return new(HttpStatusCode.NoContent);
+            return new HttpResponseMessage(HttpStatusCode.NoContent);
         });
         using var client = new HttpClient(handler);
-        client.BaseAddress = new("https://example.com/");
+        client.BaseAddress = new Uri("https://example.com/");
         using var service = new WebApiService(client);
 
         await service.PostDataAsync("/items", new { Id = 1 }, CancellationToken.None);
@@ -102,13 +102,13 @@ public class WebApiServiceTests
         using var handler = new StubHttpMessageHandler(async (_, cancellationToken) =>
         {
             await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
-            return new(HttpStatusCode.OK)
+            return new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent("{\"value\":\"late\"}", Encoding.UTF8, "application/json")
             };
         });
         using var client = new HttpClient(handler);
-        client.BaseAddress = new("https://example.com/");
+        client.BaseAddress = new Uri("https://example.com/");
         using var service = new WebApiService(client, timeout: TimeSpan.FromMilliseconds(50));
 
         await Assert.ThrowsAsync<TimeoutException>(() => service.GetDataAsync<ResponseDto>("/slow", CancellationToken.None));

@@ -83,7 +83,7 @@ public sealed class FilterBuilder<T>
     /// <returns>The current instance of <see cref="FilterBuilder{T}"/>.</returns>
     private FilterBuilder<T> AddGroup(LogicalOperator op, Func<FilterBuilder<T>, FilterBuilder<T>> builder)
     {
-        var inner = builder(new());
+        var inner = builder(new FilterBuilder<T>());
         var node = inner.Build();
 
         if (node is not null)

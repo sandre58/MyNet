@@ -55,7 +55,7 @@ public class ReflectionExtensionsTests
     [Fact]
     public void GetDeepPropertyValue_Should_Return_Nested_Value()
     {
-        var root = new NestedParent { Child = new() { Name = "value" } };
+        var root = new NestedParent { Child = new NestedChild { Name = "value" } };
         Assert.Equal("value", root.Child!.Name);
 
         var result = root.GetDeepPropertyValue<string>("Child.Name");
@@ -66,7 +66,7 @@ public class ReflectionExtensionsTests
     [Fact]
     public void GetDeepPropertyValue_Should_Return_Null_For_Invalid_Path()
     {
-        var root = new NestedParent { Child = new() { Name = "value" } };
+        var root = new NestedParent { Child = new NestedChild { Name = "value" } };
         Assert.Equal("value", root.Child!.Name);
 
         var result = root.GetDeepPropertyValue("Child.Unknown");

@@ -88,7 +88,7 @@ public sealed class SourceEngine<T> : ISourceEngine<T>, ISourceWriter<T>, IRefre
         var list = new SourceList<T>();
         list.AddRange(items);
 
-        return new(list, readOnly);
+        return new SourceEngine<T>(list, readOnly);
     }
 
     /// <summary>

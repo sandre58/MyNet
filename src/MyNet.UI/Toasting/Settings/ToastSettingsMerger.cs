@@ -21,7 +21,7 @@ public static class ToastSettingsMerger
     /// <returns>Resolved toast settings for the toast instance.</returns>
     public static ToastSettings Merge(INotification notification, ToastManagerOptions? options = null)
     {
-        options ??= new();
+        options ??= new ToastManagerOptions();
 
         var settings = new ToastSettings
         {

@@ -14,7 +14,7 @@ public static class Slugifier
     /// <summary>
     /// Gets the default slugifier transform.
     /// </summary>
-    public static ITextSlugifierTransform Default { get; } = new SlugifyTransform(new());
+    public static ITextSlugifierTransform Default { get; } = new SlugifyTransform(new TextSlugifierOptions());
 
     /// <summary>
     /// Gets a kebab-case slugifier (lowercase, '-' separator).
@@ -24,10 +24,10 @@ public static class Slugifier
     /// <summary>
     /// Gets a snake_case slugifier (lowercase, '_' separator).
     /// </summary>
-    public static ITextSlugifierTransform SnakeCase { get; } = new SlugifyTransform(new() { Separator = '_' });
+    public static ITextSlugifierTransform SnakeCase { get; } = new SlugifyTransform(new TextSlugifierOptions { Separator = '_' });
 
     /// <summary>
     /// Gets a slugifier preserving original case.
     /// </summary>
-    public static ITextSlugifierTransform PreserveCase { get; } = new SlugifyTransform(new() { Lowercase = false });
+    public static ITextSlugifierTransform PreserveCase { get; } = new SlugifyTransform(new TextSlugifierOptions { Lowercase = false });
 }

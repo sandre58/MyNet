@@ -26,7 +26,7 @@ public class DisplayTextStrategyRegistryTests
         });
 
         var provider = resolver.GetRequired<ConcreteType>();
-        var result = provider.GetDisplayText(new(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
+        var result = provider.GetDisplayText(new ConcreteType(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
 
         Assert.Equal("exact", result);
     }
@@ -41,7 +41,7 @@ public class DisplayTextStrategyRegistryTests
         });
 
         var provider = resolver.GetRequired<ConcreteType>();
-        var result = provider.GetDisplayText(new(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
+        var result = provider.GetDisplayText(new ConcreteType(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
 
         Assert.Equal("interface", result);
     }
@@ -51,7 +51,7 @@ public class DisplayTextStrategyRegistryTests
     {
         var resolver = BuildResolver(services => services.AddDisplayTextStrategy<BaseType, BaseProvider>());
         var provider = resolver.GetRequired<ConcreteType>();
-        var result = provider.GetDisplayText(new(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
+        var result = provider.GetDisplayText(new ConcreteType(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
 
         Assert.Equal("base", result);
     }
@@ -61,7 +61,7 @@ public class DisplayTextStrategyRegistryTests
     {
         var resolver = BuildResolver(services => services.AddDisplayTextStrategy<object, ObjectProvider>());
         var provider = resolver.GetRequired<ConcreteType>();
-        var result = provider.GetDisplayText(new(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
+        var result = provider.GetDisplayText(new ConcreteType(), DisplayTextOptions.Default, CultureInfo.InvariantCulture);
 
         Assert.Equal("object", result);
     }

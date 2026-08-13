@@ -26,7 +26,7 @@ public class TimeHumanizerTests
     [Fact]
     public void TimeHumanizer_RelativeTime_Works()
     {
-        var humanizer = CreateTimeHumanizer(new("en-US"));
+        var humanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         // Test relative time humanization
         var result = humanizer.HumanizeRelativeTime(1, TimeUnit.Day, Tense.Past);
@@ -37,7 +37,7 @@ public class TimeHumanizerTests
     [Fact]
     public void TimeHumanizer_ZeroQuantity_ReturnsNow()
     {
-        var humanizer = CreateTimeHumanizer(new("en-US"));
+        var humanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         var result = humanizer.HumanizeRelativeTime(0, TimeUnit.Second, Tense.Future);
 
@@ -49,7 +49,7 @@ public class TimeHumanizerTests
     [InlineData(Tense.Future)]
     public void TimeHumanizer_BothTenses_Work(Tense tense)
     {
-        var humanizer = CreateTimeHumanizer(new("en-US"));
+        var humanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         var result = humanizer.HumanizeRelativeTime(5, TimeUnit.Hour, tense);
 
@@ -65,7 +65,7 @@ public class TimeHumanizerTests
     [InlineData(TimeUnit.Year)]
     public void TimeHumanizer_AllTimeUnits_Work(TimeUnit unit)
     {
-        var humanizer = CreateTimeHumanizer(new("en-US"));
+        var humanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         var result = humanizer.HumanizeRelativeTime(1, unit, Tense.Past);
 
@@ -75,8 +75,8 @@ public class TimeHumanizerTests
     [Fact]
     public void ListFormatterAndTimeHumanizer_Combined_Work()
     {
-        var listFormatter = CreateListFormatter(new("en-US"));
-        var timeHumanizer = CreateTimeHumanizer(new("en-US"));
+        var listFormatter = CreateListFormatter(new CultureInfo("en-US"));
+        var timeHumanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         // Use list formatter to format items
         var formattedList = listFormatter.Format(["task1", "task2", "task3"]);
@@ -94,7 +94,7 @@ public class TimeHumanizerTests
     [InlineData(10)]
     public void TimeHumanizer_VariousQuantities_AllWork(int quantity)
     {
-        var humanizer = CreateTimeHumanizer(new("en-US"));
+        var humanizer = CreateTimeHumanizer(new CultureInfo("en-US"));
 
         var result = humanizer.HumanizeRelativeTime(quantity, TimeUnit.Day, Tense.Past);
 
@@ -106,7 +106,7 @@ public class TimeHumanizerTests
         // Create a simple translator implementation
         var translator = new SimpleTranslator();
         var translationService = new TranslationService(translator, new FixedCultureContext(culture));
-        return new(translationService, culture);
+        return new ListFormatter(translationService, culture);
     }
 
     private static TimeHumanizer CreateTimeHumanizer(CultureInfo culture)
@@ -115,7 +115,7 @@ public class TimeHumanizerTests
         var translationService = new TranslationService(translator, new FixedCultureContext(culture));
         var listFormatter = new ListFormatter(translationService, culture);
         var options = new TimeLocalizationOptions();
-        return new(translationService, new StubListFormatterSource(listFormatter), culture, options);
+        return new TimeHumanizer(translationService, new StubListFormatterSource(listFormatter), culture, options);
     }
 
     /// <summary>
@@ -240,7 +240,7 @@ public class TimeHumanizerEnTests
     [Theory]
     [InlineData(1, TimeUnit.Year, Tense.Future, "en-US", "11 months from now")]
     [InlineData(40, TimeUnit.Second, Tense.Past, "fr-FR", "il y a 40 secondes")]
-    public void CanSpecifyCultureExplicitly(int unit, TimeUnit timeUnit, Tense tense, string culture, string expected) => TimeHumanizerTestsHelper.Verify(expected, culture, unit, timeUnit, tense, culture: new(culture));
+    public void CanSpecifyCultureExplicitly(int unit, TimeUnit timeUnit, Tense tense, string culture, string expected) => TimeHumanizerTestsHelper.Verify(expected, culture, unit, timeUnit, tense, culture: new CultureInfo(culture));
 }
 
 [UseCulture(Culture)]

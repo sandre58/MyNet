@@ -145,8 +145,8 @@ public class ComparableExtensionsTests
     {
         IComparable<int> value = 7;
 
-        Assert.Equal(new(3, 7), value.MinMax(3));
-        Assert.Equal(new(7, 10), value.MinMax(10));
+        Assert.Equal(new MinMax<int>(3, 7), value.MinMax(3));
+        Assert.Equal(new MinMax<int>(7, 10), value.MinMax(10));
     }
 
     [Fact]
@@ -155,10 +155,10 @@ public class ComparableExtensionsTests
         IComparable<int> value = 7;
         IComparable<int>? nullValue = null;
 
-        Assert.Equal(new(3, 7), value.MinMax((int?)3));
-        Assert.Equal(new(null, 7), value.MinMax(null));
-        Assert.Equal(new(null, 3), nullValue.MinMax((int?)3));
-        Assert.Equal(new(null, null), nullValue.MinMax(null));
+        Assert.Equal(new OptionalMinMax<int>(3, 7), value.MinMax((int?)3));
+        Assert.Equal(new OptionalMinMax<int>(null, 7), value.MinMax(null));
+        Assert.Equal(new OptionalMinMax<int>(null, 3), nullValue.MinMax((int?)3));
+        Assert.Equal(new OptionalMinMax<int>(null, null), nullValue.MinMax(null));
     }
 
     [Fact]

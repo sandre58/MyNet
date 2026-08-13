@@ -7,7 +7,6 @@
 using System;
 using System.Linq;
 using MyNet.Primitives;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -21,7 +20,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(14, 37, 22, 500);
         var result = time.BeginningOfHour();
-        Assert.Equal(new(14, 0, 0, 0), result);
+        Assert.Equal(new TimeOnly(14, 0, 0, 0), result);
     }
 
     [Fact]
@@ -29,7 +28,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(14, 37, 22, 500);
         var result = time.EndOfHour();
-        Assert.Equal(new(14, 59, 59, 999), result);
+        Assert.Equal(new TimeOnly(14, 59, 59, 999), result);
     }
 
     #endregion
@@ -41,7 +40,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(14, 37, 22, 500);
         var result = time.BeginningOfMinute();
-        Assert.Equal(new(14, 37, 0, 0), result);
+        Assert.Equal(new TimeOnly(14, 37, 0, 0), result);
     }
 
     [Fact]
@@ -49,7 +48,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(14, 37, 22, 500);
         var result = time.EndOfMinute();
-        Assert.Equal(new(14, 37, 59, 999), result);
+        Assert.Equal(new TimeOnly(14, 37, 59, 999), result);
     }
 
     #endregion
@@ -61,7 +60,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(10, 20, 30, 400);
         var result = time.SetHour(18);
-        Assert.Equal(new(18, 20, 30, 400), result);
+        Assert.Equal(new TimeOnly(18, 20, 30, 400), result);
     }
 
     [Fact]
@@ -69,7 +68,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(10, 20, 30, 400);
         var result = time.SetMinute(55);
-        Assert.Equal(new(10, 55, 30, 400), result);
+        Assert.Equal(new TimeOnly(10, 55, 30, 400), result);
     }
 
     [Fact]
@@ -77,7 +76,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(10, 20, 30, 400);
         var result = time.SetSecond(59);
-        Assert.Equal(new(10, 20, 59, 400), result);
+        Assert.Equal(new TimeOnly(10, 20, 59, 400), result);
     }
 
     [Fact]
@@ -85,7 +84,7 @@ public class TimeOnlyExtensionsTests
     {
         var time = new TimeOnly(10, 20, 30, 400);
         var result = time.SetMillisecond(999);
-        Assert.Equal(new(10, 20, 30, 999), result);
+        Assert.Equal(new TimeOnly(10, 20, 30, 999), result);
     }
 
     #endregion
@@ -167,7 +166,7 @@ public class TimeOnlyExtensionsTests
         var end = new TimeOnly(11, 0, 0);
         var result = start.Range(end).ToList();
 
-        Assert.Equal([new(8, 0, 0), new(9, 0, 0), new(10, 0, 0), new(11, 0, 0)], result);
+        Assert.Equal([new TimeOnly(8, 0, 0), new TimeOnly(9, 0, 0), new TimeOnly(10, 0, 0), new TimeOnly(11, 0, 0)], result);
     }
 
     [Fact]
@@ -178,8 +177,8 @@ public class TimeOnlyExtensionsTests
         var result = start.Range(end, 1, TimeUnit.Minute).ToList();
 
         Assert.Equal(4, result.Count);
-        Assert.Equal(new(10, 0, 0), result[0]);
-        Assert.Equal(new(10, 3, 0), result[3]);
+        Assert.Equal(new TimeOnly(10, 0, 0), result[0]);
+        Assert.Equal(new TimeOnly(10, 3, 0), result[3]);
     }
 
     [Fact]
@@ -222,7 +221,7 @@ public class TimeOnlyExtensionsTests
         var start = new TimeOnly(10, 0, 0);
         var end = new TimeOnly(8, 0, 0);
         var result = start.Range(end, -1).ToList();
-        Assert.Equal([new(10, 0, 0), new(9, 0, 0), new(8, 0, 0)], result);
+        Assert.Equal([new TimeOnly(10, 0, 0), new TimeOnly(9, 0, 0), new TimeOnly(8, 0, 0)], result);
     }
 
     #endregion

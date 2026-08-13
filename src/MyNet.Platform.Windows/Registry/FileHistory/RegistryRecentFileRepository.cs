@@ -23,7 +23,8 @@ namespace MyNet.Platform.Windows.Registry.FileHistory;
 [SupportedOSPlatform("windows")]
 public sealed class RegistryRecentFileRepository(IRegistryService registryService, RecentFilesOptions options) : IRecentFileRepository
 {
-    private readonly HashSet<string> _supportedExtensions = new(options.SupportedExtensions.Select(NormalizeExtension), StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _supportedExtensions =
+        [with(options.SupportedExtensions.Select(NormalizeExtension), StringComparer.OrdinalIgnoreCase)];
 
     /// <inheritdoc/>
     public Task<IReadOnlyList<RecentFile>> GetAllAsync()

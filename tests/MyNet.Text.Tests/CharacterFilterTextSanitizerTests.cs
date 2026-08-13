@@ -43,7 +43,7 @@ public sealed class CharacterFilterTextSanitizerTests
     [Fact]
     public void Apply_EmptyInput_ReturnsEmpty()
     {
-        var sut = new CharacterFilterTextSanitizer(new());
+        var sut = new CharacterFilterTextSanitizer(new TextSanitizationOptions());
 
         var result = sut.Apply(string.Empty, CultureInfo.InvariantCulture);
 

@@ -23,10 +23,10 @@ public static class NavigationParametersExtensions
     public static NavigationParameters ToNavigationParameters(this object? parameters)
         => parameters switch
         {
-            null => new(),
-            NavigationParameters navigationParameters => new(navigationParameters),
+            null => new NavigationParameters(),
+            NavigationParameters navigationParameters => new NavigationParameters(navigationParameters),
             INavigationParameters typedParameters => typedParameters as NavigationParameters ?? NavigationParameters.From(typedParameters),
-            IEnumerable<KeyValuePair<string, object?>> pairs => new(pairs),
+            IEnumerable<KeyValuePair<string, object?>> pairs => new NavigationParameters(pairs),
             _ => NavigationParameters.From(parameters)
         };
 

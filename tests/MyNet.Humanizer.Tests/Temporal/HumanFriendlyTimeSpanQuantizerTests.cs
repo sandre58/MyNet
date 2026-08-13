@@ -24,8 +24,8 @@ public class HumanFriendlyTimeSpanQuantizerTests
 
         var result = HumanFriendlyTimeSpanQuantizer.Default.Quantize(values);
 
-        Assert.Equal(new(1, TimeUnit.Minute), result[0]);
-        Assert.Equal(new(0, TimeUnit.Second), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Minute), result[0]);
+        Assert.Equal(new TimeUnitValue(0, TimeUnit.Second), result[1]);
     }
 
     [Fact]
@@ -40,8 +40,8 @@ public class HumanFriendlyTimeSpanQuantizerTests
 
         var result = HumanFriendlyTimeSpanQuantizer.Default.Quantize(values);
 
-        Assert.Equal(new(2, TimeUnit.Hour), result[0]);
-        Assert.Equal(new(0, TimeUnit.Minute), result[1]);
-        Assert.Equal(new(0, TimeUnit.Second), result[2]);
+        Assert.Equal(new TimeUnitValue(2, TimeUnit.Hour), result[0]);
+        Assert.Equal(new TimeUnitValue(0, TimeUnit.Minute), result[1]);
+        Assert.Equal(new TimeUnitValue(0, TimeUnit.Second), result[2]);
     }
 }

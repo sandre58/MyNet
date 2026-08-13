@@ -134,7 +134,7 @@ public static class PluginService
         {
             var assemblyName = Path.GetFileNameWithoutExtension(dllPath);
             var loadContext = new PluginLoadContext(dllPath);
-            var assembly = loadContext.LoadFromAssemblyName(new(assemblyName));
+            var assembly = loadContext.LoadFromAssemblyName(new AssemblyName(assemblyName));
 
             // Only cache on success so a broken DLL can be replaced and retried.
             AssemblyCache.TryAdd(dllPath, assembly);

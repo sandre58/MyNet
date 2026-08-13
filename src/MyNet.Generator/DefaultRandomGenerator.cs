@@ -84,7 +84,7 @@ public sealed class DefaultRandomGenerator(IRandomSource source) : IRandomGenera
             return min;
 
         var offset = (long)(_source.NextDouble() * range);
-        return new(min.Ticks + offset, min.Kind);
+        return new DateTime(min.Ticks + offset, min.Kind);
     }
 
     /// <inheritdoc />
@@ -237,7 +237,7 @@ public sealed class DefaultRandomGenerator(IRandomSource source) : IRandomGenera
         for (var i = 0; i < length; i++)
             buffer[i] = chars[_source.NextInt32(0, chars.Length)];
 
-        return new(buffer);
+        return new string(buffer);
     }
 
     /// <inheritdoc />

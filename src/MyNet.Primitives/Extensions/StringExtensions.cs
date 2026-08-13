@@ -120,7 +120,7 @@ public static class StringExtensions
         {
             try
             {
-                version = new(value);
+                version = new Version(value);
                 return true;
             }
             catch (ArgumentException)

@@ -26,7 +26,7 @@ public sealed class EventBehaviorsTests
         var owner = new AsyncEventAwareOwner();
         var behavior = new TestAsyncEventBehavior(owner);
 
-        behavior.Raise(new() { Value = 123 });
+        behavior.Raise(new DummyEvent { Value = 123 });
 
         // The behavior triggers the async handler without awaiting it. The handler used here
         // completes synchronously, but give a small delay to avoid timing issues.
@@ -57,7 +57,7 @@ public sealed class EventBehaviorsTests
         sut.Behaviors.Register(new CultureChangedBehavior(sut, cultureService));
         sut.Behaviors.Register(new TimeZoneChangedBehavior(sut, timeZoneService));
 
-        cultureService.Raise(CultureInfo.InvariantCulture, new("fr-FR"));
+        cultureService.Raise(CultureInfo.InvariantCulture, new CultureInfo("fr-FR"));
         timeZoneService.Raise(TimeZoneInfo.Utc, TimeZoneInfo.Local);
 
         Assert.Contains(nameof(EventAwareOwner.CultureLabel), changedProperties);
@@ -102,7 +102,7 @@ public sealed class EventBehaviorsTests
         public void Raise(CultureInfo oldCulture, CultureInfo newCulture)
         {
             CurrentCulture = newCulture;
-            CultureChanged?.Invoke(this, new(oldCulture, newCulture));
+            CultureChanged?.Invoke(this, new CultureChangedEventArgs(oldCulture, newCulture));
         }
     }
 
@@ -127,7 +127,7 @@ public sealed class EventBehaviorsTests
         public void Raise(TimeZoneInfo oldTimeZone, TimeZoneInfo newTimeZone)
         {
             CurrentTimeZone = newTimeZone;
-            TimeZoneChanged?.Invoke(this, new(oldTimeZone, newTimeZone));
+            TimeZoneChanged?.Invoke(this, new TimeZoneChangedEventArgs(oldTimeZone, newTimeZone));
         }
     }
 

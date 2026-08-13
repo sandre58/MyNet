@@ -85,7 +85,7 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
 
         var fullyQualifiedTypeName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
-        return new(fullyQualifiedTypeName, properties);
+        return new TypeModel(fullyQualifiedTypeName, properties);
     }
 
     [SuppressMessage("ReSharper", "MergeIntoPattern", Justification = "Improves readability in this case")]
@@ -109,7 +109,7 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
 
         return !ignoreTracking && !reactsToCulture && !reactsToTimeZone && !propertyChangedForwarding && validationDependents.Length == 0
             ? null
-            : new(property.Name, ignoreTracking, reactsToCulture, reactsToTimeZone, propertyChangedForwarding, concatenateForwardedPropertyName, validationDependents);
+            : new PropertyModel(property.Name, ignoreTracking, reactsToCulture, reactsToTimeZone, propertyChangedForwarding, concatenateForwardedPropertyName, validationDependents);
     }
 
     [SuppressMessage("ReSharper", "MergeIntoPattern", Justification = "Improves readability in this case")]
@@ -158,11 +158,14 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
 
                 foreach (var namedArgument in attribute.NamedArguments)
                 {
-                    if (string.Equals(namedArgument.Key, "ConcatenatePropertyName", StringComparison.Ordinal) && namedArgument.Value.Value is bool namedValue)
+                    if (!string.Equals(namedArgument.Key, "ConcatenatePropertyName", StringComparison.Ordinal) ||
+                        namedArgument.Value.Value is not bool namedValue)
                     {
-                        concatenateForwardedPropertyName = namedValue;
-                        break;
+                        continue;
                     }
+
+                    concatenateForwardedPropertyName = namedValue;
+                    break;
                 }
 
                 return true;
@@ -385,14 +388,12 @@ public sealed class MetadataProviderGenerator : IIncrementalGenerator
             source.AppendLine("\");");
         }
 
-        if (property.PropertyChangedForwarding)
-        {
-            source.Append("            MetadataApplicators.ApplyForwardProperty(metadata_");
-            source.Append(property.Name);
-            source.Append(", ");
-            source.Append(property.ConcatenateForwardedPropertyName ? "true" : "false");
-            source.AppendLine(");");
-        }
+        if (!property.PropertyChangedForwarding) return;
+        source.Append("            MetadataApplicators.ApplyForwardProperty(metadata_");
+        source.Append(property.Name);
+        source.Append(", ");
+        source.Append(property.ConcatenateForwardedPropertyName ? "true" : "false");
+        source.AppendLine(");");
     }
 
     private sealed class TypeModel(string fullyQualifiedTypeName, ImmutableArray<PropertyModel> properties)

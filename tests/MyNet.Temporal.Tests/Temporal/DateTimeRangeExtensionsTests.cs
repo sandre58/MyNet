@@ -5,8 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
-using MyNet.Temporal.Intervals;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -16,10 +14,10 @@ public class DateTimeRangeExtensionsTests
     [Fact]
     public void NormalizeDateRange_OrdersAndDiscardsTime()
     {
-        var (start, end) = new DateTime(2026, 5, 20, 14, 30, 0).Normalize(new(2026, 5, 10, 8, 0, 0));
+        var (start, end) = new DateTime(2026, 5, 20, 14, 30, 0).Normalize(new DateTime(2026, 5, 10, 8, 0, 0));
 
-        Assert.Equal(new(2026, 5, 10), start);
-        Assert.Equal(new(2026, 5, 20), end);
+        Assert.Equal(new DateTime(2026, 5, 10), start);
+        Assert.Equal(new DateTime(2026, 5, 20), end);
     }
 
     [Fact]

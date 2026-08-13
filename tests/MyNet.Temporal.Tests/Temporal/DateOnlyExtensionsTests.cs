@@ -8,7 +8,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using MyNet.Primitives;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -22,21 +21,21 @@ public class DateOnlyExtensionsTests
     public void NextDay_ReturnsFollowingDay()
     {
         var date = new DateOnly(2024, 3, 15);
-        Assert.Equal(new(2024, 3, 16), date.NextDay());
+        Assert.Equal(new DateOnly(2024, 3, 16), date.NextDay());
     }
 
     [Fact]
     public void PreviousDay_ReturnsPrecedingDay()
     {
         var date = new DateOnly(2024, 3, 15);
-        Assert.Equal(new(2024, 3, 14), date.PreviousDay());
+        Assert.Equal(new DateOnly(2024, 3, 14), date.PreviousDay());
     }
 
     [Fact]
     public void NextYear_ReturnsSameDayNextYear()
     {
         var date = new DateOnly(2023, 6, 15);
-        Assert.Equal(new(2024, 6, 15), date.NextYear());
+        Assert.Equal(new DateOnly(2024, 6, 15), date.NextYear());
     }
 
     [Fact]
@@ -54,7 +53,7 @@ public class DateOnlyExtensionsTests
     public void PreviousYear_ReturnsSameDayPreviousYear()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2023, 6, 15), date.PreviousYear());
+        Assert.Equal(new DateOnly(2023, 6, 15), date.PreviousYear());
     }
 
     #endregion
@@ -84,7 +83,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 19);
         var result = date.Next(1, 9); // next Sep 1
-        Assert.Equal(new(2024, 9, 1), result);
+        Assert.Equal(new DateOnly(2024, 9, 1), result);
     }
 
     [Fact]
@@ -92,7 +91,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 19);
         var result = date.Previous(1, 8); // previous Aug 1
-        Assert.Equal(new(2024, 8, 1), result);
+        Assert.Equal(new DateOnly(2024, 8, 1), result);
     }
 
     #endregion
@@ -103,14 +102,14 @@ public class DateOnlyExtensionsTests
     public void WeekAfter_AddsSeven_Days()
     {
         var date = new DateOnly(2024, 8, 1);
-        Assert.Equal(new(2024, 8, 8), date.WeekAfter());
+        Assert.Equal(new DateOnly(2024, 8, 8), date.WeekAfter());
     }
 
     [Fact]
     public void WeekEarlier_SubtractsSeven_Days()
     {
         var date = new DateOnly(2024, 8, 8);
-        Assert.Equal(new(2024, 8, 1), date.WeekEarlier());
+        Assert.Equal(new DateOnly(2024, 8, 1), date.WeekEarlier());
     }
 
     #endregion
@@ -121,21 +120,21 @@ public class DateOnlyExtensionsTests
     public void SetYear_ChangesYearComponent()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2030, 6, 15), date.SetYear(2030));
+        Assert.Equal(new DateOnly(2030, 6, 15), date.SetYear(2030));
     }
 
     [Fact]
     public void SetMonth_ChangesMonthComponent()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2024, 12, 15), date.SetMonth(12));
+        Assert.Equal(new DateOnly(2024, 12, 15), date.SetMonth(12));
     }
 
     [Fact]
     public void SetDay_ChangesDayComponent()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2024, 6, 1), date.SetDay(1));
+        Assert.Equal(new DateOnly(2024, 6, 1), date.SetDay(1));
     }
 
     #endregion
@@ -146,49 +145,49 @@ public class DateOnlyExtensionsTests
     public void BeginningOfMonth_ReturnsFirstDay()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2024, 6, 1), date.BeginningOfMonth());
+        Assert.Equal(new DateOnly(2024, 6, 1), date.BeginningOfMonth());
     }
 
     [Fact]
     public void EndOfMonth_ReturnsLastDay()
     {
         var date = new DateOnly(2024, 2, 5); // Feb in leap year 2024
-        Assert.Equal(new(2024, 2, 29), date.EndOfMonth());
+        Assert.Equal(new DateOnly(2024, 2, 29), date.EndOfMonth());
     }
 
     [Fact]
     public void BeginningOfYear_ReturnsJanuary1()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2024, 1, 1), date.BeginningOfYear());
+        Assert.Equal(new DateOnly(2024, 1, 1), date.BeginningOfYear());
     }
 
     [Fact]
     public void EndOfYear_ReturnsDecember31()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2024, 12, 31), date.EndOfYear());
+        Assert.Equal(new DateOnly(2024, 12, 31), date.EndOfYear());
     }
 
     [Fact]
     public void BeginningOfDecade_ReturnsFirstYearOfDecade()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2020, 1, 1), date.BeginningOfDecade());
+        Assert.Equal(new DateOnly(2020, 1, 1), date.BeginningOfDecade());
     }
 
     [Fact]
     public void EndOfDecade_ReturnsLastYearOfDecade()
     {
         var date = new DateOnly(2024, 6, 15);
-        Assert.Equal(new(2029, 12, 31), date.EndOfDecade());
+        Assert.Equal(new DateOnly(2029, 12, 31), date.EndOfDecade());
     }
 
     [Fact]
     public void BeginningOfQuarter_ReturnsFirstDayOfQuarter()
     {
         var date = new DateOnly(2024, 11, 15); // Q4
-        Assert.Equal(new(2024, 10, 1), date.BeginningOfQuarter());
+        Assert.Equal(new DateOnly(2024, 10, 1), date.BeginningOfQuarter());
     }
 
     [Fact]
@@ -272,7 +271,7 @@ public class DateOnlyExtensionsTests
         var date = new DateOnly(2024, 8, 22);
         var time = new TimeOnly(14, 30, 0);
         var result = date.At(time);
-        Assert.Equal(new(2024, 8, 22, 14, 30, 0), result);
+        Assert.Equal(new DateTime(2024, 8, 22, 14, 30, 0), result);
     }
 
     [Fact]
@@ -280,7 +279,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 22);
         var result = date.At(14, 30);
-        Assert.Equal(new(2024, 8, 22, 14, 30, 0), result);
+        Assert.Equal(new DateTime(2024, 8, 22, 14, 30, 0), result);
     }
 
     [Fact]
@@ -288,7 +287,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 22);
         var result = date.BeginningOfDay();
-        Assert.Equal(new(2024, 8, 22, 0, 0, 0), result);
+        Assert.Equal(new DateTime(2024, 8, 22, 0, 0, 0), result);
     }
 
     [Fact]
@@ -311,7 +310,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 23); // Friday
         var result = date.AddBusinessDays(1);
-        Assert.Equal(new(2024, 8, 26), result); // Monday
+        Assert.Equal(new DateOnly(2024, 8, 26), result); // Monday
     }
 
     [Fact]
@@ -319,7 +318,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 8, 26); // Monday
         var result = date.SubtractBusinessDays(1);
-        Assert.Equal(new(2024, 8, 23), result); // Friday
+        Assert.Equal(new DateOnly(2024, 8, 23), result); // Friday
     }
 
     #endregion
@@ -357,7 +356,7 @@ public class DateOnlyExtensionsTests
         var d1 = new DateOnly(2024, 1, 1);
         var d2 = new DateTime(2024, 4, 1);
         Assert.Equal(3, d1.CompareMonth(d2));
-        Assert.Equal(-3, new DateOnly(2024, 4, 1).CompareMonth(new(2024, 1, 1)));
+        Assert.Equal(-3, new DateOnly(2024, 4, 1).CompareMonth(new DateTime(2024, 1, 1)));
     }
 
     [Fact]
@@ -376,14 +375,14 @@ public class DateOnlyExtensionsTests
     public void PreviousMonth_ReturnsCorrectDate()
     {
         var date = new DateOnly(2024, 3, 15);
-        Assert.Equal(new(2024, 2, 15), date.PreviousMonth());
+        Assert.Equal(new DateOnly(2024, 2, 15), date.PreviousMonth());
     }
 
     [Fact]
     public void PreviousMonth_JanuaryGoesToDecemberPreviousYear()
     {
         var date = new DateOnly(2024, 1, 15);
-        Assert.Equal(new(2023, 12, 15), date.PreviousMonth());
+        Assert.Equal(new DateOnly(2023, 12, 15), date.PreviousMonth());
     }
 
     [Fact]
@@ -391,21 +390,21 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 3, 31);
         var result = date.PreviousMonth(); // Feb has 29 days in 2024
-        Assert.Equal(new(2024, 2, 29), result);
+        Assert.Equal(new DateOnly(2024, 2, 29), result);
     }
 
     [Fact]
     public void NextMonth_ReturnsCorrectDate()
     {
         var date = new DateOnly(2024, 3, 15);
-        Assert.Equal(new(2024, 4, 15), date.NextMonth());
+        Assert.Equal(new DateOnly(2024, 4, 15), date.NextMonth());
     }
 
     [Fact]
     public void NextMonth_DecemberGoesToJanuaryNextYear()
     {
         var date = new DateOnly(2024, 12, 15);
-        Assert.Equal(new(2025, 1, 15), date.NextMonth());
+        Assert.Equal(new DateOnly(2025, 1, 15), date.NextMonth());
     }
 
     [Fact]
@@ -413,7 +412,7 @@ public class DateOnlyExtensionsTests
     {
         var date = new DateOnly(2024, 1, 31);
         var result = date.NextMonth(); // Feb has 29 days in 2024
-        Assert.Equal(new(2024, 2, 29), result);
+        Assert.Equal(new DateOnly(2024, 2, 29), result);
     }
 
     #endregion
@@ -427,8 +426,8 @@ public class DateOnlyExtensionsTests
         var end = new DateOnly(2024, 8, 5);
         var result = start.Range(end).ToList();
         Assert.Equal(5, result.Count);
-        Assert.Equal(new(2024, 8, 1), result[0]);
-        Assert.Equal(new(2024, 8, 5), result[4]);
+        Assert.Equal(new DateOnly(2024, 8, 1), result[0]);
+        Assert.Equal(new DateOnly(2024, 8, 5), result[4]);
     }
 
     [Fact]
@@ -481,8 +480,8 @@ public class DateOnlyExtensionsTests
         var end = new DateOnly(2024, 8, 1);
         var result = start.Range(end, -1).ToList();
         Assert.Equal(5, result.Count);
-        Assert.Equal(new(2024, 8, 5), result[0]);
-        Assert.Equal(new(2024, 8, 1), result[4]);
+        Assert.Equal(new DateOnly(2024, 8, 5), result[0]);
+        Assert.Equal(new DateOnly(2024, 8, 1), result[4]);
     }
 
     #endregion
@@ -495,7 +494,7 @@ public class DateOnlyExtensionsTests
         public CultureScope(string name)
         {
             _prev = CultureInfo.CurrentCulture;
-            CultureInfo.CurrentCulture = new(name);
+            CultureInfo.CurrentCulture = new CultureInfo(name);
         }
 
         public void Dispose() => CultureInfo.CurrentCulture = _prev;

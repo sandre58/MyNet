@@ -72,7 +72,7 @@ public abstract class WindowsAuthenticationService<TPrincipal> : IAuthentication
         var isAuthenticated = IsAuthenticated;
 
         if (wasAuthenticated != isAuthenticated)
-            Authenticated?.Invoke(this, new(isAuthenticated));
+            Authenticated?.Invoke(this, new AuthenticatedEventArgs(isAuthenticated));
     }
 
     /// <summary>

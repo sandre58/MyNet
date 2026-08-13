@@ -35,10 +35,8 @@ public class ProgressionBusy : Busy
     {
         Value = value;
 
-        if (!string.IsNullOrWhiteSpace(message))
-        {
-            Title = message;
-            Messages.Add(message);
-        }
+        if (string.IsNullOrWhiteSpace(message)) return;
+        Title = message;
+        Messages.Add(message);
     }
 }

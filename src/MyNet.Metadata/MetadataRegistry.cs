@@ -25,7 +25,7 @@ public static class MetadataRegistry
     public static MetadataBuilder<T> For<T>()
     {
         var metadata = Get(typeof(T));
-        return new(metadata);
+        return new MetadataBuilder<T>(metadata);
     }
 
     /// <summary>
@@ -48,5 +48,5 @@ public static class MetadataRegistry
     /// </summary>
     /// <param name="type">The type for which metadata is being retrieved or created.</param>
     /// <returns>The <see cref="TypeMetadata"/> associated with the specified type.</returns>
-    private static TypeMetadata GetOrCreate(Type type) => Cache.GetOrAdd(type, static _ => new());
+    private static TypeMetadata GetOrCreate(Type type) => Cache.GetOrAdd(type, static _ => new TypeMetadata());
 }

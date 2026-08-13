@@ -51,8 +51,8 @@ public sealed class CollectionStatisticsTests
     {
         using var collection = ExtendedCollection.From(
         [
-            new(1),
-            new(2),
+            new MetricItem(1),
+            new MetricItem(2),
             new MetricItem(10)
         ]);
 
@@ -68,7 +68,7 @@ public sealed class CollectionStatisticsTests
     [Fact]
     public void Statistics_WhenFilterChanges_ShouldRecalculate()
     {
-        using var collection = ExtendedCollection.From([new(1), new MetricItem(5)]);
+        using var collection = ExtendedCollection.From([new MetricItem(1), new MetricItem(5)]);
         using var statistics = collection.Statistics(x => x.Value);
 
         statistics.Sum.Should().Be(6);
@@ -91,7 +91,7 @@ public sealed class CollectionStatisticsTests
     {
         using var collection = ExtendedCollection.From(
         [
-            new(TimeSpan.FromMinutes(1)),
+            new DurationItem(TimeSpan.FromMinutes(1)),
             new DurationItem(TimeSpan.FromMinutes(3))
         ]);
 

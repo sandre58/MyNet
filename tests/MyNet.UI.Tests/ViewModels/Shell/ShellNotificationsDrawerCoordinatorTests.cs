@@ -61,7 +61,7 @@ public class ShellNotificationsDrawerCoordinatorTests
         var notificationsManager = new Mock<INotificationsManager>();
         notificationsManager.Setup(x => x.Notifications).Returns(new ReadOnlyObservableCollection<INotification>(items));
 
-        return new(
+        return new ShellNotificationsViewModel(
             notificationsManager.Object,
             new DefaultSchedulerProvider());
     }

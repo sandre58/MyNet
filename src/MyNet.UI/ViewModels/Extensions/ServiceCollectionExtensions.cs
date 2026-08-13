@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
 
             services.TryAddSingleton<ITaskbarProgressSource, TaskbarProgressSource>();
             services.TryAddSingleton<BusyTaskbarCoordinator>(static sp =>
-                new(
+                new BusyTaskbarCoordinator(
                     sp.GetRequiredService<IBusyService>(),
                     sp.GetRequiredService<ITaskbarProgressSource>()));
 
@@ -67,7 +67,7 @@ public static class ServiceCollectionExtensions
             services.TryAddSingleton<ShellDrawerCoordinator>(static sp =>
             {
                 _ = sp.GetRequiredService<IShellHostProvider>();
-                return new(
+                return new ShellDrawerCoordinator(
                     sp.GetRequiredService<IContentDialogService>(),
                     sp.GetRequiredService<IShellHostProvider>());
             });

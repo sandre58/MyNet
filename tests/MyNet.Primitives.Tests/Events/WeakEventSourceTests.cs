@@ -69,6 +69,7 @@ public sealed class WeakEventSourceTests
     private static void SubscribeTransientHandler(WeakEventSource<EventArgs> source)
     {
         subscribe();
+        return;
 
         void subscribe()
         {

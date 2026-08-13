@@ -66,7 +66,7 @@ public static class QuantityExtensions
 
             var converted = converter.Convert(quantity.Value, quantity.Unit, target);
 
-            return new(converted, target);
+            return new Quantity<TUnit>(converted, target);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ public static class QuantityExtensions
 
             var rightValue = converter.Convert(right.Value, right.Unit, quantity.Unit);
 
-            return new(quantity.Value + rightValue, quantity.Unit);
+            return new Quantity<TUnit>(quantity.Value + rightValue, quantity.Unit);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ public static class QuantityExtensions
 
             var rightValue = converter.Convert(right.Value, right.Unit, quantity.Unit);
 
-            return new(quantity.Value - rightValue, quantity.Unit);
+            return new Quantity<TUnit>(quantity.Value - rightValue, quantity.Unit);
         }
     }
 }

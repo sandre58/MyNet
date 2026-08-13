@@ -33,6 +33,6 @@ public sealed class MetadataBuilder<T>
     public PropertyBuilder<T, TProperty> Property<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         var name = expression.PropertyInfo.Name;
-        return new(_metadata.GetProperty(name));
+        return new PropertyBuilder<T, TProperty>(_metadata.GetProperty(name));
     }
 }

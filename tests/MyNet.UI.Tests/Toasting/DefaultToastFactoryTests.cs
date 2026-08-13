@@ -7,7 +7,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyNet.Primitives;
 using MyNet.Temporal;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Toasting;
@@ -62,7 +61,7 @@ public class DefaultToastFactoryTests
     {
         var notification = new MessageNotification("hello")
         {
-            ToastSettings = new()
+            ToastSettings = new ToastSettingsOverrides
             {
                 Duration = 3.Seconds(),
                 FreezeOnMouseEnter = false
@@ -110,7 +109,7 @@ public class DefaultToastFactoryTests
         public void RequestClose()
         {
             RequestCloseCount++;
-            CloseRequested?.Invoke(this, new());
+            CloseRequested?.Invoke(this, new CloseRequestedEventArgs());
         }
     }
 }

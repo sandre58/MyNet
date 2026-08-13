@@ -66,7 +66,7 @@ public class ScopedActionRunnerTests
     public void Run_ThrowsWhenReenteredBeforeManualCompletion()
     {
         ScopedActionRunner? runner = null;
-        runner = new(complete =>
+        runner = new ScopedActionRunner(complete =>
         {
             Assert.Throws<InvalidOperationException>(() => runner!.Run());
             complete();

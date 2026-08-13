@@ -57,6 +57,6 @@ public sealed class PluralizationServiceTests
             .Setup(r => r.GetRequired<IInflector>(It.IsAny<CultureInfo>()))
             .Returns(Inflectors.English);
 
-        return new(resolver.Object, cultureContext.Object);
+        return new PluralizationService(resolver.Object, cultureContext.Object);
     }
 }

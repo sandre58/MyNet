@@ -37,7 +37,7 @@ public sealed class ValidationGraphVisitorTests
         var right = new CyclicNode();
         left.Other = right;
         right.Other = left;
-        left.Node = new(isValid: true);
+        left.Node = new StubValidatable(isValid: true);
 
         Assert.True(ValidationGraphVisitor.Validate(left));
     }

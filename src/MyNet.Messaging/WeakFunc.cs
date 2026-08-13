@@ -33,14 +33,14 @@ public class WeakFunc<TResult>
         {
             _staticFunc = func;
             if (target != null)
-                _targetReference = new(target);
+                _targetReference = new WeakReference(target);
             return;
         }
 
         _method = func.Method;
-        _funcTargetReference = new(func.Target);
+        _funcTargetReference = new WeakReference(func.Target);
         _liveReference = keepTargetAlive ? func.Target : null;
-        _targetReference = new(target);
+        _targetReference = new WeakReference(target);
     }
 
     /// <summary>
@@ -79,19 +79,15 @@ public class WeakFunc<TResult>
             return _staticFunc();
 
         var funcTarget = FuncTarget;
-        if (_method != null && funcTarget != null)
+        if (_method == null || funcTarget == null) return default;
+        try
         {
-            try
-            {
-                return (TResult?)_method.Invoke(funcTarget, null);
-            }
-            catch
-            {
-                return default;
-            }
+            return (TResult?)_method.Invoke(funcTarget, null);
         }
-
-        return default;
+        catch
+        {
+            return default;
+        }
     }
 
     /// <summary>
@@ -132,14 +128,14 @@ public class WeakFunc<T, TResult> : IExecuteWithObjectAndResult
         {
             _staticFunc = func;
             if (target != null)
-                _targetReference = new(target);
+                _targetReference = new WeakReference(target);
             return;
         }
 
         _method = func.Method;
-        _funcTargetReference = new(func.Target);
+        _funcTargetReference = new WeakReference(func.Target);
         _liveReference = keepTargetAlive ? func.Target : null;
-        _targetReference = new(target);
+        _targetReference = new WeakReference(target);
     }
 
     /// <summary>
@@ -189,19 +185,15 @@ public class WeakFunc<T, TResult> : IExecuteWithObjectAndResult
         }
 
         var funcTarget = FuncTarget;
-        if (_method != null && funcTarget != null)
+        if (_method == null || funcTarget == null) return default;
+        try
         {
-            try
-            {
-                return (TResult?)_method.Invoke(funcTarget, [parameter]);
-            }
-            catch
-            {
-                return default;
-            }
+            return (TResult?)_method.Invoke(funcTarget, [parameter]);
         }
-
-        return default;
+        catch
+        {
+            return default;
+        }
     }
 
     /// <summary>

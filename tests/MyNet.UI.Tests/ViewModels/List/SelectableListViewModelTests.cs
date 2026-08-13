@@ -85,7 +85,7 @@ public sealed class SelectableListViewModelTests
     {
         using var vm = ListViewModelFactory.CreateSelection(
             Enumerable.Range(1, 250).Select(x => x.ToString(CultureInfo.CurrentCulture)),
-            new() { Paging = new PagingViewModel(100) });
+            new ListViewModelOptions<string> { Paging = new PagingViewModel(100) });
 
         vm.Paging!.TotalItems.Should().Be(250);
         vm.FilteredCount.Should().Be(250);
@@ -106,7 +106,7 @@ public sealed class SelectableListViewModelTests
         var collection = ExtendedCollection.FromReadOnly(Enumerable.Range(1, 7461).Select(x => x.ToString(CultureInfo.CurrentCulture)));
         using var vm = ListViewModelFactory.CreateSelection(
             collection,
-            new() { Paging = new PagingViewModel(100) });
+            new ListViewModelOptions<string> { Paging = new PagingViewModel(100) });
 
         vm.Paging!.TotalItems.Should().Be(7461);
         vm.Items.Should().HaveCount(100);
@@ -117,7 +117,7 @@ public sealed class SelectableListViewModelTests
     {
         using var vm = new AdHocFilterListViewModel(
             ExtendedCollection.From(["A1", "A2", "B1", "B2", "B3"]),
-            new() { Paging = new PagingViewModel(2) });
+            new ListViewModelOptions<string> { Paging = new PagingViewModel(2) });
 
         vm.SetPrefixFilter("B");
         vm.RequestPipelineRefresh();
@@ -132,7 +132,7 @@ public sealed class SelectableListViewModelTests
     {
         using var vm = new AdHocFilterListViewModel(
             ExtendedCollection.From(Enumerable.Range(1, 250).Select(x => x.ToString(CultureInfo.CurrentCulture))),
-            new() { Paging = new PagingViewModel(100) });
+            new ListViewModelOptions<string> { Paging = new PagingViewModel(100) });
 
         vm.Paging!.MoveToPage(3);
         vm.Paging.CurrentPage.Should().Be(3);

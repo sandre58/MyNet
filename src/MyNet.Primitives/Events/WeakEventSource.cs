@@ -23,7 +23,7 @@ public sealed class WeakEventSource<TEventArgs>
     /// Subscribes to the event with a weak reference to the handler, allowing the subscriber to be garbage collected if it is no longer referenced elsewhere. This helps prevent memory leaks in event-driven scenarios where subscribers may not always unsubscribe from events.
     /// </summary>
     /// <param name="handler">The event handler to subscribe.</param>
-    public void Subscribe(EventHandler<TEventArgs> handler) => _subscriptions.Add(new(handler));
+    public void Subscribe(EventHandler<TEventArgs> handler) => _subscriptions.Add(new WeakSubscription(handler));
 
     /// <summary>
     /// Unsubscribes from the event.
@@ -62,7 +62,7 @@ public sealed class WeakEventSource<TEventArgs>
             _method = handler.Method;
 
             if (handler.Target != null)
-                _targetReference = new(handler.Target);
+                _targetReference = new WeakReference(handler.Target);
         }
 
         /// <summary>

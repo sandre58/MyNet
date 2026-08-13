@@ -14,7 +14,7 @@ namespace MyNet.Mail;
 
 public class Email(string fromAddress, string displayNameFrom = "") : IEmail
 {
-    public EmailData Data { get; } = new(new(fromAddress, displayNameFrom));
+    public EmailData Data { get; } = new(new EmailAddress(fromAddress, displayNameFrom));
 
     /// <summary>
     /// Creates a new Email instance and sets the from property.
@@ -32,7 +32,7 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
     /// <returns>Instance of the Email class.</returns>
     public IEmail SetFrom(string emailAddress, string name = "")
     {
-        Data.From = new(emailAddress, name);
+        Data.From = new EmailAddress(emailAddress, name);
         return this;
     }
 
@@ -219,12 +219,12 @@ public class Email(string fromAddress, string displayNameFrom = "") : IEmail
                     currentName = nameSplit[i];
 
                 if (!string.IsNullOrWhiteSpace(addressSplit[i]))
-                    destination.Add(new(addressSplit[i], currentName.Trim()));
+                    destination.Add(new EmailAddress(addressSplit[i], currentName.Trim()));
             }
         }
         else
         {
-            destination.Add(new(emailAddress.Trim(), name.Trim()));
+            destination.Add(new EmailAddress(emailAddress.Trim(), name.Trim()));
         }
 
         return this;

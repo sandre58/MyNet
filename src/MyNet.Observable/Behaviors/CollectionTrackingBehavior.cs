@@ -18,7 +18,7 @@ namespace MyNet.Observable.Behaviors;
 /// </summary>
 public sealed class CollectionTrackingBehavior : SuspendableBehavior<ObservableObject>
 {
-    private readonly HashSet<string> _trackedProperties = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _trackedProperties = [with(StringComparer.Ordinal)];
     private readonly HashSet<INotifyCollectionChanged> _trackedCollections = [];
     private readonly Lock _gate = new();
     private int _initialTrackScheduled;

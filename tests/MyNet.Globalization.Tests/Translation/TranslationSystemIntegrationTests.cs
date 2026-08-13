@@ -28,7 +28,7 @@ public class TranslationSystemIntegrationTests
     {
         // Setup all components
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -50,13 +50,13 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // Test 1: Simple translation with argument
         var result1 = translator.Translate(
             "Welcome",
             new TranslationOptionsBuilder().WithArgument("name", "Alice").Build(),
-            new("en-US"));
+            new CultureInfo("en-US"));
 
         Assert.Equal("Welcome Alice!", result1);
 
@@ -64,7 +64,7 @@ public class TranslationSystemIntegrationTests
         var result2 = translator.Translate(
             "Items",
             new TranslationOptionsBuilder().WithQuantity(3).Build(),
-            new("en-US"));
+            new CultureInfo("en-US"));
 
         Assert.NotEmpty(result2);
 
@@ -72,7 +72,7 @@ public class TranslationSystemIntegrationTests
         var result3 = translator.Translate(
             "ItemCount",
             new TranslationOptionsBuilder().WithQuantity(42).Build(),
-            new("en-US"));
+            new CultureInfo("en-US"));
 
         Assert.Contains("42", result3, StringComparison.InvariantCultureIgnoreCase);
 
@@ -80,7 +80,7 @@ public class TranslationSystemIntegrationTests
         var result4 = translator.Translate(
             "Welcome",
             new TranslationOptionsBuilder().WithArgument("name", "Marie").Build(),
-            new("fr-FR"));
+            new CultureInfo("fr-FR"));
 
         Assert.Equal("Bienvenue Marie!", result4);
     }
@@ -89,7 +89,7 @@ public class TranslationSystemIntegrationTests
     public void IntegrationWithDisplayStyles_AllStylesWork()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -107,7 +107,7 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new StyleAwareKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new StyleAwareKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // Test each display style
         var styles = new[] { DisplayStyle.Default, DisplayStyle.Short, DisplayStyle.Abbreviation, DisplayStyle.Symbol, DisplayStyle.Narrow };
@@ -117,7 +117,7 @@ public class TranslationSystemIntegrationTests
             var result = translator.Translate(
                 "Currency",
                 new TranslationOptionsBuilder().WithStyle(style).Build(),
-                new("en-US"));
+                new CultureInfo("en-US"));
 
             Assert.NotEmpty(result);
         }
@@ -134,20 +134,20 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // Translate when no resources exist
-        var result1 = translator.Translate("Missing", TranslationOptionsPresets.Default, new("en-US"));
+        var result1 = translator.Translate("Missing", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
         Assert.Equal("Missing", result1);
 
         // Register new resources
-        catalog.Register("Dynamic", new InMemoryResourceManager(new()
+        catalog.Register("Dynamic", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new() { ["NewKey"] = "New Value" }
         }));
 
         // Translate after registration
-        var result2 = translator.Translate("NewKey", TranslationOptionsPresets.Default, new("en-US"));
+        var result2 = translator.Translate("NewKey", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
         Assert.Equal("New Value", result2);
     }
 
@@ -163,9 +163,9 @@ public class TranslationSystemIntegrationTests
         var providerResolver = new LocalizationServiceResolver(registry);
 
         // Test culture-specific provider resolution
-        providerResolver.TryGet<IInflector>(new("en-US"), out var enProvider);
-        providerResolver.TryGet<IInflector>(new("fr-FR"), out var frProvider);
-        providerResolver.TryGet<IInflector>(new("de-DE"), out var deProvider);
+        providerResolver.TryGet<IInflector>(new CultureInfo("en-US"), out var enProvider);
+        providerResolver.TryGet<IInflector>(new CultureInfo("fr-FR"), out var frProvider);
+        providerResolver.TryGet<IInflector>(new CultureInfo("de-DE"), out var deProvider);
 
         Assert.NotNull(enProvider);
         Assert.NotNull(frProvider);
@@ -176,7 +176,7 @@ public class TranslationSystemIntegrationTests
     public void IntegrationPluralization_EnglishVsFrench()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -195,13 +195,13 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // English pluralization: person -> people
         var enResult = translator.Translate(
             "person",
             new TranslationOptionsBuilder().WithQuantity(5).Build(),
-            new("en-US"));
+            new CultureInfo("en-US"));
 
         Assert.Equal("people", enResult);
 
@@ -209,7 +209,7 @@ public class TranslationSystemIntegrationTests
         var frResult = translator.Translate(
             "personne",
             new TranslationOptionsBuilder().WithQuantity(5).Build(),
-            new("fr-FR"));
+            new CultureInfo("fr-FR"));
 
         Assert.Equal("personnes", frResult);
     }
@@ -218,7 +218,7 @@ public class TranslationSystemIntegrationTests
     public void IntegrationCultureFallback_ChainedResolution()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             // Only have English (en) translation, not en-US
             ["en"] = new() { ["Hello"] = "Hello from en" }
@@ -230,10 +230,10 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // Request en-US but only have en -> should fallback
-        var result = translator.Translate("Hello", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Hello", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("Hello from en", result);
     }
@@ -242,7 +242,7 @@ public class TranslationSystemIntegrationTests
     public void IntegrationComplexTemplate_MultipleArguments()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -255,7 +255,7 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         var options = new TranslationOptionsBuilder()
             .WithQuantity(1000)
@@ -264,7 +264,7 @@ public class TranslationSystemIntegrationTests
             .WithArgument("location", "library")
             .Build();
 
-        var result = translator.Translate("ComplexMsg", options, new("en-US"));
+        var result = translator.Translate("ComplexMsg", options, new CultureInfo("en-US"));
 
         Assert.Contains("alice", result, StringComparison.InvariantCultureIgnoreCase);
         Assert.Contains("1,000", result, StringComparison.InvariantCultureIgnoreCase);
@@ -276,12 +276,12 @@ public class TranslationSystemIntegrationTests
     public void IntegrationMultipleResources_ResolvesCorrectly()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("LoginModule", new InMemoryResourceManager(new()
+        catalog.Register("LoginModule", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new() { ["Login"] = "Login" }
         }));
 
-        catalog.Register("UserModule", new InMemoryResourceManager(new()
+        catalog.Register("UserModule", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new() { ["Profile"] = "User Profile" }
         }));
@@ -291,13 +291,13 @@ public class TranslationSystemIntegrationTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        var translator = new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
 
         // Specific resource lookup
-        var result1 = translator.Translate("Login", TranslationOptionsPresets.Default, new("en-US"), "LoginModule");
+        var result1 = translator.Translate("Login", TranslationOptionsPresets.Default, new CultureInfo("en-US"), "LoginModule");
         Assert.Equal("Login", result1);
 
-        var result2 = translator.Translate("Profile", TranslationOptionsPresets.Default, new("en-US"), "UserModule");
+        var result2 = translator.Translate("Profile", TranslationOptionsPresets.Default, new CultureInfo("en-US"), "UserModule");
         Assert.Equal("User Profile", result2);
     }
 
@@ -335,11 +335,11 @@ public class TranslationSystemIntegrationTests
                 };
 
                 if (!string.IsNullOrEmpty(styleSuffix))
-                    candidates.Add(new(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
+                    candidates.Add(new TranslationKeyCandidate(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
             }
 
             // Add base key
-            candidates.Add(new(baseKey, TranslationFallbackPolicy.Flexible));
+            candidates.Add(new TranslationKeyCandidate(baseKey, TranslationFallbackPolicy.Flexible));
 
             return candidates;
         }

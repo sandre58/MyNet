@@ -359,7 +359,7 @@ public sealed class MetadataProviderGeneratorTests
             assemblyName: "LazyBootstrapTests",
             syntaxTrees: [.. syntaxTrees],
             references: GetMetadataReferences(),
-            options: new(OutputKind.DynamicallyLinkedLibrary));
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         using var stream = new MemoryStream();
         var emitResult = compilation.Emit(stream);
@@ -373,13 +373,13 @@ public sealed class MetadataProviderGeneratorTests
 
     private static CSharpCompilation CreateCompilation(string source)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(source, new(LanguageVersion.Preview));
+        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview));
 
         return CSharpCompilation.Create(
             assemblyName: "GeneratorTests",
             syntaxTrees: [syntaxTree],
             references: GetMetadataReferences(),
-            options: new(OutputKind.DynamicallyLinkedLibrary));
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 
     public static ImmutableArray<MetadataReference> GetMetadataReferences()

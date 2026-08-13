@@ -19,12 +19,12 @@ public static class Sanitizer
     /// <summary>
     /// Gets a sanitizer that keeps letters and digits only.
     /// </summary>
-    public static ITextSanitizerTransform AlphaNumeric { get; } = new CharacterFilterTextSanitizer(new());
+    public static ITextSanitizerTransform AlphaNumeric { get; } = new CharacterFilterTextSanitizer(new TextSanitizationOptions());
 
     /// <summary>
     /// Gets a sanitizer for technical identifiers (letters, digits and underscore).
     /// </summary>
-    public static ITextSanitizerTransform Identifier { get; } = new CharacterFilterTextSanitizer(new()
+    public static ITextSanitizerTransform Identifier { get; } = new CharacterFilterTextSanitizer(new TextSanitizationOptions
     {
         KeepLetters = true,
         KeepDigits = true,
@@ -35,7 +35,7 @@ public static class Sanitizer
     /// <summary>
     /// Gets a sanitizer for URL segments (letters, digits, hyphen and underscore).
     /// </summary>
-    public static ITextSanitizerTransform UrlSegment { get; } = new CharacterFilterTextSanitizer(new()
+    public static ITextSanitizerTransform UrlSegment { get; } = new CharacterFilterTextSanitizer(new TextSanitizationOptions
     {
         KeepLetters = true,
         KeepDigits = true,

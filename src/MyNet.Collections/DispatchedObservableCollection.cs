@@ -41,7 +41,7 @@ public sealed class DispatchedObservableCollection<T>(ObservableRangeCollection<
     /// <param name="capacity">The initial capacity to pre-allocate.</param>
     /// <param name="dispatcher">The dispatcher used for notifications.</param>
     public DispatchedObservableCollection(int capacity, ICollectionEventDispatcher dispatcher)
-        : this(new ObservableRangeCollection<T>(capacity), dispatcher)
+        : this([with(capacity)], dispatcher)
     {
     }
 
@@ -51,7 +51,7 @@ public sealed class DispatchedObservableCollection<T>(ObservableRangeCollection<
     /// <param name="list">The list whose elements are copied to the new collection.</param>
     /// <param name="dispatcher">The dispatcher used for notifications.</param>
     public DispatchedObservableCollection(IList<T> list, ICollectionEventDispatcher dispatcher)
-        : this(new ObservableRangeCollection<T>(list), dispatcher)
+        : this([.. list], dispatcher)
     {
     }
 
@@ -61,7 +61,7 @@ public sealed class DispatchedObservableCollection<T>(ObservableRangeCollection<
     /// <param name="collection">The collection whose elements are copied to the new collection.</param>
     /// <param name="dispatcher">The dispatcher used for notifications.</param>
     public DispatchedObservableCollection(IEnumerable<T> collection, ICollectionEventDispatcher dispatcher)
-        : this(new ObservableRangeCollection<T>(collection), dispatcher)
+        : this([.. collection], dispatcher)
     {
     }
 

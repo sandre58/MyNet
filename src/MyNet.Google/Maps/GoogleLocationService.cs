@@ -114,7 +114,7 @@ public class GoogleLocationService(string apikey, bool useHttps, Func<string, XD
 
         var country = ResolveCountry(addressCountry, addressCountryCode);
         var streetParts = new[] { addressStreetNumber, addressRoute, addressSubLocality }.Where(static x => x is not null);
-        return new(string.Join(" ", streetParts), addressPostalCode, addressLocality, country, new(latitude, longitude));
+        return new Address(string.Join(" ", streetParts), addressPostalCode, addressLocality, country, new Coordinates(latitude, longitude));
     }
 
     /// <summary>

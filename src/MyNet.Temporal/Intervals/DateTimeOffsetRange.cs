@@ -48,5 +48,5 @@ public sealed class DateTimeOffsetRange(DateTimeOffset start, DateTimeOffset end
     protected override DateTimeOffsetRange Create(IntervalBoundary<DateTimeOffset>? start, IntervalBoundary<DateTimeOffset>? end) =>
         !start.HasValue || !end.HasValue
             ? throw new InvalidOperationException("DateTimeOffsetRange must be bounded.")
-            : new(start.Value.Value, end.Value.Value, start.Value.IsInclusive, end.Value.IsInclusive);
+            : new DateTimeOffsetRange(start.Value.Value, end.Value.Value, start.Value.IsInclusive, end.Value.IsInclusive);
 }

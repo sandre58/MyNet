@@ -69,11 +69,11 @@ public sealed class SingleTaskDeferrer : IDisposable, IDeferrable, ISuspendable
         if (throttleMilliseconds < 0)
             ArgumentOutOfRangeException.ThrowIfNegative(throttleMilliseconds);
 
-        _deferredAction = new(FlushDeferredRequest);
+        _deferredAction = new DeferredAction(FlushDeferredRequest);
         _debouncer = throttleMilliseconds > 0 ? new Debouncer(throttleMilliseconds) : null;
         _onRunningChanged = onRunningChanged;
 
-        _runner = new(
+        _runner = new SingleTaskRunner(
             action,
             OnRunningChanged,
             onCancelled,

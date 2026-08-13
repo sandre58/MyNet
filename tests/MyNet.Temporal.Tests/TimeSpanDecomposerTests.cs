@@ -27,7 +27,7 @@ public sealed class TimeSpanDecomposerTests
         var result = TimeSpan.FromSeconds(59).Decompose(options);
 
         Assert.Single(result);
-        Assert.Equal(new(59, TimeUnit.Second), result[0]);
+        Assert.Equal(new TimeUnitValue(59, TimeUnit.Second), result[0]);
     }
 
     [Fact]
@@ -40,8 +40,8 @@ public sealed class TimeSpanDecomposerTests
             .MaxComponents(2));
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(new(1, TimeUnit.Hour), result[0]);
-        Assert.Equal(new(3, TimeUnit.Minute), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Hour), result[0]);
+        Assert.Equal(new TimeUnitValue(3, TimeUnit.Minute), result[1]);
     }
 
     [Fact]
@@ -55,9 +55,9 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Equal(3, result.Count);
-        Assert.Equal(new(1, TimeUnit.Hour), result[0]);
-        Assert.Equal(new(2, TimeUnit.Minute), result[1]);
-        Assert.Equal(new(3, TimeUnit.Second), result[2]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Hour), result[0]);
+        Assert.Equal(new TimeUnitValue(2, TimeUnit.Minute), result[1]);
+        Assert.Equal(new TimeUnitValue(3, TimeUnit.Second), result[2]);
     }
 
     [Fact]
@@ -86,8 +86,8 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(new(1, TimeUnit.Week), result[0]);
-        Assert.Equal(new(3, TimeUnit.Day), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Week), result[0]);
+        Assert.Equal(new TimeUnitValue(3, TimeUnit.Day), result[1]);
     }
 
     [Fact]
@@ -101,8 +101,8 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(new(1, TimeUnit.Month), result[0]);
-        Assert.Equal(new(1, TimeUnit.Day), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Month), result[0]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Day), result[1]);
         Assert.DoesNotContain(result, x => x.Unit == TimeUnit.Week);
     }
 
@@ -118,7 +118,7 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Single(result);
-        Assert.Equal(new(11, TimeUnit.Month), result[0]);
+        Assert.Equal(new TimeUnitValue(11, TimeUnit.Month), result[0]);
     }
 
     [Fact]
@@ -132,8 +132,8 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(new(1, TimeUnit.Hour), result[0]);
-        Assert.Equal(new(63, TimeUnit.Minute), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Hour), result[0]);
+        Assert.Equal(new TimeUnitValue(63, TimeUnit.Minute), result[1]);
     }
 
     [Fact]
@@ -147,6 +147,6 @@ public sealed class TimeSpanDecomposerTests
         });
 
         Assert.Single(result);
-        Assert.Equal(new(63, TimeUnit.Minute), result[0]);
+        Assert.Equal(new TimeUnitValue(63, TimeUnit.Minute), result[0]);
     }
 }

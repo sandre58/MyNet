@@ -29,7 +29,7 @@ public static class DateTimeOffsetExtensions
         {
             var start = dateTimeOffset <= other ? dateTimeOffset : other;
             var end = dateTimeOffset <= other ? other : dateTimeOffset;
-            return new(start, end);
+            return new DateTimeOffsetPeriod(start, end);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ public static class DateTimeOffsetExtensions
             var numberOfDaysInSameMonthNextYear = DateTime.DaysInMonth(nextYear, dateTimeOffset.Month);
 
             if (numberOfDaysInSameMonthNextYear >= dateTimeOffset.Day)
-                return new(nextYear, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
+                return new DateTimeOffset(nextYear, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
             var differenceInDays = dateTimeOffset.Day - numberOfDaysInSameMonthNextYear;
             var dateTimeOffset1 = new DateTimeOffset(nextYear, dateTimeOffset.Month, numberOfDaysInSameMonthNextYear, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
             return dateTimeOffset1.AddCalendarAmount(differenceInDays.Days());
@@ -83,7 +83,7 @@ public static class DateTimeOffsetExtensions
             var numberOfDaysInSameMonthPreviousYear = DateTime.DaysInMonth(previousYear, dateTimeOffset.Month);
 
             if (numberOfDaysInSameMonthPreviousYear >= dateTimeOffset.Day)
-                return new(previousYear, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
+                return new DateTimeOffset(previousYear, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
             var differenceInDays = dateTimeOffset.Day - numberOfDaysInSameMonthPreviousYear;
             var dateTime = new DateTimeOffset(previousYear, dateTimeOffset.Month, numberOfDaysInSameMonthPreviousYear, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Millisecond, dateTimeOffset.Offset);
             return dateTime.AddCalendarAmount(differenceInDays.Days());
@@ -336,7 +336,7 @@ public static class DateTimeOffsetExtensions
             {
                 case RoundTo.Second:
                     {
-                        rounded = new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Offset);
+                        rounded = new DateTimeOffset(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, dateTimeOffset.Second, dateTimeOffset.Offset);
                         if (dateTimeOffset.Millisecond >= 500)
                             rounded = rounded.AddSeconds(1);
                         break;
@@ -344,7 +344,7 @@ public static class DateTimeOffsetExtensions
 
                 case RoundTo.Minute:
                     {
-                        rounded = new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, 0, dateTimeOffset.Offset);
+                        rounded = new DateTimeOffset(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, dateTimeOffset.Minute, 0, dateTimeOffset.Offset);
                         if (dateTimeOffset.Second >= 30)
                             rounded = rounded.AddMinutes(1);
                         break;
@@ -352,7 +352,7 @@ public static class DateTimeOffsetExtensions
 
                 case RoundTo.Hour:
                     {
-                        rounded = new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, 0, 0, dateTimeOffset.Offset);
+                        rounded = new DateTimeOffset(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, dateTimeOffset.Hour, 0, 0, dateTimeOffset.Offset);
                         if (dateTimeOffset.Minute >= 30)
                             rounded = rounded.AddHours(1);
                         break;
@@ -360,7 +360,7 @@ public static class DateTimeOffsetExtensions
 
                 case RoundTo.Day:
                     {
-                        rounded = new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, dateTimeOffset.Offset);
+                        rounded = new DateTimeOffset(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, dateTimeOffset.Offset);
                         if (dateTimeOffset.Hour >= 12)
                             rounded = rounded.AddDays(1);
                         break;

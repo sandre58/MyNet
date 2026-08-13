@@ -94,7 +94,7 @@ public partial class ListFormatterExtensionsTests
     [Fact]
     public void HumanizeNonNull_AlwaysIgnoresNullOrWhiteSpaceItems()
     {
-        var result = new[] { "A", null, " ", "C" }.HumanizeNonNull(new() { IgnoreNullOrWhiteSpace = false });
+        var result = new[] { "A", null, " ", "C" }.HumanizeNonNull(new ListFormattingOptions { IgnoreNullOrWhiteSpace = false });
 
         Assert.Equal("A and C", NormalizeSpaces(result));
     }

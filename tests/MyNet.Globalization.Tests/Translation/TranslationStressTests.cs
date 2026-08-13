@@ -99,7 +99,7 @@ public class TranslationStressTests
             tasks.AddRange(displayStyles.Select(localStyle => Task.Run(() =>
             {
                 var options = new TranslationOptionsBuilder().WithStyle(localStyle).Build();
-                var result = translator.Translate("Message", options, new("en-US"));
+                var result = translator.Translate("Message", options, new CultureInfo("en-US"));
                 results.Add((result, localStyle));
             })));
         }
@@ -128,7 +128,7 @@ public class TranslationStressTests
                     .WithQuantity(quantity)
                     .Build();
 
-                var result = translator.Translate("Item", options, new("en-US"));
+                var result = translator.Translate("Item", options, new CultureInfo("en-US"));
                 results.Add((result, quantity));
             });
         }
@@ -158,7 +158,7 @@ public class TranslationStressTests
             tasks[i] = Task.Run(() =>
             {
                 // Try to get provider concurrently
-                providerResolver.TryGet<IInflector>(new("en-US"), out var inflector);
+                providerResolver.TryGet<IInflector>(new CultureInfo("en-US"), out var inflector);
                 Assert.NotNull(inflector);
             });
         }
@@ -180,7 +180,7 @@ public class TranslationStressTests
             tasks[i] = Task.Run(() =>
             {
                 var resourceKey = $"Resource{index}";
-                var manager = new InMemoryResourceManager(new() { ["en-US"] = new() { ["Key"] = $"Value{index}" } });
+                var manager = new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Key"] = $"Value{index}" } });
 
                 catalog.Register(resourceKey, manager);
             });
@@ -224,7 +224,7 @@ public class TranslationStressTests
             {
                 translationTasks.Add(Task.Run(() =>
                 {
-                    var manager = new InMemoryResourceManager(new() { ["en-US"] = new() { ["Key"] = "Value" } });
+                    var manager = new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Key"] = "Value" } });
 
                     catalog.Register($"Resource{index}", manager);
                 }));
@@ -290,7 +290,7 @@ public class TranslationStressTests
     private static Translator CreateTranslator()
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -312,7 +312,7 @@ public class TranslationStressTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, new StubKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext

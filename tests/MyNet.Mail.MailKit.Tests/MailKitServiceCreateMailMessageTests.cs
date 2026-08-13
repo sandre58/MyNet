@@ -125,7 +125,7 @@ public class MailKitServiceCreateMailMessageTests
                 Filename = "file.txt",
                 ContentType = "text/plain",
                 ContentId = "cid-1",
-                Data = new System.IO.MemoryStream("data"u8.ToArray())
+                Data = new System.IO.MemoryStream([.. "data"u8])
             });
 
         using var message = MailKitService.CreateMailMessage(email);

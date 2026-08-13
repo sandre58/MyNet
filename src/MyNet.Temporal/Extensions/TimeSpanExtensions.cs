@@ -80,7 +80,7 @@ public static class TimeSpanExtensions
             {
                 case RoundTo.Second:
                     {
-                        rounded = new(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+                        rounded = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
                         if (timeSpan.Milliseconds >= 500)
                         {
                             rounded += 1.Seconds();
@@ -91,7 +91,7 @@ public static class TimeSpanExtensions
 
                 case RoundTo.Minute:
                     {
-                        rounded = new(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, 0);
+                        rounded = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, 0);
                         if (timeSpan.Seconds >= 30)
                         {
                             rounded += 1.Minutes();
@@ -102,7 +102,7 @@ public static class TimeSpanExtensions
 
                 case RoundTo.Hour:
                     {
-                        rounded = new(timeSpan.Days, timeSpan.Hours, 0, 0);
+                        rounded = new TimeSpan(timeSpan.Days, timeSpan.Hours, 0, 0);
                         if (timeSpan.Minutes >= 30)
                         {
                             rounded += 1.Hours();
@@ -113,7 +113,7 @@ public static class TimeSpanExtensions
 
                 case RoundTo.Day:
                     {
-                        rounded = new(timeSpan.Days, 0, 0, 0);
+                        rounded = new TimeSpan(timeSpan.Days, 0, 0, 0);
                         if (timeSpan.Hours >= 12)
                         {
                             rounded += 1.Days();
@@ -181,27 +181,13 @@ public static class TimeSpanExtensions
             referenceDate = referenceDate.DiscardTime();
 
             var startDateTime = referenceDate.Add(timeSpan);
-            DateTime endDateTime;
-
-            if (allowOvernight && end <= timeSpan)
-            {
-                endDateTime = referenceDate.AddDays(1).Add(end);
-            }
-            else if (!allowOvernight && end < timeSpan)
-            {
-                throw new ArgumentException(
+            var endDateTime = allowOvernight && end <= timeSpan
+                ? referenceDate.AddDays(1).Add(end)
+                : !allowOvernight && end < timeSpan
+                    ? throw new ArgumentException(
                     "End time-of-day is before start; pass allowOvernight: true for overnight ranges.",
-                    nameof(end));
-            }
-            else if (!allowOvernight && end == timeSpan)
-            {
-                endDateTime = startDateTime.AddTicks(1);
-            }
-            else
-            {
-                endDateTime = referenceDate.Add(end);
-            }
-
+                    nameof(end))
+                    : !allowOvernight && end == timeSpan ? startDateTime.AddTicks(1) : referenceDate.Add(end);
             return new DateTimePeriod(startDateTime, endDateTime);
         }
     }

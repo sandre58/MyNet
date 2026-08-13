@@ -186,7 +186,7 @@ public sealed class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultEx
 
             expirationPolicy ??= defaultExpirationPolicyInitCode?.Invoke();
 
-            _dictionary[key] = new(value, expirationPolicy);
+            _dictionary[key] = new CacheStorageValueInfo<TValue>(value, expirationPolicy);
             UpdateExpirationStateUnsafe();
 
             return value;
@@ -355,7 +355,7 @@ public sealed class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultEx
         {
             expirationPolicy ??= defaultExpirationPolicyInitCode?.Invoke();
 
-            _dictionary[key] = new(item.Value, expirationPolicy);
+            _dictionary[key] = new CacheStorageValueInfo<TValue>(item.Value, expirationPolicy);
             UpdateExpirationStateUnsafe();
 
             return false;
@@ -404,7 +404,7 @@ public sealed class CacheStorage<TKey, TValue>(Func<ExpirationPolicy>? defaultEx
         }
 
         var timeSpan = _expirationTimerInterval;
-        _expirationTimer ??= new(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
+        _expirationTimer ??= new Timer(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
         _ = _expirationTimer.Change(timeSpan, timeSpan);
     }
     #endregion

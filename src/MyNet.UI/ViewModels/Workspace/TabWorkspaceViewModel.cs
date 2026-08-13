@@ -33,7 +33,7 @@ public abstract class TabWorkspaceViewModel : WorkspaceViewModel, ITabWorkspaceV
     {
         var commands = commandFactory.GetOrDefault();
 
-        Workspaces = new(_workspaces);
+        Workspaces = [with(_workspaces)];
 
         GoToTabCommand = commands.CreateRequired<object>(GoToTab, CanGoToTab);
         GoToNextTabCommand = commands.Create(GoToNextTab, CanGoToNextTab);

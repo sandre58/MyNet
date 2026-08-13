@@ -35,7 +35,7 @@ public sealed class LocalizationServiceResolver(ILocalizationFactoryRegistry reg
             throw CreateCycleException(cacheKey);
 
         var lazyProvider = _cache.GetOrAdd(cacheKey,
-            _ => new(() => ResolveWithCycleCheck<TService>(culture), LazyThreadSafetyMode.ExecutionAndPublication));
+            _ => new Lazy<object?>(() => ResolveWithCycleCheck<TService>(culture), LazyThreadSafetyMode.ExecutionAndPublication));
 
         provider = lazyProvider.Value as TService;
         return lazyProvider.Value is not null;
@@ -62,7 +62,7 @@ public sealed class LocalizationServiceResolver(ILocalizationFactoryRegistry reg
             ? $"Circular localization provider dependency detected for {requestedNode}."
             : $"Circular localization provider dependency detected: {chain} -> {requestedNode}.";
 
-        return new(message);
+        return new InvalidOperationException(message);
     }
 
     /// <summary>

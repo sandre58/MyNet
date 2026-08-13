@@ -22,51 +22,51 @@ public static class ProgresserExtensions
     {
         /// <summary>Starts a new single-step session with a string message.</summary>
         public IProgressStep<ProgressMessage> Begin(string message, params object[] parameters)
-            => progresser.Begin(new(message, parameters));
+            => progresser.Begin(new ProgressMessage(message, parameters));
 
         /// <summary>Starts a new session divided into <paramref name="numberOfSteps"/> equal sub-steps.</summary>
         public IProgressStep<ProgressMessage> Begin(int numberOfSteps, string message, params object[] parameters)
-            => progresser.Begin(numberOfSteps, new(message, parameters));
+            => progresser.Begin(numberOfSteps, new ProgressMessage(message, parameters));
 
         /// <summary>Starts a new session with custom sub-step weightings and a string message.</summary>
         public IProgressStep<ProgressMessage> Begin(IEnumerable<double> subStepWeightings, string message, params object[] parameters)
-            => progresser.Begin(subStepWeightings, new(message, parameters));
+            => progresser.Begin(subStepWeightings, new ProgressMessage(message, parameters));
 
         /// <summary>Starts a new cancellable session with a string message.</summary>
         public IProgressStep<ProgressMessage> Begin(Action cancelAction, string message, params object[] parameters)
-            => progresser.Begin(new(message, parameters), cancelAction);
+            => progresser.Begin(new ProgressMessage(message, parameters), cancelAction);
 
         /// <summary>Starts a new cancellable session divided into <paramref name="numberOfSteps"/> equal sub-steps.</summary>
         public IProgressStep<ProgressMessage> Begin(int numberOfSteps, Action cancelAction, string message, params object[] parameters)
-            => progresser.Begin(numberOfSteps, new(message, parameters), cancelAction);
+            => progresser.Begin(numberOfSteps, new ProgressMessage(message, parameters), cancelAction);
 
         /// <summary>Starts a new cancellable session with custom sub-step weightings and a string message.</summary>
         public IProgressStep<ProgressMessage> Begin(IEnumerable<double> subStepWeightings, Action cancelAction, string message, params object[] parameters)
-            => progresser.Begin(subStepWeightings, new(message, parameters), cancelAction);
+            => progresser.Begin(subStepWeightings, new ProgressMessage(message, parameters), cancelAction);
 
         /// <summary>Pushes a cancellable child step with a string message.</summary>
         public IProgressStep<ProgressMessage> StartStep(string message, params object[] parameters)
-            => progresser.StartStep(new(message, parameters));
+            => progresser.StartStep(new ProgressMessage(message, parameters));
 
         /// <summary>Pushes a cancellable child step divided into <paramref name="numberOfSteps"/> equal sub-steps.</summary>
         public IProgressStep<ProgressMessage> StartStep(int numberOfSteps, string message, params object[] parameters)
-            => progresser.StartStep(numberOfSteps, new(message, parameters));
+            => progresser.StartStep(numberOfSteps, new ProgressMessage(message, parameters));
 
         /// <summary>Pushes a cancellable child step with custom sub-step weightings and a string message.</summary>
         public IProgressStep<ProgressMessage> StartStep(IEnumerable<double> subStepWeightings, string message, params object[] parameters)
-            => progresser.StartStep(subStepWeightings, new(message, parameters));
+            => progresser.StartStep(subStepWeightings, new ProgressMessage(message, parameters));
 
         /// <summary>Pushes a non-cancellable child step with a string message.</summary>
         public IProgressStep<ProgressMessage> StartStepUncancellable(string message, params object[] parameters)
-            => progresser.StartStep(new(message, parameters), canCancel: false);
+            => progresser.StartStep(new ProgressMessage(message, parameters), canCancel: false);
 
         /// <summary>Pushes a non-cancellable child step divided into <paramref name="numberOfSteps"/> equal sub-steps.</summary>
         public IProgressStep<ProgressMessage> StartStepUncancellable(int numberOfSteps, string message, params object[] parameters)
-            => progresser.StartStep(numberOfSteps, new(message, parameters), canCancel: false);
+            => progresser.StartStep(numberOfSteps, new ProgressMessage(message, parameters), canCancel: false);
 
         /// <summary>Pushes a non-cancellable child step with custom sub-step weightings and a string message.</summary>
         public IProgressStep<ProgressMessage> StartStepUncancellable(IEnumerable<double> subStepWeightings, string message, params object[] parameters)
-            => progresser.StartStep(subStepWeightings, new(message, parameters), canCancel: false);
+            => progresser.StartStep(subStepWeightings, new ProgressMessage(message, parameters), canCancel: false);
     }
 
     // ── StartStep (child step) ───────────────────────────────────────────────

@@ -25,7 +25,7 @@ public class PropertyAccessorCacheTests
     public void Get_WithNestedProperty_ReturnsAccessorValue()
     {
         var accessor = PropertyAccessorCache<Person>.Get("Address.City");
-        var person = new Person { Address = new() { City = "Paris" } };
+        var person = new Person { Address = new Address { City = "Paris" } };
 
         Assert.Equal("Paris", accessor(person));
     }

@@ -40,5 +40,5 @@ public class ClosableNotification(string message, string title, NotificationSeve
     /// <summary>
     /// Closes the notification and raises the <see cref="CloseRequested"/> event.
     /// </summary>
-    public void RequestClose() => CloseRequested?.Invoke(this, new());
+    public void RequestClose() => CloseRequested?.Invoke(this, new CloseRequestedEventArgs());
 }

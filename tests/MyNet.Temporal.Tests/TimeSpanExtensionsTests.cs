@@ -19,8 +19,8 @@ public class TimeSpanExtensionsTests
         var result = TimeSpan.FromSeconds(3723).Decompose(TimeSpanDecompositionPresets.Humanized);
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(new(1, TimeUnit.Hour), result[0]);
-        Assert.Equal(new(2, TimeUnit.Minute), result[1]);
+        Assert.Equal(new TimeUnitValue(1, TimeUnit.Hour), result[0]);
+        Assert.Equal(new TimeUnitValue(2, TimeUnit.Minute), result[1]);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class TimeSpanExtensionsTests
         var result = TimeSpan.FromMinutes(30).Decompose(TimeSpanDecompositionPresets.Compact);
 
         Assert.Single(result);
-        Assert.Equal(new(30, TimeUnit.Minute), result[0]);
+        Assert.Equal(new TimeUnitValue(30, TimeUnit.Minute), result[0]);
     }
 
     [Fact]
@@ -42,6 +42,6 @@ public class TimeSpanExtensionsTests
             .MaxComponents(1));
 
         Assert.Single(result);
-        Assert.Equal(new(30, TimeUnit.Minute), result[0]);
+        Assert.Equal(new TimeUnitValue(30, TimeUnit.Minute), result[0]);
     }
 }

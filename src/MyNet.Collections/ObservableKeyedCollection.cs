@@ -241,23 +241,21 @@ public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollec
         base.InsertItem(index, item);
 
         // Then handle dictionary
-        if (key is not null)
+        if (key is null) return;
+        switch (_dict)
         {
             // Check threshold AFTER item is added
             // Special case: if threshold is 0, always use dictionary
-            if (_dict is not null ||
-                (_dictionaryCreationThreshold == 0 && Count > 0) ||
-                Count > _dictionaryCreationThreshold)
-            {
-                if (_dict is null)
-                {
-                    CreateDictionary();
-                }
-                else
-                {
-                    _dict.Add(key, item);
-                }
-            }
+            case null when
+                (_dictionaryCreationThreshold != 0 || Count <= 0) &&
+                Count <= _dictionaryCreationThreshold:
+                return;
+            case null:
+                CreateDictionary();
+                break;
+            default:
+                _dict.Add(key, item);
+                break;
         }
     }
 
@@ -284,26 +282,25 @@ public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollec
         base.AddRange(items);
 
         // Now update dictionary with all new items
-        if (Count > initialCount)
+        if (Count <= initialCount) return;
+
+        // Check if we should create dictionary
+        if (_dict is null && (_dictionaryCreationThreshold == 0 || Count > _dictionaryCreationThreshold))
         {
-            // Check if we should create dictionary
-            if (_dict is null && (_dictionaryCreationThreshold == 0 || Count > _dictionaryCreationThreshold))
+            // Create dictionary and it will include all items
+            CreateDictionary();
+        }
+        else if (_dict is not null)
+        {
+            // Dictionary exists, add only the new items
+            // Items were added from initialCount to Count-1
+            for (var i = initialCount; i < Count; i++)
             {
-                // Create dictionary and it will include all items
-                CreateDictionary();
-            }
-            else if (_dict is not null)
-            {
-                // Dictionary exists, add only the new items
-                // Items were added from initialCount to Count-1
-                for (var i = initialCount; i < Count; i++)
+                var item = Items[i];
+                var key = GetKeyForItem(item);
+                if (key is not null)
                 {
-                    var item = Items[i];
-                    var key = GetKeyForItem(item);
-                    if (key is not null)
-                    {
-                        _dict.TryAdd(key, item); // Use TryAdd to avoid exceptions on duplicates
-                    }
+                    _dict.TryAdd(key, item); // Use TryAdd to avoid exceptions on duplicates
                 }
             }
         }
@@ -332,11 +329,9 @@ public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollec
         for (var i = Items.Count - 1; i >= 0; i--)
         {
             var key = GetKeyForItem(Items[i]);
-            if (key is not null && set.Contains(key))
-            {
-                RemoveItem(i);
-                removedCount++;
-            }
+            if (key is null || !set.Contains(key)) continue;
+            RemoveItem(i);
+            removedCount++;
         }
 
         return removedCount;
@@ -436,7 +431,7 @@ public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollec
     {
         // Pre-allocate with current count + some headroom
         var capacity = Math.Max(Count, 16);
-        _dict = new(capacity, Comparer);
+        _dict = new Dictionary<TKey, T>(capacity, Comparer);
 
         foreach (var item in Items)
         {
@@ -452,5 +447,6 @@ public abstract class ObservableKeyedCollection<TKey, T> : ObservableRangeCollec
     /// <summary>
     /// Gets statistics about the dictionary usage.
     /// </summary>
-    protected (bool Created, int Count, int Capacity) GetDictionaryStats() => _dict is null ? (false, 0, 0) : (true, _dict.Count, _dict.EnsureCapacity(0));
+    protected (bool Created, int Count, int Capacity) GetDictionaryStats() =>
+        _dict is null ? (false, 0, 0) : (true, _dict.Count, _dict.EnsureCapacity(0));
 }

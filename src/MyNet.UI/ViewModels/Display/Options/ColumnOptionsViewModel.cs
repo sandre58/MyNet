@@ -24,7 +24,7 @@ public sealed class ColumnOptionsViewModel : ObservableCollection<DisplayColumnO
     public ColumnOptionsViewModel(IEnumerable<string>? defaultVisibleColumns = null)
     {
         if (defaultVisibleColumns is not null)
-            _defaultVisibleColumns = new(defaultVisibleColumns, StringComparer.Ordinal);
+            _defaultVisibleColumns = [with(defaultVisibleColumns, StringComparer.Ordinal)];
     }
 
     /// <summary>

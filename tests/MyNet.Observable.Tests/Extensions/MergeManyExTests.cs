@@ -148,7 +148,7 @@ public sealed class MergeManyExTests
         var parent = new Parent();
         foreach (var name in childNames)
         {
-            parent.Children.Add(new(name));
+            parent.Children.Add(new Child(name));
         }
 
         return parent;

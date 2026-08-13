@@ -22,7 +22,7 @@ public class TimeHumanizerOptionsTests
     public void TimeHumanizer_CanBeCreatedWithValidArguments()
     {
         var translator = new NullTranslator();
-        var translationService = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var translationService = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
         var formatter = new NullListFormatter();
         var culture = CultureInfo.GetCultureInfo("en-US");
         var localizationOptions = new TimeLocalizationOptions();
@@ -46,7 +46,7 @@ public class TimeHumanizerOptionsTests
     {
         var translator = new NullTranslator();
         var formatter = new NullListFormatter();
-        var translationService = new TranslationService(translator, new FixedCultureContext(new("en-US")));
+        var translationService = new TranslationService(translator, new FixedCultureContext(new CultureInfo("en-US")));
         var culture = CultureInfo.GetCultureInfo("en-US");
         var localizationOptions = new TimeLocalizationOptions();
 

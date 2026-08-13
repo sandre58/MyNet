@@ -21,7 +21,7 @@ public class ImportDialogViewModelTests
     public void ValidateCommand_CannotExecute_WhenNoItemsMarkedForImport()
     {
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new() { Import = false }]);
+        list.Load([new TestImportItem { Import = false }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list);
 
@@ -46,7 +46,7 @@ public class ImportDialogViewModelTests
     {
         var publisher = new Mock<INotificationPublisher>();
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new() { Import = true, FailValidation = true }]);
+        list.Load([new TestImportItem { Import = true, FailValidation = true }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list, publisher.Object);
         await sut.OnOpenedAsync();
@@ -83,7 +83,7 @@ public class ImportDialogViewModelTests
     public async Task CancelCommand_SetsCancelledResultAsync()
     {
         var list = new ImportListViewModel<TestImportItem>();
-        list.Load([new() { Import = true }]);
+        list.Load([new TestImportItem { Import = true }]);
 
         var sut = new ImportDialogViewModel<TestImportItem>(list);
         await sut.OnOpenedAsync();

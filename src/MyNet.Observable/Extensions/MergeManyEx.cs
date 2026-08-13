@@ -52,7 +52,7 @@ internal sealed class MergeManyEx<T, TDestination>(IObservable<IChangeSet<T>> so
         var observableList = _observableSelector(sourceItem).AsObservableList();
         var changeset = new ChangeSet<TDestination>(
         [
-            new(ListChangeReason.RemoveRange, observableList.Items)
+            new Change<TDestination>(ListChangeReason.RemoveRange, observableList.Items)
         ]);
         observableList.Dispose();
         observer.OnNext(changeset);

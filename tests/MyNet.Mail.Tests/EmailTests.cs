@@ -133,7 +133,7 @@ public class EmailTests
     public void To_WithEmailAddressList_AddsRecipients()
     {
         var email = Email.From("from@test.com")
-            .To([new("a@test.com"), new("b@test.com", "Bob")]);
+            .To([new EmailAddress("a@test.com"), new EmailAddress("b@test.com", "Bob")]);
 
         Assert.Equal(2, email.Data.To.Count);
         Assert.Equal("Bob", email.Data.To[1].Name);

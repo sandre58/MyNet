@@ -68,7 +68,7 @@ public sealed class SelectionAndWrapperBehaviorTests
         owner.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
 
         changed.Clear();
-        owner.Wrapper = new() { Name = "b" };
+        owner.Wrapper = new Child { Name = "b" };
 
         Assert.Contains($"{nameof(OwnerWithWrapper.Wrapper)}.{nameof(Child.Name)}", changed);
     }
@@ -213,7 +213,7 @@ public sealed class SelectionAndWrapperBehaviorTests
                 if (field == value)
                     return;
                 field = value;
-                PropertyChanged?.Invoke(this, new(nameof(Name)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
             }
         }
 

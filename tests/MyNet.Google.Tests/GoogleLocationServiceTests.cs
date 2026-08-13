@@ -132,7 +132,7 @@ public sealed class GoogleLocationServiceTests
         Assert.Equal("75001", address.PostalCode);
         Assert.Equal("10 Rue de Rivoli ", address.Street);
         Assert.Equal(Country.France, address.Country);
-        Assert.Equal(new(48.8566, 2.3522), address.Coordinates);
+        Assert.Equal(new Coordinates(48.8566, 2.3522), address.Coordinates);
     }
 
     [Fact]
@@ -233,6 +233,6 @@ public sealed class GoogleLocationServiceTests
                 return doc;
             };
 
-        return new("test-key", true, loadX, loadXml);
+        return new GoogleLocationService("test-key", true, loadX, loadXml);
     }
 }

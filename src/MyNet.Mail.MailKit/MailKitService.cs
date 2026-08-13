@@ -187,7 +187,7 @@ public sealed partial class MailKitService(SmtpClientOptions smtpClientOptions, 
                 return Directory.Exists(smtpClientOptions.MailPickupDirectory);
             }
 
-            client = new();
+            client = new SmtpClient();
             await ConnectAndAuthenticateAsync(client, CancellationToken.None).ConfigureAwait(false);
             await client.DisconnectAsync(true, CancellationToken.None).ConfigureAwait(false);
             return true;

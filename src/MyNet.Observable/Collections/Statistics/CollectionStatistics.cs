@@ -186,9 +186,9 @@ internal sealed class TimeSpanStatisticsComputer : IStatisticsComputer<TimeSpan>
     {
         var ticks = values.Select(v => v.Ticks).ToList();
         return (
-            new(ticks.Sum()),
-            new((long)ticks.Average()),
-            new(ticks.Min()),
-            new(ticks.Max()));
+            new TimeSpan(ticks.Sum()),
+            new TimeSpan((long)ticks.Average()),
+            new TimeSpan(ticks.Min()),
+            new TimeSpan(ticks.Max()));
     }
 }

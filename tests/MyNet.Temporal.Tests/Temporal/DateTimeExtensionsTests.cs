@@ -6,7 +6,6 @@
 
 using System;
 using System.Globalization;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -106,8 +105,8 @@ public class DateTimeExtensionsTests
     {
         var originalPointInTime = new DateTime(1976, 4, 30, 0, 0, 0, DateTimeKind.Utc);
 
-        Assert.Equal(1.Months().Before(originalPointInTime), new(1976, 3, 30, 0, 0, 0, DateTimeKind.Utc));
-        Assert.Equal(1.Months().From(originalPointInTime), new(1976, 5, 30, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(1.Months().Before(originalPointInTime), new DateTime(1976, 3, 30, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(1.Months().From(originalPointInTime), new DateTime(1976, 5, 30, 0, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
@@ -115,7 +114,7 @@ public class DateTimeExtensionsTests
     {
         var originalPointInTime = new DateTime(1976, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var fluentTimeSpan = 1.Months();
-        Assert.Equal(new(1976, 2, 1, 0, 0, 0, DateTimeKind.Utc), originalPointInTime.AddCalendarAmount(fluentTimeSpan));
+        Assert.Equal(new DateTime(1976, 2, 1, 0, 0, 0, DateTimeKind.Utc), originalPointInTime.AddCalendarAmount(fluentTimeSpan));
     }
 
     [Fact]
@@ -123,7 +122,7 @@ public class DateTimeExtensionsTests
     {
         var originalPointInTime = new DateTime(1976, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var fluentTimeSpan = 1.Months();
-        Assert.Equal(new(1976, 1, 1, 0, 0, 0, DateTimeKind.Utc), originalPointInTime.SubtractCalendarAmount(fluentTimeSpan));
+        Assert.Equal(new DateTime(1976, 1, 1, 0, 0, 0, DateTimeKind.Utc), originalPointInTime.SubtractCalendarAmount(fluentTimeSpan));
     }
 
     [Fact]
@@ -131,8 +130,8 @@ public class DateTimeExtensionsTests
     {
         var originalPointInTime = new DateTime(2004, 2, 29, 0, 0, 0, DateTimeKind.Utc);
 
-        Assert.Equal(1.Years().Before(originalPointInTime), new(2003, 2, 28, 0, 0, 0, DateTimeKind.Utc));
-        Assert.Equal(1.Years().From(originalPointInTime), new(2005, 2, 28, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(1.Years().Before(originalPointInTime), new DateTime(2003, 2, 28, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(1.Years().From(originalPointInTime), new DateTime(2005, 2, 28, 0, 0, 0, DateTimeKind.Utc));
     }
 
     [Theory]
@@ -283,8 +282,8 @@ public class DateTimeExtensionsTests
     public void BasicTests()
     {
         var now = DateTime.Now;
-        Assert.Equal(new(now.Year, now.Month, now.Day, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Now.EndOfDay());
-        Assert.Equal(new(now.Year, now.Month, now.Day, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Now.BeginningOfDay());
+        Assert.Equal(new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Now.EndOfDay());
+        Assert.Equal(new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Now.BeginningOfDay());
 
         var firstBirthDay = new DateTime(1977, 12, 31, 17, 0, 0, 0, DateTimeKind.Utc);
         Assert.Equal(firstBirthDay + new TimeSpan(1, 0, 5, 0, 0), firstBirthDay.AddCalendarAmount(1.Days()).AddCalendarAmount(5.Minutes()));
@@ -295,25 +294,25 @@ public class DateTimeExtensionsTests
         Assert.Equal(now + TimeSpan.FromDays(7), now.WeekAfter());
         Assert.Equal(now - TimeSpan.FromDays(7), now.WeekEarlier());
 
-        Assert.Equal(new(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2008, 12, 31, 0, 0, 0, DateTimeKind.Utc).AddCalendarAmount(1.Days()));
-        Assert.Equal(new(2009, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddCalendarAmount(1.Days()));
+        Assert.Equal(new DateTime(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2008, 12, 31, 0, 0, 0, DateTimeKind.Utc).AddCalendarAmount(1.Days()));
+        Assert.Equal(new DateTime(2009, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddCalendarAmount(1.Days()));
 
         var sampleDate = new DateTime(2009, 1, 1, 13, 0, 0, 0, DateTimeKind.Utc);
-        Assert.Equal(new(2009, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), sampleDate.Noon());
-        Assert.Equal(new(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), sampleDate.Midnight());
+        Assert.Equal(new DateTime(2009, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), sampleDate.Noon());
+        Assert.Equal(new DateTime(2009, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), sampleDate.Midnight());
 
         Assert.Equal(3.Days() + 3.Days(), 6.Days());
         Assert.Equal(102.Days() - 3.Days(), 99.Days());
 
         Assert.Equal(24.Hours(), 1.Days());
 
-        sampleDate = new(2008, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        sampleDate = new DateTime(2008, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         Assert.Equal(3.Days().Since(sampleDate), sampleDate.AddCalendarAmount(3.Days()));
 
         var saturday = new DateTime(2008, 10, 25, 12, 0, 0, DateTimeKind.Utc);
-        Assert.Equal(new(2008, 11, 1, 12, 0, 0, DateTimeKind.Utc), saturday.Next(DayOfWeek.Saturday));
+        Assert.Equal(new DateTime(2008, 11, 1, 12, 0, 0, DateTimeKind.Utc), saturday.Next(DayOfWeek.Saturday));
 
-        Assert.Equal(new(2008, 10, 18, 12, 0, 0, DateTimeKind.Utc), saturday.Previous(DayOfWeek.Saturday));
+        Assert.Equal(new DateTime(2008, 10, 18, 12, 0, 0, DateTimeKind.Utc), saturday.Previous(DayOfWeek.Saturday));
     }
 
     [Fact]
@@ -586,7 +585,7 @@ public class DateTimeExtensionsTests
     [InlineData("2011-06-22T06:40:20.005")]
     [InlineData("2011-12-31T06:40:20.005")]
     [InlineData("2011-01-01T06:40:20.005")]
-    public void FirstDayOfYearBasicTest(string value) => Assert.Equal(new(2011, 1, 1, 6, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).FirstDayOfYear());
+    public void FirstDayOfYearBasicTest(string value) => Assert.Equal(new DateTime(2011, 1, 1, 6, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).FirstDayOfYear());
 
     [Theory]
     [InlineData("2011-12-24T06:40:20.005")]
@@ -597,14 +596,14 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 25, 06, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).LastDayOfWeek());
+        Assert.Equal(new DateTime(2011, 12, 25, 06, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).LastDayOfWeek());
     }
 
     [Theory]
     [InlineData("2011-02-13T06:40:20.005")]
     [InlineData("2011-01-01T06:40:20.005")]
     [InlineData("2011-12-31T06:40:20.005")]
-    public void LastDayOfYearBasicTest(string value) => Assert.Equal(new(2011, 12, 31, 06, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).LastDayOfYear());
+    public void LastDayOfYearBasicTest(string value) => Assert.Equal(new DateTime(2011, 12, 31, 06, 40, 20, 5, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).LastDayOfYear());
 
     [Fact]
     public void PreviousMonthBasicTest()
@@ -714,7 +713,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 19, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
+        Assert.Equal(new DateTime(2011, 12, 19, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
     }
 
     [Theory]
@@ -726,7 +725,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 25, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
+        Assert.Equal(new DateTime(2011, 12, 25, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
     }
 
     [Theory]
@@ -738,7 +737,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 18, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
+        Assert.Equal(new DateTime(2011, 12, 18, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfWeek());
     }
 
     [Theory]
@@ -750,7 +749,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 24, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
+        Assert.Equal(new DateTime(2011, 12, 24, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfWeek());
     }
 
     [Theory]
@@ -762,7 +761,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfMonth());
+        Assert.Equal(new DateTime(2011, 12, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfMonth());
     }
 
     [Theory]
@@ -774,7 +773,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Sunday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfMonth());
+        Assert.Equal(new DateTime(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfMonth());
     }
 
     [Theory]
@@ -786,7 +785,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 10, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfQuarter());
+        Assert.Equal(new DateTime(2011, 10, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfQuarter());
     }
 
     [Theory]
@@ -798,7 +797,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfQuarter());
+        Assert.Equal(new DateTime(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfQuarter());
     }
 
     [Theory]
@@ -810,7 +809,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 01, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfYear());
+        Assert.Equal(new DateTime(2011, 01, 01, 0, 0, 0, 0, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfYear());
     }
 
     [Theory]
@@ -822,7 +821,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfYear());
+        Assert.Equal(new DateTime(2011, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfYear());
     }
 
     [Theory]
@@ -834,7 +833,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2010, 01, 01, 00, 00, 00, 000, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfDecade());
+        Assert.Equal(new DateTime(2010, 01, 01, 00, 00, 00, 000, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).BeginningOfDecade());
     }
 
     [Theory]
@@ -846,7 +845,7 @@ public class DateTimeExtensionsTests
         var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
         culture.DateTimeFormat.FirstDayOfWeek = DayOfWeek.Monday;
         CultureInfo.CurrentCulture = culture;
-        Assert.Equal(new(2019, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfDecade());
+        Assert.Equal(new DateTime(2019, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), DateTime.Parse(value, CultureInfo.InvariantCulture).EndOfDecade());
     }
 
     [Theory]

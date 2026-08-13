@@ -280,7 +280,7 @@ public static class DateTimeExtensions
             var numberOfDaysInSameMonthNextYear = DateTime.DaysInMonth(nextYear, dateTime.Month);
 
             if (numberOfDaysInSameMonthNextYear >= dateTime.Day)
-                return new(nextYear, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
+                return new DateTime(nextYear, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
 
             var differenceInDays = dateTime.Day - numberOfDaysInSameMonthNextYear;
             var dateTime1 = new DateTime(nextYear, dateTime.Month, numberOfDaysInSameMonthNextYear, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
@@ -297,7 +297,7 @@ public static class DateTimeExtensions
             var numberOfDaysInSameMonthPreviousYear = DateTime.DaysInMonth(previousYear, dateTime.Month);
 
             if (numberOfDaysInSameMonthPreviousYear >= dateTime.Day)
-                return new(previousYear, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
+                return new DateTime(previousYear, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
 
             var differenceInDays = dateTime.Day - numberOfDaysInSameMonthPreviousYear;
             var dateTime1 = new DateTime(previousYear, dateTime.Month, numberOfDaysInSameMonthPreviousYear, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
@@ -565,7 +565,7 @@ public static class DateTimeExtensions
             {
                 case RoundTo.Second:
                     {
-                        rounded = new(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
+                        rounded = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
                         if (dateTime.Millisecond >= 500)
                         {
                             rounded = rounded.AddSeconds(1);
@@ -576,7 +576,7 @@ public static class DateTimeExtensions
 
                 case RoundTo.Minute:
                     {
-                        rounded = new(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
+                        rounded = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
                         if (dateTime.Second >= 30)
                         {
                             rounded = rounded.AddMinutes(1);
@@ -587,7 +587,7 @@ public static class DateTimeExtensions
 
                 case RoundTo.Hour:
                     {
-                        rounded = new(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, dateTime.Kind);
+                        rounded = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, dateTime.Kind);
                         if (dateTime.Minute >= 30)
                         {
                             rounded = rounded.AddHours(1);
@@ -598,7 +598,7 @@ public static class DateTimeExtensions
 
                 case RoundTo.Day:
                     {
-                        rounded = new(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, dateTime.Kind);
+                        rounded = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, dateTime.Kind);
                         if (dateTime.Hour >= 12)
                         {
                             rounded = rounded.AddDays(1);

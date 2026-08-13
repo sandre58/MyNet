@@ -47,7 +47,7 @@ public static class DateRangeExtensions
                     monthEnd = left.End.Value.Value;
                 }
 
-                yield return new(monthStart, monthEnd);
+                yield return new DateRange(monthStart, monthEnd);
 
                 current = current.AddMonths(1);
             }
@@ -80,7 +80,7 @@ public static class DateRangeExtensions
                     weekEnd = left.End.Value.Value;
                 }
 
-                yield return new(weekStart, weekEnd);
+                yield return new DateRange(weekStart, weekEnd);
 
                 current = weekEnd.AddDays(1);
             }

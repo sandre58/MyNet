@@ -36,7 +36,7 @@ public static class StringExtensions
                 .Concat(parameters.SelectMany(string.SplitAndSanitizeSegments));
 
             var relativePath = string.Join(RelativeUriSeparator, allSegments);
-            return new(relativePath, UriKind.Relative);
+            return new Uri(relativePath, UriKind.Relative);
         }
 
         /// <summary>

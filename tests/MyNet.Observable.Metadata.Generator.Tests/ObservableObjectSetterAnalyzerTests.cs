@@ -114,12 +114,12 @@ public sealed class ObservableObjectSetterAnalyzerTests
 
     private static CSharpCompilation CreateCompilation(string source)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(source, new(LanguageVersion.Preview));
+        var syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview));
 
         return CSharpCompilation.Create(
             assemblyName: "ObservableObjectSetterAnalyzerTests",
             syntaxTrees: [syntaxTree],
             references: MetadataProviderGeneratorTests.GetMetadataReferences(),
-            options: new(OutputKind.DynamicallyLinkedLibrary));
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 }

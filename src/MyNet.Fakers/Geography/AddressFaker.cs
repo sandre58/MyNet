@@ -30,7 +30,7 @@ public sealed class AddressFaker(
         var postal = PostalCode(culture);
         var country = countryFaker.Country();
 
-        return new(
+        return new Address(
             Street: street,
             PostalCode: postal,
             City: city,
@@ -62,6 +62,6 @@ public sealed class AddressFaker(
         var lat = random.Double(-90, 90);
         var lon = random.Double(-180, 180);
 
-        return new(lat, lon);
+        return new Coordinates(lat, lon);
     }
 }

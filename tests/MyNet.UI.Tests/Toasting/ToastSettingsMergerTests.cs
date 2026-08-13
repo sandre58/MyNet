@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using MyNet.Primitives;
 using MyNet.Temporal;
 using MyNet.UI.Notifications.Models;
 using MyNet.UI.Toasting.Settings;
@@ -36,10 +35,10 @@ public sealed class ToastSettingsMergerTests
     {
         var notification = new MessageNotification("hello")
         {
-            ToastSettings = new() { Duration = 2.Seconds() }
+            ToastSettings = new ToastSettingsOverrides { Duration = 2.Seconds() }
         };
 
-        var settings = ToastSettingsMerger.Merge(notification, new()
+        var settings = ToastSettingsMerger.Merge(notification, new ToastManagerOptions
         {
             DefaultClosingStrategy = ToastClosingStrategy.AutoClose,
             DefaultFreezeOnMouseEnter = true
@@ -55,7 +54,7 @@ public sealed class ToastSettingsMergerTests
     {
         var settings = ToastSettingsMerger.Merge(
             new ClosableNotification("message", "title", NotificationSeverity.Information),
-            new() { DefaultClosingStrategy = ToastClosingStrategy.AutoClose });
+            new ToastManagerOptions { DefaultClosingStrategy = ToastClosingStrategy.AutoClose });
 
         settings.ClosingStrategy.Should().Be(ToastClosingStrategy.Both);
     }
@@ -65,7 +64,7 @@ public sealed class ToastSettingsMergerTests
     {
         var settings = ToastSettingsMerger.Merge(
             new ClosableNotification("message", "title", NotificationSeverity.Information),
-            new() { DefaultClosingStrategy = ToastClosingStrategy.None });
+            new ToastManagerOptions { DefaultClosingStrategy = ToastClosingStrategy.None });
 
         settings.ClosingStrategy.Should().Be(ToastClosingStrategy.CloseButton);
     }
@@ -75,7 +74,7 @@ public sealed class ToastSettingsMergerTests
     {
         var notification = new ClosableNotification("message", "title", NotificationSeverity.Information)
         {
-            ToastSettings = new() { ClosingStrategy = ToastClosingStrategy.CloseButton }
+            ToastSettings = new ToastSettingsOverrides { ClosingStrategy = ToastClosingStrategy.CloseButton }
         };
 
         var settings = ToastSettingsMerger.Merge(notification);

@@ -22,9 +22,9 @@ public sealed class RegistryRecentFileRepositoryTests
     private readonly InMemoryRegistryService _registry = new();
     private readonly RegistryRecentFileRepository _repository;
 
-    public RegistryRecentFileRepositoryTests() => _repository = new(
+    public RegistryRecentFileRepositoryTests() => _repository = new RegistryRecentFileRepository(
         _registry,
-        new()
+        new RecentFilesOptions
         {
             BasePath = "Software\\MyNetRecentFileTests",
             MaxEntries = 2,
@@ -180,7 +180,7 @@ public sealed class RegistryRecentFileRepositoryTests
             }
 
             var storagePath = RegistryPath.Combine(entry.Path.ToString(), Guid.NewGuid().ToString("N"));
-            _entries.Add(new(storagePath, recentEntry));
+            _entries.Add(new RegistryEntry<RegistryRecentFileEntry>(storagePath, recentEntry));
         }
 
         public RegistryEntry<T>? Get<T>(RegistryPath path)
@@ -192,10 +192,12 @@ public sealed class RegistryRecentFileRepositoryTests
 
         public IEnumerable<RegistryEntry<T>> GetAll<T>(RegistryPath parent)
             where T : new()
-            => _entries
-                .Where(x => x.Path.ToString().StartsWith(parent + "\\", StringComparison.OrdinalIgnoreCase))
-                .Select(x => new RegistryEntry<T>(x.Path, (T)(object)x.Item))
-                .ToList();
+            =>
+            [
+                .. _entries
+                    .Where(x => x.Path.ToString().StartsWith(parent + "\\", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => new RegistryEntry<T>(x.Path, (T)(object)x.Item))
+            ];
 
         public void Remove(RegistryPath path)
         {

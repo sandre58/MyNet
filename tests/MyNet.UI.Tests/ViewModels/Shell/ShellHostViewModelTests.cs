@@ -17,6 +17,7 @@ using MyNet.UI.Tests.Loading;
 using MyNet.UI.Theming;
 using MyNet.UI.Threading;
 using MyNet.UI.ViewModels.Shell;
+using MyNet.UI.ViewModels.Shell.Chrome;
 using MyNet.UI.ViewModels.Shell.FileMenu;
 using MyNet.UI.ViewModels.Shell.Host;
 using MyNet.UI.ViewModels.Shell.Notifications;
@@ -62,7 +63,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void CloseFileMenuContent_ClearsDrawerAndContent()
     {
-        var sut = CreateSut([new()]);
+        var sut = CreateSut([new TestWorkspaceViewModel()]);
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         sut.CloseFileMenuContent();
@@ -74,7 +75,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void SetFileMenuContentVisibility_ToggleWhenOpenWithSameContent_ClosesDrawer()
     {
-        var sut = CreateSut([new()]);
+        var sut = CreateSut([new TestWorkspaceViewModel()]);
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         sut.SetFileMenuContentVisibility<TestWorkspaceViewModel>(ShellDrawerAction.Toggle);
@@ -86,7 +87,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void SetNotificationsDrawer_Toggle_FlipsState()
     {
-        var sut = CreateSut([new()]);
+        var sut = CreateSut([new TestWorkspaceViewModel()]);
 
         sut.SetNotificationsDrawer(ShellDrawerAction.Show);
         sut.IsNotificationsOpen.Should().BeTrue();
@@ -98,7 +99,7 @@ public class ShellHostViewModelTests
     [Fact]
     public void OpenFileMenu_WithMutuallyExclusiveDrawers_ClosesNotifications()
     {
-        var sut = CreateSut([new()]);
+        var sut = CreateSut([new TestWorkspaceViewModel()]);
         sut.SetNotificationsDrawer(ShellDrawerAction.Show);
 
         sut.OpenFileMenuContent<TestWorkspaceViewModel>();
@@ -111,7 +112,7 @@ public class ShellHostViewModelTests
     public void Attach_RegistersShellHostProvider()
     {
         var provider = new ShellHostProvider();
-        var sut = CreateSut([new()], provider);
+        var sut = CreateSut([new TestWorkspaceViewModel()], provider);
 
         provider.Current.Should().BeSameAs(sut);
 
@@ -154,16 +155,16 @@ public class ShellHostViewModelTests
         var cultureService = new CultureService(SupportedCultures.English);
         var applicationInfo = new ApplicationInfo();
 
-        return new(
+        return new ShellHostViewModel(
             applicationInfo,
             notificationsVm,
-            new(cultureService, null, [SupportedCultures.English]),
-            new(theme.Object, registry.Object),
+            new ShellCultureViewModel(cultureService, null, [SupportedCultures.English]),
+            new ShellThemeViewModel(theme.Object, registry.Object),
             Mock.Of<IAppCommandsService>(),
             new NoOpBusyService(),
             new TaskbarProgressSource(),
             dialogService.Object,
-            new(),
+            new ShellNotificationsDrawerCoordinator(),
             fileMenu,
             shellHostProvider,
             options);

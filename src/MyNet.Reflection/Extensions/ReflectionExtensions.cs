@@ -234,12 +234,10 @@ public static class ReflectionExtensions
 
                 foreach (var property in properties)
                 {
-                    if (typeof(T).IsAssignableFrom(property.PropertyType))
-                    {
-                        var value = property.GetValue(instance);
-                        if (value is T typed)
-                            yield return typed;
-                    }
+                    if (!typeof(T).IsAssignableFrom(property.PropertyType)) continue;
+                    var value = property.GetValue(instance);
+                    if (value is T typed)
+                        yield return typed;
                 }
             }
         }

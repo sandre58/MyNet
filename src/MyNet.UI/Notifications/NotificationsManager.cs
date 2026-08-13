@@ -36,7 +36,7 @@ public sealed class NotificationsManager : INotificationsManager, IDisposable
         ISchedulerProvider schedulerProvider)
     {
         _schedulerProvider = schedulerProvider;
-        Notifications = new(_items);
+        Notifications = [with(_items)];
 
         _subscription = service.Notifications
             .ObserveOn(schedulerProvider.Ui)

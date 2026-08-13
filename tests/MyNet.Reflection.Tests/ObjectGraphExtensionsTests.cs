@@ -32,7 +32,7 @@ public class ObjectGraphExtensionsTests
         var shared = new ChildNode { Name = "shared" };
         var source = new SharedReferenceContainer { First = shared, Second = shared };
 
-        var clone = source.DeepClone(new() { PreserveReferences = false });
+        var clone = source.DeepClone(new DeepCloneOptions { PreserveReferences = false });
 
         Assert.NotNull(clone);
         Assert.NotNull(clone.First);
@@ -109,7 +109,7 @@ public class ObjectGraphExtensionsTests
     {
         var shared = new ChildNode { Name = "shared" };
         var source = new SharedReferenceContainer { First = shared, Second = shared };
-        var target = new SharedReferenceContainer { First = new(), Second = new() };
+        var target = new SharedReferenceContainer { First = new ChildNode(), Second = new ChildNode() };
 
         target.PopulateFrom(source);
 

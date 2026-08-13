@@ -22,7 +22,7 @@ public class TextSanitizationExtensionsTests
     [Fact]
     public void Sanitize_WithOptions_RespectsAdditionalCharacters()
     {
-        var sanitizer = new CharacterFilterTextSanitizer(new()
+        var sanitizer = new CharacterFilterTextSanitizer(new TextSanitizationOptions
         {
             KeepLetters = true,
             KeepDigits = true,

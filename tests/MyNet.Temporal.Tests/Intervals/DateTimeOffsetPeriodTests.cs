@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
 using MyNet.Temporal.Intervals;
 using Xunit;
 

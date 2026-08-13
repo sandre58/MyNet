@@ -25,7 +25,7 @@ public class TranslationKeyResolverTests
     {
         var resolver = CreateResolver();
 
-        var key = resolver.ResolvePluralizedKey("DurationDay", 2, new("en-US"));
+        var key = resolver.ResolvePluralizedKey("DurationDay", 2, new CultureInfo("en-US"));
 
         Assert.Equal("DurationDayPlural", key);
     }
@@ -35,7 +35,7 @@ public class TranslationKeyResolverTests
     {
         var resolver = CreateResolver();
 
-        var key = resolver.ResolvePluralizedKey("DurationDay", 0, new("en-US"));
+        var key = resolver.ResolvePluralizedKey("DurationDay", 0, new CultureInfo("en-US"));
 
         Assert.Equal("DurationDayZero", key);
     }
@@ -45,7 +45,7 @@ public class TranslationKeyResolverTests
     {
         var resolver = CreateResolver();
 
-        var key = resolver.ResolveStyledKey("TimeUnitMinute", DisplayStyle.Abbreviation, new("en-US"));
+        var key = resolver.ResolveStyledKey("TimeUnitMinute", DisplayStyle.Abbreviation, new CultureInfo("en-US"));
 
         Assert.Equal("TimeUnitMinuteAbbr", key);
     }
@@ -59,7 +59,7 @@ public class TranslationKeyResolverTests
             .WithQuantity(2)
             .Build();
 
-        var candidates = resolver.Resolve("TimeUnitMinute", options, new("en-US"));
+        var candidates = resolver.Resolve("TimeUnitMinute", options, new CultureInfo("en-US"));
 
         Assert.Contains(candidates, c => c is { Key: "TimeUnitMinuteAbbrPlural", Policy.AllowInflectionFallback: false });
         Assert.Contains(candidates, c => c is { Key: "TimeUnitMinuteAbbr", Policy.AllowInflectionFallback: false });
@@ -86,8 +86,8 @@ public class TranslationKeyResolverTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
 
         var providerResolver = new LocalizationServiceResolver(registry);
-        var pluralizationService = new PluralizationService(providerResolver, new FixedCultureContext(new("en-US")));
-        return new(pluralizationService);
+        var pluralizationService = new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US")));
+        return new TranslationKeyResolver(pluralizationService);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext

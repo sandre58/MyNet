@@ -40,7 +40,7 @@ public class ImportBySourcesDialogViewModel<T> : ImportDialogViewModel<T>
         IValidator? validator = null)
         : base(list, notificationPublisher, commandFactory, validator)
     {
-        _itemsProvider = new(sources);
+        _itemsProvider = new ImportItemsProvider<T>(sources);
 
         LoadSourceCommand = Commands.Create<IImportSourceViewModel<T>>(async x => await LoadSourceAsync(x).ConfigureAwait(false), x => x is not null);
         ReloadSourceCommand = Commands.Create(ReloadSource, CanReloadSource);
@@ -113,11 +113,9 @@ public class ImportBySourcesDialogViewModel<T> : ImportDialogViewModel<T>
 
         _itemsProvider.Reload();
 
-        if (CurrentSource is not null)
-        {
-            _itemsProvider.LoadSource(CurrentSource);
-            List.Load(_itemsProvider.Items);
-        }
+        if (CurrentSource is null) return;
+        _itemsProvider.LoadSource(CurrentSource);
+        List.Load(_itemsProvider.Items);
     }
 
     private bool CanClearLoadedItems() => ShowList;

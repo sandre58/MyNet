@@ -125,7 +125,7 @@ public static class ComparableExtensions
         /// <param name="other">The value to compare with.</param>
         /// <returns>A MinMax struct containing the minimum and maximum values.</returns>
         /// <exception cref="InvalidCastException">Thrown if the current value is null or not of type T.</exception>
-        public MinMax<T> MinMax(T other) => value is T t ? (t.CompareTo(other) >= 0 ? new(other, t) : new(t, other)) : throw new InvalidCastException();
+        public MinMax<T> MinMax(T other) => value is T t ? (t.CompareTo(other) >= 0 ? new MinMax<T>(other, t) : new MinMax<T>(t, other)) : throw new InvalidCastException();
 
         /// <summary>
         /// Returns a MinMax struct containing the minimum and maximum of the current value and another value. The method first checks if the current value is of type T and then uses the CompareTo method to compare it with the other value. If the current value is greater than or equal to the other value, it returns a MinMax struct with the other value as the minimum and the current value as the maximum; otherwise, it returns a MinMax struct with the current value as the minimum and the other value as the maximum. If the current value is null or not of type T, it throws an InvalidCastException.
@@ -133,7 +133,7 @@ public static class ComparableExtensions
         /// <param name="other">The value to compare with.</param>
         /// <returns>A MinMax struct containing the minimum and maximum values.</returns>
         /// <exception cref="InvalidCastException">Thrown if the current value is null or not of type T.</exception>
-        public OptionalMinMax<T> MinMax(T? other) => new NullableComparer<T>().Compare(value, other) >= 0 ? new(other, value as T?) : new(value as T?, other);
+        public OptionalMinMax<T> MinMax(T? other) => new NullableComparer<T>().Compare(value, other) >= 0 ? new OptionalMinMax<T>(other, value as T?) : new OptionalMinMax<T>(value as T?, other);
 
         /// <summary>
         ///     Clamps a value between a minimum and maximum value.

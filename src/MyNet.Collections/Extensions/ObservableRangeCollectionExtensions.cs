@@ -33,7 +33,7 @@ public static class ObservableRangeCollectionExtensions
         public SynchronizedObservableCollection<T> Synchronized(ICollectionSynchronizer? synchronizer = null)
         {
             ArgumentNullException.ThrowIfNull(collection);
-            return new(collection, synchronizer);
+            return new SynchronizedObservableCollection<T>(collection, synchronizer);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ public static class ObservableRangeCollectionExtensions
         {
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(dispatcher);
-            return new(collection, dispatcher);
+            return new DispatchedObservableCollection<T>(collection, dispatcher);
         }
     }
 }

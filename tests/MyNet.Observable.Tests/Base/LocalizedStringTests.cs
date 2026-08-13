@@ -34,7 +34,7 @@ public sealed class LocalizedStringTests
         sut.PropertyChanged += (_, e) => changedProperties.Add(e.PropertyName ?? string.Empty);
 
         _ = sut.Value;
-        cultureService.Raise(CultureInfo.InvariantCulture, new("fr-FR"));
+        cultureService.Raise(CultureInfo.InvariantCulture, new CultureInfo("fr-FR"));
 
         Assert.Contains(nameof(LocalizedString.Value), changedProperties);
     }
@@ -52,7 +52,7 @@ public sealed class LocalizedStringTests
         public void Raise(CultureInfo oldCulture, CultureInfo newCulture)
         {
             CurrentCulture = newCulture;
-            CultureChanged?.Invoke(this, new(oldCulture, newCulture));
+            CultureChanged?.Invoke(this, new CultureChangedEventArgs(oldCulture, newCulture));
         }
     }
 }

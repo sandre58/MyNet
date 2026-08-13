@@ -35,7 +35,7 @@ public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
     {
         Root = root ?? throw new ArgumentNullException(nameof(root));
 
-        _deferredAction = new(HandleFiltersChanged);
+        _deferredAction = new DeferredAction(HandleFiltersChanged);
         Disposables.Add(_treeSubscriptions);
 
         RebuildSubscriptions();
@@ -91,7 +91,7 @@ public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
         CurrentFilter = ComputeCurrentFilter();
         IsDirty = false;
 
-        FiltersChanged?.Invoke(this, new(CurrentFilter));
+        FiltersChanged?.Invoke(this, new FiltersChangedEventArgs<T>(CurrentFilter));
     }
 
     /// <summary>
@@ -146,17 +146,15 @@ public class FiltersViewModel<T> : ObservableObject, IFiltersViewModel<T>
                 .Subscribe(_ => _deferredAction.Request()));
         }
 
-        if (node is IFilterGroupViewModel<T> group)
+        if (node is not IFilterGroupViewModel<T> group) return disposable;
+        disposable.Add(ObserveCollectionChanges(group.Children).Subscribe(_ =>
         {
-            disposable.Add(ObserveCollectionChanges(group.Children).Subscribe(_ =>
-            {
-                RebuildSubscriptions();
-                _deferredAction.Request();
-            }));
+            RebuildSubscriptions();
+            _deferredAction.Request();
+        }));
 
-            foreach (var child in group.Children)
-                disposable.Add(Subscribe(child));
-        }
+        foreach (var child in group.Children)
+            disposable.Add(Subscribe(child));
 
         return disposable;
     }

@@ -46,5 +46,5 @@ public sealed class TimeRange(TimeOnly start, TimeOnly end) : Interval<TimeOnly,
         ? throw new InvalidOperationException("TimeRange must be bounded.")
         : !start.Value.IsInclusive || !end.Value.IsInclusive
             ? throw new InvalidOperationException("TimeRange only supports inclusive boundaries.")
-            : new(start.Value.Value, end.Value.Value);
+            : new TimeRange(start.Value.Value, end.Value.Value);
 }

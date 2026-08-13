@@ -28,7 +28,7 @@ public static class PropertyCache
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return new(type);
+        return new PropertyQuery(type);
     }
 
     /// <summary>

@@ -85,7 +85,7 @@ public sealed class MetadataApplicatorsTests
                     return;
 
                 field = value;
-                PropertyChanged?.Invoke(this, new(nameof(Name)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
             }
         }
 

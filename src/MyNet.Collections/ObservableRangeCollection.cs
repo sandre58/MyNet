@@ -35,7 +35,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
     /// </summary>
     /// <param name="capacity">The initial capacity to pre-allocate.</param>
     public ObservableRangeCollection(int capacity)
-        : base(new(capacity))
+        : base([with(capacity)])
     {
     }
 
@@ -95,7 +95,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
         {
             // NotifyCollectionChangedAction.Add with multiple items is supported in WPF
             // but can cause issues in some bindings, so we use Reset for safety
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
@@ -127,7 +127,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
 
         if (!_suspendNotifications)
         {
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
@@ -163,7 +163,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
 
         if (!_suspendNotifications)
         {
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
@@ -191,7 +191,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
 
         if (!_suspendNotifications)
         {
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
@@ -216,7 +216,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
 
         if (!_suspendNotifications)
         {
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         return itemsToRemove.Count;
@@ -282,10 +282,10 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
     /// </summary>
     protected virtual void OnCountPropertyChanged(bool sendCollectionReset = false)
     {
-        OnPropertyChanged(new(nameof(Count)));
+        OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
         if (sendCollectionReset && !_suspendNotifications)
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
     /// <summary>
@@ -340,12 +340,10 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>, IObservable
             owner._suspendNotifications = false;
 
             // Send reset notification if there were any changes
-            if (owner._deferredResetPending)
-            {
-                owner.OnCountPropertyChanged();
-                owner.OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
-                owner._deferredResetPending = false;
-            }
+            if (!owner._deferredResetPending) return;
+            owner.OnCountPropertyChanged();
+            owner.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            owner._deferredResetPending = false;
         }
     }
 }

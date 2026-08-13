@@ -65,7 +65,7 @@ public sealed class MailSmtpServiceTests
                 Filename = "doc.txt",
                 ContentType = "text/plain",
                 ContentId = "cid-1",
-                Data = new MemoryStream("content"u8.ToArray())
+                Data = new MemoryStream([.. "content"u8])
             })
             .Attach(new Attachment { Filename = "empty.bin", Data = null });
 

@@ -40,7 +40,7 @@ public sealed class CultureChangedBehavior : EventBehavior<ObservableObject, Cul
         if (IsDisposed || IsSuspended)
             return;
 
-        RaiseEvent(new(e.NewCulture));
+        RaiseEvent(new CultureChangedEvent(e.NewCulture));
     }
 
     /// <inheritdoc/>

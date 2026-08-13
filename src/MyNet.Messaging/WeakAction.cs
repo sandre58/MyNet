@@ -32,14 +32,14 @@ public class WeakAction
         {
             _staticAction = action;
             if (target != null)
-                _targetReference = new(target);
+                _targetReference = new WeakReference(target);
             return;
         }
 
         _method = action.Method;
-        _actionTargetReference = new(action.Target);
+        _actionTargetReference = new WeakReference(action.Target);
         _liveReference = keepTargetAlive ? action.Target : null;
-        _targetReference = new(target);
+        _targetReference = new WeakReference(target);
     }
 
     /// <summary>
@@ -93,16 +93,14 @@ public class WeakAction
         }
 
         var actionTarget = ActionTarget;
-        if (_method != null && actionTarget != null)
+        if (_method == null || actionTarget == null) return;
+        try
         {
-            try
-            {
-                _ = _method.Invoke(actionTarget, null);
-            }
-            catch
-            {
-                // Silently ignore invocation errors
-            }
+            _ = _method.Invoke(actionTarget, null);
+        }
+        catch
+        {
+            // Silently ignore invocation errors
         }
     }
 
@@ -143,14 +141,14 @@ public class WeakAction<T> : IExecuteWithObject
         {
             _staticAction = action;
             if (target != null)
-                _targetReference = new(target);
+                _targetReference = new WeakReference(target);
             return;
         }
 
         _method = action.Method;
-        _actionTargetReference = new(action.Target);
+        _actionTargetReference = new WeakReference(action.Target);
         _liveReference = keepTargetAlive ? action.Target : null;
-        _targetReference = new(target);
+        _targetReference = new WeakReference(target);
     }
 
     /// <summary>
@@ -201,16 +199,14 @@ public class WeakAction<T> : IExecuteWithObject
         }
 
         var actionTarget = ActionTarget;
-        if (_method != null && actionTarget != null)
+        if (_method == null || actionTarget == null) return;
+        try
         {
-            try
-            {
-                _ = _method.Invoke(actionTarget, [parameter]);
-            }
-            catch
-            {
-                // Silently ignore invocation errors
-            }
+            _ = _method.Invoke(actionTarget, [parameter]);
+        }
+        catch
+        {
+            // Silently ignore invocation errors
         }
     }
 

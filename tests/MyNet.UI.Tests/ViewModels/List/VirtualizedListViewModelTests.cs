@@ -52,17 +52,17 @@ public sealed class VirtualizedListViewModelTests
 
     private static VirtualizedListViewModel<string> CreateSut(out ObservableCollection<string> source)
     {
-        source = new(["A", "B", "C", "D", "E", "F"]);
+        source = [with(["A", "B", "C", "D", "E", "F"])];
 
         var providerMock = new Mock<IListDataProvider<string>>();
-        providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<string>(source));
-        providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<string>(source));
+        providerMock.Setup(p => p.Source).Returns([with(source)]);
+        providerMock.Setup(p => p.FilteredItems).Returns([with(source)]);
+        providerMock.Setup(p => p.Items).Returns([with(source)]);
         providerMock.Setup(p => p.FilteredCount).Returns(source.Count);
         providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<string>>());
         providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<string>>());
         providerMock.Setup(p => p.ConnectGroups()).Returns(Return<IReadOnlyList<CollectionGroup<string>>>([]));
 
-        return new(providerMock.Object);
+        return new VirtualizedListViewModel<string>(providerMock.Object);
     }
 }

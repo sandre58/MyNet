@@ -74,7 +74,7 @@ public abstract partial class AutoSaveEngine(TimeSpan interval, ILogger? logger 
 
         _enabled = true;
 
-        _cts = new();
+        _cts = new CancellationTokenSource();
         _loopTask = RunLoopAsync(_cts.Token);
     }
 

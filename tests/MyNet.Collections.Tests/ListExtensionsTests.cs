@@ -86,14 +86,14 @@ public sealed class ListExtensionsTests
     {
         var destination = new List<SyncItem>
         {
-            new(1, "keep-old"),
-            new(2, "remove-me")
+            new(1),
+            new(2)
         };
 
         var source = new[]
         {
-            new SyncItem(1, "keep-new"),
-            new SyncItem(3, "add-me")
+            new SyncItem(1),
+            new SyncItem(3)
         };
 
         var removed = new List<int>();
@@ -113,7 +113,7 @@ public sealed class ListExtensionsTests
         Assert.Equal([3], added);
     }
 
-    private sealed record SyncItem(int Id, string Name);
+    private sealed record SyncItem(int Id);
 
     private sealed class TestList<T> : IList<T>
     {

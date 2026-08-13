@@ -64,7 +64,7 @@ public sealed class NavigationService(
             var context = journal.PeekBack();
 
             return context is null
-                ? new(NavigationStatus.NotFound)
+                ? new NavigationResult(NavigationStatus.NotFound)
                 : await NavigateInternalAsync(context.To, NavigationMode.Back, context.Parameters, cancellationToken).ConfigureAwait(false);
         }
         finally
@@ -83,7 +83,7 @@ public sealed class NavigationService(
             var context = journal.PeekForward();
 
             return context is null
-                ? new(NavigationStatus.NotFound)
+                ? new NavigationResult(NavigationStatus.NotFound)
                 : await NavigateInternalAsync(context.To, NavigationMode.Forward, context.Parameters, cancellationToken).ConfigureAwait(false);
         }
         finally
@@ -130,7 +130,7 @@ public sealed class NavigationService(
             var guardResult = await ExecuteGuardsAsync(previousContext, context, cancellationToken).ConfigureAwait(false);
             if (!guardResult)
             {
-                return new(NavigationStatus.Cancelled, "Navigation blocked by guard.");
+                return new NavigationResult(NavigationStatus.Cancelled, "Navigation blocked by guard.");
             }
 
             // 2. Lifecycle: leaving the current page (source only)
@@ -165,11 +165,11 @@ public sealed class NavigationService(
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return new(NavigationStatus.Cancelled);
+            return new NavigationResult(NavigationStatus.Cancelled);
         }
         catch (Exception exception)
         {
-            return new(NavigationStatus.Failed, exception.Message, exception);
+            return new NavigationResult(NavigationStatus.Failed, exception.Message, exception);
         }
 
         static Task<NavigationResult> core() => Task.FromResult(new NavigationResult(NavigationStatus.Succeeded));
@@ -243,13 +243,15 @@ public sealed class NavigationService(
                 if (previousContext is not null)
                     journal.PushBack(previousContext);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
     }
 
     private void RaiseStateChanged()
         => StateChanged?.Invoke(
             this,
-            new(CurrentContext, CanGoBack, CanGoForward));
+            new NavigationStateChangedEventArgs(CurrentContext, CanGoBack, CanGoForward));
 
     /// <inheritdoc />
     public void Dispose() => _navigationLock.Dispose();

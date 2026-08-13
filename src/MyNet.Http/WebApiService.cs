@@ -68,7 +68,7 @@ public sealed class WebApiService : IWebApiService
     }
 
     /// <inheritdoc/>
-    public Task<Stream> GetStreamAsync(string str) => GetStreamAsync(new(str, UriKind.RelativeOrAbsolute), CancellationToken.None);
+    public Task<Stream> GetStreamAsync(string str) => GetStreamAsync(new Uri(str, UriKind.RelativeOrAbsolute), CancellationToken.None);
 
     /// <inheritdoc/>
     public Task<T> GetDataAsync<T>(string str, CancellationToken cancellationToken, params ApiParameter[] parameters) => GetDataAsync<T>(ToWebUri(str, parameters), cancellationToken);
@@ -104,7 +104,7 @@ public sealed class WebApiService : IWebApiService
     public Task<TReturn> PatchDataAsync<TParam, TReturn>(string str, TParam value, CancellationToken cancellationToken, params ApiParameter[] parameters) => PatchDataAsync<TParam, TReturn>(ToWebUri(str, parameters), value, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T> PatchDataAsync<TParam, T>(Uri uri, TParam value, CancellationToken cancellationToken = default) => SendRequestAsync<T>(new("PATCH"), uri, CreateContent(value), cancellationToken);
+    public Task<T> PatchDataAsync<TParam, T>(Uri uri, TParam value, CancellationToken cancellationToken = default) => SendRequestAsync<T>(new HttpMethod("PATCH"), uri, CreateContent(value), cancellationToken);
 
     /// <inheritdoc/>
     public Task DeleteDataAsync(string str, CancellationToken cancellationToken, params ApiParameter[] parameters) => DeleteDataAsync(ToWebUri(str, parameters), cancellationToken);
@@ -194,9 +194,9 @@ public sealed class WebApiService : IWebApiService
         var client = new HttpClient(handler) { BaseAddress = serverUrl };
 
         client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new("application/json"));
-        client.DefaultRequestHeaders.Accept.Add(new("application/problem+json"));
-        client.DefaultRequestHeaders.Accept.Add(new("text/plain"));
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/problem+json"));
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
         client.DefaultRequestHeaders.AcceptEncoding.Add(StringWithQualityHeaderValue.Parse("gzip"));
         ApplyHeaders(client.DefaultRequestHeaders, headers);
 
@@ -213,16 +213,13 @@ public sealed class WebApiService : IWebApiService
         {
             response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, linkedCancellationToken.Token).ConfigureAwait(false);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var stream = await response.Content.ReadAsStreamAsync(linkedCancellationToken.Token).ConfigureAwait(false);
-                var responseToReturn = response;
-                response = null;
+            if (!response.IsSuccessStatusCode)
+                throw await GetExceptionAsync(response, linkedCancellationToken.Token).ConfigureAwait(false);
+            var stream = await response.Content.ReadAsStreamAsync(linkedCancellationToken.Token).ConfigureAwait(false);
+            var responseToReturn = response;
+            response = null;
 
-                return new ResponseStream(stream, responseToReturn);
-            }
-
-            throw await GetExceptionAsync(response, linkedCancellationToken.Token).ConfigureAwait(false);
+            return new ResponseStream(stream, responseToReturn);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
@@ -262,13 +259,13 @@ public sealed class WebApiService : IWebApiService
     {
         var request = new HttpRequestMessage(method, uri) { Content = content };
 
-        request.Headers.AcceptLanguage.Add(new(CultureInfo.CurrentCulture.Name));
+        request.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(CultureInfo.CurrentCulture.Name));
         return request;
     }
 
     private CancellationTokenSource CreateLinkedTimeoutTokenSource(HttpRequestMessage request, CancellationToken cancellationToken, out CancellationTokenSource tokenSource)
     {
-        tokenSource = new();
+        tokenSource = new CancellationTokenSource();
         var linked = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token, cancellationToken);
         var effectiveTimeout = request.GetTimeout() ?? _timeout;
 
@@ -332,16 +329,15 @@ public sealed class WebApiService : IWebApiService
         }
 
         object? payload = null;
-        if (!string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(text))
+            return _toException?.Invoke(payload) ?? new WebApiException(statusCode, reasonPhrase, text, payload);
+        try
         {
-            try
-            {
-                payload = JsonNode.Parse(text);
-            }
-            catch (JsonException)
-            {
-                payload = text;
-            }
+            payload = JsonNode.Parse(text);
+        }
+        catch (JsonException)
+        {
+            payload = text;
         }
 
         return _toException?.Invoke(payload) ?? new WebApiException(statusCode, reasonPhrase, text, payload);

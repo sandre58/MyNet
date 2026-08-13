@@ -26,5 +26,5 @@ public static class TextNormalization
     /// <summary>
     /// Gets a transform that trims and collapses whitespace.
     /// </summary>
-    public static ITextNormalizationTransform CleanWhitespace { get; } = new WhitespaceNormalizationTransform(new());
+    public static ITextNormalizationTransform CleanWhitespace { get; } = new WhitespaceNormalizationTransform(new TextNormalizationOptions());
 }

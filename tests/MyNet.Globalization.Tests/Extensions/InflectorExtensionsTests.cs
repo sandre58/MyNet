@@ -4,8 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MyNet.Globalization.Facade;
 using MyNet.Text;
@@ -125,224 +123,220 @@ public class InflectorExtensionsTests
     public void Kebaberize(string input, string expectedOutput) => Assert.Equal(expectedOutput, input.ToKebabCase());
 }
 
-internal sealed class EnglishPluralTestSource : IEnumerable<object[]>
+internal sealed class EnglishPluralTestSource : TheoryData<string, string>
 {
-    public IEnumerator<object[]> GetEnumerator()
+    public EnglishPluralTestSource()
     {
-        yield return ["search", "searches"];
-        yield return ["switch", "switches"];
-        yield return ["fix", "fixes"];
-        yield return ["box", "boxes"];
-        yield return ["process", "processes"];
-        yield return ["address", "addresses"];
-        yield return ["case", "cases"];
-        yield return ["stack", "stacks"];
-        yield return ["wish", "wishes"];
-        yield return ["fish", "fish"];
+        Add("search", "searches");
+        Add("switch", "switches");
+        Add("fix", "fixes");
+        Add("box", "boxes");
+        Add("process", "processes");
+        Add("address", "addresses");
+        Add("case", "cases");
+        Add("stack", "stacks");
+        Add("wish", "wishes");
+        Add("fish", "fish");
 
-        yield return ["category", "categories"];
-        yield return ["query", "queries"];
-        yield return ["ability", "abilities"];
-        yield return ["agency", "agencies"];
-        yield return ["movie", "movies"];
+        Add("category", "categories");
+        Add("query", "queries");
+        Add("ability", "abilities");
+        Add("agency", "agencies");
+        Add("movie", "movies");
 
-        yield return ["archive", "archives"];
+        Add("archive", "archives");
 
-        yield return ["index", "indices"];
+        Add("index", "indices");
 
-        yield return ["wife", "wives"];
-        yield return ["safe", "saves"];
-        yield return ["half", "halves"];
+        Add("wife", "wives");
+        Add("safe", "saves");
+        Add("half", "halves");
 
-        yield return ["move", "moves"];
+        Add("move", "moves");
 
-        yield return ["salesperson", "salespeople"];
-        yield return ["person", "people"];
+        Add("salesperson", "salespeople");
+        Add("person", "people");
 
-        yield return ["spokesman", "spokesmen"];
-        yield return ["man", "men"];
-        yield return ["woman", "women"];
-        yield return ["freshman", "freshmen"];
-        yield return ["chairman", "chairmen"];
-        yield return ["human", "humans"];
-        yield return ["personnel", "personnel"];
-        yield return ["staff", "staff"];
+        Add("spokesman", "spokesmen");
+        Add("man", "men");
+        Add("woman", "women");
+        Add("freshman", "freshmen");
+        Add("chairman", "chairmen");
+        Add("human", "humans");
+        Add("personnel", "personnel");
+        Add("staff", "staff");
 
-        yield return ["basis", "bases"];
-        yield return ["diagnosis", "diagnoses"];
+        Add("basis", "bases");
+        Add("diagnosis", "diagnoses");
 
-        yield return ["data", "data"];
-        yield return ["medium", "media"];
-        yield return ["analysis", "analyses"];
+        Add("data", "data");
+        Add("medium", "media");
+        Add("analysis", "analyses");
 
-        yield return ["node_child", "node_children"];
-        yield return ["child", "children"];
+        Add("node_child", "node_children");
+        Add("child", "children");
 
-        yield return ["experience", "experiences"];
-        yield return ["day", "days"];
+        Add("experience", "experiences");
+        Add("day", "days");
 
-        yield return ["comment", "comments"];
-        yield return ["foobar", "foobars"];
-        yield return ["newsletter", "newsletters"];
+        Add("comment", "comments");
+        Add("foobar", "foobars");
+        Add("newsletter", "newsletters");
 
-        yield return ["old_news", "old_news"];
-        yield return ["news", "news"];
+        Add("old_news", "old_news");
+        Add("news", "news");
 
-        yield return ["series", "series"];
-        yield return ["species", "species"];
+        Add("series", "series");
+        Add("species", "species");
 
-        yield return ["quiz", "quizzes"];
+        Add("quiz", "quizzes");
 
-        yield return ["perspective", "perspectives"];
+        Add("perspective", "perspectives");
 
-        yield return ["ox", "oxen"];
-        yield return ["photo", "photos"];
-        yield return ["buffalo", "buffaloes"];
-        yield return ["tomato", "tomatoes"];
-        yield return ["dwarf", "dwarves"];
-        yield return ["elf", "elves"];
-        yield return ["information", "information"];
-        yield return ["equipment", "equipment"];
-        yield return ["bus", "buses"];
-        yield return ["status", "statuses"];
-        yield return ["status_code", "status_codes"];
-        yield return ["mouse", "mice"];
+        Add("ox", "oxen");
+        Add("photo", "photos");
+        Add("buffalo", "buffaloes");
+        Add("tomato", "tomatoes");
+        Add("dwarf", "dwarves");
+        Add("elf", "elves");
+        Add("information", "information");
+        Add("equipment", "equipment");
+        Add("bus", "buses");
+        Add("status", "statuses");
+        Add("status_code", "status_codes");
+        Add("mouse", "mice");
 
-        yield return ["house", "houses"];
-        yield return ["octopus", "octopi"];
-        yield return ["alias", "aliases"];
-        yield return ["portfolio", "portfolios"];
-        yield return ["criterion", "criteria"];
+        Add("house", "houses");
+        Add("octopus", "octopi");
+        Add("alias", "aliases");
+        Add("portfolio", "portfolios");
+        Add("criterion", "criteria");
 
-        yield return ["vertex", "vertices"];
-        yield return ["matrix", "matrices"];
+        Add("vertex", "vertices");
+        Add("matrix", "matrices");
 
-        yield return ["axis", "axes"];
-        yield return ["testis", "testes"];
-        yield return ["crisis", "crises"];
+        Add("axis", "axes");
+        Add("testis", "testes");
+        Add("crisis", "crises");
 
-        yield return ["corn", "corn"];
-        yield return ["milk", "milk"];
-        yield return ["rice", "rice"];
-        yield return ["shoe", "shoes"];
+        Add("corn", "corn");
+        Add("milk", "milk");
+        Add("rice", "rice");
+        Add("shoe", "shoes");
 
-        yield return ["horse", "horses"];
-        yield return ["prize", "prizes"];
-        yield return ["edge", "edges"];
+        Add("horse", "horses");
+        Add("prize", "prizes");
+        Add("edge", "edges");
 
-        yield return ["goose", "geese"];
-        yield return ["deer", "deer"];
-        yield return ["sheep", "sheep"];
-        yield return ["wolf", "wolves"];
-        yield return ["volcano", "volcanoes"];
-        yield return ["aircraft", "aircraft"];
-        yield return ["alumna", "alumnae"];
-        yield return ["alumnus", "alumni"];
-        yield return ["fungus", "fungi"];
-        yield return ["water", "water"];
-        yield return ["waters", "waters"];
-        yield return ["semen", "semen"];
-        yield return ["sperm", "sperm"];
+        Add("goose", "geese");
+        Add("deer", "deer");
+        Add("sheep", "sheep");
+        Add("wolf", "wolves");
+        Add("volcano", "volcanoes");
+        Add("aircraft", "aircraft");
+        Add("alumna", "alumnae");
+        Add("alumnus", "alumni");
+        Add("fungus", "fungi");
+        Add("water", "water");
+        Add("waters", "waters");
+        Add("semen", "semen");
+        Add("sperm", "sperm");
 
-        yield return ["wave", "waves"];
+        Add("wave", "waves");
 
-        yield return ["campus", "campuses"];
+        Add("campus", "campuses");
 
-        yield return ["is", "are"];
+        Add("is", "are");
 
-        yield return ["addendum", "addenda"];
-        yield return ["alga", "algae"];
-        yield return ["apparatus", "apparatuses"];
-        yield return ["appendix", "appendices"];
-        yield return ["bias", "biases"];
-        yield return ["bison", "bison"];
-        yield return ["blitz", "blitzes"];
-        yield return ["buzz", "buzzes"];
-        yield return ["cactus", "cacti"];
-        yield return ["corps", "corps"];
-        yield return ["curriculum", "curricula"];
-        yield return ["database", "databases"];
-        yield return ["die", "dice"];
-        yield return ["echo", "echoes"];
-        yield return ["ellipsis", "ellipses"];
-        yield return ["elk", "elk"];
-        yield return ["emphasis", "emphases"];
-        yield return ["embargo", "embargoes"];
-        yield return ["focus", "foci"];
-        yield return ["foot", "feet"];
-        yield return ["fuse", "fuses"];
-        yield return ["grass", "grass"];
-        yield return ["hair", "hair"];
-        yield return ["hero", "heroes"];
-        yield return ["hippopotamus", "hippopotami"];
-        yield return ["hoof", "hooves"];
-        yield return ["iris", "irises"];
-        yield return ["larva", "larvae"];
-        yield return ["leaf", "leaves"];
-        yield return ["loaf", "loaves"];
-        yield return ["luggage", "luggage"];
-        yield return ["means", "means"];
-        yield return ["mail", "mail"];
-        yield return ["millennium", "millennia"];
-        yield return ["moose", "moose"];
-        yield return ["mosquito", "mosquitoes"];
-        yield return ["mud", "mud"];
-        yield return ["nucleus", "nuclei"];
-        yield return ["neurosis", "neuroses"];
-        yield return ["oasis", "oases"];
-        yield return ["offspring", "offspring"];
-        yield return ["paralysis", "paralyses"];
-        yield return ["phenomenon", "phenomena"];
-        yield return ["potato", "potatoes"];
-        yield return ["radius", "radii"];
-        yield return ["salmon", "salmon"];
-        yield return ["scissors", "scissors"];
-        yield return ["shrimp", "shrimp"];
-        yield return ["someone", "someone"];
-        yield return ["stimulus", "stimuli"];
-        yield return ["swine", "swine"];
-        yield return ["syllabus", "syllabi"];
-        yield return ["that", "those"];
-        yield return ["thief", "thieves"];
-        yield return ["this", "these"];
-        yield return ["tooth", "teeth"];
-        yield return ["torpedo", "torpedoes"];
-        yield return ["trellis", "trellises"];
-        yield return ["trout", "trout"];
-        yield return ["tuna", "tuna"];
-        yield return ["vertebra", "vertebrae"];
-        yield return ["veto", "vetoes"];
-        yield return ["virus", "viruses"];
-        yield return ["walrus", "walruses"];
-        yield return ["waltz", "waltzes"];
-        yield return ["zombie", "zombies"];
+        Add("addendum", "addenda");
+        Add("alga", "algae");
+        Add("apparatus", "apparatuses");
+        Add("appendix", "appendices");
+        Add("bias", "biases");
+        Add("bison", "bison");
+        Add("blitz", "blitzes");
+        Add("buzz", "buzzes");
+        Add("cactus", "cacti");
+        Add("corps", "corps");
+        Add("curriculum", "curricula");
+        Add("database", "databases");
+        Add("die", "dice");
+        Add("echo", "echoes");
+        Add("ellipsis", "ellipses");
+        Add("elk", "elk");
+        Add("emphasis", "emphases");
+        Add("embargo", "embargoes");
+        Add("focus", "foci");
+        Add("foot", "feet");
+        Add("fuse", "fuses");
+        Add("grass", "grass");
+        Add("hair", "hair");
+        Add("hero", "heroes");
+        Add("hippopotamus", "hippopotami");
+        Add("hoof", "hooves");
+        Add("iris", "irises");
+        Add("larva", "larvae");
+        Add("leaf", "leaves");
+        Add("loaf", "loaves");
+        Add("luggage", "luggage");
+        Add("means", "means");
+        Add("mail", "mail");
+        Add("millennium", "millennia");
+        Add("moose", "moose");
+        Add("mosquito", "mosquitoes");
+        Add("mud", "mud");
+        Add("nucleus", "nuclei");
+        Add("neurosis", "neuroses");
+        Add("oasis", "oases");
+        Add("offspring", "offspring");
+        Add("paralysis", "paralyses");
+        Add("phenomenon", "phenomena");
+        Add("potato", "potatoes");
+        Add("radius", "radii");
+        Add("salmon", "salmon");
+        Add("scissors", "scissors");
+        Add("shrimp", "shrimp");
+        Add("someone", "someone");
+        Add("stimulus", "stimuli");
+        Add("swine", "swine");
+        Add("syllabus", "syllabi");
+        Add("that", "those");
+        Add("thief", "thieves");
+        Add("this", "these");
+        Add("tooth", "teeth");
+        Add("torpedo", "torpedoes");
+        Add("trellis", "trellises");
+        Add("trout", "trout");
+        Add("tuna", "tuna");
+        Add("vertebra", "vertebrae");
+        Add("veto", "vetoes");
+        Add("virus", "viruses");
+        Add("walrus", "walruses");
+        Add("waltz", "waltzes");
+        Add("zombie", "zombies");
 
-        yield return ["cookie", "cookies"];
-        yield return ["bookie", "bookies"];
-        yield return ["rookie", "rookies"];
-        yield return ["roomie", "roomies"];
-        yield return ["smoothie", "smoothies"];
+        Add("cookie", "cookies");
+        Add("bookie", "bookies");
+        Add("rookie", "rookies");
+        Add("roomie", "roomies");
+        Add("smoothie", "smoothies");
 
-        yield return ["cache", "caches"];
+        Add("cache", "caches");
     }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
-internal sealed class FrenchPluralTestSource : IEnumerable<object[]>
+internal sealed class FrenchPluralTestSource : TheoryData<string, string>
 {
-    public IEnumerator<object[]> GetEnumerator()
+    public FrenchPluralTestSource()
     {
-        yield return ["catégorie", "catégories"];
-        yield return ["bateau", "bateaux"];
-        yield return ["noyau", "noyaux"];
-        yield return ["animal", "animaux"];
-        yield return ["carnaval", "carnavals"];
-        yield return ["portail", "portails"];
-        yield return ["bail", "baux"];
-        yield return ["genou", "genoux"];
-        yield return ["cou", "cous"];
+        Add("catégorie", "catégories");
+        Add("bateau", "bateaux");
+        Add("noyau", "noyaux");
+        Add("animal", "animaux");
+        Add("carnaval", "carnavals");
+        Add("portail", "portails");
+        Add("bail", "baux");
+        Add("genou", "genoux");
+        Add("cou", "cous");
     }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -77,7 +77,7 @@ public class ProgresserTests
         var countAfterBegin = observer.ReportCount;
 
         progresser.Unsubscribe(observer);
-        root.UpdateMessage(new("changed"));
+        root.UpdateMessage(new ProgressMessage("changed"));
 
         Assert.Equal(countAfterBegin, observer.ReportCount);
     }

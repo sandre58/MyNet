@@ -22,7 +22,7 @@ public sealed class PerformanceLogger : IDisposable
 {
     private static readonly AsyncLocal<Stack<PerformanceLogger>?> CurrentStack = new();
 
-    private static Stack<PerformanceLogger> Stack => CurrentStack.Value ??= new();
+    private static Stack<PerformanceLogger> Stack => CurrentStack.Value ??= new Stack<PerformanceLogger>();
 
     private readonly ILogger _logger;
     private readonly string _title;
@@ -164,7 +164,7 @@ public sealed class PerformanceLogger : IDisposable
     /// <param name="time">The time span to register.</param>
     /// <param name="level">The log level for the registered time.</param>
     public void AddTime(string key, TimeSpan time, LogLevel level)
-        => _registeredTimes.AddOrUpdate(key, _ => new(level, time), (_, existing) => new(level, existing.Time + time));
+        => _registeredTimes.AddOrUpdate(key, _ => new RegisteredTime(level, time), (_, existing) => new RegisteredTime(level, existing.Time + time));
 
     /// <summary>
     /// Merges the registered times from a child performance logger into the current performance logger. This method is used when disposing of a child performance logger to ensure that any registered times from the child are added to the parent logger, allowing for accurate logging of nested performance measurements. The method iterates through the registered times in the child logger and adds them to the current logger using the AddTime method, preserving the hierarchy of logged times and their associated log levels.

@@ -136,7 +136,8 @@ public sealed class ListDisplayModeViewModel : DisplayModeViewModel, IColumnOpti
     public ListDisplayModeViewModel(string[]? defaultColumns = null, ICommandFactory? commandFactory = null)
         : base(ListKey, commandFactory)
     {
-        ColumnOptions = new(defaultColumns);
+        // ReSharper disable once UseCollectionExpression
+        ColumnOptions = new ColumnOptionsViewModel(defaultColumns);
         var commands = commandFactory.GetOrDefault();
         SetDisplayedColumnsCommand = commands.Create<IEnumerable<string>>(x => SetDisplayedColumns(x ?? []));
     }

@@ -20,9 +20,9 @@ public sealed class RecentFilesServiceTests
     public async Task GetAllAsync_InitializesCacheOnlyOnce_AndOrdersPinnedFirstAsync()
     {
         var repository = new InMemoryRecentFileRepository([
-            new() { Name = "Second", Path = "b.txt", LastAccessedAt = new DateTimeOffset(2026, 5, 1, 10, 0, 0, TimeSpan.Zero) },
-            new() { Name = "Pinned", Path = "a.txt", IsPinned = true, LastAccessedAt = new DateTimeOffset(2026, 5, 1, 9, 0, 0, TimeSpan.Zero) },
-            new() { Name = "Third", Path = "c.txt", LastAccessedAt = new DateTimeOffset(2026, 5, 1, 8, 0, 0, TimeSpan.Zero) }
+            new RecentFile { Name = "Second", Path = "b.txt", LastAccessedAt = new DateTimeOffset(2026, 5, 1, 10, 0, 0, TimeSpan.Zero) },
+            new RecentFile { Name = "Pinned", Path = "a.txt", IsPinned = true, LastAccessedAt = new DateTimeOffset(2026, 5, 1, 9, 0, 0, TimeSpan.Zero) },
+            new RecentFile { Name = "Third", Path = "c.txt", LastAccessedAt = new DateTimeOffset(2026, 5, 1, 8, 0, 0, TimeSpan.Zero) }
         ]);
 
         using var service = new RecentFilesService(repository);
@@ -39,8 +39,8 @@ public sealed class RecentFilesServiceTests
     public async Task GetLastAsync_IgnoresRecoveredFilesAsync()
     {
         var repository = new InMemoryRecentFileRepository([
-            new() { Name = "Recovered", Path = "recovered.txt", IsRecovered = true, LastAccessedAt = DateTimeOffset.UtcNow },
-            new() { Name = "Normal", Path = "normal.txt", LastAccessedAt = DateTimeOffset.UtcNow.AddMinutes(-1) }
+            new RecentFile { Name = "Recovered", Path = "recovered.txt", IsRecovered = true, LastAccessedAt = DateTimeOffset.UtcNow },
+            new RecentFile { Name = "Normal", Path = "normal.txt", LastAccessedAt = DateTimeOffset.UtcNow.AddMinutes(-1) }
         ]);
 
         using var service = new RecentFilesService(repository);
@@ -60,7 +60,7 @@ public sealed class RecentFilesServiceTests
 
         try
         {
-            File.SetLastWriteTimeUtc(path, new(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc));
+            File.SetLastWriteTimeUtc(path, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc));
 
             var result = await service.AddAsync("document", path, isRecovered: true);
 
@@ -101,7 +101,7 @@ public sealed class RecentFilesServiceTests
     public async Task PinAsync_WhenEntryExists_UpdatesPinnedStateAsync()
     {
         var repository = new InMemoryRecentFileRepository([
-            new() { Name = "document", Path = "file.txt", LastAccessedAt = DateTimeOffset.UtcNow }
+            new RecentFile { Name = "document", Path = "file.txt", LastAccessedAt = DateTimeOffset.UtcNow }
         ]);
         using var service = new RecentFilesService(repository);
 
@@ -115,7 +115,7 @@ public sealed class RecentFilesServiceTests
     public async Task RemoveAsync_WhenEntryExists_RemovesEntryAsync()
     {
         var repository = new InMemoryRecentFileRepository([
-            new() { Name = "document", Path = "file.txt" }
+            new RecentFile { Name = "document", Path = "file.txt" }
         ]);
         using var service = new RecentFilesService(repository);
 
@@ -129,8 +129,8 @@ public sealed class RecentFilesServiceTests
     public async Task ClearAsync_RemovesAllEntriesFromCacheAndRepositoryAsync()
     {
         var repository = new InMemoryRecentFileRepository([
-            new() { Name = "one", Path = "one.txt" },
-            new() { Name = "two", Path = "two.txt" }
+            new RecentFile { Name = "one", Path = "one.txt" },
+            new RecentFile { Name = "two", Path = "two.txt" }
         ]);
         using var service = new RecentFilesService(repository);
 

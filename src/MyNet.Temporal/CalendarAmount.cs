@@ -141,13 +141,13 @@ public readonly struct CalendarAmount :
     /// Determines whether a <see cref="TimeSpan"/> and a <see cref="CalendarAmount"/> are equal.
     /// Equal only when the calendar amount has zero years and months and its <see cref="TimeSpan"/> equals <paramref name="left"/>.
     /// </summary>
-    public static bool operator ==(TimeSpan left, CalendarAmount right) => right.Years == 0 && right.Months == 0 && right.TimeSpan == left;
+    public static bool operator ==(TimeSpan left, CalendarAmount right) => right is { Years: 0, Months: 0 } && right.TimeSpan == left;
 
     /// <summary>
     /// Determines whether a <see cref="CalendarAmount"/> and a <see cref="TimeSpan"/> are equal.
     /// Equal only when the calendar amount has zero years and months and its <see cref="TimeSpan"/> equals <paramref name="right"/>.
     /// </summary>
-    public static bool operator ==(CalendarAmount left, TimeSpan right) => left.Years == 0 && left.Months == 0 && left.TimeSpan == right;
+    public static bool operator ==(CalendarAmount left, TimeSpan right) => left is { Years: 0, Months: 0 } && left.TimeSpan == right;
 
     /// <summary>
     /// Determines whether two <see cref="CalendarAmount"/> instances are not equal.

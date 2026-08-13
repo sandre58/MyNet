@@ -54,14 +54,12 @@ public sealed class DeferredOperations
     {
         _deferCount--;
 
-        if (_deferCount == 0)
-        {
-            var operations = _operations.ToArray();
-            _operations.Clear();
+        if (_deferCount != 0) return;
+        var operations = _operations.ToArray();
+        _operations.Clear();
 
-            foreach (var operation in operations)
-                operation();
-        }
+        foreach (var operation in operations)
+            operation();
     }
 
     /// <summary>

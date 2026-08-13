@@ -34,6 +34,6 @@ public static class AbstractValidatorLocalizedExtensions
         ArgumentNullException.ThrowIfNull(expression);
 
         var key = propertyDisplayKey ?? expression.PropertyName();
-        return new(validator.RuleFor(expression), key);
+        return new LocalizedRuleBuilder<T, TProperty>(validator.RuleFor(expression), key);
     }
 }

@@ -37,9 +37,9 @@ public sealed class PipelineDebouncingTests : IDisposable
     {
         var source = new ObservableCollection<int>([1, 2, 3]);
         Mock<IListDataProvider<int>> providerMock = new();
-        providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<int>(source));
-        providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<int>(source));
-        providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<int>(source));
+        providerMock.Setup(p => p.Source).Returns([with(source)]);
+        providerMock.Setup(p => p.FilteredItems).Returns([with(source)]);
+        providerMock.Setup(p => p.Items).Returns([with(source)]);
         providerMock.Setup(p => p.FilteredCount).Returns(source.Count);
         providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<int>>());
         providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<int>>());
@@ -49,13 +49,13 @@ public sealed class PipelineDebouncingTests : IDisposable
         providerMock.Setup(p => p.ClearSorting()).Callback(() => _providerCallCount++);
         providerMock.Setup(p => p.SetSorting(It.IsAny<ISortingProperty<int>[]>())).Callback<ISortingProperty<int>[]>(_ => _providerCallCount++);
 
-        _filtersMock = new();
+        _filtersMock = new Mock<IFiltersViewModel<int>>();
         _filtersMock.Setup(f => f.CurrentFilter).Returns((IFilter<int>?)null);
 
-        _sortingMock = new();
+        _sortingMock = new Mock<ISortingViewModel<int>>();
         _sortingMock.Setup(s => s.CurrentSorting).Returns([]);
 
-        _vm = new(providerMock.Object, _filtersMock.Object, _sortingMock.Object);
+        _vm = new SimpleListViewModel(providerMock.Object, _filtersMock.Object, _sortingMock.Object);
         _providerCallCount = 0;
     }
 

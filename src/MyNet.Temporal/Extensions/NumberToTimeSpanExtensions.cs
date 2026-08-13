@@ -93,14 +93,14 @@ public static class NumberToTimeSpanExtensions
         /// </summary>
         public TimeSpan ToTimeSpan(TimeUnit timeUnitToGet) => timeUnitToGet switch
         {
-            TimeUnit.Millisecond => new(0, 0, 0, 0, value),
-            TimeUnit.Second => new(0, 0, 0, value, 0),
-            TimeUnit.Minute => new(0, 0, value, 0, 0),
-            TimeUnit.Hour => new(0, value, 0, 0, 0),
-            TimeUnit.Day => new(value, 0, 0, 0, 0),
-            TimeUnit.Week => new(value * DateTimeHelper.DaysPerWeek, 0, 0, 0, 0),
-            TimeUnit.Month => new((int)Math.Round(value * DateTimeHelper.DaysPerMonth), 0, 0, 0, 0),
-            TimeUnit.Year => new((int)Math.Round(value * DateTimeHelper.DaysPerYear), 0, 0, 0, 0),
+            TimeUnit.Millisecond => new TimeSpan(0, 0, 0, 0, value),
+            TimeUnit.Second => new TimeSpan(0, 0, 0, value, 0),
+            TimeUnit.Minute => new TimeSpan(0, 0, value, 0, 0),
+            TimeUnit.Hour => new TimeSpan(0, value, 0, 0, 0),
+            TimeUnit.Day => new TimeSpan(value, 0, 0, 0, 0),
+            TimeUnit.Week => new TimeSpan(value * DateTimeHelper.DaysPerWeek, 0, 0, 0, 0),
+            TimeUnit.Month => new TimeSpan((int)Math.Round(value * DateTimeHelper.DaysPerMonth), 0, 0, 0, 0),
+            TimeUnit.Year => new TimeSpan((int)Math.Round(value * DateTimeHelper.DaysPerYear), 0, 0, 0, 0),
             _ => TimeSpan.Zero
         };
 
@@ -120,7 +120,7 @@ public static class NumberToTimeSpanExtensions
         public ClosedInterval<int> Decade()
         {
             var start = GetDecadeStart(value);
-            return new(start, start + 9);
+            return new ClosedInterval<int>(start, start + 9);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ public static class NumberToTimeSpanExtensions
         public ClosedInterval<int> Century()
         {
             var start = GetCenturyStart(value);
-            return new(start, start + 99);
+            return new ClosedInterval<int>(start, start + 99);
         }
     }
 

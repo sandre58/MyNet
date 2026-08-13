@@ -51,7 +51,7 @@ public class NavigationParametersTests
     [Fact]
     public void TryGetValue_ReturnsFalse_WhenConversionIsNotSupported()
     {
-        var sut = new NavigationParameters().Set("Payload", new());
+        var sut = new NavigationParameters().Set("Payload", new object());
 
         sut.TryGetValue("Payload", out int _).Should().BeFalse();
     }

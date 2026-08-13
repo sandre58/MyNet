@@ -50,7 +50,7 @@ public sealed class MailKitServiceSendTests
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
 
-        using var service = new MailKitService(new() { Server = "smtp.test", Port = 587 });
+        using var service = new MailKitService(new SmtpClientOptions { Server = "smtp.test", Port = 587 });
         var response = await service.SendAsync(Email.From("from@test.com").To("to@test.com"), cts.Token);
 
         Assert.Contains("Send canceled.", response.ErrorMessages);
@@ -121,7 +121,7 @@ public sealed class MailKitServiceSendTests
     [Fact]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        var service = new MailKitService(new() { Server = "smtp.test", Port = 587 });
+        var service = new MailKitService(new SmtpClientOptions { Server = "smtp.test", Port = 587 });
 
         service.Dispose();
         service.Dispose();
@@ -130,7 +130,7 @@ public sealed class MailKitServiceSendTests
     [Fact]
     public async Task SendAsync_AfterDispose_ThrowsObjectDisposedExceptionAsync()
     {
-        var service = new MailKitService(new() { Server = "smtp.test", Port = 587 });
+        var service = new MailKitService(new SmtpClientOptions { Server = "smtp.test", Port = 587 });
         service.Dispose();
 
         await Assert.ThrowsAsync<ObjectDisposedException>(() =>

@@ -25,6 +25,6 @@ public static class CollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(scheduler);
-        return new(collection, new SchedulerCollectionEventDispatcher(scheduler));
+        return new DispatchedObservableCollection<T>(collection, new SchedulerCollectionEventDispatcher(scheduler));
     }
 }

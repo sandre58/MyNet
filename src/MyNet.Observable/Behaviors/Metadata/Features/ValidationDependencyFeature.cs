@@ -17,5 +17,5 @@ public sealed class ValidationDependencyFeature
     /// <summary>
     /// Gets the set of property names that are dependent on the validation state of other properties. This hash set allows you to specify which properties in an observable object are dependent on the validation state of other properties. By adding property names to this set, you can establish relationships between properties in terms of their validation requirements, enabling more complex validation scenarios where the validity of one property may affect the validity of others in an observable object. This can be particularly useful in scenarios where certain properties must be validated together or where the validation state of one property influences the validation state of others in an application.
     /// </summary>
-    public HashSet<string> Dependents { get; } = new(StringComparer.Ordinal);
+    public HashSet<string> Dependents { get; } = [with(StringComparer.Ordinal)];
 }

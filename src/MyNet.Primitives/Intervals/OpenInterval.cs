@@ -32,5 +32,5 @@ public class OpenInterval<T>(T start, T end) : Interval<T, OpenInterval<T>>(new 
             ? throw new InvalidOperationException("OpenInterval must be bounded.")
             : start.Value.IsInclusive || end.Value.IsInclusive
                 ? throw new InvalidOperationException("OpenInterval only supports exclusive boundaries.")
-                : new(start.Value.Value, end.Value.Value);
+                : new OpenInterval<T>(start.Value.Value, end.Value.Value);
 }

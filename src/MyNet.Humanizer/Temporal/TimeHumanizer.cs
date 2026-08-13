@@ -51,7 +51,7 @@ public abstract class TimeHumanizerBase(ITranslationService translationService, 
 
         var key = GetRelativeDateKey(count, unit, tense);
 
-        return translationService.Translate(key, new() { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture);
+        return translationService.Translate(key, new TranslationOptions { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture);
     }
 
     /// <inheritdoc/>
@@ -81,13 +81,13 @@ public abstract class TimeHumanizerBase(ITranslationService translationService, 
         {
             // "no time" for tiny units, explicit "0 <unit>" for larger constrained units.
             return unit is TimeUnit.Minute or TimeUnit.Hour or TimeUnit.Day or TimeUnit.Week or TimeUnit.Month or TimeUnit.Year
-                ? translationService.Translate(GetDurationKey(count, unit), new() { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture)
+                ? translationService.Translate(GetDurationKey(count, unit), new TranslationOptions { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture)
                 : translationService.Translate(options.ZeroKey, TranslationOptionsPresets.Default, nameof(DateTimeResources), supportedCulture);
         }
 
         var resourceKey = GetDurationKey(count, unit);
 
-        return translationService.Translate(resourceKey, new() { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture);
+        return translationService.Translate(resourceKey, new TranslationOptions { Quantity = count, UseInflectionFallback = false }, nameof(DateTimeResources), supportedCulture);
     }
 
     /// <inheritdoc/>

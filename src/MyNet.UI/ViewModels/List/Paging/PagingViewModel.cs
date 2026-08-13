@@ -28,7 +28,7 @@ public class PagingViewModel : ObservableObject, IPagingViewModel
     {
         var commands = commandFactory.GetOrDefault();
 
-        _deferredAction = new(RaisePagingChanged);
+        _deferredAction = new DeferredAction(RaisePagingChanged);
 
         MoveNextCommand = commands.Create(MoveNext, () => HasNextPage);
         MovePreviousCommand = commands.Create(MovePrevious, () => HasPreviousPage);
@@ -186,7 +186,7 @@ public class PagingViewModel : ObservableObject, IPagingViewModel
     /// <summary>
     /// Invoked when the paging configuration has changed (page number or page size).
     /// </summary>
-    private void RaisePagingChanged() => PagingChanged?.Invoke(this, new(CurrentPage, PageSize));
+    private void RaisePagingChanged() => PagingChanged?.Invoke(this, new PagingChangedEventArgs(CurrentPage, PageSize));
 
     private void RaiseNavigationCommandsCanExecuteChanged()
     {

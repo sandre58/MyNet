@@ -74,7 +74,7 @@ public class ToastManagerTests
             new TestSchedulerProvider(),
             new FrozenAutoCloseToastFactory(),
             new AllToastsFilter(),
-            new() { DefaultDuration = TimeSpan.FromMilliseconds(50) });
+            new ToastManagerOptions { DefaultDuration = TimeSpan.FromMilliseconds(50) });
 
         service.Publish(new MessageNotification("hello"));
 
@@ -86,7 +86,7 @@ public class ToastManagerTests
     private sealed class FrozenAutoCloseToastFactory : IToastFactory
     {
         public IToast Create(INotification notification) =>
-            new Toast(notification, new()
+            new Toast(notification, new ToastSettings
             {
                 ClosingStrategy = ToastClosingStrategy.AutoClose,
                 Duration = TimeSpan.FromMilliseconds(50),
@@ -97,7 +97,7 @@ public class ToastManagerTests
     private sealed class TestToastFactory : IToastFactory
     {
         public IToast Create(INotification notification) =>
-            new Toast(notification, new() { ClosingStrategy = ToastClosingStrategy.None });
+            new Toast(notification, new ToastSettings { ClosingStrategy = ToastClosingStrategy.None });
     }
 
     private sealed class TestSchedulerProvider : ISchedulerProvider

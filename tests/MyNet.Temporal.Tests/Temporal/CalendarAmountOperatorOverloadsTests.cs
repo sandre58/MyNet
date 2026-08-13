@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;

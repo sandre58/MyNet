@@ -29,7 +29,7 @@ public sealed class DateRange(DateOnly start, DateOnly end) : Interval<DateOnly,
             ? throw new InvalidOperationException("DateRange must be bounded.")
             : !start.Value.IsInclusive || !end.Value.IsInclusive
                 ? throw new InvalidOperationException("DateRange only supports inclusive boundaries.")
-                : new(start.Value.Value, end.Value.Value);
+                : new DateRange(start.Value.Value, end.Value.Value);
 
     /// <summary>
     /// Enumerates all the dates in the date range, starting from the start date and ending with the end date. Each date is returned as a DateOnly value.

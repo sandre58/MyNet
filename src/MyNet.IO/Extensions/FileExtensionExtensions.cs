@@ -33,7 +33,7 @@ public static class FileExtensionExtensions
             if (!string.IsNullOrWhiteSpace(pattern) && pattern != "*.*")
                 title = $"{title} ({pattern})";
 
-            return new(title, pattern);
+            return new FileFilter(title, pattern);
         }
 
         /// <summary>

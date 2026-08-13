@@ -33,16 +33,16 @@ public sealed class ListViewModelBaseDataProviderTests : IDisposable
 
     public ListViewModelBaseDataProviderTests()
     {
-        _providerMock = new();
-        _providerMock.Setup(p => p.Source).Returns(new ReadOnlyObservableCollection<string>(_sourceItems));
-        _providerMock.Setup(p => p.FilteredItems).Returns(new ReadOnlyObservableCollection<string>(_filteredItems));
-        _providerMock.Setup(p => p.Items).Returns(new ReadOnlyObservableCollection<string>(_filteredItems));
+        _providerMock = new Mock<IListDataProvider<string>>();
+        _providerMock.Setup(p => p.Source).Returns([with(_sourceItems)]);
+        _providerMock.Setup(p => p.FilteredItems).Returns([with(_filteredItems)]);
+        _providerMock.Setup(p => p.Items).Returns([with(_filteredItems)]);
         _providerMock.Setup(p => p.FilteredCount).Returns(_filteredItems.Count);
         _providerMock.Setup(p => p.ConnectFiltered()).Returns(Empty<IChangeSet<string>>());
         _providerMock.Setup(p => p.Connect()).Returns(Empty<IChangeSet<string>>());
         _providerMock.Setup(p => p.ConnectGroups()).Returns(Return<IReadOnlyList<CollectionGroup<string>>>([]));
 
-        _vm = new(_providerMock.Object);
+        _vm = new ConcreteListViewModel(_providerMock.Object);
     }
 
     [Fact]

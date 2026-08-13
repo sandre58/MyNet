@@ -58,7 +58,7 @@ internal sealed class RecentFilesListOptions(
                     .Descending());
         });
 
-        return new(filters, nameFilter!, pathFilter!, sorting);
+        return new RecentFilesListOptions(filters, nameFilter!, pathFilter!, sorting);
     }
 
     public FiltersViewModel<RecentFileViewModel> Filters { get; } = filters;

@@ -41,15 +41,13 @@ public sealed class HumanFriendlyTimeSpanQuantizer : ITimeSpanQuantizer
             var currentValue = dict[currentUnit];
             var threshold = GetThreshold(currentUnit);
 
-            if (threshold > 0 && currentValue >= threshold)
-            {
-                dict[nextUnit]++;
-                dict[currentUnit] = 0;
+            if (threshold <= 0 || currentValue < threshold) continue;
+            dict[nextUnit]++;
+            dict[currentUnit] = 0;
 
-                // Drop smaller details after promoting to a bigger unit.
-                for (var j = i + 1; j < ordered.Count; j++)
-                    dict[ordered[j].Unit] = 0;
-            }
+            // Drop smaller details after promoting to a bigger unit.
+            for (var j = i + 1; j < ordered.Count; j++)
+                dict[ordered[j].Unit] = 0;
         }
 
         return ordered.ConvertAll(x => x with { Value = dict[x.Unit] });

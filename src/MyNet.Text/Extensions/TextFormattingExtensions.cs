@@ -47,7 +47,7 @@ public static class TextFormattingExtensions
         /// <param name="format">Optional format string for the incrementing number.</param>
         /// <returns>The TextPipeline instance with the applied transformation.</returns>
         public TextPipeline Increment(IEnumerable<string> existStrings, int minIncrement = 1, int step = 1, string? format = null) =>
-            pipeline.Increment(new()
+            pipeline.Increment(new IncrementTransformOptions
             {
                 ExistingStrings = existStrings,
                 Kind = IncrementKind.Numeric,
@@ -64,7 +64,7 @@ public static class TextFormattingExtensions
         /// <param name="step">The step value for incrementing. Current is 1.</param>
         /// <returns>The TextPipeline instance with the applied transformation.</returns>
         public TextPipeline IncrementAlpha(IEnumerable<string> existStrings, int minIncrement = 1, int step = 1) =>
-            pipeline.Increment(new()
+            pipeline.Increment(new IncrementTransformOptions
             {
                 ExistingStrings = existStrings,
                 Kind = IncrementKind.Alpha,

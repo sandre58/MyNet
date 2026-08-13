@@ -81,7 +81,7 @@ public class EqualityComparersTests
     public void Reference_GenericEquals_ReturnsFalseForDifferentInstances()
     {
         IEqualityComparer<object> comparer = MyNet.Primitives.Comparers.ReferenceEqualityComparer.Instance;
-        Assert.False(comparer.Equals(new(), new()));
+        Assert.False(comparer.Equals(new object(), new object()));
     }
 
     [Fact]

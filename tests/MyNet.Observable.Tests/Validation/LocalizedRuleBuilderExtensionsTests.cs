@@ -46,7 +46,7 @@ public sealed class LocalizedRuleBuilderExtensionsTests
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
 
             var validator = new SampleValidator();
-            var result = validator.Validate(new SampleModel { Name = new('a', 11) });
+            var result = validator.Validate(new SampleModel { Name = new string('a', 11) });
 
             Assert.False(result.IsValid);
             Assert.Contains(result.Errors, e =>

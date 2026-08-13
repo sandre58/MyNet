@@ -32,7 +32,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Simulate translating a product description with quantity pricing
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Products", new InMemoryResourceManager(new()
+        catalog.Register("Products", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -65,11 +65,11 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("amount", 29.99m)
             .Build();
 
-        var enPrice = translator.Translate("price_template", priceOptions, new("en-US"));
+        var enPrice = translator.Translate("price_template", priceOptions, new CultureInfo("en-US"));
         Assert.Contains("USD", enPrice, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("29.99", enPrice, StringComparison.CurrentCultureIgnoreCase);
 
-        var frPrice = translator.Translate("price_template", priceOptions, new("fr-FR"));
+        var frPrice = translator.Translate("price_template", priceOptions, new CultureInfo("fr-FR"));
         Assert.Contains("29,99", frPrice, StringComparison.CurrentCultureIgnoreCase);
 
         // Test 2: Bulk discount message
@@ -78,7 +78,7 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("percent_value", 15)
             .Build();
 
-        var discount = translator.Translate("bulk_discount", discountOptions, new("en-US"));
+        var discount = translator.Translate("bulk_discount", discountOptions, new CultureInfo("en-US"));
         Assert.Contains("5", discount, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("15", discount, StringComparison.CurrentCultureIgnoreCase);
 
@@ -87,7 +87,7 @@ public class AdvancedTranslationScenarioTests
             .WithQuantity(3)
             .Build();
 
-        var shipping = translator.Translate("shipping", shippingOptions, new("en-US"));
+        var shipping = translator.Translate("shipping", shippingOptions, new CultureInfo("en-US"));
         Assert.NotEmpty(shipping);
     }
 
@@ -96,7 +96,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Simulate translating documentation with code blocks and special formatting
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Docs", new InMemoryResourceManager(new()
+        catalog.Register("Docs", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -122,12 +122,12 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("number", 3)
             .Build();
 
-        var enTutorial = translator.Translate("tutorial_intro", options, new("en-US"));
+        var enTutorial = translator.Translate("tutorial_intro", options, new CultureInfo("en-US"));
         Assert.Contains("MyFramework", enTutorial, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("get started", enTutorial, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("10", enTutorial, StringComparison.CurrentCultureIgnoreCase);
 
-        var frTutorial = translator.Translate("tutorial_intro", options, new("fr-FR"));
+        var frTutorial = translator.Translate("tutorial_intro", options, new CultureInfo("fr-FR"));
         Assert.Contains("MyFramework", frTutorial, StringComparison.CurrentCultureIgnoreCase);
     }
 
@@ -136,7 +136,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Simulate user preferences affecting translation output
         var catalog = new TestTranslationCatalog();
-        catalog.Register("UI", new InMemoryResourceManager(new()
+        catalog.Register("UI", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -166,12 +166,12 @@ public class AdvancedTranslationScenarioTests
 
         // User prefers compact symbols in English
         var symbolOptions = new TranslationOptionsBuilder().WithStyle(DisplayStyle.Symbol).Build();
-        var enSymbol = translator.Translate("menu", symbolOptions, new("en-US"));
+        var enSymbol = translator.Translate("menu", symbolOptions, new CultureInfo("en-US"));
         Assert.Equal("☰", enSymbol);
 
         // User prefers abbreviations in French
         var abbrevOptions = new TranslationOptionsBuilder().WithStyle(DisplayStyle.Abbreviation).Build();
-        var frAbbrev = translator.Translate("settings", abbrevOptions, new("fr-FR"));
+        var frAbbrev = translator.Translate("settings", abbrevOptions, new CultureInfo("fr-FR"));
         Assert.Equal("PAR", frAbbrev);
     }
 
@@ -180,7 +180,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Simulate generating messages based on time/quantity
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Time", new InMemoryResourceManager(new()
+        catalog.Register("Time", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -200,12 +200,12 @@ public class AdvancedTranslationScenarioTests
 
         // Time-based message
         var timeOptions = new TranslationOptionsBuilder().WithQuantity(30).Build();
-        var timeMsg = translator.Translate("ago", timeOptions, new("en-US"));
+        var timeMsg = translator.Translate("ago", timeOptions, new CultureInfo("en-US"));
         Assert.Contains("30", timeMsg, StringComparison.CurrentCultureIgnoreCase);
 
         // Version number formatting
         var versionOptions = new TranslationOptionsBuilder().WithQuantity(1000000).Build();
-        var version = translator.Translate("version", versionOptions, new("en-US"));
+        var version = translator.Translate("version", versionOptions, new CultureInfo("en-US"));
         Assert.Contains("1,000,000", version, StringComparison.CurrentCultureIgnoreCase);
     }
 
@@ -214,7 +214,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Simulate personalized messages with user context
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Messages", new InMemoryResourceManager(new()
+        catalog.Register("Messages", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en-US"] = new()
             {
@@ -237,7 +237,7 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("name", "John Doe")
             .Build();
 
-        var welcome = translator.Translate("welcome_new", welcomeOptions, new("en-US"));
+        var welcome = translator.Translate("welcome_new", welcomeOptions, new CultureInfo("en-US"));
         Assert.Contains("John Doe", welcome, StringComparison.CurrentCultureIgnoreCase);
 
         // Order summary with multiple arguments
@@ -248,7 +248,7 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("date", "2023-12-01")
             .Build();
 
-        var order = translator.Translate("order_summary", orderOptions, new("en-US"));
+        var order = translator.Translate("order_summary", orderOptions, new CultureInfo("en-US"));
         Assert.Contains("Jane Smith", order, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("3", order, StringComparison.CurrentCultureIgnoreCase);
 
@@ -258,7 +258,7 @@ public class AdvancedTranslationScenarioTests
             .WithArgument("level_value", 42)
             .Build();
 
-        var achievement = translator.Translate("achievement", achievementOptions, new("en-US"));
+        var achievement = translator.Translate("achievement", achievementOptions, new CultureInfo("en-US"));
         Assert.Contains("Alex", achievement, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("42", achievement, StringComparison.CurrentCultureIgnoreCase);
     }
@@ -268,7 +268,7 @@ public class AdvancedTranslationScenarioTests
     {
         // Test cascading fallback: en-GB -> en -> invariant
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             // Only English generic available
             ["en"] = new() { ["Greeting"] = "Hello" }
@@ -279,7 +279,7 @@ public class AdvancedTranslationScenarioTests
         var translator = CreateTranslator(catalog);
 
         // Request en-GB but only have en
-        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new("en-GB"));
+        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new CultureInfo("en-GB"));
 
         Assert.Equal("Hello", result);
     }
@@ -289,7 +289,7 @@ public class AdvancedTranslationScenarioTests
     {
         // What happens when template references missing arguments
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new() { ["en-US"] = new() { ["partial"] = "Hello {name}, welcome to {platform}" } }));
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["partial"] = "Hello {name}, welcome to {platform}" } }));
 
         var translator = CreateTranslator(catalog);
 
@@ -300,7 +300,7 @@ public class AdvancedTranslationScenarioTests
             // Missing: platform
             .Build();
 
-        var result = translator.Translate("partial", options, new("en-US"));
+        var result = translator.Translate("partial", options, new CultureInfo("en-US"));
 
         Assert.Contains("Alice", result, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("{platform}", result, StringComparison.CurrentCultureIgnoreCase); // Unknown placeholder preserved
@@ -317,7 +317,7 @@ public class AdvancedTranslationScenarioTests
     public void Scenario_RegionalVariants_AllSupported(string cultureName)
     {
         var catalog = new TestTranslationCatalog();
-        catalog.Register("Main", new InMemoryResourceManager(new()
+        catalog.Register("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>>
         {
             ["en"] = new() { ["Hello"] = "Hello" },
             ["fr"] = new() { ["Hello"] = "Bonjour" },
@@ -326,7 +326,7 @@ public class AdvancedTranslationScenarioTests
 
         var translator = CreateTranslator(catalog);
 
-        var result = translator.Translate("Hello", TranslationOptionsPresets.Default, new(cultureName));
+        var result = translator.Translate("Hello", TranslationOptionsPresets.Default, new CultureInfo(cultureName));
 
         Assert.NotEmpty(result);
     }
@@ -341,7 +341,7 @@ public class AdvancedTranslationScenarioTests
 
         var providerResolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, new SimpleKeyResolver(), new PluralizationService(providerResolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext
@@ -367,10 +367,10 @@ public class AdvancedTranslationScenarioTests
                 };
 
                 if (!string.IsNullOrEmpty(styleSuffix))
-                    candidates.Add(new(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
+                    candidates.Add(new TranslationKeyCandidate(baseKey + styleSuffix, TranslationFallbackPolicy.Strict));
             }
 
-            candidates.Add(new(baseKey, TranslationFallbackPolicy.Flexible));
+            candidates.Add(new TranslationKeyCandidate(baseKey, TranslationFallbackPolicy.Flexible));
 
             return candidates;
         }

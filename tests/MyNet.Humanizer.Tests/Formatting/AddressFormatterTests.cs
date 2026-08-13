@@ -90,7 +90,7 @@ public class AddressFormatterTests
     [Fact]
     public void AddressFormatterBase_Format_WithUnknownToken_RemovesUnknownTokenAndExtraWhitespace()
     {
-        var formatter = new TestAddressFormatter(new("en-US"));
+        var formatter = new TestAddressFormatter(new CultureInfo("en-US"));
         var address = new Address("Main street", "90210", "Beverly Hills", Country.UnitedStatesOfAmerica);
 
         var result = formatter.Format(address);

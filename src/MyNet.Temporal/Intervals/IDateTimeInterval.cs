@@ -6,8 +6,6 @@
 
 using System;
 
-using MyNet.Primitives.Intervals;
-
 namespace MyNet.Temporal.Intervals;
 
 /// <summary>

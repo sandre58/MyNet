@@ -130,10 +130,10 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
         lock (_sync)
         {
             _openedDialogs.Add(dialog);
-            _activeDialogs[dialog] = new() { Strategy = strategy };
+            _activeDialogs[dialog] = new ActiveDialog { Strategy = strategy };
         }
 
-        DialogOpened?.Invoke(this, new(dialog));
+        DialogOpened?.Invoke(this, new ContentDialogLifecycleEventArgs(dialog));
     }
 
     private async Task CompleteLifecycleAsync(IDialog dialog)
@@ -155,7 +155,7 @@ public sealed class ContentDialogService(IEnumerable<IDialogStrategy> strategies
         if (shouldNotifyClosed)
         {
             await dialog.OnClosedAsync().ConfigureAwait(false);
-            DialogClosed?.Invoke(this, new(dialog));
+            DialogClosed?.Invoke(this, new ContentDialogLifecycleEventArgs(dialog));
         }
     }
 

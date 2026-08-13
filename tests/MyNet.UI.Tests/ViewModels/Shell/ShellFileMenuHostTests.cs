@@ -31,7 +31,7 @@ public class ShellFileMenuHostTests
     public void CloseFileMenuContent_ClearsDrawerAndContent()
     {
         var drawer = new TestFileMenuDrawer();
-        var host = CreateHost([new()], drawer);
+        var host = CreateHost([new TestWorkspaceViewModel()], drawer);
         host.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         host.CloseFileMenuContent();
@@ -44,7 +44,7 @@ public class ShellFileMenuHostTests
     public void SetFileMenuContentVisibility_ToggleWhenOpenWithSameContent_ClosesDrawer()
     {
         var drawer = new TestFileMenuDrawer();
-        var host = CreateHost([new()], drawer);
+        var host = CreateHost([new TestWorkspaceViewModel()], drawer);
         host.OpenFileMenuContent<TestWorkspaceViewModel>();
 
         host.SetFileMenuContentVisibility<TestWorkspaceViewModel>(ShellDrawerAction.Toggle);
@@ -57,7 +57,7 @@ public class ShellFileMenuHostTests
     public void SetDrawer_Toggle_FlipsDrawerWithoutChangingContent()
     {
         var drawer = new TestFileMenuDrawer { IsFileMenuOpen = false };
-        var host = CreateHost([new()], drawer);
+        var host = CreateHost([new TestWorkspaceViewModel()], drawer);
 
         host.SetDrawer(ShellDrawerAction.Toggle);
 
@@ -69,7 +69,7 @@ public class ShellFileMenuHostTests
     {
         var fileMenu = new FileMenuViewModel(content);
 
-        return new(fileMenu, drawer);
+        return new ShellFileMenuHost(fileMenu, drawer);
     }
 
     private sealed class TestFileMenuDrawer : IShellFileMenuDrawer

@@ -108,7 +108,7 @@ public static class Faker
         var colorFaker = new ColorFaker(RandomGenerator.Current);
         var mailFaker = new MailFaker(RandomGenerator.Current, identityFaker, domainFaker);
 
-        return new(
+        return new FakeDataGenerator(
             nameFaker,
             phoneFaker,
             mailFaker,

@@ -36,10 +36,10 @@ public class GroupingViewModel<T> : ObservableObject, IGroupingViewModel<T>
     /// <param name="defaultGrouping">The optional default grouping configuration.</param>
     public GroupingViewModel(IEnumerable<IGroupingPropertyViewModel<T>> properties, IEnumerable<IGroupingProperty<T>>? defaultGrouping = null)
     {
-        Properties = new(new(properties));
+        Properties = [with([.. properties])];
         DefaultGrouping = defaultGrouping?.ToList() ?? [];
 
-        _deferredAction = new(RaiseGroupingChanged);
+        _deferredAction = new DeferredAction(RaiseGroupingChanged);
 
         Reset();
 
@@ -144,7 +144,7 @@ public class GroupingViewModel<T> : ObservableObject, IGroupingViewModel<T>
     private void RaiseGroupingChanged()
     {
         CurrentGrouping = ComputeCurrentGrouping();
-        GroupingChanged?.Invoke(this, new(CurrentGrouping));
+        GroupingChanged?.Invoke(this, new GroupingChangedEventArgs<T>(CurrentGrouping));
     }
 
     /// <summary>

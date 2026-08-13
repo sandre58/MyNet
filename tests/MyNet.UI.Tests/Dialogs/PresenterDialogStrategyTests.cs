@@ -31,7 +31,7 @@ public class PresenterDialogStrategyTests
         var strategy = new PresenterDialogStrategy([low, high]);
         var dialog = new SimpleDialog();
 
-        await strategy.ShowAsync(dialog, new() { Dialog = dialog }).ConfigureAwait(true);
+        await strategy.ShowAsync(dialog, new DialogOptions { Dialog = dialog }).ConfigureAwait(true);
 
         high.PresentCount.Should().Be(1);
         low.PresentCount.Should().Be(0);

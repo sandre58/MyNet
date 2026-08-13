@@ -29,7 +29,7 @@ internal sealed class Debouncer : IDisposable
     {
         ArgumentOutOfRangeException.ThrowIfNegative(delayMilliseconds);
         _delayMilliseconds = delayMilliseconds;
-        _timer = new(static s => ((Debouncer)s!).Fire(), this, Timeout.Infinite, Timeout.Infinite);
+        _timer = new Timer(static s => ((Debouncer)s!).Fire(), this, Timeout.Infinite, Timeout.Infinite);
     }
 
     /// <summary>

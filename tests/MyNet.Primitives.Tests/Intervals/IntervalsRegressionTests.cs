@@ -102,7 +102,7 @@ public class IntervalsRegressionTests
     [Fact]
     public void TimeRange_Should_Support_CrossMidnight_And_Closed_End()
     {
-        var range = new TimeRange(new(22, 0), new(2, 0));
+        var range = new TimeRange(new TimeOnly(22, 0), new TimeOnly(2, 0));
 
         Assert.True(range.CrossesMidnight);
         Assert.Equal(TimeSpan.FromHours(4), range.Duration);
@@ -114,17 +114,17 @@ public class IntervalsRegressionTests
     [Fact]
     public void TimeRange_Enumerate_Should_Include_End_When_It_Matches_Step_Across_Midnight()
     {
-        var range = new TimeRange(new(22, 0), new(2, 0));
+        var range = new TimeRange(new TimeOnly(22, 0), new TimeOnly(2, 0));
 
         var values = range.Enumerate(TimeSpan.FromHours(1)).ToList();
 
         Assert.Equal(
             [
-                new(22, 0),
-                new(23, 0),
-                new(0, 0),
-                new(1, 0),
-                new(2, 0)
+                new TimeOnly(22, 0),
+                new TimeOnly(23, 0),
+                new TimeOnly(0, 0),
+                new TimeOnly(1, 0),
+                new TimeOnly(2, 0)
             ],
             values);
     }

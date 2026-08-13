@@ -33,7 +33,7 @@ public sealed class SelectionEngine<T> : IDisposable
     public SelectionEngine(IObservable<IChangeSet<T>> source, SelectionMode mode)
     {
         Mode = mode;
-        _subject = new([]);
+        _subject = new BehaviorSubject<IReadOnlyCollection<T>>([]);
 
         _disposables.Add(source.Subscribe(ApplySourceChanges));
     }

@@ -36,7 +36,7 @@ public sealed class NavigationParameters : INavigationParameters, IReadOnlyDicti
     public NavigationParameters(IEnumerable<KeyValuePair<string, object?>> values)
     {
         ArgumentNullException.ThrowIfNull(values);
-        _values = new(values, StringComparer.Ordinal);
+        _values = new Dictionary<string, object?>(values, StringComparer.Ordinal);
     }
 
     /// <summary>
@@ -66,27 +66,27 @@ public sealed class NavigationParameters : INavigationParameters, IReadOnlyDicti
         switch (values)
         {
             case null:
-                return new();
+                return new NavigationParameters();
             case NavigationParameters parameters:
-                return new(parameters);
+                return new NavigationParameters(parameters);
             case IReadOnlyDictionary<string, object?> readOnlyDictionary:
-                return new(readOnlyDictionary);
+                return new NavigationParameters(readOnlyDictionary);
             case IEnumerable<KeyValuePair<string, object?>> pairs:
-                return new(pairs);
+                return new NavigationParameters(pairs);
             case IDictionary dictionary:
                 {
                     var entries = new List<KeyValuePair<string, object?>>();
                     foreach (DictionaryEntry entry in dictionary)
                     {
                         if (entry.Key is string key)
-                            entries.Add(new(key, entry.Value));
+                            entries.Add(new KeyValuePair<string, object?>(key, entry.Value));
                     }
 
-                    return new(entries);
+                    return new NavigationParameters(entries);
                 }
 
             default:
-                return new(values.GetType()
+                return new NavigationParameters(values.GetType()
                     .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(property => property.CanRead && property.GetIndexParameters().Length == 0)
                     .Select(property => new KeyValuePair<string, object?>(property.Name, property.GetValue(values))));
@@ -127,13 +127,10 @@ public sealed class NavigationParameters : INavigationParameters, IReadOnlyDicti
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
-        if (!_values.TryGetValue(key, out var rawValue))
-        {
-            value = default;
-            return false;
-        }
-
-        return NavigationParameterConversions.TryConvert(rawValue, out value);
+        if (_values.TryGetValue(key, out var rawValue))
+            return NavigationParameterConversions.TryConvert(rawValue, out value);
+        value = default;
+        return false;
     }
 
     /// <inheritdoc />

@@ -27,9 +27,9 @@ public class TranslatorTests
     public void Translate_UnknownKey_ReturnsKeyByDefault()
     {
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Unknown", TranslationFallbackPolicy.Flexible)));
+            new StubKeyResolver(new TranslationKeyCandidate("Unknown", TranslationFallbackPolicy.Flexible)));
 
-        var result = translator.Translate("Unknown", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Unknown", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("Unknown", result);
     }
@@ -38,9 +38,9 @@ public class TranslatorTests
     public void Translate_WithResourceKey_UsesOnlyTargetResource()
     {
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Label", TranslationFallbackPolicy.Flexible)), ("A", new InMemoryResourceManager(new() { ["en-US"] = new() { ["Label"] = "A value" } })), ("B", new InMemoryResourceManager(new() { ["en-US"] = new() { ["Label"] = "B value" } })));
+            new StubKeyResolver(new TranslationKeyCandidate("Label", TranslationFallbackPolicy.Flexible)), ("A", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Label"] = "A value" } })), ("B", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Label"] = "B value" } })));
 
-        var result = translator.Translate("Label", TranslationOptionsPresets.Default, new("en-US"), "B");
+        var result = translator.Translate("Label", TranslationOptionsPresets.Default, new CultureInfo("en-US"), "B");
 
         Assert.Equal("B value", result);
     }
@@ -49,9 +49,9 @@ public class TranslatorTests
     public void Translate_WithCultureFallback_UsesParentCulture()
     {
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Greeting", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new() { ["en"] = new() { ["Greeting"] = "Hello from parent" } })));
+            new StubKeyResolver(new TranslationKeyCandidate("Greeting", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en"] = new() { ["Greeting"] = "Hello from parent" } })));
 
-        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new("en-US"));
+        var result = translator.Translate("Greeting", TranslationOptionsPresets.Default, new CultureInfo("en-US"));
 
         Assert.Equal("Hello from parent", result);
     }
@@ -61,9 +61,9 @@ public class TranslatorTests
     {
         var options = new TranslationOptionsBuilder().WithQuantity(2).Build();
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Word", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new() { ["en-US"] = new() { ["Word"] = "person" } })));
+            new StubKeyResolver(new TranslationKeyCandidate("Word", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Word"] = "person" } })));
 
-        var result = translator.Translate("Word", options, new("en-US"));
+        var result = translator.Translate("Word", options, new CultureInfo("en-US"));
 
         Assert.Equal("people", result);
     }
@@ -73,9 +73,9 @@ public class TranslatorTests
     {
         var options = new TranslationOptionsBuilder().WithQuantity(2).Build();
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Word", TranslationFallbackPolicy.Strict)), ("Main", new InMemoryResourceManager(new() { ["en-US"] = new() { ["Word"] = "person" } })));
+            new StubKeyResolver(new TranslationKeyCandidate("Word", TranslationFallbackPolicy.Strict)), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["en-US"] = new() { ["Word"] = "person" } })));
 
-        var result = translator.Translate("Word", options, new("en-US"));
+        var result = translator.Translate("Word", options, new CultureInfo("en-US"));
 
         Assert.Equal("person", result);
     }
@@ -85,9 +85,9 @@ public class TranslatorTests
     {
         var options = new TranslationOptionsBuilder().WithQuantity(1234).Build();
         var translator = CreateTranslator(
-            new StubKeyResolver(new("Template", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new() { ["fr-FR"] = new() { ["Template"] = "Valeur {quantity:N0}" } })));
+            new StubKeyResolver(new TranslationKeyCandidate("Template", TranslationFallbackPolicy.Flexible)), ("Main", new InMemoryResourceManager(new Dictionary<string, Dictionary<string, string>> { ["fr-FR"] = new() { ["Template"] = "Valeur {quantity:N0}" } })));
 
-        var result = translator.Translate("Template", options, new("fr-FR"));
+        var result = translator.Translate("Template", options, new CultureInfo("fr-FR"));
 
         var normalized = result.Replace('\u202F', ' ').Replace('\u00A0', ' ');
         Assert.StartsWith("Valeur 1 234", normalized, StringComparison.Ordinal);
@@ -106,7 +106,7 @@ public class TranslatorTests
         var registry = TestLocalizationProviderRegistryFactory.Create(factory);
         var resolver = new LocalizationServiceResolver(registry);
 
-        return new(catalog, keyResolver, new PluralizationService(resolver, new FixedCultureContext(new("en-US"))), CultureFallbackPolicies.ParentCulture);
+        return new Translator(catalog, keyResolver, new PluralizationService(resolver, new FixedCultureContext(new CultureInfo("en-US"))), CultureFallbackPolicies.ParentCulture);
     }
 
     private sealed class FixedCultureContext(CultureInfo culture) : ICultureContext

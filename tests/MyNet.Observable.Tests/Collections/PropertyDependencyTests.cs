@@ -20,7 +20,7 @@ public sealed class PropertyDependencyTests
     public void SetFilter_WhenItemPropertyChanges_ShouldReevaluateFilter()
     {
         var item = new FilterableItem { Value = 1 };
-        using var collection = ExtendedCollection.From([item, new() { Value = 2 }]);
+        using var collection = ExtendedCollection.From([item, new FilterableItem { Value = 2 }]);
 
         collection.SetFilter(new ExpressionFilter<FilterableItem>(x => x.Value > 1));
 
@@ -65,7 +65,7 @@ public sealed class PropertyDependencyTests
                 return;
 
             field = value;
-            PropertyChanged?.Invoke(this, new(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -60,7 +60,7 @@ public class DialogViewModel : WorkspaceViewModel, IDialog
 
     /// <summary>Raises a close request for the current dialog.</summary>
     /// <param name="force">A value indicating whether the close request should bypass optional checks.</param>
-    protected virtual void RequestClose(bool force = false) => CloseRequested?.Invoke(this, new() { Force = force });
+    protected virtual void RequestClose(bool force = false) => CloseRequested?.Invoke(this, new CloseRequestedEventArgs { Force = force });
 }
 
 /// <summary>
@@ -82,7 +82,7 @@ public abstract class DialogViewModel<TResult>(
     public override Task OnOpenedAsync()
     {
         // Reset so the dialog can be shown more than once.
-        _tcs = new();
+        _tcs = new TaskCompletionSource<DialogResult<TResult>>();
         return base.OnOpenedAsync();
     }
 

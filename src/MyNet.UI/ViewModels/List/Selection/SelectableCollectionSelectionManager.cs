@@ -33,7 +33,7 @@ public sealed class SelectableCollectionSelectionManager<T> : ISelectionManager<
     {
         ArgumentNullException.ThrowIfNull(collection);
 
-        _selection = new(collection, mode, disposeCollection: false);
+        _selection = new SelectableCollection<T>(collection, mode, disposeCollection: false);
         _ownsSelectable = true;
     }
 

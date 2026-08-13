@@ -72,7 +72,7 @@ public class NumericRangeTests
         var intersection = left.Intersection(right);
 
         Assert.NotNull(intersection);
-        Assert.Equal(new(3, 5), intersection);
+        Assert.Equal(new NumericRange<int>(3, 5), intersection);
     }
 
     [Fact]

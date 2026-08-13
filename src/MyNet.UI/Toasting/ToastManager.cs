@@ -55,7 +55,7 @@ public sealed class ToastManager : IToastManager
         _filter = filter;
         _options = options ?? new ToastManagerOptions();
 
-        Toasts = new(_visible);
+        Toasts = [with(_visible)];
 
         _subscription = service.Notifications
             .ObserveOn(_scheduler.Ui)
@@ -156,11 +156,9 @@ public sealed class ToastManager : IToastManager
             _closeHandlers.Remove(toast.Notification.Id);
         }
 
-        if (_lifetimeSubscriptions.TryGetValue(toast.Notification.Id, out var subscription))
-        {
-            subscription.Dispose();
-            _lifetimeSubscriptions.Remove(toast.Notification.Id);
-        }
+        if (!_lifetimeSubscriptions.TryGetValue(toast.Notification.Id, out var subscription)) return;
+        subscription.Dispose();
+        _lifetimeSubscriptions.Remove(toast.Notification.Id);
     }
 
     /// <inheritdoc />

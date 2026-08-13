@@ -43,6 +43,6 @@ public sealed class AutoSaveFeature : IAutoSaveFeature
             return;
 
         IsEnabled = value;
-        Changed?.Invoke(this, new(value));
+        Changed?.Invoke(this, new AutoSaveEnabledChangedEventArgs(value));
     }
 }

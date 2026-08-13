@@ -26,11 +26,9 @@ public static class DictionaryExtensions
         {
             ArgumentNullException.ThrowIfNull(dictionary);
 
-            if (!dictionary.TryGetValue(key, out var value))
-            {
-                value = factory();
-                dictionary.Add(key, value);
-            }
+            if (dictionary.TryGetValue(key, out var value)) return value;
+            value = factory();
+            dictionary.Add(key, value);
 
             return value;
         }

@@ -36,7 +36,7 @@ public static class DateOnlyExtensions
             var nextYear = date.Year + 1;
             var numberOfDaysInSameMonthNextYear = DateTime.DaysInMonth(nextYear, date.Month);
 
-            if (numberOfDaysInSameMonthNextYear >= date.Day) return new(nextYear, date.Month, date.Day);
+            if (numberOfDaysInSameMonthNextYear >= date.Day) return new DateOnly(nextYear, date.Month, date.Day);
             var differenceInDays = date.Day - numberOfDaysInSameMonthNextYear;
             var dateTime = new DateOnly(nextYear, date.Month, numberOfDaysInSameMonthNextYear);
             return dateTime.AddDays(differenceInDays);
@@ -52,7 +52,7 @@ public static class DateOnlyExtensions
             var numberOfDaysInSameMonthPreviousYear = DateTime.DaysInMonth(previousYear, date.Month);
 
             if (numberOfDaysInSameMonthPreviousYear >= date.Day)
-                return new(previousYear, date.Month, date.Day);
+                return new DateOnly(previousYear, date.Month, date.Day);
             var differenceInDays = date.Day - numberOfDaysInSameMonthPreviousYear;
             var dateTime = new DateOnly(previousYear, date.Month, numberOfDaysInSameMonthPreviousYear);
             return dateTime.AddDays(differenceInDays);
@@ -186,17 +186,17 @@ public static class DateOnlyExtensions
         /// <summary>
         /// Returns a <see cref="DateTime"/> representing the provided hour and minute on the same date.
         /// </summary>
-        public DateTime At(int hour, int minute) => date.At(new(hour, minute));
+        public DateTime At(int hour, int minute) => date.At(new TimeOnly(hour, minute));
 
         /// <summary>
         /// Returns a <see cref="DateTime"/> representing the provided hour, minute and second on the same date.
         /// </summary>
-        public DateTime At(int hour, int minute, int second) => date.At(new(hour, minute, second));
+        public DateTime At(int hour, int minute, int second) => date.At(new TimeOnly(hour, minute, second));
 
         /// <summary>
         /// Returns a <see cref="DateTime"/> representing the provided hour, minute, second and milliseconds on the same date.
         /// </summary>
-        public DateTime At(int hour, int minute, int second, int milliseconds) => date.At(new(hour, minute, second, milliseconds));
+        public DateTime At(int hour, int minute, int second, int milliseconds) => date.At(new TimeOnly(hour, minute, second, milliseconds));
 
         /// <summary>
         /// Gets the earliest possible <see cref="DateTime"/> for the date (midnight).
@@ -216,7 +216,7 @@ public static class DateOnlyExtensions
         public DateOnly BeginningOfQuarter()
         {
             var currentQuarter = ((date.Month - 1) / 3) + 1;
-            return new(date.Year, (3 * currentQuarter) - 2, 1);
+            return new DateOnly(date.Year, (3 * currentQuarter) - 2, 1);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ public static class DateOnlyExtensions
         {
             var currentQuarter = ((date.Month - 1) / 3) + 1;
             var firstDay = new DateOnly(date.Year, (3 * currentQuarter) - 2, 1);
-            return new(firstDay.Year, firstDay.Month + 2, 1);
+            return new DateOnly(firstDay.Year, firstDay.Month + 2, 1);
         }
 
         /// <summary>

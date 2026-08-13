@@ -45,6 +45,6 @@ public static class GlobalizationServices
         CultureService defaultCultureService = new();
         TimeZoneService defaultTimeZoneService = new();
 
-        return new(defaultCultureService, defaultTimeZoneService);
+        return new GlobalizationService(defaultCultureService, defaultTimeZoneService);
     }
 }

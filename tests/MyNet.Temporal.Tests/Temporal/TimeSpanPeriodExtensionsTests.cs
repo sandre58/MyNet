@@ -5,8 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Temporal;
-using MyNet.Temporal.Intervals;
 using Xunit;
 
 namespace MyNet.Temporal.Tests.Temporal;
@@ -18,16 +16,16 @@ public class TimeSpanPeriodExtensionsTests
     [Fact]
     public void CoerceSameDayRange_WhenEndEdited_AdjustsStartToEnd()
     {
-        var (start, end) = new TimeSpan(15, 32, 0).CoerceSameDayRange(new(14, 12, 0), editedEnd: true);
+        var (start, end) = new TimeSpan(15, 32, 0).CoerceSameDayRange(new TimeSpan(14, 12, 0), editedEnd: true);
 
-        Assert.Equal(new(14, 12, 0), start);
-        Assert.Equal(new(14, 12, 0), end);
+        Assert.Equal(new TimeSpan(14, 12, 0), start);
+        Assert.Equal(new TimeSpan(14, 12, 0), end);
     }
 
     [Fact]
     public void ToPeriodFromTimeOfDay_AllowsOvernight()
     {
-        var period = new TimeSpan(22, 0, 0).ToDateTimePeriod(new(2, 0, 0), ReferenceDate, allowOvernight: true);
+        var period = new TimeSpan(22, 0, 0).ToDateTimePeriod(new TimeSpan(2, 0, 0), ReferenceDate, allowOvernight: true);
 
         Assert.True(period.SpansMidnight);
     }
@@ -35,14 +33,14 @@ public class TimeSpanPeriodExtensionsTests
     [Fact]
     public void ToPeriodFromTimeOfDay_WithoutOvernight_ThrowsWhenEndBeforeStart() =>
         Assert.Throws<ArgumentException>(() =>
-            new TimeSpan(22, 0, 0).ToDateTimePeriod(new(2, 0, 0), ReferenceDate, allowOvernight: false));
+            new TimeSpan(22, 0, 0).ToDateTimePeriod(new TimeSpan(2, 0, 0), ReferenceDate, allowOvernight: false));
 
     [Fact]
     public void EndTimeOfDay_CollapsesSubMinuteInterval()
     {
-        var period = new TimeSpan(14, 12, 0).ToDateTimePeriod(new(14, 12, 30), ReferenceDate);
+        var period = new TimeSpan(14, 12, 0).ToDateTimePeriod(new TimeSpan(14, 12, 30), ReferenceDate);
 
-        Assert.Equal(new(14, 12, 0), period.StartTimeOfDay);
-        Assert.Equal(new(14, 12, 0), period.EndTimeOfDay());
+        Assert.Equal(new TimeSpan(14, 12, 0), period.StartTimeOfDay);
+        Assert.Equal(new TimeSpan(14, 12, 0), period.EndTimeOfDay());
     }
 }

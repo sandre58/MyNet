@@ -74,7 +74,7 @@ public static class Localizer
         Translator defaultTranslator = new(defaultCatalog, defaultTranslationKeyResolver, defaultPluralizationService, CultureFallbackPolicies.ParentCulture);
         TranslationService defaultTranslationService = new(defaultTranslator, defaultCultureContext);
 
-        return new(
+        return new LocalizationRuntime(
             defaultCultureContext,
             defaultTranslationService,
             defaultPluralizationService,

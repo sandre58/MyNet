@@ -56,7 +56,7 @@ public sealed class CultureService(CultureInfo initialCulture) : ICultureService
 
             var old = CurrentCulture;
             CurrentCulture = culture;
-            args = new(old, culture);
+            args = new CultureChangedEventArgs(old, culture);
         }
 
         // Update the calling thread's culture so that formatting APIs (e.g. ResourceManager, string.Format)

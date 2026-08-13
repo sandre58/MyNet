@@ -120,7 +120,7 @@ public sealed class DirectoryServiceTests
         public DirectoryFixture()
         {
             Root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-            Service = new(Root, NullLogger<DirectoryService>.Instance);
+            Service = new DirectoryService(Root, NullLogger<DirectoryService>.Instance);
         }
 
         public string Root { get; }

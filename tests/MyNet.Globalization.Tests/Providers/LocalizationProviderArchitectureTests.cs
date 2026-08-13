@@ -23,21 +23,21 @@ public sealed class LocalizationProviderArchitectureTests
     {
         var builder = new LocalizationServiceFactoryBuilder<ITestProvider>(_ => new TestProvider("default", CultureInfo.InvariantCulture));
 
-        builder.RegisterCulture("fr", () => new TestProvider("fr-v1", new("fr")));
+        builder.RegisterCulture("fr", () => new TestProvider("fr-v1", new CultureInfo("fr")));
 
         Assert.Throws<InvalidOperationException>(() =>
-            builder.RegisterCulture("fr", () => new TestProvider("fr-v2", new("fr")), CultureRegistrationBehavior.ThrowIfExists));
+            builder.RegisterCulture("fr", () => new TestProvider("fr-v2", new CultureInfo("fr")), CultureRegistrationBehavior.ThrowIfExists));
     }
 
     [Fact]
     public void RegisterCulture_WithSkipIfExists_KeepsFirstRegistration()
     {
         var factory = new LocalizationServiceFactoryBuilder<ITestProvider>(_ => new TestProvider("default", CultureInfo.InvariantCulture))
-            .RegisterCulture("fr", () => new TestProvider("fr-v1", new("fr")))
-            .RegisterCulture("fr", () => new TestProvider("fr-v2", new("fr")), CultureRegistrationBehavior.SkipIfExists)
+            .RegisterCulture("fr", () => new TestProvider("fr-v1", new CultureInfo("fr")))
+            .RegisterCulture("fr", () => new TestProvider("fr-v2", new CultureInfo("fr")), CultureRegistrationBehavior.SkipIfExists)
             .Build();
 
-        var provider = factory.Create(new("fr-FR"));
+        var provider = factory.Create(new CultureInfo("fr-FR"));
 
         Assert.Equal("fr-v1", provider.Name);
     }
@@ -53,7 +53,7 @@ public sealed class LocalizationProviderArchitectureTests
         factoryA.CreateAction = culture => new AProvider(culture, resolver.GetRequired<IBProvider>(culture));
         factoryB.CreateAction = culture => new BProvider(culture, resolver.GetRequired<IAProvider>(culture));
 
-        var exception = Assert.Throws<InvalidOperationException>(() => resolver.GetRequired<IAProvider>(new("fr-FR")));
+        var exception = Assert.Throws<InvalidOperationException>(() => resolver.GetRequired<IAProvider>(new CultureInfo("fr-FR")));
 
         Assert.Contains("Circular localization provider dependency detected", exception.Message, StringComparison.Ordinal);
         Assert.Contains("IAProvider(fr-FR)", exception.Message, StringComparison.Ordinal);

@@ -5,6 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Globalization;
+using MyNet.Observable.Behaviors.Metadata.Features.Events;
 using MyNet.Primitives;
 using Xunit;
 
@@ -37,7 +39,7 @@ public sealed class LocalizedSmartEnumTests
         var changed = new List<string>();
         sut.PropertyChanged += (_, e) => changed.Add(e.PropertyName ?? string.Empty);
 
-        sut.OnEvent(new(new("fr-FR")));
+        sut.OnEvent(new CultureChangedEvent(new CultureInfo("fr-FR")));
 
         Assert.Contains(nameof(LocalizedSmartEnum<>.Display), changed);
     }

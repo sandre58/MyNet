@@ -14,7 +14,7 @@ public static class FileExtensionGroups
     /// <summary>
     /// Gets a <see cref="FileExtensionGroup"/> that represents all files, using a wildcard extension. This group can be used to allow users to select any file type in file dialogs, without restricting the selection to specific extensions.
     /// </summary>
-    public static FileExtensionGroup AllFiles { get; } = new(nameof(AllFiles), [new("*")]);
+    public static FileExtensionGroup AllFiles { get; } = new(nameof(AllFiles), [new FileExtension("*")]);
 
     /// <summary>
     /// Gets a <see cref="FileExtensionGroup"/> that represents CSV files, using the ".csv" extension. This group can be used to filter files in file dialogs to only show CSV files, which are commonly used for storing tabular data in a plain text format.

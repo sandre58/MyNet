@@ -43,7 +43,7 @@ public sealed class ViewModelExtensionsTests
         public void RaiseItemChanged(string value)
         {
             Item = value;
-            ItemChanged?.Invoke(this, new(null, value));
+            ItemChanged?.Invoke(this, new ItemChangedEventArgs<string>(null, value));
         }
     }
 }

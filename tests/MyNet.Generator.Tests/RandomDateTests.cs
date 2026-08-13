@@ -55,11 +55,9 @@ public class RandomDateTests
         var different = false;
         for (var i = 0; i < 20; i++)
         {
-            if (RandomGenerator.Current.Date(min, max) != first)
-            {
-                different = true;
-                break;
-            }
+            if (RandomGenerator.Current.Date(min, max) == first) continue;
+            different = true;
+            break;
         }
 
         Assert.True(different, "Date() returned the same value every time.");

@@ -40,7 +40,7 @@ public sealed class TimeZoneChangedBehavior : EventBehavior<ObservableObject, Ti
         if (IsDisposed || IsSuspended)
             return;
 
-        RaiseEvent(new(e.NewTimeZone));
+        RaiseEvent(new TimeZoneChangedEvent(e.NewTimeZone));
     }
 
     /// <inheritdoc/>

@@ -74,21 +74,17 @@ public static class InflectorExtensions
         {
             ArgumentException.ThrowIfNullOrEmpty(word);
 
-            if (!inputIsKnownToBeSingular)
-            {
-                var asPlural = Localizer.Pluralization.Pluralize(word, culture);
-                if (asPlural == word)
-                    return word;
+            if (inputIsKnownToBeSingular) return Localizer.Pluralization.Pluralize(word, culture);
+            var asPlural = Localizer.Pluralization.Pluralize(word, culture);
+            if (asPlural == word)
+                return word;
 
-                var asSingular = Localizer.Pluralization.Singularize(word, culture);
+            var asSingular = Localizer.Pluralization.Singularize(word, culture);
 
-                // Keep irregular plurals (people, children, mice, ...) unchanged when plurality is unknown.
-                return asSingular != word && Localizer.Pluralization.Pluralize(asSingular, culture) == word && !string.LooksLikeSimpleSuffixPlural(word, asSingular)
-                    ? word
-                    : asPlural;
-            }
-
-            return Localizer.Pluralization.Pluralize(word, culture);
+            // Keep irregular plurals (people, children, mice, ...) unchanged when plurality is unknown.
+            return asSingular != word && Localizer.Pluralization.Pluralize(asSingular, culture) == word && !string.LooksLikeSimpleSuffixPlural(word, asSingular)
+                ? word
+                : asPlural;
         }
 
         /// <summary>
@@ -113,22 +109,18 @@ public static class InflectorExtensions
             if (skipSimpleWords && word.Length <= 3)
                 return word;
 
-            if (!inputIsKnownToBePlural)
-            {
-                var asSingular = Localizer.Pluralization.Singularize(word, culture);
+            if (inputIsKnownToBePlural) return Localizer.Pluralization.Singularize(word, culture);
+            var asSingular = Localizer.Pluralization.Singularize(word, culture);
 
-                if (asSingular == word)
-                    return word;
+            if (asSingular == word)
+                return word;
 
-                var asPlural = Localizer.Pluralization.Pluralize(word, culture);
+            var asPlural = Localizer.Pluralization.Pluralize(word, culture);
 
-                // Guard against false positives for singular words ending with 's' (bus, status, analysis, ...).
-                return asPlural != word && Localizer.Pluralization.Singularize(asPlural, culture) == word && string.LooksLikeSimpleSuffixPlural(word, asSingular)
-                    ? word
-                    : asSingular;
-            }
-
-            return Localizer.Pluralization.Singularize(word, culture);
+            // Guard against false positives for singular words ending with 's' (bus, status, analysis, ...).
+            return asPlural != word && Localizer.Pluralization.Singularize(asPlural, culture) == word && string.LooksLikeSimpleSuffixPlural(word, asSingular)
+                ? word
+                : asSingular;
         }
 
         private static bool LooksLikeSimpleSuffixPlural(string input, string singularCandidate)

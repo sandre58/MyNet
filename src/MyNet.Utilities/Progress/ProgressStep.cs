@@ -59,7 +59,7 @@ internal sealed class ProgressStep<T> : IProgressStep<T>
         var weightings = subStepWeightings.ToList();
         var total = weightings.Sum();
         foreach (var w in weightings)
-            _children.Add(new(total > 0 ? w / total : 1.0 / weightings.Count));
+            _children.Add(new ProgressStepValue(total > 0 ? w / total : 1.0 / weightings.Count));
 
         _progresser.Push(this);
 

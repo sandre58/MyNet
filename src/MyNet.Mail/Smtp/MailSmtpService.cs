@@ -54,14 +54,14 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
         // Smtp seems to require the HTML version as the alternative.
         if (!string.IsNullOrEmpty(data.PlaintextAlternativeBody))
         {
-            message = new()
+            message = new MailMessage
             {
                 Subject = data.Subject,
                 Body = data.PlaintextAlternativeBody,
                 IsBodyHtml = false,
                 BodyEncoding = Encoding.UTF8,
                 SubjectEncoding = Encoding.UTF8,
-                From = new(data.From.Address, data.From.Name)
+                From = new MailAddress(data.From.Address, data.From.Name)
             };
 
             var mimeType = new ContentType("text/html; charset=UTF-8");
@@ -70,14 +70,14 @@ public sealed class MailSmtpService(SmtpClient smtpClient) : IMailService, IDisp
         }
         else
         {
-            message = new()
+            message = new MailMessage
             {
                 Subject = data.Subject,
                 Body = data.Body,
                 IsBodyHtml = data.IsHtml,
                 BodyEncoding = Encoding.UTF8,
                 SubjectEncoding = Encoding.UTF8,
-                From = new(data.From.Address, data.From.Name)
+                From = new MailAddress(data.From.Address, data.From.Name)
             };
         }
 

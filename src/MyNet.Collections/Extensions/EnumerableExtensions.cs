@@ -32,7 +32,7 @@ public static class EnumerableExtensions
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            return source as ObservableCollection<T> ?? new(source);
+            return source as ObservableCollection<T> ?? [.. source];
         }
 
         /// <summary>

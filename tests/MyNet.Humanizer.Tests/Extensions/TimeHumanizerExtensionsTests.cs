@@ -96,7 +96,7 @@ public class TimeHumanizerExtensionsTests
             MinUnit = TimeUnit.Millisecond,
             MaxUnit = TimeUnit.Minute,
             MaxComponents = 3,
-            ListFormatting = new()
+            ListFormatting = new ListFormattingOptions
             {
                 Separator = ", ",
                 Conjunction = ListConjunction.And

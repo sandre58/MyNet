@@ -21,7 +21,7 @@ public class TemplateTransformTests
             .WithArgument("price", 9876.54m)
             .Build();
 
-        var result = new TemplateTransform(options).Apply("Q={quantity:N1} / P={price:N2}", new("fr-FR"));
+        var result = new TemplateTransform(options).Apply("Q={quantity:N1} / P={price:N2}", new CultureInfo("fr-FR"));
 
         var normalized = result.Replace('\u202F', ' ').Replace('\u00A0', ' ');
         Assert.Equal("Q=1 234,5 / P=9 876,54", normalized);
@@ -32,7 +32,7 @@ public class TemplateTransformTests
     {
         var options = new TextTemplateOptionsBuilder().Build();
 
-        var result = new TemplateTransform(options).Apply("Hello {unknown}", new("en-US"));
+        var result = new TemplateTransform(options).Apply("Hello {unknown}", new CultureInfo("en-US"));
 
         Assert.Equal("Hello {unknown}", result);
     }

@@ -50,7 +50,7 @@ public sealed class DateTimePeriod(DateTime start, DateTime end) : DateTimeInter
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
-        return new(ToOffsetBound(Start!.Value.Value, timeZone), ToOffsetBound(End!.Value.Value, timeZone));
+        return new DateTimeOffsetPeriod(ToOffsetBound(Start!.Value.Value, timeZone), ToOffsetBound(End!.Value.Value, timeZone));
     }
 
     /// <inheritdoc />
@@ -59,7 +59,7 @@ public sealed class DateTimePeriod(DateTime start, DateTime end) : DateTimeInter
             ? throw new InvalidOperationException("DateTimePeriod must be bounded.")
             : !start.Value.IsInclusive || end.Value.IsInclusive
                 ? throw new InvalidOperationException("DateTimePeriod only supports [start, end) boundaries.")
-                : new(start.Value.Value, end.Value.Value);
+                : new DateTimePeriod(start.Value.Value, end.Value.Value);
 
     private static DateTimeOffset ToOffsetBound(DateTime value, TimeSpan offset) => value.Kind switch
     {

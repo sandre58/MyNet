@@ -68,14 +68,14 @@ internal sealed class WeakCallable<TDelegate> : WeakCallable
         {
             _staticDelegate = @delegate;
             if (target != null)
-                _targetReference = new(target);
+                _targetReference = new WeakReference(target);
             return;
         }
 
         _method = @delegate.Method;
-        _delegateTargetReference = new(@delegate.Target);
+        _delegateTargetReference = new WeakReference(@delegate.Target);
         _liveReference = keepTargetAlive ? @delegate.Target : null;
-        _targetReference = new(target);
+        _targetReference = new WeakReference(target);
     }
 
     public override bool IsStatic => _staticDelegate != null;

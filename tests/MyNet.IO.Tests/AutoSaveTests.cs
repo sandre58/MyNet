@@ -125,7 +125,7 @@ public sealed class AutoSaveTests
         {
             if (SaveCount >= count) return Task.CompletedTask;
 
-            _targetReached = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            _targetReached = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             _expectedCount = count;
             return _targetReached.Task;
         }

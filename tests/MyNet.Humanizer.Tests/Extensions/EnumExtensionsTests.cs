@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using MyNet.Globalization.Localization.Translation;
+using MyNet.Humanizer.Display;
 using MyNet.Humanizer.Facade;
 using MyNet.Primitives;
 using Xunit;
@@ -57,7 +59,7 @@ public class EnumExtensionsTests
     [Fact]
     public void EnumHumanize_WithAbbreviationStyle_UsesTranslationKeySuffix()
     {
-        var result = TimeUnit.Minute.Humanize(new() { Style = DisplayStyle.Abbreviation }, new("en-US"));
+        var result = TimeUnit.Minute.Humanize(new DisplayTextOptions { Style = DisplayStyle.Abbreviation }, new CultureInfo("en-US"));
 
         Assert.Equal("min", result);
     }
@@ -65,7 +67,7 @@ public class EnumExtensionsTests
     [Fact]
     public void EnumHumanize_WithDefaultStyle_UsesLocalizedTranslation()
     {
-        var result = TimeUnit.Month.Humanize(culture: new("fr-FR"));
+        var result = TimeUnit.Month.Humanize(culture: new CultureInfo("fr-FR"));
 
         Assert.Equal("Mois", result);
     }

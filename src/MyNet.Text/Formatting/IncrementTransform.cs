@@ -26,7 +26,7 @@ public sealed class IncrementTransform : ITextFormatterTransform
     /// <param name="format">Optional format string for the incrementing number.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="existStrings"/> is null.</exception>
     public IncrementTransform(IEnumerable<string> existStrings, int minIncrement = 1, int step = 1, string? format = null)
-        : this(new()
+        : this(new IncrementTransformOptions
         {
             ExistingStrings = existStrings,
             Kind = IncrementKind.Numeric,
@@ -49,7 +49,7 @@ public sealed class IncrementTransform : ITextFormatterTransform
             current /= 26;
         }
 
-        return new([.. chars]);
+        return new string([.. chars]);
     }
 
     /// <summary>
