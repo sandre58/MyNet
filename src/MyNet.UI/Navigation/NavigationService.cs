@@ -30,10 +30,10 @@ public sealed class NavigationService(
     public NavigationContext? CurrentContext { get; private set; }
 
     /// <inheritdoc />
-    public bool CanGoBack => journal.BackStack.Any();
+    public bool CanGoBack => journal.BackStack.Count > 0;
 
     /// <inheritdoc />
-    public bool CanGoForward => journal.ForwardStack.Any();
+    public bool CanGoForward => journal.ForwardStack.Count > 0;
 
     #region Public API
 

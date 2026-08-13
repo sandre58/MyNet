@@ -65,7 +65,7 @@ public class GroupingViewModel<T> : ObservableObject, IGroupingViewModel<T>
     /// <summary>
     /// Gets a value indicating whether there are any active grouping properties in the current configuration. This property returns true if there is at least one grouping property that is enabled and contributing to the grouping configuration, and false if there are no active grouping properties. This can be used by UI components to determine whether to display grouping indicators or to enable/disable grouping-related actions based on the presence of active grouping properties.
     /// </summary>
-    public bool HasActiveGrouping => CurrentGrouping.Any();
+    public bool HasActiveGrouping => CurrentGrouping.Count > 0;
 
     /// <summary>
     /// Occurs when the grouping configuration has changed. Subscribers can react to this event to apply the new grouping configuration to their collections. The event provides data in the form of <see cref="GroupingChangedEventArgs{T}"/>, which contains the current grouping properties that define the active grouping configuration based on the user's selections in the UI.

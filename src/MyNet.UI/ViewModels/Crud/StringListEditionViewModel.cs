@@ -70,7 +70,7 @@ public sealed class StringListEditionViewModel(ICommandFactory? commandFactory =
     /// <inheritdoc />
     protected override void EnsureEditableRow()
     {
-        if (!Items.Any())
+        if (Items.Count == 0)
             Items.Add(new());
     }
 

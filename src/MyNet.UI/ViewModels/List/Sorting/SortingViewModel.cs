@@ -65,7 +65,7 @@ public class SortingViewModel<T> : ObservableObject, ISortingViewModel<T>
     /// <summary>
     /// Gets a value indicating whether there are any active sorting properties in the current configuration. This property returns true if there is at least one sorting property that is enabled and contributing to the sorting configuration, and false if there are no active sorting properties. This can be used by UI components to determine whether to display sorting indicators or to enable/disable sorting-related actions based on the presence of active sorting properties.
     /// </summary>
-    public bool HasActiveSorting => CurrentSorting.Any();
+    public bool HasActiveSorting => CurrentSorting.Count > 0;
 
     /// <summary>
     /// Occurs when the sorting configuration has changed. Subscribers can react to this event to apply the new sorting configuration to their collections. The event provides data in the form of <see cref="SortingChangedEventArgs{T}"/>, which contains the current sorting properties that define the active sorting configuration based on the user's selections in the UI.

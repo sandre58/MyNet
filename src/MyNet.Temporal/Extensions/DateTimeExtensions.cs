@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="DateTimeExtensions.cs" company="St?phane ANDRE">
-// Copyright (c) St?phane ANDRE. All rights reserved.
+// <copyright file="DateTimeExtensions.cs" company="Stéphane ANDRE">
+// Copyright (c) Stéphane ANDRE. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
