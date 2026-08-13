@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using MyNet.Primitives;
-using MyNet.Primitives.Temporal;
+using MyNet.Temporal;
 
 namespace MyNet.Temporal.Decomposition;
 

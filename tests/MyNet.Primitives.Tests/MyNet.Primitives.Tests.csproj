@@ -2,6 +2,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\MyNet.Primitives\MyNet.Primitives.csproj" />
+        <ProjectReference Include="..\..\src\MyNet.Temporal\MyNet.Temporal.csproj" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Update="Resources\OtherDataResources.resx">

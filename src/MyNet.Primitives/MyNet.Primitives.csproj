@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup>
         <Product>My .NET Primitives</Product>
         <PackageIcon>MyNetPrimitives.png</PackageIcon>
-        <Description>Foundation library for the MyNet suite: SmartEnum, intervals, unit conversions, comparers, sequences, temporal primitives, and shared helpers with minimal dependencies.</Description>
+        <Description>Foundation library for the MyNet suite: SmartEnum, generic intervals, unit conversions, comparers, sequences, and shared helpers with minimal dependencies.</Description>
         <PackageTags>mynet primitives smartenum intervals comparers conversions extensions</PackageTags>
     </PropertyGroup>
 

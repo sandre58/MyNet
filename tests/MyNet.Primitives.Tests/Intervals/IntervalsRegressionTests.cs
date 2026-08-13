@@ -7,6 +7,8 @@
 using System;
 using System.Linq;
 using MyNet.Primitives.Intervals;
+using MyNet.Temporal;
+using MyNet.Temporal.Intervals;
 using Xunit;
 
 namespace MyNet.Primitives.Tests.Intervals;
@@ -83,7 +85,7 @@ public class IntervalsRegressionTests
     }
 
     [Fact]
-    public void TemporalInterval_Status_Methods_Should_Respect_Boundary_Inclusivity()
+    public void DateTimeInterval_Status_Methods_Should_Respect_Boundary_Inclusivity()
     {
         var start = new DateTime(2026, 5, 8, 8, 0, 0, DateTimeKind.Utc);
         var end = start.AddHours(1);

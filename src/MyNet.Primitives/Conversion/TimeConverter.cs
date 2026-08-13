@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using MyNet.Primitives.Temporal;
 
 namespace MyNet.Primitives.Conversion;
 
@@ -29,9 +28,9 @@ public sealed class TimeConverter : IUnitConverter<TimeUnit>
         TimeUnit.Minute => 60d * 1000d,
         TimeUnit.Hour => 60d * 60d * 1000d,
         TimeUnit.Day => 24d * 60d * 60d * 1000d,
-        TimeUnit.Week => DateTimeHelper.DaysPerWeek * 24d * 60d * 60d * 1000d,
-        TimeUnit.Month => DateTimeHelper.DaysPerMonth * 24d * 60d * 60d * 1000d,
-        TimeUnit.Year => DateTimeHelper.DaysPerYear * 24d * 60d * 60d * 1000d,
+        TimeUnit.Week => 7 * 24d * 60d * 60d * 1000d, // DaysPerWeek
+        TimeUnit.Month => (365.2425 / 12) * 24d * 60d * 60d * 1000d, // Gregorian avg days/month (DateTimeHelper.DaysPerMonth)
+        TimeUnit.Year => 365.2425 * 24d * 60d * 60d * 1000d, // Gregorian avg days/year (DateTimeHelper.DaysPerYear)
         _ => throw new ArgumentOutOfRangeException(nameof(unit), unit, "Unsupported time unit.")
     };
 }

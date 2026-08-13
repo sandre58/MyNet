@@ -6,13 +6,13 @@ Core building blocks used across the MyNet suite. Prefer the **smallest package*
 
 | Package | Responsibility | README |
 |---------|----------------|--------|
-| **MyNet.Primitives** | `SmartEnum`, intervals, conversions, comparers, sequences | [README](../../src/MyNet.Primitives/README.md) |
+| **MyNet.Primitives** | `SmartEnum`, generic intervals, conversions, comparers, sequences | [README](../../src/MyNet.Primitives/README.md) |
 | **MyNet.Text** | Templating, slugify, sanitize, normalize, truncate, redact | [README](../../src/MyNet.Text/README.md) |
 | **MyNet.Utilities** | Cache, encryption, progress, threading, deferral, logging helpers | [README](../../src/MyNet.Utilities/README.md) |
 | **MyNet.Generator** | `IRandomGenerator`, sampling, random strings | [README](../../src/MyNet.Generator/README.md) |
 | **MyNet.Reflection** | Cached property accessors, expression helpers | [README](../../src/MyNet.Reflection/README.md) |
 | **MyNet.Metadata** | Type/member metadata registry + features | [README](../../src/MyNet.Metadata/README.md) |
-| **MyNet.Temporal** | `TimeSpan` decomposition | [README](../../src/MyNet.Temporal/README.md) |
+| **MyNet.Temporal** | Date/time intervals, `CalendarAmount`, fluent helpers, `TimeSpan` decomposition | [README](../../src/MyNet.Temporal/README.md) |
 
 ---
 
@@ -169,6 +169,35 @@ MetadataRegistry.For<MyViewModel>()
 
 ## MyNet.Temporal
 
+Public temporal surface. Depends on `MyNet.Primitives` for generic `Interval<T>`.
+
+### Contracts
+
+| Layer | Citizen | Types | Notes |
+|-------|---------|-------|-------|
+| Civil / UI | `DateTime` | `DateTimePeriod`, `DateTimeRange` | Kind not normalized; Unspecified = consumer civil time |
+| Absolute | `DateTimeOffset` | `DateTimeOffsetPeriod`, `DateTimeOffsetRange` | Prefer for APIs / multi-offset |
+| Day / clock | `DateOnly` / `TimeOnly` | `DateRange` (closed), `TimeRange` (closed, overnight) | |
+| Fixed duration | `TimeSpan` | — | Occupation length |
+| Calendar amount | — | `CalendarAmount` | `AddYears`/`AddMonths`; use `ToApproximateTimeSpan()` only when approximating |
+
+Instant periods are half-open **`[start, end)`**.
+
+```csharp
+using MyNet.Temporal;
+using MyNet.Temporal.Intervals;
+using MyNet.Temporal.Serialization;
+using System.Text.Json;
+
+var period = new DateTimeOffsetPeriod(
+    DateTimeOffset.Parse("2026-06-15T09:00:00+02:00"),
+    DateTimeOffset.Parse("2026-06-15T10:00:00+02:00"));
+
+var options = new JsonSerializerOptions().AddMyNetTemporalConverters();
+```
+
+### Decomposition
+
 ```csharp
 using MyNet.Temporal.Decomposition.Extensions;
 
@@ -184,7 +213,8 @@ Presets: `.Humanized()`, `.Compact()`, `.Full()` extension methods on `TimeSpan`
 
 | Need | Package |
 |------|---------|
-| Rich enum, intervals, units | Primitives only |
+| Rich enum, generic intervals, units | Primitives only |
+| Dates, periods, calendar amounts, TimeSpan decompose | Temporal (+ Primitives) |
 | String pipelines | Text (+ Primitives, Generator) |
 | App-wide cache/crypto/progress | Utilities |
 | Test random data | Generator or [Fakers](fakers.md) |

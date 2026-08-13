@@ -4,7 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using MyNet.Primitives;
 using MyNet.Primitives.Intervals;
+using MyNet.Temporal.Intervals;
 using Xunit;
 
 namespace MyNet.Primitives.Tests.Intervals;

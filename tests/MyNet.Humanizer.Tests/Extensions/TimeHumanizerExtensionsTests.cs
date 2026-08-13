@@ -9,6 +9,7 @@ using MyNet.Humanizer.Facade;
 using MyNet.Humanizer.Formatting.Collections;
 using MyNet.Humanizer.Temporal;
 using MyNet.Primitives;
+using MyNet.Temporal;
 using MyNet.Temporal.Decomposition;
 using Xunit;
 

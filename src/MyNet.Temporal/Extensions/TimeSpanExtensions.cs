@@ -1,0 +1,251 @@
+// -----------------------------------------------------------------------
+// <copyright file="TimeSpanExtensions.cs" company="St?phane ANDRE">
+// Copyright (c) St?phane ANDRE. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using MyNet.Primitives;
+using MyNet.Temporal.Intervals;
+
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace MyNet.Temporal;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
+
+public static class TimeSpanExtensions
+{
+    extension(TimeSpan timeSpan)
+    {
+        /// <summary>
+        /// Converts a <see cref="TimeSpan"/> to a <see cref="TimeOnly"/> by taking the time component of the <see cref="TimeSpan"/> and ignoring the date component.
+        /// </summary>
+        /// <returns>A <see cref="TimeOnly"/> representing the time component of the <see cref="TimeSpan"/>.</returns>
+        public TimeOnly ToTime() => TimeOnly.FromTimeSpan(timeSpan);
+
+        /// <summary>
+        /// Adds the given <see cref="CalendarAmount"/> from a <see cref="TimeSpan"/> and returns resulting <see cref="CalendarAmount"/>.
+        /// </summary>
+        public CalendarAmount AddCalendarAmount(CalendarAmount fluentTimeSpan) => fluentTimeSpan.Add(timeSpan);
+
+        /// <summary>
+        /// Subtracts the given <see cref="CalendarAmount"/> from a <see cref="TimeSpan"/> and returns resulting <see cref="CalendarAmount"/>.
+        /// </summary>
+        public CalendarAmount SubtractCalendarAmount(CalendarAmount fluentTimeSpan) => CalendarAmount.SubtractInternal(timeSpan, fluentTimeSpan);
+
+        /// <summary>
+        /// Subtracts given <see cref="TimeSpan"/> from current date (<see cref="DateTime.Now"/>) and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Ago() => timeSpan.Before(DateTime.Now);
+
+        /// <summary>
+        /// Subtracts given <see cref="TimeSpan"/> from <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Ago(DateTime originalValue) => timeSpan.Before(originalValue);
+
+        /// <summary>
+        /// Adds given <see cref="TimeSpan"/> to supplied <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        /// <seealso cref="From(TimeSpan, DateTime)"/>
+        /// <remarks>
+        /// Synonym of <see cref="From(TimeSpan, DateTime)"/> method.
+        /// </remarks>
+        public DateTime Since(DateTime originalValue) => timeSpan.From(originalValue);
+
+        /// <summary>
+        /// Adds given <see cref="TimeSpan"/> to current <see cref="DateTime.Now"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        public DateTime FromNow() => timeSpan.From(DateTime.Now);
+
+        /// <summary>
+        /// Adds given <see cref="TimeSpan"/> to supplied <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        public DateTime From(DateTime originalValue) => originalValue + timeSpan;
+
+        /// <summary>
+        /// Subtracts given <see cref="TimeSpan"/> from <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Before(DateTime originalValue) => originalValue - timeSpan;
+
+        /// <summary>
+        /// Rounds the <see cref="TimeSpan"/> to the nearest specified time unit (second, minute, hour, or day) based on the value of the smaller time units. For example, if rounding to the nearest minute and the seconds are 30 or more, it will round up to the next minute; if the seconds are less than 30, it will round down to the current minute. The method throws an <see cref="ArgumentException"/> if an unsupported rounding unit is provided.
+        /// </summary>
+        /// <param name="rt">The time unit to which the <see cref="TimeSpan"/> should be rounded.</param>
+        /// <returns>The rounded <see cref="TimeSpan"/>.</returns>
+        /// <exception cref="ArgumentException">Thrown when an unsupported rounding unit is provided.</exception>
+        public TimeSpan Round(RoundTo rt)
+        {
+            TimeSpan rounded;
+
+            switch (rt)
+            {
+                case RoundTo.Second:
+                    {
+                        rounded = new(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+                        if (timeSpan.Milliseconds >= 500)
+                        {
+                            rounded += 1.Seconds();
+                        }
+
+                        break;
+                    }
+
+                case RoundTo.Minute:
+                    {
+                        rounded = new(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, 0);
+                        if (timeSpan.Seconds >= 30)
+                        {
+                            rounded += 1.Minutes();
+                        }
+
+                        break;
+                    }
+
+                case RoundTo.Hour:
+                    {
+                        rounded = new(timeSpan.Days, timeSpan.Hours, 0, 0);
+                        if (timeSpan.Minutes >= 30)
+                        {
+                            rounded += 1.Hours();
+                        }
+
+                        break;
+                    }
+
+                case RoundTo.Day:
+                    {
+                        rounded = new(timeSpan.Days, 0, 0, 0);
+                        if (timeSpan.Hours >= 12)
+                        {
+                            rounded += 1.Days();
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new ArgumentException(null, nameof(rt));
+                    }
+            }
+
+            return rounded;
+        }
+
+        /// <summary>
+        /// Adds a specified value of a given time unit to the current <see cref="TimeSpan"/> and returns the resulting <see cref="TimeSpan"/>. The method takes an integer value and a <see cref="TimeUnit"/> enumeration to determine how much time to add. For example, if you want to add 5 minutes to the current <see cref="TimeSpan"/>, you would call this method with a value of 5 and a time unit of <see cref="TimeUnit.Minute"/>. The method will then convert the value to the appropriate amount of time based on the specified time unit and add it to the current <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <param name="value">The amount of time to add.</param>
+        /// <param name="timeUnitToGet">The unit of time for the value to add.</param>
+        /// <returns>The resulting <see cref="TimeSpan"/> after adding the specified time.</returns>
+        public TimeSpan Add(int value, TimeUnit timeUnitToGet) => timeSpan.Add(value.ToTimeSpan(timeUnitToGet));
+
+        /// <summary>
+        /// Converts the current <see cref="TimeSpan"/> to an integer value representing the total amount of time in the specified time unit. For example, if you have a <see cref="TimeSpan"/> of 90 seconds and you want to convert it to minutes, you would call this method with a time unit of <see cref="TimeUnit.Minute"/>, and it would return 1 (since 90 seconds is equal to 1.5 minutes, which rounds down to 1 minute). The method uses the total time in the specified unit, so if you have a <see cref="TimeSpan"/> of 1 hour and 30 minutes and you convert it to minutes, it would return 90 (since 1 hour is equal to 60 minutes and 30 minutes is equal to 30 minutes, for a total of 90 minutes).
+        /// </summary>
+        /// <param name="unit">The time unit to convert to.</param>
+        /// <returns>The total amount of time in the specified time unit.</returns>
+        public double ConvertTo(TimeUnit unit)
+        {
+            var abs = timeSpan.Duration();
+
+            return unit switch
+            {
+                TimeUnit.Millisecond => Math.Round(abs.TotalMilliseconds),
+                TimeUnit.Second => Math.Round(abs.TotalSeconds),
+                TimeUnit.Minute => Math.Round(abs.TotalMinutes),
+                TimeUnit.Hour => Math.Round(abs.TotalHours),
+                TimeUnit.Day => Math.Round(abs.TotalDays),
+                TimeUnit.Week => Math.Round(abs.TotalDays / DateTimeHelper.DaysPerWeek),
+                TimeUnit.Month => Math.Round(abs.TotalDays / DateTimeHelper.DaysPerMonth),
+                TimeUnit.Year => Math.Round(abs.TotalDays / DateTimeHelper.DaysPerYear),
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// When same-day ranges are required, aligns the non-edited boundary to the edited one if <paramref name="end"/> is before the receiver.
+        /// </summary>
+        /// <param name="end">The end time of the range.</param>
+        /// <param name="editedEnd">When <see langword="true"/>, the end boundary was edited; otherwise the start boundary was edited.</param>
+        public (TimeSpan Start, TimeSpan End) CoerceSameDayRange(TimeSpan end, bool editedEnd = false) =>
+            end >= timeSpan ? (timeSpan, end)
+                : editedEnd ? (end, end) : (timeSpan, timeSpan);
+
+        /// <summary>
+        /// Builds a half-open <see cref="DateTimePeriod"/> from time-of-day values on a reference calendar date.
+        /// When <paramref name="allowOvernight"/> is <see langword="false"/> and <paramref name="end"/> is before the start time-of-day,
+        /// an <see cref="ArgumentException"/> is thrown (no silent reorder).
+        /// </summary>
+        public DateTimePeriod ToDateTimePeriod(TimeSpan end, DateTime referenceDate, bool allowOvernight = false)
+        {
+            referenceDate = referenceDate.DiscardTime();
+
+            var startDateTime = referenceDate.Add(timeSpan);
+            DateTime endDateTime;
+
+            if (allowOvernight && end <= timeSpan)
+            {
+                endDateTime = referenceDate.AddDays(1).Add(end);
+            }
+            else if (!allowOvernight && end < timeSpan)
+            {
+                throw new ArgumentException(
+                    "End time-of-day is before start; pass allowOvernight: true for overnight ranges.",
+                    nameof(end));
+            }
+            else if (!allowOvernight && end == timeSpan)
+            {
+                endDateTime = startDateTime.AddTicks(1);
+            }
+            else
+            {
+                endDateTime = referenceDate.Add(end);
+            }
+
+            return new DateTimePeriod(startDateTime, endDateTime);
+        }
+    }
+
+    extension(CalendarAmount calendarAmount)
+    {
+        /// <summary>
+        /// Converts a <see cref="CalendarAmount"/> to a <see cref="TimeOnly"/> by taking the approximate time component of the <see cref="CalendarAmount"/>.
+        /// </summary>
+        /// <returns>A <see cref="TimeOnly"/> representing the time component of the <see cref="CalendarAmount"/>.</returns>
+        public TimeOnly ToTime() => TimeOnly.FromTimeSpan(calendarAmount.ToApproximateTimeSpan());
+
+        /// <summary>
+        /// Subtracts given <see cref="CalendarAmount"/> from current date (<see cref="DateTime.Now"/>) and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Ago() => calendarAmount.Before(DateTime.Now);
+
+        /// <summary>
+        /// Subtracts given <see cref="CalendarAmount"/> from <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Ago(DateTime originalValue) => calendarAmount.Before(originalValue);
+
+        /// <summary>
+        /// Subtracts given <see cref="CalendarAmount"/> from <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the past.
+        /// </summary>
+        public DateTime Before(DateTime originalValue) => originalValue.SubtractCalendarAmount(calendarAmount);
+
+        /// <summary>
+        /// Adds given <see cref="CalendarAmount"/> to current <see cref="DateTime.Now"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        public DateTime FromNow() => calendarAmount.From(DateTime.Now);
+
+        /// <summary>
+        /// Adds given <see cref="CalendarAmount"/> to supplied <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        public DateTime From(DateTime originalValue) => originalValue.AddCalendarAmount(calendarAmount);
+
+        /// <summary>
+        /// Adds given <see cref="CalendarAmount"/> to supplied <paramref name="originalValue"/> <see cref="DateTime"/> and returns resulting <see cref="DateTime"/> in the future.
+        /// </summary>
+        /// <seealso cref="From(CalendarAmount, DateTime)"/>
+        /// <remarks>
+        /// Synonym of <see cref="From(CalendarAmount, DateTime)"/> method.
+        /// </remarks>
+        public DateTime Since(DateTime originalValue) => calendarAmount.From(originalValue);
+    }
+}

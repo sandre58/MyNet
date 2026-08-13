@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Product>My .NET Globalization</Product>
@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyNet.Primitives\MyNet.Primitives.csproj" />
+      <ProjectReference Include="..\MyNet.Temporal\MyNet.Temporal.csproj" />
       <ProjectReference Include="..\MyNet.Text\MyNet.Text.csproj" />
     </ItemGroup>
 
